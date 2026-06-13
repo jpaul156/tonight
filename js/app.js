@@ -42,7 +42,7 @@ async function init() {
 // width as the page scrolls, while staying pinned to the top.
 // ============================================================
 
-const LOGO_RATIO = 1000 / 542; // intrinsic width / height of logo-wide.png
+const LOGO_RATIO = 1000 / 529; // intrinsic width / height of logo-wide-transparent.png
 const HERO_WIDTH = 420;
 const COMPACT_WIDTH = 130;
 const SHRINK_DISTANCE = 180; // px scrolled to go from hero to compact
