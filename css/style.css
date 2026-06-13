@@ -330,6 +330,10 @@ a:focus-visible {
   align-items: flex-end;
 }
 
+.detail-overlay[hidden] {
+  display: none;
+}
+
 .detail-panel {
   width: 100%;
   max-width: var(--max-width);
