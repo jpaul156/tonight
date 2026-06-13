@@ -35,6 +35,52 @@
     <p>Tonight · data refreshed nightly</p>
   </footer>
 
+  <div class="detail-overlay" id="detail-overlay" hidden>
+    <div class="detail-panel" role="dialog" aria-modal="true" aria-labelledby="detail-title">
+      <button class="detail-close" id="detail-close" aria-label="Close">✕</button>
+      <div class="detail-art" id="detail-art"></div>
+      <div class="detail-body">
+        <div class="card-meta">
+          <span class="category-tag" id="detail-category"></span>
+          <span class="cost" id="detail-cost"></span>
+        </div>
+        <h2 class="detail-title" id="detail-title"></h2>
+        <p class="card-time" id="detail-time"></p>
+        <div class="transit-badge" id="detail-transit">
+          <span class="transit-dot"></span>
+          <span class="transit-text" id="detail-transit-text"></span>
+        </div>
+
+        <p class="detail-description" id="detail-description"></p>
+
+        <div class="venue-row">
+          <div class="venue-avatar" id="detail-venue-avatar"></div>
+          <div class="venue-info">
+            <p class="venue-name" id="detail-venue-name"></p>
+            <p class="venue-address" id="detail-venue-address"></p>
+          </div>
+        </div>
+
+        <div class="detail-actions">
+          <a class="btn" id="detail-directions" target="_blank" rel="noopener">Get directions</a>
+          <button class="btn" id="detail-calendar">Add to calendar</button>
+          <button class="btn" id="detail-share">Share</button>
+          <a class="btn btn-primary" id="detail-tickets" target="_blank" rel="noopener" hidden>Buy tickets</a>
+        </div>
+
+        <div class="detail-more" id="more-venue" hidden>
+          <h3>More from this venue</h3>
+          <div class="more-list" id="more-venue-list"></div>
+        </div>
+
+        <div class="detail-more" id="more-performer" hidden>
+          <h3 id="more-performer-heading">More from this artist</h3>
+          <div class="more-list" id="more-performer-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="js/app.js"></script>
 </body>
 </html>

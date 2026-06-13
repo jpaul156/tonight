@@ -1,7 +1,7 @@
 // ============================================================
 // Tonight — front end logic
-// Loads data/events.json, renders the feed, and wires up the
-// square / category filter chips.
+// Loads data/events.json, renders the feed, wires up filter
+// chips, and handles the event detail overlay.
 // ============================================================
 
 const ICONS = {
@@ -17,6 +17,9 @@ const ICONS = {
 const SQUARES = ["Davis", "Porter", "Harvard", "Central", "Kendall", "Union Square"];
 const CATEGORIES = ["music", "trivia", "comedy", "film", "market", "karaoke", "community"];
 
+// Stand-in for "now" — once real scraping is in place this becomes new Date()
+const NOW = new Date("2026-06-12T17:00:00");
+
 let allEvents = [];
 let activeSquare = "all";
 let activeCategory = "all";
@@ -28,12 +31,14 @@ async function init() {
   buildFilterChips();
   allEvents = await loadEvents();
   render();
+  wireDetailOverlay();
+  window.addEventListener("hashchange", handleHash);
+  handleHash();
 }
 
 function setDate() {
   const el = document.getElementById("today-date");
-  const today = new Date();
-  el.textContent = today.toLocaleDateString("en-US", {
+  el.textContent = NOW.toLocaleDateString("en-US", {
     weekday: "long",
     month: "long",
     day: "numeric"
@@ -43,11 +48,7 @@ function setDate() {
 async function loadEvents() {
   try {
     const res = await fetch("data/events.json");
-    const data = await res.json();
-    // Only show events that haven't ended yet, soonest first by default
-    return data
-      .filter(e => new Date(e.end) > new Date("2026-06-12T17:00:00"))
-      .sort((a, b) => new Date(a.start) - new Date(b.start));
+    return await res.json();
   } catch (err) {
     console.error("Could not load events.json", err);
     return [];
@@ -80,22 +81,28 @@ function addChip(row, label, value, group) {
   row.appendChild(btn);
 }
 
+// ============================================================
+// Main feed
+// ============================================================
+
 function render() {
   const list = document.getElementById("event-list");
   const empty = document.getElementById("empty-state");
   list.innerHTML = "";
 
-  let events = allEvents.filter(e => {
-    const squareMatch = activeSquare === "all" || e.square === activeSquare;
-    const categoryMatch = activeCategory === "all" || e.category === activeCategory;
-    return squareMatch && categoryMatch;
-  });
+  let events = allEvents
+    .filter(e => new Date(e.end) > NOW) // tonight's feed only shows what's still ahead
+    .filter(e => {
+      const squareMatch = activeSquare === "all" || e.square === activeSquare;
+      const categoryMatch = activeCategory === "all" || e.category === activeCategory;
+      return squareMatch && categoryMatch;
+    });
 
-  // "Near me": sort by walk time (stand-in for distance from the user).
-  // Square filters preserve chronological order within that square.
-  if (activeSquare === "all") {
-    events = [...events].sort((a, b) => a.walk_minutes - b.walk_minutes);
-  }
+  events.sort((a, b) =>
+    activeSquare === "all"
+      ? a.walk_minutes - b.walk_minutes
+      : new Date(a.start) - new Date(b.start)
+  );
 
   if (events.length === 0) {
     empty.hidden = false;
@@ -109,20 +116,16 @@ function render() {
 function renderCard(e) {
   const article = document.createElement("article");
   article.className = "card";
+  article.tabIndex = 0;
+  article.setAttribute("role", "button");
+  article.addEventListener("click", () => { location.hash = e.id; });
+  article.addEventListener("keydown", ev => {
+    if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); location.hash = e.id; }
+  });
 
   const art = document.createElement("div");
   art.className = `card-art cat-${e.category}`;
-  if (e.image_url) {
-    const img = document.createElement("img");
-    img.src = e.image_url;
-    img.alt = "";
-    img.style.width = "100%";
-    img.style.height = "100%";
-    img.style.objectFit = "cover";
-    art.appendChild(img);
-  } else {
-    art.innerHTML = `<svg viewBox="0 0 24 24">${ICONS[e.category] || ""}</svg>`;
-  }
+  art.appendChild(buildArt(e));
 
   const body = document.createElement("div");
   body.className = "card-body";
@@ -136,7 +139,7 @@ function renderCard(e) {
     <p class="card-time">${formatTimeRange(e.start, e.end)}</p>
     <div class="transit-badge" style="--line-color:${e.transit_color}">
       <span class="transit-dot"></span>
-      <span class="transit-text">${e.transit_line.toUpperCase()} · ${e.transit_stop.toUpperCase()} · ${e.walk_minutes} MIN WALK</span>
+      <span class="transit-text">${e.transit_stop} → ${e.walk_minutes} min</span>
     </div>
   `;
 
@@ -145,11 +148,198 @@ function renderCard(e) {
   return article;
 }
 
+function buildArt(e, large) {
+  if (e.image_url) {
+    const img = document.createElement("img");
+    img.src = e.image_url;
+    img.alt = "";
+    if (!large) {
+      img.style.width = "100%";
+      img.style.height = "100%";
+      img.style.objectFit = "cover";
+    }
+    return img;
+  }
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = `<svg viewBox="0 0 24 24">${ICONS[e.category] || ""}</svg>`;
+  return wrapper.firstElementChild;
+}
+
+// ============================================================
+// Detail overlay
+// ============================================================
+
+function handleHash() {
+  const id = decodeURIComponent(location.hash.replace(/^#/, ""));
+  if (!id) {
+    closeDetail();
+    return;
+  }
+  const event = allEvents.find(e => e.id === id);
+  if (event) openDetail(event);
+  else closeDetail();
+}
+
+function wireDetailOverlay() {
+  const overlay = document.getElementById("detail-overlay");
+  document.getElementById("detail-close").addEventListener("click", () => { history.back(); });
+  overlay.addEventListener("click", ev => {
+    if (ev.target === overlay) history.back();
+  });
+  document.getElementById("detail-calendar").addEventListener("click", () => {
+    const e = currentEvent;
+    if (e) downloadICS(e);
+  });
+  document.getElementById("detail-share").addEventListener("click", () => {
+    const e = currentEvent;
+    if (e) shareEvent(e);
+  });
+}
+
+let currentEvent = null;
+
+function openDetail(e) {
+  currentEvent = e;
+  const overlay = document.getElementById("detail-overlay");
+
+  const art = document.getElementById("detail-art");
+  art.className = `detail-art cat-${e.category}`;
+  art.innerHTML = "";
+  art.appendChild(buildArt(e, true));
+
+  document.getElementById("detail-category").textContent = e.category;
+  document.getElementById("detail-cost").textContent = e.cost;
+  document.getElementById("detail-title").textContent = e.title;
+  document.getElementById("detail-time").textContent = formatFullTimeRange(e.start, e.end);
+  document.getElementById("detail-description").textContent = e.description || "";
+
+  const transit = document.getElementById("detail-transit");
+  transit.style.setProperty("--line-color", e.transit_color);
+  document.getElementById("detail-transit-text").textContent =
+    `${e.transit_stop} → ${e.walk_minutes} min`;
+
+  document.getElementById("detail-venue-avatar").textContent = e.venue.charAt(0);
+  document.getElementById("detail-venue-name").textContent = e.venue;
+  document.getElementById("detail-venue-address").textContent = e.address || "";
+
+  document.getElementById("detail-directions").href =
+    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(e.address || e.venue)}`;
+
+  const ticketBtn = document.getElementById("detail-tickets");
+  if (e.ticket_url) {
+    ticketBtn.href = e.ticket_url;
+    ticketBtn.hidden = false;
+  } else {
+    ticketBtn.hidden = true;
+  }
+
+  renderMoreFrom("more-venue", "more-venue-list", null,
+    allEvents.filter(o => o.venue === e.venue && o.id !== e.id && new Date(o.end) > NOW));
+
+  const performerHeading = document.getElementById("more-performer-heading");
+  if (e.performer) performerHeading.textContent = `More from ${e.performer}`;
+  renderMoreFrom("more-performer", "more-performer-list", null,
+    e.performer
+      ? allEvents.filter(o => o.performer === e.performer && o.id !== e.id && new Date(o.end) > NOW)
+      : []);
+
+  overlay.hidden = false;
+  document.body.style.overflow = "hidden";
+  overlay.querySelector(".detail-panel").scrollTop = 0;
+}
+
+function renderMoreFrom(sectionId, listId, _unused, events) {
+  const section = document.getElementById(sectionId);
+  const list = document.getElementById(listId);
+  list.innerHTML = "";
+
+  if (events.length === 0) {
+    section.hidden = true;
+    return;
+  }
+  section.hidden = false;
+
+  events
+    .sort((a, b) => new Date(a.start) - new Date(b.start))
+    .forEach(o => {
+      const item = document.createElement("button");
+      item.className = "more-item";
+      item.innerHTML = `
+        <span class="more-title">${o.title}</span>
+        <span class="more-date">${formatShortDate(o.start)}</span>
+      `;
+      item.addEventListener("click", () => { location.hash = o.id; });
+      list.appendChild(item);
+    });
+}
+
+function closeDetail() {
+  const overlay = document.getElementById("detail-overlay");
+  overlay.hidden = true;
+  document.body.style.overflow = "";
+  currentEvent = null;
+}
+
+// ============================================================
+// Actions: calendar export, share
+// ============================================================
+
+function downloadICS(e) {
+  const fmt = d => d.toISOString().replace(/[-:]/g, "").split(".")[0];
+  const ics = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "BEGIN:VEVENT",
+    `UID:${e.id}@tonight`,
+    `DTSTART:${fmt(new Date(e.start))}`,
+    `DTEND:${fmt(new Date(e.end))}`,
+    `SUMMARY:${e.title}`,
+    `LOCATION:${e.venue}, ${e.address || ""}`,
+    `DESCRIPTION:${(e.description || "").replace(/\n/g, "\\n")}`,
+    "END:VEVENT",
+    "END:VCALENDAR"
+  ].join("\r\n");
+
+  const blob = new Blob([ics], { type: "text/calendar" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${e.id}.ics`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function shareEvent(e) {
+  const url = `${location.origin}${location.pathname}#${e.id}`;
+  if (navigator.share) {
+    navigator.share({ title: e.title, text: `${e.title} at ${e.venue}`, url }).catch(() => {});
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(url);
+    alert("Link copied to clipboard");
+  }
+}
+
+// ============================================================
+// Formatting helpers
+// ============================================================
+
 function formatTimeRange(start, end) {
   const opts = { hour: "numeric", minute: "2-digit" };
   const s = new Date(start).toLocaleTimeString("en-US", opts);
   const en = new Date(end).toLocaleTimeString("en-US", opts);
   return `${s} – ${en}`;
+}
+
+function formatFullTimeRange(start, end) {
+  const dateOpts = { weekday: "long", month: "long", day: "numeric" };
+  const d = new Date(start).toLocaleDateString("en-US", dateOpts);
+  return `${d} · ${formatTimeRange(start, end)}`;
+}
+
+function formatShortDate(dateStr) {
+  return new Date(dateStr).toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
 function capitalize(s) {
