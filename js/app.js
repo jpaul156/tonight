@@ -32,8 +32,38 @@ async function init() {
   allEvents = await loadEvents();
   render();
   wireDetailOverlay();
+  wireCollapsingHeader();
   window.addEventListener("hashchange", handleHash);
   handleHash();
+}
+
+// ============================================================
+// Collapsing header — the wide logo shrinks toward a compact
+// width as the page scrolls, while staying pinned to the top.
+// ============================================================
+
+const LOGO_RATIO = 1000 / 542; // intrinsic width / height of logo-wide.png
+const HERO_WIDTH = 420;
+const COMPACT_WIDTH = 130;
+const SHRINK_DISTANCE = 180; // px scrolled to go from hero to compact
+
+function wireCollapsingHeader() {
+  const update = () => {
+    const progress = Math.min(window.scrollY / SHRINK_DISTANCE, 1);
+    const width = HERO_WIDTH - (HERO_WIDTH - COMPACT_WIDTH) * progress;
+    document.getElementById("logo-img").style.width = `${width}px`;
+    document.getElementById("today-date").style.opacity = String(1 - progress);
+  };
+
+  let ticking = false;
+  window.addEventListener("scroll", () => {
+    if (!ticking) {
+      requestAnimationFrame(() => { update(); ticking = false; });
+      ticking = true;
+    }
+  }, { passive: true });
+
+  update();
 }
 
 function setDate() {
