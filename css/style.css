@@ -1,0 +1,318 @@
+/* ============================================================
+   Tonight — design tokens
+   ============================================================ */
+:root {
+  /* Palette */
+  --bg: #0a0d1a;
+  --bg-glow: #11183a;
+  --surface: #131829;
+  --surface-2: #1c2238;
+  --border: #2a3150;
+  --text: #eef0f6;
+  --text-muted: #8b93ad;
+  --amber: #f5b942;
+  --amber-soft: #f5b94222;
+
+  /* Type */
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  /* Layout */
+  --max-width: 480px;
+  --radius: 14px;
+  --gap: 14px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ============================================================
+   Starfield backdrop — echoes the logo's night-sky motif
+   ============================================================ */
+.stars {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(255,255,255,0.9) 0, transparent 1.4px),
+    radial-gradient(circle at 78% 9%, rgba(255,255,255,0.7) 0, transparent 1.2px),
+    radial-gradient(circle at 35% 62%, rgba(255,255,255,0.6) 0, transparent 1px),
+    radial-gradient(circle at 92% 48%, rgba(255,255,255,0.8) 0, transparent 1.4px),
+    radial-gradient(circle at 60% 80%, rgba(255,255,255,0.5) 0, transparent 1px),
+    radial-gradient(circle at 20% 92%, rgba(255,255,255,0.7) 0, transparent 1.2px),
+    radial-gradient(circle at 50% 35%, rgba(255,255,255,0.4) 0, transparent 1px),
+    radial-gradient(ellipse at 50% -10%, var(--bg-glow) 0%, transparent 55%),
+    var(--bg);
+  background-size: 100% 100%;
+}
+
+/* ============================================================
+   Header
+   ============================================================ */
+.header {
+  width: 100%;
+  max-width: var(--max-width);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 18px 12px;
+}
+
+.header img {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.header-text h1 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  letter-spacing: 0.06em;
+  margin: 0;
+  font-weight: 600;
+}
+
+.header-text .date {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--amber);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   Filter chip rows
+   ============================================================ */
+.filter-row {
+  width: 100%;
+  max-width: var(--max-width);
+  display: flex;
+  gap: 8px;
+  padding: 6px 18px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.filter-row::-webkit-scrollbar { display: none; }
+
+.chip {
+  flex: 0 0 auto;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.chip:hover {
+  border-color: var(--amber);
+  color: var(--text);
+}
+
+.chip.active {
+  background: var(--amber);
+  border-color: var(--amber);
+  color: #1a1306;
+  font-weight: 600;
+}
+
+/* ============================================================
+   Event feed
+   ============================================================ */
+.event-list {
+  width: 100%;
+  max-width: var(--max-width);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  padding: 14px 18px 8px;
+}
+
+.card {
+  display: flex;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.card-art {
+  flex: 0 0 84px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-art svg {
+  width: 30px;
+  height: 30px;
+  stroke: rgba(255,255,255,0.85);
+  fill: none;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Category gradients — used as image placeholder until image_url is set */
+.cat-music     { background: linear-gradient(145deg, #3a3a78, #2a6fb0); }
+.cat-trivia    { background: linear-gradient(145deg, #1f6f5c, #36a87f); }
+.cat-comedy    { background: linear-gradient(145deg, #a8431f, #e2922c); }
+.cat-film      { background: linear-gradient(145deg, #2b2d52, #5a5aa8); }
+.cat-market    { background: linear-gradient(145deg, #5a6e2f, #a8b13a); }
+.cat-karaoke   { background: linear-gradient(145deg, #8c2f5e, #d1487f); }
+.cat-community { background: linear-gradient(145deg, #2f4858, #5a8ca0); }
+
+.card-body {
+  flex: 1;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.category-tag {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.cost {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--amber);
+}
+
+.card-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card-venue {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card-time {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text);
+  margin: 2px 0 4px;
+}
+
+/* ============================================================
+   Transit badge — the signature element.
+   Styled like a station sign: line color + stop + walk time.
+   ============================================================ */
+.transit-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  padding: 3px 10px 3px 8px;
+  border-radius: 6px;
+  background: var(--surface-2);
+  border: 1px solid var(--line-color, var(--border));
+}
+
+.transit-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--line-color, var(--text-muted));
+  flex-shrink: 0;
+}
+
+.transit-text {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+/* ============================================================
+   Empty state & footer
+   ============================================================ */
+.empty-state {
+  width: 100%;
+  max-width: var(--max-width);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  padding: 40px 18px;
+}
+
+.footer {
+  width: 100%;
+  max-width: var(--max-width);
+  text-align: center;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 18px 18px 32px;
+}
+
+/* ============================================================
+   Focus visibility
+   ============================================================ */
+.chip:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   Reduced motion
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
