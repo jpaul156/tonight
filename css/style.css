@@ -50,7 +50,7 @@ body {
   inset: 0;
   z-index: -1;
   background-color: var(--bg);
-  background-image: url("assets/bg-stars.jpg");
+  background-image: url("../assets/bg-stars.jpg");
   background-size: cover;
   background-position: center;
 }
@@ -82,24 +82,19 @@ body {
   z-index: 1;
 }
 
+.date-strip {
+  width: 100%;
+  max-width: var(--max-width);
+  text-align: center;
+  padding: 6px 18px 2px;
+}
+
 .date {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  z-index: 2;
-  background: rgba(10, 13, 26, 0.6);
-  -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px);
-  border-radius: 999px;
-  padding: 3px 10px;
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   color: var(--amber);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  transition: opacity 0.15s linear;
-  pointer-events: none;
-  white-space: nowrap;
 }
 
 /* ============================================================

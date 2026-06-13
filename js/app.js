@@ -52,7 +52,6 @@ function wireCollapsingHeader() {
     const progress = Math.min(window.scrollY / SHRINK_DISTANCE, 1);
     const width = HERO_WIDTH - (HERO_WIDTH - COMPACT_WIDTH) * progress;
     document.getElementById("logo-img").style.width = `${width}px`;
-    document.getElementById("today-date").style.opacity = String(1 - progress);
   };
 
   let ticking = false;
