@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tonight — Somerville &amp; Cambridge tonight</title>
+
+  <link rel="icon" type="image/png" href="assets/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="stars" aria-hidden="true"></div>
+
+  <header class="header">
+    <img src="assets/logo-240.png" alt="Tonight logo">
+    <div class="header-text">
+      <h1>TONIGHT</h1>
+      <span class="date" id="today-date"></span>
+    </div>
+  </header>
+
+  <nav class="filter-row" id="square-filters" aria-label="Filter by square"></nav>
+  <nav class="filter-row category-row" id="category-filters" aria-label="Filter by category"></nav>
+
+  <main class="event-list" id="event-list"></main>
+  <p class="empty-state" id="empty-state" hidden>Nothing matches yet — try a different filter.</p>
+
+  <footer class="footer">
+    <p>Tonight · data refreshed nightly</p>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
