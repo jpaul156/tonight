@@ -15,10 +15,15 @@ const ICONS = {
 };
 
 const SQUARES = ["Davis", "Porter", "Harvard", "Central", "Kendall", "Union Square"];
-const CATEGORIES = ["music", "trivia", "comedy", "film", "market", "karaoke", "community"];
+const CATEGORIES = ["music", "trivia", "comedy", "film", "market", "karaoke", "community", "sports", "fitness", "food"];
 
-// Stand-in for "now" — once real scraping is in place this becomes new Date()
-const NOW = new Date("2026-06-12T17:00:00");
+// Real clock — 4am rollover so late-night events stay on "tonight"
+function getNow() {
+  const d = new Date();
+  if (d.getHours() < 4) d.setDate(d.getDate() - 1);
+  return d;
+}
+const NOW = getNow();
 
 let allEvents = [];
 let activeSquare = "all";
@@ -77,7 +82,23 @@ function setDate() {
 async function loadEvents() {
   try {
     const res = await fetch("data/events.json");
-    return await res.json();
+    const data = await res.json();
+
+    // Handle both bare array (old format) and {generated_at, events} envelope
+    const events = Array.isArray(data) ? data : (data.events || []);
+    const generatedAt = data.generated_at || null;
+
+    // Freshness check — warn if data is more than 26 hours old
+    if (generatedAt) {
+      const ageHours = (Date.now() - new Date(generatedAt).getTime()) / 3600000;
+      const el = document.getElementById("today-date");
+      if (ageHours > 26) {
+        el.textContent = "⚠ Listings may be outdated";
+        el.style.color = "#e05c5c";
+      }
+    }
+
+    return events;
   } catch (err) {
     console.error("Could not load events.json", err);
     return [];

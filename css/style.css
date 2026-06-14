@@ -624,3 +624,8 @@ a:focus-visible {
   padding: 4px 11px 4px 9px;
 }
 
+
+/* New category gradients */
+.cat-sports   { background: linear-gradient(145deg, #1a4a2e, #2d7a4a); }
+.cat-fitness  { background: linear-gradient(145deg, #3d2060, #7b4fa6); }
+.cat-food     { background: linear-gradient(145deg, #5a2d0c, #c4622d); }
