@@ -26,6 +26,7 @@ function getNow() {
 const NOW = getNow();
 
 let allEvents = [];
+let venueData = {};
 let activeSquare = "all";
 let activeCategory = "all";
 
@@ -34,12 +35,22 @@ init();
 async function init() {
   setDate();
   buildFilterChips();
-  allEvents = await loadEvents();
+  [allEvents, venueData] = await Promise.all([loadEvents(), loadVenues()]);
   render();
   wireDetailOverlay();
   wireCollapsingHeader();
   window.addEventListener("hashchange", handleHash);
   handleHash();
+}
+
+async function loadVenues() {
+  try {
+    const res = await fetch("data/venues.json");
+    return await res.json();
+  } catch (err) {
+    console.warn("Could not load venues.json", err);
+    return {};
+  }
 }
 
 // ============================================================
@@ -176,13 +187,25 @@ function buildLocalityPill(e, extraClass) {
 
 
 
+function eventEndTime(e) {
+  // Use end if available, otherwise treat start as the cutoff
+  // (for events with no listed end time, show until midnight of that day)
+  if (e.end) return new Date(e.end);
+  if (e.start) {
+    const d = new Date(e.start);
+    d.setHours(23, 59, 59);
+    return d;
+  }
+  return new Date(0);
+}
+
 function render() {
   const list = document.getElementById("event-list");
   const empty = document.getElementById("empty-state");
   list.innerHTML = "";
 
   let events = allEvents
-    .filter(e => new Date(e.end) > NOW) // tonight's feed only shows what's still ahead
+    .filter(e => eventEndTime(e) > NOW)
     .filter(e => {
       const squareMatch = activeSquare === "all" || e.square === activeSquare;
       const categoryMatch = activeCategory === "all" || e.category === activeCategory;
@@ -224,14 +247,22 @@ function renderCard(e) {
 
   const art = document.createElement("div");
   art.className = `card-art cat-${e.category}`;
-  art.appendChild(buildArt(e));
+  if (e.image_url) {
+    const img = document.createElement("img");
+    img.src = e.image_url;
+    img.alt = "";
+    img.style.cssText = "width:100%;height:100%;object-fit:cover;";
+    art.appendChild(img);
+  } else {
+    art.appendChild(buildArt(e));
+  }
 
   const body = document.createElement("div");
   body.className = "card-body";
   body.innerHTML = `
     <div class="card-meta">
       <span class="category-tag">${e.category}</span>
-      <span class="cost">${e.cost}</span>
+      <span class="cost">${e.cost || ""}</span>
     </div>
     <h2 class="card-title">${e.title}</h2>
     <p class="card-venue">${e.venue}</p>
@@ -311,7 +342,7 @@ function openDetail(e) {
   art.appendChild(buildArt(e, true));
 
   document.getElementById("detail-category").textContent = e.category;
-  document.getElementById("detail-cost").textContent = e.cost;
+  document.getElementById("detail-cost").textContent = e.cost || "";
   document.getElementById("detail-title").textContent = e.title;
   document.getElementById("detail-time").textContent = formatFullTimeRange(e.start, e.end);
   document.getElementById("detail-description").textContent = e.description || "";
@@ -342,11 +373,12 @@ function openDetail(e) {
     `${e.transit_stop} → ${e.walk_minutes} min`;
 
   document.getElementById("detail-venue-avatar").textContent = e.venue.charAt(0);
-  document.getElementById("detail-venue-name").textContent = e.venue;
-  document.getElementById("detail-venue-address").textContent = e.address || "";
+  const vd = venueData[e.venue_id] || venueData[e.id?.split("-").slice(0,2).join("-")] || {};
+  document.getElementById("detail-venue-name").textContent = vd.name || e.venue;
+  document.getElementById("detail-venue-address").textContent = vd.address || e.address || "";
 
   document.getElementById("detail-directions").href =
-    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(e.address || e.venue)}`;
+    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(vd.address || e.address || e.venue)}`;
 
   const ticketBtn = document.getElementById("detail-tickets");
   if (e.ticket_url) {
