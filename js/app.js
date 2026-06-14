@@ -199,13 +199,30 @@ function eventEndTime(e) {
   return new Date(0);
 }
 
+function isTonightEvent(e) {
+  if (!e.start) return false;
+  const start = new Date(e.start);
+  const end = eventEndTime(e);
+
+  // "Tonight" = same calendar date as NOW (already 4am-adjusted)
+  // An event belongs to tonight if it starts today OR ends today
+  // (catches late-night events that started yesterday evening)
+  const todayStr = NOW.toDateString();
+  const startStr = start.toDateString();
+
+  // Also include events that cross midnight (start today, end tomorrow before 4am)
+  const endBeforeCutoff = end <= new Date(NOW.getFullYear(), NOW.getMonth(), NOW.getDate() + 1, 4, 0, 0);
+
+  return startStr === todayStr && end > NOW;
+}
+
 function render() {
   const list = document.getElementById("event-list");
   const empty = document.getElementById("empty-state");
   list.innerHTML = "";
 
   let events = allEvents
-    .filter(e => eventEndTime(e) > NOW)
+    .filter(isTonightEvent)
     .filter(e => {
       const squareMatch = activeSquare === "all" || e.square === activeSquare;
       const categoryMatch = activeCategory === "all" || e.category === activeCategory;
