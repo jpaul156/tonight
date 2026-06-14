@@ -111,8 +111,49 @@ function addChip(row, label, value, group) {
 }
 
 // ============================================================
-// Main feed
+// Locality + sponsored helpers
 // ============================================================
+
+function localityState(e) {
+  const venueLocal = !!e.venue_is_local;
+  const perfLocal  = e.performer && e.performer_is_local === true;
+  const perfPresent = !!e.performer;
+
+  if (venueLocal && perfPresent && perfLocal)  return "both";
+  if (venueLocal && (!perfPresent || !perfLocal)) return "venue";
+  if (!venueLocal && perfPresent && perfLocal)  return "performer";
+  return "none";
+}
+
+const LOCALITY_CONFIG = {
+  venue: {
+    cls: "pill-venue",
+    icon: `<svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
+    label: "Local spot"
+  },
+  performer: {
+    cls: "pill-performer",
+    icon: `<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
+    label: "Local artist"
+  },
+  both: {
+    cls: "pill-both",
+    icon: `<svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
+    label: "Homegrown"
+  }
+};
+
+function buildLocalityPill(e, extraClass) {
+  const state = localityState(e);
+  if (state === "none") return null;
+  const cfg = LOCALITY_CONFIG[state];
+  const pill = document.createElement("span");
+  pill.className = `locality-pill ${cfg.cls}${extraClass ? " " + extraClass : ""}`;
+  pill.innerHTML = `${cfg.icon} ${cfg.label}`;
+  return pill;
+}
+
+
 
 function render() {
   const list = document.getElementById("event-list");
@@ -144,13 +185,21 @@ function render() {
 
 function renderCard(e) {
   const article = document.createElement("article");
-  article.className = "card";
+  article.className = "card" + (e.sponsored ? " is-sponsored" : "");
   article.tabIndex = 0;
   article.setAttribute("role", "button");
   article.addEventListener("click", () => { location.hash = e.id; });
   article.addEventListener("keydown", ev => {
     if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); location.hash = e.id; }
   });
+
+  // Sponsored corner tag
+  if (e.sponsored && e.sponsor) {
+    const tag = document.createElement("span");
+    tag.className = "sponsored-tag";
+    tag.textContent = e.sponsor.label || "Featured";
+    article.appendChild(tag);
+  }
 
   const art = document.createElement("div");
   art.className = `card-art cat-${e.category}`;
@@ -171,6 +220,10 @@ function renderCard(e) {
       <span class="transit-text">${e.transit_stop} → ${e.walk_minutes} min</span>
     </div>
   `;
+
+  // Locality pill
+  const pill = buildLocalityPill(e);
+  if (pill) body.appendChild(pill);
 
   article.appendChild(art);
   article.appendChild(body);
@@ -241,6 +294,26 @@ function openDetail(e) {
   document.getElementById("detail-title").textContent = e.title;
   document.getElementById("detail-time").textContent = formatFullTimeRange(e.start, e.end);
   document.getElementById("detail-description").textContent = e.description || "";
+
+  // Locality pill in detail
+  const existingPill = document.getElementById("detail-locality");
+  if (existingPill) existingPill.remove();
+  const detailPill = buildLocalityPill(e, "detail-locality-pill");
+  if (detailPill) {
+    detailPill.id = "detail-locality";
+    document.getElementById("detail-description").insertAdjacentElement("beforebegin", detailPill);
+  }
+
+  // Sponsored attribution line
+  const existingAttr = document.getElementById("detail-sponsor-attr");
+  if (existingAttr) existingAttr.remove();
+  if (e.sponsored && e.sponsor) {
+    const attr = document.createElement("p");
+    attr.id = "detail-sponsor-attr";
+    attr.style.cssText = "font-family:var(--font-mono);font-size:0.65rem;color:var(--amber);letter-spacing:0.08em;text-transform:uppercase;margin:2px 0 0;";
+    attr.textContent = `★ Featured listing · ${e.sponsor.attributed_to}`;
+    document.getElementById("detail-time").insertAdjacentElement("afterend", attr);
+  }
 
   const transit = document.getElementById("detail-transit");
   transit.style.setProperty("--line-color", e.transit_color);

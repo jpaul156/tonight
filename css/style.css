@@ -91,7 +91,7 @@ body {
 
 .date {
   font-family: var(--font-mono);
-  font-size: 1rem;
+  font-size: 0.72rem;
   color: var(--amber);
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -543,3 +543,84 @@ a:focus-visible {
 .card {
   cursor: pointer;
 }
+
+/* ============================================================
+   Locality badges + sponsored frame
+   ============================================================ */
+
+/* Sponsored frame — wraps the whole card */
+.card.is-sponsored {
+  border-color: var(--amber);
+  box-shadow: 0 0 0 1px var(--amber), 0 0 12px rgba(245, 185, 66, 0.18);
+  position: relative;
+}
+
+/* "Featured" corner tag on sponsored cards */
+.sponsored-tag {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: var(--amber);
+  color: #1a1306;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 0 var(--radius) 0 8px;
+  z-index: 1;
+}
+
+/* Locality pill — sits below the transit badge */
+.locality-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  align-self: flex-start;
+  padding: 3px 9px 3px 7px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  font-family: var(--font-mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  line-height: 1;
+  margin-top: 4px;
+}
+
+.locality-pill svg {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* venue only */
+.pill-venue {
+  color: #7ec8c8;
+  border-color: rgba(126, 200, 200, 0.45);
+}
+
+/* performer only */
+.pill-performer {
+  color: #b09ef5;
+  border-color: rgba(176, 158, 245, 0.45);
+}
+
+/* both — slightly brighter amber to read as "more special" */
+.pill-both {
+  color: var(--amber);
+  border-color: rgba(245, 185, 66, 0.55);
+}
+
+/* locality pill in detail panel — same logic, slightly larger */
+.detail-locality-pill {
+  font-size: 0.7rem;
+  padding: 4px 11px 4px 9px;
+}
+
