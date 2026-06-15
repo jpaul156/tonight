@@ -275,7 +275,20 @@ def extract_shopify_products(html, base_url):
         text = parent.get_text(separator=" ", strip=True) if parent else link.get_text(strip=True)
         if href.startswith("/"):
             href = base_url + href
-        chunks.append(f"URL: {href}\n{text}")
+
+        # Pull image from within the link element itself. get_text() above
+        # discards all HTML so without this the image URL is lost entirely.
+        # Shopify CDN URLs are protocol-relative (//...) and carry size params
+        # (?v=...&width=N) — normalize to https and strip the query string.
+        image_line = ""
+        img = link.find("img", src=True)
+        if img:
+            src = img["src"].split("?")[0]
+            if src.startswith("//"):
+                src = "https:" + src
+            image_line = f"IMAGE: {src}\n"
+
+        chunks.append(f"URL: {href}\n{image_line}{text}")
 
     print(f"  Found {len(chunks)} product links")
     return "\n\n---\n\n".join(chunks[:30])
@@ -421,7 +434,7 @@ For each event include:
 - source_url (string — the URL: line before this event's text if present, else null)
 - performer (string — artist, band, or host name if explicitly stated, else null)
 - description (string — 1-2 sentence summary max, or null)
-- image_url (string — full https image URL if present, else null)
+- image_url (string — copy the IMAGE: line exactly if present, else null)
 - ticket_url (string or null)
 - is_recurring (boolean)
 - recurrence_note (string or null)
