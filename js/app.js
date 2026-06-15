@@ -17,6 +17,24 @@ const ICONS = {
 const SQUARES = ["Davis", "Porter", "Harvard", "Central", "Kendall", "Lechmere", "Union Square"];
 const CATEGORIES = ["music", "trivia", "comedy", "film", "market", "karaoke", "community", "sports", "fitness", "food"];
 
+// MBTA line/mode → brand color. Color is presentation, derived from the line
+// name at render time, so the data only stores the fact (which line) and never
+// a hex. A known line therefore can never render the wrong color.
+const LINE_COLORS = {
+  Red: "#DA291C",
+  Orange: "#ED8B00",
+  Green: "#00843D",
+  Blue: "#003DA5",
+  Silver: "#7C878E",
+  Bus: "#FFC72C",            // yellow
+  "Commuter Rail": "#80276C", // purple
+  Ferry: "#008EAA",           // teal
+};
+const DEFAULT_LINE_COLOR = "#8b93ad"; // text-muted, for unknown/missing lines
+function lineColor(line) {
+  return LINE_COLORS[line] || DEFAULT_LINE_COLOR;
+}
+
 // Real clock — 4am rollover so late-night events stay on "tonight"
 function getNow() {
   const d = new Date();
@@ -284,7 +302,7 @@ function renderCard(e) {
     <h2 class="card-title">${e.title}</h2>
     <p class="card-venue">${e.venue}</p>
     <p class="card-time">${formatTimeRange(e.start, e.end)}</p>
-    <div class="transit-badge" style="--line-color:${e.transit_color}">
+    <div class="transit-badge" style="--line-color:${lineColor(e.transit_line)}">
       <span class="transit-dot"></span>
       <span class="transit-text">${e.transit_stop} → ${e.walk_minutes} min</span>
     </div>
@@ -385,7 +403,7 @@ function openDetail(e) {
   }
 
   const transit = document.getElementById("detail-transit");
-  transit.style.setProperty("--line-color", e.transit_color);
+  transit.style.setProperty("--line-color", lineColor(e.transit_line));
   document.getElementById("detail-transit-text").textContent =
     `${e.transit_stop} → ${e.walk_minutes} min`;
 

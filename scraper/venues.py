@@ -7,8 +7,10 @@
 #   name          display name shown in the app
 #   address       street address
 #   square        neighborhood label matching the front-end filter chips
-#   transit_line  MBTA line name ("Red", "Green", etc.)
-#   transit_color hex color for the transit badge
+#   transit_line  MBTA line/mode name ("Red", "Green", "Bus",
+#                 "Commuter Rail", "Ferry", etc.) — the badge color is
+#                 derived from this name in the front end (LINE_COLORS),
+#                 so no hex is stored here.
 #   transit_stop  station name shown in the badge
 #   walk_minutes  approximate walk from the T stop
 #   is_local      True for independent/locally-owned venues
@@ -42,7 +44,6 @@ VENUES = [
         "address": "284 Broadway, Cambridge, MA",
         "square": "Central",
         "transit_line": "Red",
-        "transit_color": "#DA291C",
         "transit_stop": "Central",
         "walk_minutes": 8,
         "is_local": True,
@@ -64,7 +65,6 @@ VENUES = [
                 "address": "525 Western Ave, Cambridge, MA",
                 "square": "Lechmere",
                 "transit_line": "Green",
-                "transit_color": "#00843D",
                 "transit_stop": "Lechmere",
                 "walk_minutes": 2,
                 "is_local": True,
@@ -81,7 +81,6 @@ VENUES = [
         "address": "247 Elm St, Somerville, MA",
         "square": "Davis",
         "transit_line": "Red",
-        "transit_color": "#DA291C",
         "transit_stop": "Davis",
         "walk_minutes": 4,
         "is_local": True,
@@ -99,7 +98,6 @@ VENUES = [
         "address": "47 Palmer St, Cambridge, MA",
         "square": "Harvard",
         "transit_line": "Red",
-        "transit_color": "#DA291C",
         "transit_stop": "Harvard",
         "walk_minutes": 4,
         "is_local": True,

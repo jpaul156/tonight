@@ -554,7 +554,6 @@ def venue_fields(vid, venue_cfg):
             "address": venue_cfg["address"],
             "square": venue_cfg["square"],
             "transit_line": venue_cfg["transit_line"],
-            "transit_color": venue_cfg["transit_color"],
             "transit_stop": venue_cfg["transit_stop"],
             "walk_minutes": venue_cfg["walk_minutes"],
         }
@@ -566,7 +565,6 @@ def venue_fields(vid, venue_cfg):
                 "address": sv["address"],
                 "square": sv.get("square", venue_cfg["square"]),
                 "transit_line": sv.get("transit_line", venue_cfg["transit_line"]),
-                "transit_color": sv.get("transit_color", venue_cfg["transit_color"]),
                 "transit_stop": sv.get("transit_stop", venue_cfg["transit_stop"]),
                 "walk_minutes": sv.get("walk_minutes", venue_cfg["walk_minutes"]),
             }

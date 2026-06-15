@@ -38,19 +38,27 @@ def merge_events(existing_map, new_events):
     return list(merged.values())
 
 
+# How far back the archival cutoff reaches. This is deliberately loose: the
+# scraper's only job here is to keep the active list from growing without
+# bound, NOT to decide what counts as "tonight." The front end re-filters
+# every event against its own 4am-rollover clock at view time (see getNow in
+# js/app.js), so it is the single source of truth for "tonight." We therefore
+# only need a boundary that can never archive something the front end might
+# still show. 36h comfortably covers the worst case — an event from yesterday
+# evening, viewed at 3:59am before the 4am rollover — with margin to spare,
+# and sidesteps any timezone/DST precision that bit the precise version.
+ARCHIVE_LOOKBACK = timedelta(hours=36)
+
+
 def cutoff_datetime():
     """
-    'Tonight' rolls over at 4am — events ending before 4am today
-    are considered past. Events with no end time use start time.
-    Past events are preserved under 'past_events' key, never deleted.
+    Events whose end (or start, if no end) is older than ARCHIVE_LOOKBACK are
+    moved to 'past_events'. Past events are preserved, never deleted.
+
+    Intentionally loose — see ARCHIVE_LOOKBACK. The front end, not this cutoff,
+    decides what is "tonight."
     """
-    now = datetime.now(timezone.utc)
-    # 4am EDT = 8am UTC (Boston timezone approximation)
-    cutoff = now.replace(hour=8, minute=0, second=0, microsecond=0)
-    local_hour = (now.hour - 4) % 24
-    if local_hour < 4:
-        cutoff -= timedelta(days=1)
-    return cutoff
+    return datetime.now(timezone.utc) - ARCHIVE_LOOKBACK
 
 
 def sort_events(events):
