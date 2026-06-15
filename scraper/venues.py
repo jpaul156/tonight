@@ -111,7 +111,7 @@ VENUES = [
         "detail_pages": True,
         "url_contains": "/live-music/events/",
         "max_pages": 1,
-        "prompt_notes": "- If the same artist appears twice on the same date with different show times, create two separate event entries with different start times.\n- The cost may include a member price (e.g. '$35 / Members $33') — preserve the full string.\n- The source_url for each event should be the /live-music/events/ link associated with that artist.",
+        "prompt_notes": "- If the same artist appears twice on the same date with different show times, create two separate event entries with different start times.\n- The cost may include a member price (e.g. '$35 / Members $33') — preserve the full string.\n- The text contains [EVENT_URL: https://...] markers immediately before each event listing. Set source_url to the EVENT_URL that appears closest before that event's artist name.",
         "location_keywords": {},
         "extra_venues": [],
     },

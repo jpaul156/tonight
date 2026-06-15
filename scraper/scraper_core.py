@@ -316,6 +316,16 @@ def extract_html_page(html, venue_cfg, extra_pages=None):
             soup = BeautifulSoup(source_html, "html.parser")
             for tag in soup(["script", "style", "nav", "footer", "header"]):
                 tag.decompose()
+            # Preserve event page links in the text so the LLM can set
+            # source_url on each event. Without this, get_text() strips all
+            # hrefs and every event falls back to the collection URL, which
+            # prevents detail-page fetching (Pass 2) and therefore images.
+            if url_fragment:
+                for a in soup.find_all("a", href=lambda h: h and url_fragment in h):
+                    href = a.get("href", "")
+                    if not href.startswith("http"):
+                        href = base_url + href
+                    a.insert_before(f"[EVENT_URL: {href}] ")
             all_text_parts.append(soup.get_text(separator="\n", strip=True))
         combined = "\n\n---PAGE BREAK---\n\n".join(all_text_parts)
         max_chars = venue_cfg.get("max_text_chars", 20000)
@@ -462,6 +472,11 @@ def llm_extract_detail(url, html):
          soup.find("meta", property="og:image")
     if og:
         og_image = og.get("content")
+        # WordPress generates thumbnails with a "-WIDTHxHEIGHT" suffix before
+        # the extension (e.g. Open-Mic-360x380.jpg). Strip it to get the
+        # full-size original.
+        if og_image:
+            og_image = re.sub(r"-\d+x\d+(\.\w+)$", r"\1", og_image)
 
     body = soup.get_text(separator="\n", strip=True)[:4000]
 
