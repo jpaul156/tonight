@@ -183,7 +183,7 @@ def extract_burren_tables(html, base_url):
                 if cell.find(class_="BAND") or cell.find(class_="Time"):
                     detail_cell = cell
                 img = cell.find("img")
-                if img and img.get("src") and "images/" in img["src"]:
+                if img and img.get("src") and ("images/" in img["src"] or img["src"].startswith("http")):
                     src = img["src"].strip()
                     # Skip UI/navigation images — only want actual event photos
                     EXCLUDED = {"moreinfo.gif", "header1.gif", "line.gif",
