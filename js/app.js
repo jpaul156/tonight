@@ -249,7 +249,7 @@ function render() {
 
   events.sort((a, b) =>
     activeSquare === "all"
-      ? a.walk_minutes - b.walk_minutes
+      ? a.walk_minutes - b.walk_minutes || new Date(a.start) - new Date(b.start)
       : new Date(a.start) - new Date(b.start)
   );
 
