@@ -14,7 +14,7 @@ from datetime import datetime, timezone, timedelta
 from venues import VENUES
 from scraper_core import scrape_venue, load_cache, save_cache
 
-OUTPUT_FILE = "events.json"
+OUTPUT_FILE = "data/events.json"
 CACHE_FILE = "scraper_cache.json"
 
 
