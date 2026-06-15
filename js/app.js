@@ -424,13 +424,13 @@ function openDetail(e) {
   }
 
   renderMoreFrom("more-venue", "more-venue-list", null,
-    allEvents.filter(o => o.venue === e.venue && o.id !== e.id && new Date(o.end) > NOW));
+    allEvents.filter(o => o.venue === e.venue && o.id !== e.id && eventEndTime(o) > NOW));
 
   const performerHeading = document.getElementById("more-performer-heading");
   if (e.performer) performerHeading.textContent = `More from ${e.performer}`;
   renderMoreFrom("more-performer", "more-performer-list", null,
     e.performer
-      ? allEvents.filter(o => o.performer === e.performer && o.id !== e.id && new Date(o.end) > NOW)
+      ? allEvents.filter(o => o.performer === e.performer && o.id !== e.id && eventEndTime(o) > NOW)
       : []);
 
   overlay.hidden = false;
