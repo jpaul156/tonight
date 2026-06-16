@@ -151,23 +151,36 @@ body {
 }
 
 .card {
+  position: relative;
   display: flex;
+  flex-direction: column;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
+  isolation: isolate;
 }
 
+/* Full-bleed image banner across the top of the card. The mask gradient
+   fades the image to nothing before it reaches the venue/time block, so the
+   title can sit over the image while the info below stays on clean surface. */
 .card-art {
-  flex: 0 0 84px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 200px;
+  z-index: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 30%, transparent 78%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 30%, transparent 78%);
 }
 
 .card-art svg {
-  width: 30px;
-  height: 30px;
+  width: 44px;
+  height: 44px;
   stroke: rgba(255,255,255,0.85);
   fill: none;
   stroke-width: 1.6;
@@ -185,48 +198,72 @@ body {
 .cat-community { background: linear-gradient(145deg, #2f4858, #5a8ca0); }
 
 .card-body {
+  position: relative;
+  z-index: 1;
   flex: 1;
-  padding: 12px 14px;
+  /* Large top padding drops the title into the lower, faded part of the
+     image; everything below it then sits on solid surface. */
+  padding: 128px 14px 14px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
   min-width: 0;
 }
 
-.card-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.category-tag {
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text-muted);
+/* Soft dark band behind the title only. The image mask lives on .card-art,
+   so this scrim is unaffected by it and guarantees title contrast even over
+   bright artwork. Fades in and out so it never shows a hard edge. */
+.card-body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 175px;
+  background: linear-gradient(
+    to bottom,
+    transparent 55%,
+    rgba(6, 9, 18, 0.5) 90%,
+    transparent 100%
+  );
+  pointer-events: none;
 }
 
 .cost {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   color: var(--amber);
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .card-title {
   font-family: var(--font-display);
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 1.4rem;
+  font-weight: 700;
   margin: 0;
-  line-height: 1.25;
+  line-height: 1.2;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.8);
 }
 
+/* Venue name + cost share a line; venue truncates, cost stays pinned right. */
+.card-venue-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 0;
+  margin-top: 8px;   /* breathing room below the title */
+}
+
+/* Venue leads the info block — brighter and heavier than the time below it. */
 .card-venue {
-  font-size: 0.82rem;
-  color: var(--text-muted);
+  font-family: var(--font-display);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text);
   margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -235,9 +272,9 @@ body {
 
 .card-time {
   font-family: var(--font-mono);
-  font-size: 0.78rem;
-  color: var(--text);
-  margin: 2px 0 4px;
+  font-size: 0.76rem;
+  color: var(--text-muted);   /* recedes beneath the venue */
+  margin: 2px 0 0;
 }
 
 /* ============================================================
@@ -269,6 +306,28 @@ body {
   letter-spacing: 0.05em;
   color: var(--text);
   white-space: nowrap;
+}
+
+/* Transit badge + locality pill share one row at the bottom of the card.
+   Transit anchors the left, the locality chip is pinned to the right. */
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+/* In the card, the locality chip matches the transit badge: same height,
+   same rounded-rectangle shape. Color (not shape) carries the distinction. */
+.card-footer .locality-pill {
+  margin-top: 0;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  line-height: normal;
+  padding: 3px 10px 3px 8px;
 }
 
 /* ============================================================
@@ -548,6 +607,11 @@ a:focus-visible {
    Locality badges + sponsored frame
    ============================================================ */
 
+/* Ended events — shown at bottom, dimmed */
+.card.is-ended {
+  opacity: 0.45;
+}
+
 /* Sponsored frame — wraps the whole card */
 .card.is-sponsored {
   border-color: var(--amber);
@@ -569,7 +633,7 @@ a:focus-visible {
   text-transform: uppercase;
   padding: 3px 8px;
   border-radius: 0 var(--radius) 0 8px;
-  z-index: 1;
+  z-index: 2;
 }
 
 /* Locality pill — sits below the transit badge */

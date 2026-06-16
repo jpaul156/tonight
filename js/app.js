@@ -220,18 +220,13 @@ function eventEndTime(e) {
 function isTonightEvent(e) {
   if (!e.start) return false;
   const start = new Date(e.start);
-  const end = eventEndTime(e);
-
-  // "Tonight" = same calendar date as NOW (already 4am-adjusted)
-  // An event belongs to tonight if it starts today OR ends today
-  // (catches late-night events that started yesterday evening)
   const todayStr = NOW.toDateString();
-  const startStr = start.toDateString();
+  // Include all events that start today, whether or not they've ended
+  return start.toDateString() === todayStr;
+}
 
-  // Also include events that cross midnight (start today, end tomorrow before 4am)
-  const endBeforeCutoff = end <= new Date(NOW.getFullYear(), NOW.getMonth(), NOW.getDate() + 1, 4, 0, 0);
-
-  return startStr === todayStr && end > NOW;
+function hasEnded(e) {
+  return eventEndTime(e) <= NOW;
 }
 
 function render() {
@@ -239,7 +234,7 @@ function render() {
   const empty = document.getElementById("empty-state");
   list.innerHTML = "";
 
-  let events = allEvents
+  const filtered = allEvents
     .filter(isTonightEvent)
     .filter(e => {
       const squareMatch = activeSquare === "all" || e.square === activeSquare;
@@ -247,24 +242,27 @@ function render() {
       return squareMatch && categoryMatch;
     });
 
-  events.sort((a, b) =>
+  const sortFn = (a, b) =>
     activeSquare === "all"
       ? a.walk_minutes - b.walk_minutes || new Date(a.start) - new Date(b.start)
-      : new Date(a.start) - new Date(b.start)
-  );
+      : new Date(a.start) - new Date(b.start);
 
-  if (events.length === 0) {
+  const active = filtered.filter(e => !hasEnded(e)).sort(sortFn);
+  const ended  = filtered.filter(e =>  hasEnded(e)).sort((a, b) => new Date(a.start) - new Date(b.start));
+
+  if (active.length === 0 && ended.length === 0) {
     empty.hidden = false;
     return;
   }
   empty.hidden = true;
 
-  events.forEach(e => list.appendChild(renderCard(e)));
+  active.forEach(e => list.appendChild(renderCard(e)));
+  ended.forEach(e => list.appendChild(renderCard(e)));
 }
 
 function renderCard(e) {
   const article = document.createElement("article");
-  article.className = "card" + (e.sponsored ? " is-sponsored" : "");
+  article.className = "card" + (e.sponsored ? " is-sponsored" : "") + (hasEnded(e) ? " is-ended" : "");
   article.tabIndex = 0;
   article.setAttribute("role", "button");
   article.addEventListener("click", () => { location.hash = e.id; });
@@ -295,22 +293,23 @@ function renderCard(e) {
   const body = document.createElement("div");
   body.className = "card-body";
   body.innerHTML = `
-    <div class="card-meta">
-      <span class="category-tag">${e.category}</span>
-      <span class="cost">${e.cost || ""}</span>
-    </div>
     <h2 class="card-title">${e.title}</h2>
-    <p class="card-venue">${e.venue}</p>
+    <div class="card-venue-row">
+      <span class="card-venue">${e.venue}</span>
+      ${e.cost ? `<span class="cost">${e.cost}</span>` : ""}
+    </div>
     <p class="card-time">${formatTimeRange(e.start, e.end)}</p>
-    <div class="transit-badge" style="--line-color:${lineColor(e.transit_line)}">
-      <span class="transit-dot"></span>
-      <span class="transit-text">${e.transit_stop} → ${e.walk_minutes} min</span>
+    <div class="card-footer">
+      <div class="transit-badge" style="--line-color:${lineColor(e.transit_line)}">
+        <span class="transit-dot"></span>
+        <span class="transit-text">${e.transit_stop} → ${e.walk_minutes} min</span>
+      </div>
     </div>
   `;
 
-  // Locality pill
+  // Locality pill — sits inline with the transit badge
   const pill = buildLocalityPill(e);
-  if (pill) body.appendChild(pill);
+  if (pill) body.querySelector(".card-footer").appendChild(pill);
 
   article.appendChild(art);
   article.appendChild(body);
@@ -482,7 +481,7 @@ function downloadICS(e) {
     "BEGIN:VEVENT",
     `UID:${e.id}@tonight`,
     `DTSTART:${fmt(new Date(e.start))}`,
-    `DTEND:${fmt(new Date(e.end))}`,
+    ...(e.end ? [`DTEND:${fmt(new Date(e.end))}`] : []),
     `SUMMARY:${e.title}`,
     `LOCATION:${e.venue}, ${e.address || ""}`,
     `DESCRIPTION:${(e.description || "").replace(/\n/g, "\\n")}`,
@@ -518,6 +517,7 @@ function shareEvent(e) {
 function formatTimeRange(start, end) {
   const opts = { hour: "numeric", minute: "2-digit" };
   const s = new Date(start).toLocaleTimeString("en-US", opts);
+  if (!end) return s;
   const en = new Date(end).toLocaleTimeString("en-US", opts);
   return `${s} – ${en}`;
 }
