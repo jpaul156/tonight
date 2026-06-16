@@ -479,22 +479,51 @@ function closeDetail() {
 // ============================================================
 
 function downloadICS(e) {
-  const fmt = d => d.toISOString().replace(/[-:]/g, "").split(".")[0];
+  const pad = n => String(n).padStart(2, "0");
+  // Event times are floating local wall-clock strings (e.g. "2026-06-15T20:00:00"),
+  // which is how the app displays them. Emit them as floating local (no Z) so the
+  // calendar shows 8:00 PM, not a UTC-shifted time. (The old code ran the value
+  // through toISOString() — UTC — then stripped the Z, shifting events 4-5 hours.)
+  const fmtLocal = d =>
+    `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}T` +
+    `${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
+  // DTSTAMP must be a real UTC timestamp (with Z). It is required by RFC 5545;
+  // iOS Calendar silently refuses to open an event that lacks it.
+  const fmtUTC = d => d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+  const esc = s =>
+    String(s == null ? "" : s)
+      .replace(/\\/g, "\\\\")
+      .replace(/;/g, "\\;")
+      .replace(/,/g, "\\,")
+      .replace(/\r?\n/g, "\\n");
+
   const ics = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
+    "PRODID:-//Tonight//Events//EN",
+    "CALSCALE:GREGORIAN",
     "BEGIN:VEVENT",
     `UID:${e.id}@tonight`,
-    `DTSTART:${fmt(new Date(e.start))}`,
-    ...(e.end ? [`DTEND:${fmt(new Date(e.end))}`] : []),
-    `SUMMARY:${e.title}`,
-    `LOCATION:${e.venue}, ${e.address || ""}`,
-    `DESCRIPTION:${(e.description || "").replace(/\n/g, "\\n")}`,
+    `DTSTAMP:${fmtUTC(new Date())}`,
+    `DTSTART:${fmtLocal(new Date(e.start))}`,
+    ...(e.end ? [`DTEND:${fmtLocal(new Date(e.end))}`] : []),
+    `SUMMARY:${esc(e.title)}`,
+    `LOCATION:${esc(e.venue + (e.address ? ", " + e.address : ""))}`,
+    `DESCRIPTION:${esc(e.description || "")}`,
     "END:VEVENT",
     "END:VCALENDAR"
   ].join("\r\n");
 
-  const blob = new Blob([ics], { type: "text/calendar" });
+  // iOS Safari ignores the <a download> attribute and won't hand a blob: URL to
+  // Calendar. Navigating to a text/calendar data URL opens the import sheet there.
+  const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  if (isIOS) {
+    window.location.href = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
+    return;
+  }
+
+  const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
