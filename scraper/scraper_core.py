@@ -114,9 +114,12 @@ def fetch_page(url, cache=None, retries=2):
 
 def parse_burren_date(date_str, time_str):
     """
-    Convert "MONDAY JUNE 8" + "8:30pm:" into "2026-06-08T20:30:00".
+    Convert "MONDAY JUNE 8" + "8:30pm:" into an ISO 8601 datetime string.
     Handles ranges like "3-6pm:" by using the start time.
     Handles multi-time strings like "10:30am, 12:30pm, ..." by using the first.
+
+    Year is inferred from the current date: if the event month is earlier than
+    the current month it wraps to next year (handles Dec→Jan rollovers).
     """
     import re
     from datetime import datetime as dt
@@ -137,6 +140,10 @@ def parse_burren_date(date_str, time_str):
     if not month_num or not day_num:
         return None
 
+    # Infer year: if event month is before current month, the event is next year
+    now = datetime.now(timezone.utc)
+    year = now.year if month_num >= now.month else now.year + 1
+
     # Extract first time from time string (handles ranges, multi-times, trailing colon)
     time_clean = re.split(r"[,&]", time_str)[0].strip().rstrip(":")
     # Handle range "3-6pm" -> "3pm"
@@ -149,7 +156,7 @@ def parse_burren_date(date_str, time_str):
         except ValueError:
             return None
 
-    return f"2026-{month_num:02d}-{day_num:02d}T{t.hour:02d}:{t.minute:02d}:00"
+    return f"{year}-{month_num:02d}-{day_num:02d}T{t.hour:02d}:{t.minute:02d}:00"
 
 
 def extract_burren_tables(html, base_url):
@@ -407,6 +414,7 @@ def clean_json(raw):
 def llm_extract_events(text_chunk, venue_cfg):
     extra_instructions = venue_cfg.get("prompt_notes", "")
     strategy = venue_cfg.get("scrape_strategy", "html_page")
+    current_year = datetime.now(timezone.utc).year
 
     if strategy == "burren_tables":
         prompt = f"""Below is structured event data extracted from The Burren's music calendar.
@@ -414,7 +422,7 @@ Each block has DATE, ROOM, TIME, TITLE, and optionally DESCRIPTION, IMAGE_URL, T
 
 Convert each block into a JSON array entry with:
 - title (string — the TITLE field)
-- start (ISO 8601 datetime — combine DATE and TIME, assume year 2026)
+- start (ISO 8601 datetime — combine DATE and TIME, assume year {current_year})
 - end (null — end times are not listed)
 - location (string — the ROOM field)
 - cost (string — infer from description if mentioned e.g. "FREE SHOW", else null)
@@ -437,7 +445,7 @@ Extract every upcoming IN-PERSON event and return a JSON array.
 SKIP any event explicitly labeled as "live stream", "livestream", or "online only".
 For each event include:
 - title (string)
-- start (ISO 8601 datetime, e.g. "2026-06-14T19:00:00" — assume year 2026 if not stated)
+- start (ISO 8601 datetime, e.g. "{current_year}-06-14T19:00:00" — assume year {current_year} if not stated)
 - end (ISO 8601 datetime or null)
 - location (string — physical location or room name if stated, otherwise null)
 - cost (string — e.g. "Free", "$15", "$35 / Members $33", or null)
