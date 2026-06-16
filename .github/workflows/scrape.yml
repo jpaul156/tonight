@@ -1,0 +1,48 @@
+name: Scrape Events
+
+on:
+  schedule:
+    - cron: '0 10 * * *'  # 6am ET (UTC-4 summer / UTC-5 winter)
+  workflow_dispatch:       # allow manual runs from the Actions tab
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ hashFiles('requirements.txt') }}
+
+      - name: Cache scraper HTTP cache
+        uses: actions/cache@v4
+        with:
+          path: scraper_cache.json
+          key: scraper-cache-${{ github.run_id }}
+          restore-keys: scraper-cache-
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run scraper
+        run: python3 scraper/run_scraper.py
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+
+      - name: Commit updated events
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/events.json
+          git diff --staged --quiet || git commit -m "chore: update events [skip ci]"
+          git push
