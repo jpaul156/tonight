@@ -1,84 +1,6 @@
 {
-  "generated_at": "2026-06-15T06:06:42.075501+00:00",
+  "generated_at": "2026-06-16T01:33:26.268086+00:00",
   "events": [
-    {
-      "id": "burren-20260613-the-nightflies",
-      "title": "THE NIGHTFLIES",
-      "venue": "The Burren",
-      "venue_is_local": true,
-      "address": "247 Elm St, Somerville, MA",
-      "square": "Davis",
-      "transit_line": "Red",
-      "transit_stop": "Davis",
-      "walk_minutes": 4,
-      "start": "2026-06-13T19:00:00",
-      "end": null,
-      "category": "music",
-      "cost": null,
-      "performer": null,
-      "performer_is_local": null,
-      "sponsored": false,
-      "sponsor": null,
-      "description": "Come sing along to some favorite Steely Dan tunes with the Nightflies!",
-      "image_url": "https://tickets.24hourmusic.com/uplimage/nightfliesSW2026.jpg",
-      "ticket_url": null,
-      "is_recurring": false,
-      "recurrence_note": null,
-      "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977105+00:00"
-    },
-    {
-      "id": "burren-20260613-irish-session",
-      "title": "IRISH SESSION",
-      "venue": "The Burren",
-      "venue_is_local": true,
-      "address": "247 Elm St, Somerville, MA",
-      "square": "Davis",
-      "transit_line": "Red",
-      "transit_stop": "Davis",
-      "walk_minutes": 4,
-      "start": "2026-06-13T21:30:00",
-      "end": null,
-      "category": "music",
-      "cost": null,
-      "performer": null,
-      "performer_is_local": null,
-      "sponsored": false,
-      "sponsor": null,
-      "description": "Weekly session with Helena Delaney & friends",
-      "image_url": "https://www.burren.com/images/sat session.jpg",
-      "ticket_url": null,
-      "is_recurring": true,
-      "recurrence_note": null,
-      "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977089+00:00"
-    },
-    {
-      "id": "burren-20260613-b-a-m",
-      "title": "B.A.M.",
-      "venue": "The Burren",
-      "venue_is_local": true,
-      "address": "247 Elm St, Somerville, MA",
-      "square": "Davis",
-      "transit_line": "Red",
-      "transit_stop": "Davis",
-      "walk_minutes": 4,
-      "start": "2026-06-13T22:00:00",
-      "end": null,
-      "category": "music",
-      "cost": null,
-      "performer": null,
-      "performer_is_local": null,
-      "sponsored": false,
-      "sponsor": null,
-      "description": "Cover Band",
-      "image_url": "https://www.burren.com/images/bam.jpg",
-      "ticket_url": null,
-      "is_recurring": false,
-      "recurrence_note": null,
-      "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977111+00:00"
-    },
     {
       "id": "lamplighter-broadway-20260614-pepita-lo-fi-sunday",
       "title": "Pepita Lo-Fi Sunday",
@@ -104,58 +26,6 @@
       "recurrence_note": null,
       "source_url": "https://lamplighterbrewing.com/collections/events",
       "last_scraped": "2026-06-14T21:24:10.024820+00:00"
-    },
-    {
-      "id": "burren-20260614-all-that-music-academy---summe",
-      "title": "ALL THAT MUSIC ACADEMY - SUMMER SHOWCASE!",
-      "venue": "The Burren",
-      "venue_is_local": true,
-      "address": "247 Elm St, Somerville, MA",
-      "square": "Davis",
-      "transit_line": "Red",
-      "transit_stop": "Davis",
-      "walk_minutes": 4,
-      "start": "2026-06-14T10:30:00",
-      "end": null,
-      "category": "music",
-      "cost": null,
-      "performer": null,
-      "performer_is_local": null,
-      "sponsored": false,
-      "sponsor": null,
-      "description": "Musicians of all ages ROCKIN out!",
-      "image_url": "https://tickets.24hourmusic.com/uplimage/AllThatMusicSummerShowcaseSW.jpg",
-      "ticket_url": null,
-      "is_recurring": false,
-      "recurrence_note": null,
-      "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977144+00:00"
-    },
-    {
-      "id": "lamplighter-cx-20260614-brewery-yoga",
-      "title": "Brewery Yoga",
-      "venue": "Lamplighter Brewing - CX",
-      "venue_is_local": true,
-      "address": "525 Western Ave, Cambridge, MA",
-      "square": "Central",
-      "transit_line": "Red",
-      "transit_stop": "Central",
-      "walk_minutes": 12,
-      "start": "2026-06-14T12:30:00",
-      "end": "2026-06-14T13:30:00",
-      "category": "fitness",
-      "cost": null,
-      "performer": null,
-      "performer_is_local": null,
-      "sponsored": false,
-      "sponsor": null,
-      "description": null,
-      "image_url": null,
-      "ticket_url": null,
-      "is_recurring": false,
-      "recurrence_note": null,
-      "source_url": "https://lamplighterbrewing.com/collections/events",
-      "last_scraped": "2026-06-14T21:24:10.025004+00:00"
     },
     {
       "id": "lamplighter-broadway-20260614-world-cup--germany-vs--cura\u00e7ao",
@@ -357,13 +227,13 @@
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "World Cup match screening at Lamplighter Brewing Co.'s Broadway Taproom. Join us to watch Spain vs. Cape Verde during the 2026 World Cup.",
+      "description": "World Cup screening of Spain vs. Cape Verde at Lamplighter Brewing Co.'s Broadway Taproom.",
       "image_url": "https://lamplighterbrewing.com/cdn/shop/files/WorldCupBanner.jpg?v=1779721158",
       "ticket_url": null,
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://lamplighterbrewing.com/products/world-cup-spain-vs-cape-verde",
-      "last_scraped": "2026-06-15T05:52:30.929811+00:00"
+      "last_scraped": "2026-06-16T01:32:56.851371+00:00"
     },
     {
       "id": "lamplighter-broadway-20260615-world-cup--belgium-vs--egypt",
@@ -376,20 +246,20 @@
       "transit_stop": "Central",
       "walk_minutes": 8,
       "start": "2026-06-15T15:00:00",
-      "end": "2026-06-15T18:00:00",
+      "end": "2026-06-15T17:00:00",
       "category": "sports",
       "cost": null,
       "performer": null,
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "World Cup screening event for the Belgium vs. Egypt match at Lamplighter Brewing Co.'s taprooms.",
+      "description": "World Cup screening event at Lamplighter Brewing Co.'s taprooms, featuring the France vs. Senegal match.",
       "image_url": "https://lamplighterbrewing.com/cdn/shop/files/WorldCupBanner.jpg?v=1779721158",
       "ticket_url": null,
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://lamplighterbrewing.com/products/world-cup-belgium-vs-egypt",
-      "last_scraped": "2026-06-15T05:52:30.929750+00:00"
+      "last_scraped": "2026-06-16T01:32:56.851461+00:00"
     },
     {
       "id": "lamplighter-cx-20260615-crazzy-tacos-6-15",
@@ -409,13 +279,13 @@
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "A taco pop-up event featuring authentic and hearty tacos from Crazzy Tacos, including chicken tacos, al pastor tacos, vegetarian options, and crazzy takis.",
+      "description": "A taco pop-up event at Lamplighter Brewing featuring authentic and hearty tacos including chicken, al pastor, vegetarian options, and crazzy takis, prepared by Gerber and Edilma.",
       "image_url": "https://lamplighterbrewing.com/cdn/shop/files/CrazzyTacosPop-UpSquare.png?v=1730663057",
       "ticket_url": null,
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://lamplighterbrewing.com/products/crazzy-tacos-pop-up-copy",
-      "last_scraped": "2026-06-15T05:52:30.930355+00:00"
+      "last_scraped": "2026-06-16T01:32:56.851557+00:00"
     },
     {
       "id": "lamplighter-broadway-20260615-world-cup--saudi-arabia-vs--ur",
@@ -435,13 +305,13 @@
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "World Cup screening event at Lamplighter Brewing Co.'s Broadway taproom, showing the Saudi Arabia vs. Uruguay match.",
+      "description": "World Cup screening event at Lamplighter Brewing Co.'s Broadway taproom. Join us to watch the Saudi Arabia vs. Uruguay match.",
       "image_url": "https://lamplighterbrewing.com/cdn/shop/files/WorldCupBanner.jpg?v=1779721158",
       "ticket_url": null,
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://lamplighterbrewing.com/products/world-cup-saudi-arabia-vs-uruguay",
-      "last_scraped": "2026-06-15T05:52:30.929709+00:00"
+      "last_scraped": "2026-06-16T01:32:56.851342+00:00"
     },
     {
       "id": "passim-20260615-open-mic",
@@ -461,13 +331,13 @@
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "An open mic event at Passim where musicians can perform live. Sign up required; see passim.org/openmic for guidelines.",
+      "description": "An open mic event at Passim where musicians can sign up to perform. Multiple dates available throughout June.",
       "image_url": "https://www.passim.org/wp-content/uploads/2025/05/Open-Mic.jpg",
       "ticket_url": null,
       "is_recurring": true,
       "recurrence_note": "Monday",
       "source_url": "https://www.passim.org/live-music/events/open-mic/",
-      "last_scraped": "2026-06-15T06:06:42.071598+00:00"
+      "last_scraped": "2026-06-16T01:33:26.266705+00:00"
     },
     {
       "id": "lamplighter-cx-20260615-jeopardy-bar-league",
@@ -487,13 +357,13 @@
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "JEOPARDY! Bar League is the official bar trivia experience from America's Favorite Quiz Show, featuring a live-hosted two-hour interactive quiz where teams compete using their smartphones across Jeopardy!, Double Jeopardy!, and Final Jeopardy! rounds.",
+      "description": "JEOPARDY! Bar League is the official bar trivia experience from America's Favorite Quiz Show, featuring a live-hosted two-hour interactive quiz where teams compete using smartphones across Jeopardy!, Double Jeopardy!, and Final Jeopardy! rounds.",
       "image_url": "https://lamplighterbrewing.com/cdn/shop/files/JBL-SquareAd_v01-A_Mon700pm.png?v=1756930471",
       "ticket_url": null,
-      "is_recurring": false,
-      "recurrence_note": null,
+      "is_recurring": true,
+      "recurrence_note": "Recurring event",
       "source_url": "https://lamplighterbrewing.com/products/jeopardy-bar-league",
-      "last_scraped": "2026-06-15T05:52:30.930102+00:00"
+      "last_scraped": "2026-06-16T01:32:56.851534+00:00"
     },
     {
       "id": "burren-20260615-trivia-night",
@@ -519,7 +389,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977167+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469305+00:00"
     },
     {
       "id": "burren-20260615-irish-session",
@@ -545,7 +415,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977160+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469285+00:00"
     },
     {
       "id": "lamplighter-broadway-20260615-world-cup--iran-vs--egypt",
@@ -565,13 +435,39 @@
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "World Cup match screening at Lamplighter Brewing Co.'s Broadway taproom.",
+      "description": "World Cup screening event at Lamplighter Brewing Co.'s Broadway taproom for the Iran vs. Egypt match.",
       "image_url": "https://lamplighterbrewing.com/cdn/shop/files/WorldCupBanner.jpg?v=1779721158",
       "ticket_url": null,
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://lamplighterbrewing.com/products/world-cup-iran-vs-egypt",
-      "last_scraped": "2026-06-15T05:52:30.929648+00:00"
+      "last_scraped": "2026-06-16T01:32:56.851326+00:00"
+    },
+    {
+      "id": "lamplighter-broadway-20260616-world-cup--france-vs--senegal",
+      "title": "World Cup: France vs. Senegal",
+      "venue": "Lamplighter Brewing - Broadway",
+      "venue_is_local": true,
+      "address": "284 Broadway, Cambridge, MA",
+      "square": "Central",
+      "transit_line": "Red",
+      "transit_stop": "Central",
+      "walk_minutes": 8,
+      "start": "2026-06-16T15:00:00",
+      "end": "2026-06-16T18:00:00",
+      "category": "sports",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": null,
+      "image_url": null,
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://lamplighterbrewing.com/collections/events",
+      "last_scraped": "2026-06-16T01:32:56.851354+00:00"
     },
     {
       "id": "lamplighter-cx-20260616-pottery-with-a-purpose---ceram",
@@ -591,13 +487,39 @@
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "A 2-hour ceramic mug making workshop where participants learn hand-building techniques and create their own one-of-a-kind clay cup to take home, with options to air dry and paint or upgrade for professional glazing and firing.",
+      "description": "A 2-hour ceramic mug making workshop where participants learn hand-building techniques to create their own one-of-a-kind clay cup. The ticket includes all materials, pottery trivia with prizes, and the ability to take home 1-3 pieces of pottery.",
       "image_url": "https://lamplighterbrewing.com/cdn/shop/files/VenueProductPhotos_24_1200x_ee0a6114-d443-45e2-b290-cc7ccc7747c3.webp?v=1734144929",
       "ticket_url": "https://lamplighterbrewing.com/products/pottery-with-a-purpose-1",
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://lamplighterbrewing.com/products/pottery-with-a-purpose-1",
-      "last_scraped": "2026-06-15T05:52:30.930206+00:00"
+      "last_scraped": "2026-06-16T01:32:56.851547+00:00"
+    },
+    {
+      "id": "lamplighter-broadway-20260616-world-cup--iraq-vs--norway",
+      "title": "World Cup: Iraq vs. Norway",
+      "venue": "Lamplighter Brewing - Broadway",
+      "venue_is_local": true,
+      "address": "284 Broadway, Cambridge, MA",
+      "square": "Central",
+      "transit_line": "Red",
+      "transit_stop": "Central",
+      "walk_minutes": 8,
+      "start": "2026-06-16T18:00:00",
+      "end": "2026-06-16T21:00:00",
+      "category": "sports",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": null,
+      "image_url": null,
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://lamplighterbrewing.com/collections/events",
+      "last_scraped": "2026-06-16T01:32:56.851430+00:00"
     },
     {
       "id": "passim-20260616-open-mic",
@@ -617,13 +539,13 @@
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "An open mic event at Passim where musicians can perform live. Sign up required; see passim.org/openmic for guidelines.",
+      "description": "An open mic event at Passim where musicians can sign up to perform. Multiple dates available throughout June.",
       "image_url": "https://www.passim.org/wp-content/uploads/2025/05/Open-Mic.jpg",
       "ticket_url": null,
       "is_recurring": true,
       "recurrence_note": "Tuesday",
       "source_url": "https://www.passim.org/live-music/events/open-mic/",
-      "last_scraped": "2026-06-15T06:06:42.071663+00:00"
+      "last_scraped": "2026-06-16T01:33:26.266726+00:00"
     },
     {
       "id": "burren-20260616-the-django-cadre",
@@ -649,7 +571,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977174+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469313+00:00"
     },
     {
       "id": "lamplighter-broadway-20260616-broadway-trivia",
@@ -669,13 +591,91 @@
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "Weekly trivia night at Lamplighter Brewing's Broadway taproom where teams of 2-6 compete in a two-hour trivia game covering history, politics, sports, movies, pop culture, music, and more, with winners receiving Lamplighter gift cards.",
+      "description": "Weekly trivia night at Lamplighter Brewing's Broadway taproom featuring rotating questions across history, politics, sports, movies, pop culture, music and more. Teams of 2-6 compete for prizes, with winners receiving Lamplighter gift cards.",
       "image_url": "https://lamplighterbrewing.com/cdn/shop/files/BroadwayTrivia.jpg?v=1730424824",
       "ticket_url": null,
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://lamplighterbrewing.com/products/broadway-trivia-copy",
-      "last_scraped": "2026-06-15T05:52:30.930458+00:00"
+      "last_scraped": "2026-06-16T01:32:56.851568+00:00"
+    },
+    {
+      "id": "lamplighter-broadway-20260616-world-cup--argentina-vs-algeri",
+      "title": "World Cup: Argentina vs Algeria",
+      "venue": "Lamplighter Brewing - Broadway",
+      "venue_is_local": true,
+      "address": "284 Broadway, Cambridge, MA",
+      "square": "Central",
+      "transit_line": "Red",
+      "transit_stop": "Central",
+      "walk_minutes": 8,
+      "start": "2026-06-16T21:00:00",
+      "end": "2026-06-17T00:00:00",
+      "category": "sports",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": null,
+      "image_url": null,
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://lamplighterbrewing.com/collections/events",
+      "last_scraped": "2026-06-16T01:32:56.851408+00:00"
+    },
+    {
+      "id": "lamplighter-broadway-20260617-world-cup--portugal-vs--democr",
+      "title": "World Cup: Portugal vs. Democratic Republic of Congo",
+      "venue": "Lamplighter Brewing - Broadway",
+      "venue_is_local": true,
+      "address": "284 Broadway, Cambridge, MA",
+      "square": "Central",
+      "transit_line": "Red",
+      "transit_stop": "Central",
+      "walk_minutes": 8,
+      "start": "2026-06-17T13:00:00",
+      "end": "2026-06-17T16:00:00",
+      "category": "sports",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": null,
+      "image_url": null,
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://lamplighterbrewing.com/collections/events",
+      "last_scraped": "2026-06-16T01:32:56.851421+00:00"
+    },
+    {
+      "id": "lamplighter-broadway-20260617-world-cup--england-vs--croatia",
+      "title": "World Cup: England vs. Croatia",
+      "venue": "Lamplighter Brewing - Broadway",
+      "venue_is_local": true,
+      "address": "284 Broadway, Cambridge, MA",
+      "square": "Central",
+      "transit_line": "Red",
+      "transit_stop": "Central",
+      "walk_minutes": 8,
+      "start": "2026-06-17T16:00:00",
+      "end": "2026-06-17T19:00:00",
+      "category": "sports",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": null,
+      "image_url": null,
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://lamplighterbrewing.com/collections/events",
+      "last_scraped": "2026-06-16T01:32:56.851383+00:00"
     },
     {
       "id": "lamplighter-broadway-20260617-queer-knitting-group",
@@ -695,13 +695,13 @@
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "A community gathering for queer folks to work on knitting, crochet, cross stitch, felt, and other fiber arts projects together at Lamplighter Brewing's Broadway taproom in partnership with Boston Queer Fiber Arts.",
-      "image_url": "https://lamplighterbrewing.com/cdn/shop/files/451014515_934898945347168_2247384946960327975_n.jpg?v=1748270225",
+      "description": null,
+      "image_url": null,
       "ticket_url": null,
       "is_recurring": false,
       "recurrence_note": null,
-      "source_url": "https://lamplighterbrewing.com/products/pride-fiber-arts-night",
-      "last_scraped": "2026-06-15T05:52:30.929926+00:00"
+      "source_url": "https://lamplighterbrewing.com/collections/events",
+      "last_scraped": "2026-06-16T01:32:56.851501+00:00"
     },
     {
       "id": "passim-20260617-the-heart-collectors",
@@ -721,13 +721,13 @@
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "Finalists at the International Folk Music Awards 2025, The Heart Collectors merge 60's and 70's Americana/Folk with Celtic influences, creating ethereal soundscapes and epic folk anthems with four-part vocal harmonies and intricate instrumentation.",
+      "description": "Finalists at the International Folk Music Awards 2025, The Heart Collectors merge 60's and 70's Americana/Folk with Celtic influences, featuring four-part vocal harmonies, cello, banjo, mandolin, and guitar to create music ranging from bluegrass-inflected folk to ethereal soundscapes.",
       "image_url": "https://www.passim.org/wp-content/uploads/2026/03/260321-USA-2026-PROMO-1-SQUARE-scaled.jpg",
       "ticket_url": null,
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.passim.org/live-music/events/the-heart-collectors/",
-      "last_scraped": "2026-06-15T06:06:42.071693+00:00"
+      "last_scraped": "2026-06-16T01:33:26.266736+00:00"
     },
     {
       "id": "burren-20260617-grain-thief",
@@ -753,7 +753,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977181+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469320+00:00"
     },
     {
       "id": "burren-20260617-rebecca-loebe--arielle-silver",
@@ -779,7 +779,33 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977191+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469328+00:00"
+    },
+    {
+      "id": "lamplighter-broadway-20260617-world-cup--ghana-vs--panama",
+      "title": "World Cup: Ghana vs. Panama",
+      "venue": "Lamplighter Brewing - Broadway",
+      "venue_is_local": true,
+      "address": "284 Broadway, Cambridge, MA",
+      "square": "Central",
+      "transit_line": "Red",
+      "transit_stop": "Central",
+      "walk_minutes": 8,
+      "start": "2026-06-17T19:00:00",
+      "end": "2026-06-17T22:00:00",
+      "category": "sports",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": null,
+      "image_url": null,
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://lamplighterbrewing.com/collections/events",
+      "last_scraped": "2026-06-16T01:32:56.851480+00:00"
     },
     {
       "id": "burren-20260617-comedy-night",
@@ -805,7 +831,111 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977199+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469335+00:00"
+    },
+    {
+      "id": "lamplighter-broadway-20260617-world-cup--uzbekistan-vs--colo",
+      "title": "World Cup: Uzbekistan vs. Colombia",
+      "venue": "Lamplighter Brewing - Broadway",
+      "venue_is_local": true,
+      "address": "284 Broadway, Cambridge, MA",
+      "square": "Central",
+      "transit_line": "Red",
+      "transit_stop": "Central",
+      "walk_minutes": 8,
+      "start": "2026-06-17T22:00:00",
+      "end": "2026-06-18T00:00:00",
+      "category": "sports",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": null,
+      "image_url": null,
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://lamplighterbrewing.com/collections/events",
+      "last_scraped": "2026-06-16T01:32:56.851394+00:00"
+    },
+    {
+      "id": "lamplighter-broadway-20260618-world-cup--czechia-vs--south-a",
+      "title": "World Cup: Czechia vs. South Africa",
+      "venue": "Lamplighter Brewing - Broadway",
+      "venue_is_local": true,
+      "address": "284 Broadway, Cambridge, MA",
+      "square": "Central",
+      "transit_line": "Red",
+      "transit_stop": "Central",
+      "walk_minutes": 8,
+      "start": "2026-06-18T12:00:00",
+      "end": "2026-06-18T15:00:00",
+      "category": "sports",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": null,
+      "image_url": null,
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://lamplighterbrewing.com/collections/events",
+      "last_scraped": "2026-06-16T01:32:56.851441+00:00"
+    },
+    {
+      "id": "lamplighter-broadway-20260618-world-cup--switzerland-vs--bos",
+      "title": "World Cup: Switzerland vs. Bosnia & Herzegovina",
+      "venue": "Lamplighter Brewing - Broadway",
+      "venue_is_local": true,
+      "address": "284 Broadway, Cambridge, MA",
+      "square": "Central",
+      "transit_line": "Red",
+      "transit_stop": "Central",
+      "walk_minutes": 8,
+      "start": "2026-06-18T15:00:00",
+      "end": "2026-06-18T18:00:00",
+      "category": "sports",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": null,
+      "image_url": null,
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://lamplighterbrewing.com/collections/events",
+      "last_scraped": "2026-06-16T01:32:56.851471+00:00"
+    },
+    {
+      "id": "lamplighter-broadway-20260618-world-cup--canada-vs--qatar",
+      "title": "World Cup: Canada vs. Qatar",
+      "venue": "Lamplighter Brewing - Broadway",
+      "venue_is_local": true,
+      "address": "284 Broadway, Cambridge, MA",
+      "square": "Central",
+      "transit_line": "Red",
+      "transit_stop": "Central",
+      "walk_minutes": 8,
+      "start": "2026-06-18T18:00:00",
+      "end": "2026-06-18T21:00:00",
+      "category": "sports",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": null,
+      "image_url": null,
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://lamplighterbrewing.com/collections/events",
+      "last_scraped": "2026-06-16T01:32:56.851450+00:00"
     },
     {
       "id": "burren-20260618-cloud-prescott-presents--velve",
@@ -831,7 +961,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977218+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469351+00:00"
     },
     {
       "id": "burren-20260618-torn-and-frayed",
@@ -857,7 +987,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977206+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469341+00:00"
     },
     {
       "id": "passim-20260618-lena-fjortoft--grace-givertz--",
@@ -877,13 +1007,13 @@
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "An evening featuring three indie folk and Americana artists: Lena Fjortoft, whose music blends Americana and alt-folk with ethereal vocals; Grace Givertz, an indie folk multi-instrumentalist from Florida known for heartfelt storytelling; and Jasper Jones, a Brooklyn-based non-binary artist whose debut EP explores themes of love and loss.",
+      "description": "An evening featuring three indie folk and Americana artists: Lena Fjortoft, whose music blends Americana, alt-folk and rock with ethereal vocals; Grace Givertz, a multi-instrumentalist from Florida whose indie folk compositions weave together folk, Americana and indie rock; and Jasper Jones, a Brooklyn-based non-binary artist whose debut EP explores themes of love and loss.",
       "image_url": "https://www.passim.org/wp-content/uploads/2026/05/Lena-Fjortoft-Grace-Givertz-Jasper-Jones-1-1.png",
       "ticket_url": null,
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.passim.org/live-music/events/lena-fjortoft-grace-givertz-and-jasper-jones/",
-      "last_scraped": "2026-06-15T06:06:42.071726+00:00"
+      "last_scraped": "2026-06-16T01:33:26.266747+00:00"
     },
     {
       "id": "burren-20260618-prestige-worldwide",
@@ -909,7 +1039,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977226+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469358+00:00"
     },
     {
       "id": "burren-20260619-alastair-moock-trio-with-sean-",
@@ -935,7 +1065,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977244+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469373+00:00"
     },
     {
       "id": "passim-20260619-windborne",
@@ -955,13 +1085,13 @@
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "Windborne is a vocal ensemble known for innovative arrangements of traditional songs from around the world, drawing on 20 years of polyphonic music study to create bold harmonies that evoke deep emotional responses while connecting audiences to history and distant places.",
+      "description": "Windborne is a vocal ensemble known for innovative arrangements and bold harmonies that draw on deep roots in global vocal harmony traditions. With 20 years of collective experience studying polyphonic music worldwide, the group brings old songs into the present while connecting audiences to history, distant places, and themselves.",
       "image_url": "https://www.passim.org/wp-content/uploads/2018/07/Windborne-Banjo-Photo-by-Michelle-Frehsee-scaled.jpg",
       "ticket_url": null,
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.passim.org/live-music/events/windborne/",
-      "last_scraped": "2026-06-15T06:06:42.071750+00:00"
+      "last_scraped": "2026-06-16T01:33:26.266754+00:00"
     },
     {
       "id": "burren-20260619-irish-session",
@@ -987,7 +1117,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977233+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469364+00:00"
     },
     {
       "id": "burren-20260619-the-mockingbirds",
@@ -1013,7 +1143,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977251+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469379+00:00"
     },
     {
       "id": "lamplighter-broadway-20260620-pepita-lo-fi-saturday",
@@ -1029,17 +1159,17 @@
       "end": "2026-06-20T13:00:00",
       "category": "music",
       "cost": "Free",
-      "performer": null,
+      "performer": "Pepita",
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "A recurring Saturday morning event featuring a calm, quiet space with ambient music where patrons can read, work, study, or relax with minimal talking encouraged.",
+      "description": "Lo-Fi Saturdays is a peaceful, unplugged experience in the back taproom featuring chill ambient music. A designated calming, quiet zone where patrons are encouraged to read, work, study, or relax with minimal talking.",
       "image_url": "https://lamplighterbrewing.com/cdn/shop/files/PepitaLoFiWeekends.png?v=1730660984",
       "ticket_url": null,
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://lamplighterbrewing.com/products/pepita-lo-fi-saturday",
-      "last_scraped": "2026-06-15T05:52:30.930609+00:00"
+      "last_scraped": "2026-06-16T01:32:56.851589+00:00"
     },
     {
       "id": "burren-20260620-school-of-rock-burlington---ro",
@@ -1065,7 +1195,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977293+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469404+00:00"
     },
     {
       "id": "burren-20260620-the-contemporaries",
@@ -1091,7 +1221,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977301+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469410+00:00"
     },
     {
       "id": "passim-20260620-jake-swamp---the-pine",
@@ -1111,13 +1241,13 @@
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "Jake Swamp and the Pine is an Americana band from Boston, Massachusetts, featuring singer-songwriter Drew Zieff alongside 8-time Boston Music Award winner Jonathan Ulman on drums and other talented musicians. The band has grown from basement shows to performing at major national festivals and venues.",
+      "description": "An Americana band from Boston led by singer-songwriter Drew Zieff, featuring 8-time Boston Music Award winner Jonathan Ulman on drums and other talented musicians. The band has evolved from basement shows to playing prestigious national festivals and major venues.",
       "image_url": "https://www.passim.org/wp-content/uploads/2022/11/jsatp-bmh-2025-9200-scaled.jpg",
       "ticket_url": null,
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.passim.org/live-music/events/jake-swamp-the-pine/",
-      "last_scraped": "2026-06-15T06:06:42.071775+00:00"
+      "last_scraped": "2026-06-16T01:33:26.266763+00:00"
     },
     {
       "id": "burren-20260620-irish-session",
@@ -1143,7 +1273,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977258+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469385+00:00"
     },
     {
       "id": "burren-20260620-jimmy-s-down",
@@ -1169,7 +1299,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977307+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469416+00:00"
     },
     {
       "id": "burren-20260621-irish-session",
@@ -1195,7 +1325,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977316+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469422+00:00"
     },
     {
       "id": "burren-20260621-old-timey-session",
@@ -1221,7 +1351,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977324+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469428+00:00"
     },
     {
       "id": "burren-20260621-preservation--a-kinks-tribute",
@@ -1247,7 +1377,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977332+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469435+00:00"
     },
     {
       "id": "passim-20260621-joe-crookston",
@@ -1267,13 +1397,13 @@
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "A dynamic singer-songwriter and fiddler known for Americana and folk music. Joe Crookston has toured with Gordon Lightfoot, headlined major US festivals, and won Folk Alliance International Album of the Year; he's known for poignant, funny, and transcendent live performances that blend storytelling with infectious rhythms.",
+      "description": "A powerful folk and Americana singer-songwriter who tours internationally and has collaborated with artists like Gordon Lightfoot, Suzanne Vega, and Dar Williams. Known for his engaging live performances that blend storytelling, lap slide guitar, and fiddle playing with humor and emotional resonance.",
       "image_url": "https://www.passim.org/wp-content/uploads/2018/01/joe-crookston-1-scaled.jpg",
       "ticket_url": null,
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.passim.org/live-music/events/joe-crookston/",
-      "last_scraped": "2026-06-15T06:06:42.071795+00:00"
+      "last_scraped": "2026-06-16T01:33:26.266770+00:00"
     },
     {
       "id": "lamplighter-cx-20260622-jeopardy-bar-league",
@@ -1293,13 +1423,13 @@
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "JEOPARDY! Bar League is the official bar trivia experience from America's Favorite Quiz Show, featuring a live-hosted two-hour quiz where teams compete using smartphones through interactive gameplay with Jeopardy!, Double Jeopardy!, and Final Jeopardy! rounds.",
+      "description": "JEOPARDY! Bar League is the official bar trivia experience from America's Favorite Quiz Show, featuring a live-hosted two-hour quiz where teams compete using smartphones through an interactive Jeopardy! game with two rounds plus finals.",
       "image_url": "https://lamplighterbrewing.com/cdn/shop/files/JBL-SquareAd_v01-A_Mon700pm.png?v=1756930471",
       "ticket_url": null,
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://lamplighterbrewing.com/products/jeopardy-bar-league-1",
-      "last_scraped": "2026-06-15T05:52:30.930004+00:00"
+      "last_scraped": "2026-06-16T01:32:56.851524+00:00"
     },
     {
       "id": "burren-20260622-trivia-night",
@@ -1325,7 +1455,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977346+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469447+00:00"
     },
     {
       "id": "burren-20260622-irish-session",
@@ -1351,7 +1481,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977339+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469441+00:00"
     },
     {
       "id": "lamplighter-broadway-20260623-broadway-trivia",
@@ -1371,13 +1501,13 @@
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "A weekly trivia night at Lamplighter Brewing's Broadway taproom where teams of 2-6 compete in a two-hour trivia game covering history, politics, sports, movies, pop culture, music, and more, with winning teams receiving gift cards.",
+      "description": "Weekly trivia night at Lamplighter Brewing's Broadway taproom where teams of 2-6 compete in a roughly two-hour trivia game covering history, politics, sports, movies, pop culture, music, and more, with winners receiving gift cards.",
       "image_url": "https://lamplighterbrewing.com/cdn/shop/files/BroadwayTrivia.jpg?v=1730424824",
       "ticket_url": null,
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://lamplighterbrewing.com/products/broadway-trivia-1",
-      "last_scraped": "2026-06-15T05:52:30.930566+00:00"
+      "last_scraped": "2026-06-16T01:32:56.851578+00:00"
     },
     {
       "id": "burren-20260623-the-django-cadre",
@@ -1403,7 +1533,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977353+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469453+00:00"
     },
     {
       "id": "burren-20260623-electric-hora",
@@ -1429,7 +1559,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977360+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469459+00:00"
     },
     {
       "id": "burren-20260624-grain-thief",
@@ -1455,7 +1585,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977367+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469465+00:00"
     },
     {
       "id": "burren-20260624-which-side---a-protest-music-t",
@@ -1481,7 +1611,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977379+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469472+00:00"
     },
     {
       "id": "burren-20260625-carl-eisman",
@@ -1507,7 +1637,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977393+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469484+00:00"
     },
     {
       "id": "burren-20260625-torn-and-frayed",
@@ -1533,7 +1663,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977386+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469478+00:00"
     },
     {
       "id": "burren-20260625-count-off-entertainment",
@@ -1559,7 +1689,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977400+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469490+00:00"
     },
     {
       "id": "burren-20260626-ethan-and-caleb-mccoy---the-up",
@@ -1585,7 +1715,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977420+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469504+00:00"
     },
     {
       "id": "burren-20260626-irish-session",
@@ -1611,7 +1741,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977407+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469496+00:00"
     },
     {
       "id": "burren-20260626-all-time-favorite",
@@ -1637,7 +1767,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977428+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469510+00:00"
     },
     {
       "id": "burren-20260627-burren-babes-drag-brunch",
@@ -1663,7 +1793,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977443+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469522+00:00"
     },
     {
       "id": "lamplighter-cx-20260627-summer-reading-brewery-book-fa",
@@ -1678,18 +1808,18 @@
       "start": "2026-06-27T14:30:00",
       "end": "2026-06-27T16:30:00",
       "category": "market",
-      "cost": "Free",
+      "cost": null,
       "performer": null,
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "A Scholastic Book Fair at Lamplighter Brewing's Cambridge Crossing taproom in partnership with More Than Words, a nonprofit bookstore. Features curated book and beer pairings, with proceeds supporting youth in foster care, experiencing homelessness, or involved in the court system.",
-      "image_url": "https://lamplighterbrewing.com/cdn/shop/files/BookFairPost_1.png?v=1781103464",
+      "description": null,
+      "image_url": "https://lamplighterbrewing.com/cdn/shop/files/BookFairPost_1.png",
       "ticket_url": null,
       "is_recurring": false,
       "recurrence_note": null,
-      "source_url": "https://lamplighterbrewing.com/products/out-in-climate-drag-happy-hour",
-      "last_scraped": "2026-06-15T05:52:30.929545+00:00"
+      "source_url": "https://lamplighterbrewing.com/collections/events",
+      "last_scraped": "2026-06-16T01:32:56.851296+00:00"
     },
     {
       "id": "burren-20260627-sophia-saleh-with-special-gues",
@@ -1715,7 +1845,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977453+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469530+00:00"
     },
     {
       "id": "burren-20260627-irish-session",
@@ -1741,7 +1871,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977435+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469515+00:00"
     },
     {
       "id": "burren-20260627-brick-park",
@@ -1767,7 +1897,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977459+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469536+00:00"
     },
     {
       "id": "burren-20260628-irish-session",
@@ -1793,7 +1923,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977466+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469541+00:00"
     },
     {
       "id": "burren-20260628-old-timey-session",
@@ -1819,7 +1949,33 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977473+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469547+00:00"
+    },
+    {
+      "id": "lamplighter-cx-20260629-jeopardy-bar-league",
+      "title": "Jeopardy Bar League",
+      "venue": "Lamplighter Brewing - CX",
+      "venue_is_local": true,
+      "address": "525 Western Ave, Cambridge, MA",
+      "square": "Lechmere",
+      "transit_line": "Green",
+      "transit_stop": "Lechmere",
+      "walk_minutes": 2,
+      "start": "2026-06-29T19:00:00",
+      "end": "2026-06-29T21:00:00",
+      "category": "trivia",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "JEOPARDY! Bar League is the official bar trivia experience from America's Favorite Quiz Show, featuring a live-hosted two-hour interactive quiz where teams compete using smartphones across Jeopardy!, Double Jeopardy!, and Final Jeopardy! rounds.",
+      "image_url": "https://lamplighterbrewing.com/cdn/shop/files/JBL-SquareAd_v01-A_Mon700pm.png?v=1756930471",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://lamplighterbrewing.com/products/jeopardy-bar-league-2",
+      "last_scraped": "2026-06-16T01:32:56.851513+00:00"
     },
     {
       "id": "burren-20260629-trivia-night",
@@ -1845,7 +2001,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977504+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469559+00:00"
     },
     {
       "id": "burren-20260629-irish-session",
@@ -1871,7 +2027,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977480+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469553+00:00"
     },
     {
       "id": "lamplighter-broadway-20260630-broadway-trivia",
@@ -1891,13 +2047,13 @@
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "Trivia Tuesday is a weekly brewery tradition where teams of 2-6 compete in a two-hour trivia game covering history, politics, sports, movies, pop culture, music, and more, with winners receiving Lamplighter gift cards.",
+      "description": "Weekly trivia night at Lamplighter Brewing's Broadway taproom where teams of 2-6 compete in a two-hour game covering categories like history, politics, sports, movies, pop culture, and music, with winners receiving gift cards.",
       "image_url": "https://lamplighterbrewing.com/cdn/shop/files/BroadwayTrivia.jpg?v=1730424824",
       "ticket_url": null,
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://lamplighterbrewing.com/products/broadway-trivia",
-      "last_scraped": "2026-06-15T05:52:30.930679+00:00"
+      "last_scraped": "2026-06-16T01:32:56.851599+00:00"
     },
     {
       "id": "burren-20260630-the-django-cadre",
@@ -1923,7 +2079,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977511+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469565+00:00"
     },
     {
       "id": "lamplighter-broadway-20260701-cambridge-public-library-book-",
@@ -1943,13 +2099,13 @@
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "A monthly book club co-hosted with Cambridge Public Library that highlights contemporary works from marginalized voices. Participants gather in person to discuss the selected book over craft beer and other beverages in a casual, welcoming setting.",
+      "description": "A monthly book club partnership between Lamplighter Brewing Co. and Cambridge Public Library highlighting contemporary works from marginalized voices. For July, the group will discuss Death of the Soccer God by Dimitry Elias Leger, a love story and Pan-American tale about the price of fame.",
       "image_url": "https://lamplighterbrewing.com/cdn/shop/files/WebsiteRatioImages_99.png?v=1780941971",
       "ticket_url": null,
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://lamplighterbrewing.com/products/cambridge-public-library-book-club-1",
-      "last_scraped": "2026-06-15T05:52:30.929866+00:00"
+      "last_scraped": "2026-06-16T01:32:56.851493+00:00"
     },
     {
       "id": "burren-20260701-grain-thief",
@@ -1975,7 +2131,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977518+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469570+00:00"
     },
     {
       "id": "burren-20260701-ethan-setiawan---fine-ground--",
@@ -2001,7 +2157,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977528+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469578+00:00"
     },
     {
       "id": "burren-20260701-comedy-night",
@@ -2027,7 +2183,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977535+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469584+00:00"
     },
     {
       "id": "burren-20260702-florence-with-cabin-fever",
@@ -2053,7 +2209,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977551+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469596+00:00"
     },
     {
       "id": "burren-20260702-torn-and-frayed",
@@ -2079,7 +2235,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977542+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469590+00:00"
     },
     {
       "id": "burren-20260702-tbd",
@@ -2105,7 +2261,241 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977557+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469602+00:00"
+    },
+    {
+      "id": "burren-20260703-irish-session",
+      "title": "IRISH SESSION",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-07-03T21:30:00",
+      "end": null,
+      "category": "music",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Weekly closed session with Callum Bell & friends",
+      "image_url": "https://www.burren.com/images/friday session.jpg",
+      "ticket_url": null,
+      "is_recurring": true,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-16T01:33:02.469608+00:00"
+    },
+    {
+      "id": "burren-20260703-broken-heels",
+      "title": "BROKEN HEELS",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-07-03T22:00:00",
+      "end": null,
+      "category": "music",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Cover Band",
+      "image_url": "https://www.burren.com/images/broken heels.jpg",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-16T01:33:02.469613+00:00"
+    },
+    {
+      "id": "burren-20260704-irish-session",
+      "title": "IRISH SESSION",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-07-04T21:30:00",
+      "end": null,
+      "category": "music",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Weekly session with Helena Delaney & friends",
+      "image_url": "https://www.burren.com/images/sat session.jpg",
+      "ticket_url": null,
+      "is_recurring": true,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-16T01:33:02.469619+00:00"
+    },
+    {
+      "id": "burren-20260704-tbd",
+      "title": "TBD",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-07-04T22:00:00",
+      "end": null,
+      "category": "other",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Cover Band",
+      "image_url": "https://www.burren.com/images/cover band.jpg",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-16T01:33:02.469624+00:00"
+    },
+    {
+      "id": "burren-20260705-irish-session",
+      "title": "IRISH SESSION",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-07-05T15:00:00",
+      "end": null,
+      "category": "music",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Hosted by Laura Fedderson and Nathan Gourley",
+      "image_url": "https://www.burren.com/images/sunday irish session.jpg",
+      "ticket_url": null,
+      "is_recurring": true,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-16T01:33:02.469629+00:00"
+    },
+    {
+      "id": "burren-20260705-old-timey-session",
+      "title": "OLD TIMEY SESSION",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-07-05T18:00:00",
+      "end": null,
+      "category": "music",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Weekly jam with Alan Kaufman & friends",
+      "image_url": "https://www.burren.com/images/old timey session.gif",
+      "ticket_url": null,
+      "is_recurring": true,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-16T01:33:02.469635+00:00"
+    },
+    {
+      "id": "burren-20260705-tiger-moan-first-sunday-blues",
+      "title": "TIGER MOAN First Sunday Blues",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-07-05T19:30:00",
+      "end": null,
+      "category": "music",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Tiger Moan blues band first Sunday residency continues!",
+      "image_url": "https://tickets.24hourmusic.com/uplimage/tigermoanaloneSW.jpg",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-16T01:33:02.469642+00:00"
+    },
+    {
+      "id": "burren-20260706-trivia-night",
+      "title": "TRIVIA NIGHT",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-07-06T20:00:00",
+      "end": null,
+      "category": "trivia",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Trivia night in the Burren Backroom every Monday!",
+      "image_url": "https://www.burren.com/images/stump trivia logo.jpeg",
+      "ticket_url": null,
+      "is_recurring": true,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-16T01:33:02.469654+00:00"
+    },
+    {
+      "id": "burren-20260706-irish-session",
+      "title": "IRISH SESSION",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-07-06T20:30:00",
+      "end": null,
+      "category": "music",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Weekly session with Helena Delaney, Tommy Sheridan, & Terry O'Shea",
+      "image_url": "https://www.burren.com/images/monday irish session.jpeg",
+      "ticket_url": null,
+      "is_recurring": true,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-16T01:33:02.469648+00:00"
     },
     {
       "id": "burren-20260707-the-django-cadre",
@@ -2131,7 +2521,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977565+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469660+00:00"
     },
     {
       "id": "burren-20260707-honky-tonk-tuesday-with-the-ta",
@@ -2157,7 +2547,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977581+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469667+00:00"
     },
     {
       "id": "burren-20260708-grain-thief",
@@ -2183,7 +2573,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977588+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469673+00:00"
     },
     {
       "id": "burren-20260708-the-ruckus",
@@ -2197,7 +2587,7 @@
       "walk_minutes": 4,
       "start": "2026-07-08T19:00:00",
       "end": null,
-      "category": "other",
+      "category": "music",
       "cost": null,
       "performer": null,
       "performer_is_local": null,
@@ -2209,7 +2599,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977649+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469678+00:00"
     },
     {
       "id": "burren-20260708-comedy-night",
@@ -2223,7 +2613,7 @@
       "walk_minutes": 4,
       "start": "2026-07-08T22:00:00",
       "end": null,
-      "category": "other",
+      "category": "comedy",
       "cost": "Free",
       "performer": null,
       "performer_is_local": null,
@@ -2235,7 +2625,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977657+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469684+00:00"
     },
     {
       "id": "burren-20260709-janet-feld--erin-ash-sullivan-",
@@ -2249,7 +2639,7 @@
       "walk_minutes": 4,
       "start": "2026-07-09T19:00:00",
       "end": null,
-      "category": "other",
+      "category": "music",
       "cost": null,
       "performer": null,
       "performer_is_local": null,
@@ -2261,7 +2651,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977674+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469697+00:00"
     },
     {
       "id": "burren-20260709-torn-and-frayed",
@@ -2275,7 +2665,7 @@
       "walk_minutes": 4,
       "start": "2026-07-09T19:30:00",
       "end": null,
-      "category": "other",
+      "category": "music",
       "cost": null,
       "performer": null,
       "performer_is_local": null,
@@ -2287,7 +2677,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977664+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469690+00:00"
     },
     {
       "id": "burren-20260709-tbd",
@@ -2313,7 +2703,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977681+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469703+00:00"
     },
     {
       "id": "burren-20260710-other-brother-darryl-with-spec",
@@ -2327,7 +2717,7 @@
       "walk_minutes": 4,
       "start": "2026-07-10T19:00:00",
       "end": null,
-      "category": "other",
+      "category": "music",
       "cost": null,
       "performer": null,
       "performer_is_local": null,
@@ -2339,7 +2729,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977699+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469717+00:00"
     },
     {
       "id": "burren-20260710-irish-session",
@@ -2353,7 +2743,7 @@
       "walk_minutes": 4,
       "start": "2026-07-10T21:30:00",
       "end": null,
-      "category": "other",
+      "category": "music",
       "cost": null,
       "performer": null,
       "performer_is_local": null,
@@ -2365,7 +2755,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977688+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469708+00:00"
     },
     {
       "id": "burren-20260710-brick-park",
@@ -2379,7 +2769,7 @@
       "walk_minutes": 4,
       "start": "2026-07-10T22:00:00",
       "end": null,
-      "category": "other",
+      "category": "music",
       "cost": null,
       "performer": null,
       "performer_is_local": null,
@@ -2391,7 +2781,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977706+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469722+00:00"
     },
     {
       "id": "lamplighter-broadway-20260711-brewery-tour---tasting",
@@ -2411,13 +2801,13 @@
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "A 60-minute guided brewery tour and tasting at Lamplighter Brewing's Cambridge production facility, where guests learn about craft beer-making and sample three current draft selections plus a bonus beer.",
+      "description": "An interactive, behind-the-scenes brewery tour at Lamplighter Brewing's Cambridge location where guests learn the essentials of craft beer-making and taste samples throughout the brewing process, held on the first Saturday of every month.",
       "image_url": "https://lamplighterbrewing.com/cdn/shop/files/TourPhoto.jpg?v=1724703657",
       "ticket_url": "https://lamplighterbrewing.com/products/brewery-tour",
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://lamplighterbrewing.com/products/brewery-tour",
-      "last_scraped": "2026-06-15T05:52:30.930790+00:00"
+      "last_scraped": "2026-06-16T01:32:56.851609+00:00"
     },
     {
       "id": "burren-20260711-summer07--gov-t-disco",
@@ -2431,7 +2821,7 @@
       "walk_minutes": 4,
       "start": "2026-07-11T19:00:00",
       "end": null,
-      "category": "other",
+      "category": "music",
       "cost": null,
       "performer": null,
       "performer_is_local": null,
@@ -2443,7 +2833,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977725+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469734+00:00"
     },
     {
       "id": "burren-20260711-irish-session",
@@ -2457,7 +2847,7 @@
       "walk_minutes": 4,
       "start": "2026-07-11T21:30:00",
       "end": null,
-      "category": "other",
+      "category": "music",
       "cost": null,
       "performer": null,
       "performer_is_local": null,
@@ -2469,7 +2859,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977713+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469727+00:00"
     },
     {
       "id": "burren-20260711-b-a-m",
@@ -2483,7 +2873,7 @@
       "walk_minutes": 4,
       "start": "2026-07-11T22:00:00",
       "end": null,
-      "category": "other",
+      "category": "music",
       "cost": null,
       "performer": null,
       "performer_is_local": null,
@@ -2495,7 +2885,111 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977732+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469740+00:00"
+    },
+    {
+      "id": "burren-20260713-trivia-night",
+      "title": "TRIVIA NIGHT",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-07-13T20:00:00",
+      "end": null,
+      "category": "other",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Trivia night in the Burren Backroom every Monday!",
+      "image_url": "https://www.burren.com/images/stump trivia logo.jpeg",
+      "ticket_url": null,
+      "is_recurring": true,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-16T01:33:02.469752+00:00"
+    },
+    {
+      "id": "burren-20260713-irish-session",
+      "title": "IRISH SESSION",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-07-13T20:30:00",
+      "end": null,
+      "category": "music",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Weekly session with Helena Delaney, Tommy Sheridan, & Terry O'Shea",
+      "image_url": "https://www.burren.com/images/monday irish session.jpeg",
+      "ticket_url": null,
+      "is_recurring": true,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-16T01:33:02.469746+00:00"
+    },
+    {
+      "id": "burren-20260714-the-django-cadre",
+      "title": "THE DJANGO CADRE",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-07-14T19:00:00",
+      "end": null,
+      "category": "other",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Gypsy jazz",
+      "image_url": "https://www.burren.com/images/djangocadre.jpg",
+      "ticket_url": null,
+      "is_recurring": true,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-16T01:33:02.469757+00:00"
+    },
+    {
+      "id": "burren-20260714-silver-arrow-band",
+      "title": "SILVER ARROW BAND",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-07-14T20:00:00",
+      "end": null,
+      "category": "other",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Silver Arrow plays a FREE wedding showcase in The Burren Backroom!",
+      "image_url": "https://www.burren.com/images/silver arrow band.jpeg",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-16T01:33:02.469764+00:00"
     },
     {
       "id": "burren-20260716-falcon-ridge-most-wanted-tour-",
@@ -2521,7 +3015,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977753+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469779+00:00"
     },
     {
       "id": "burren-20260716-torn-and-frayed",
@@ -2547,7 +3041,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977740+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469769+00:00"
     },
     {
       "id": "burren-20260716-tbd",
@@ -2573,7 +3067,85 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977760+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469785+00:00"
+    },
+    {
+      "id": "burren-20260717-interzone--lost-my-balance",
+      "title": "INTERZONE, LOST MY BALANCE",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-07-17T19:00:00",
+      "end": null,
+      "category": "other",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Interzone and Lost My Balance",
+      "image_url": "https://tickets.24hourmusic.com/uplimage/interzoneLostmybalanceSW.jpg",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-16T01:33:02.469798+00:00"
+    },
+    {
+      "id": "burren-20260717-irish-session",
+      "title": "IRISH SESSION",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-07-17T21:30:00",
+      "end": null,
+      "category": "other",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Weekly closed session with Callum Bell & friends",
+      "image_url": "https://www.burren.com/images/friday session.jpg",
+      "ticket_url": null,
+      "is_recurring": true,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-16T01:33:02.469791+00:00"
+    },
+    {
+      "id": "burren-20260717-closing-time",
+      "title": "CLOSING TIME",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-07-17T22:00:00",
+      "end": null,
+      "category": "other",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Cover Band",
+      "image_url": "https://www.burren.com/images/closing time boston.png",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-16T01:33:02.469804+00:00"
     },
     {
       "id": "burren-20260719-irish-session",
@@ -2599,7 +3171,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977767+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469810+00:00"
     },
     {
       "id": "burren-20260719-old-timey-session",
@@ -2625,7 +3197,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977774+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469816+00:00"
     },
     {
       "id": "burren-20260719-daydream--muddy-river-junction",
@@ -2651,7 +3223,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977782+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469823+00:00"
     },
     {
       "id": "burren-20260720-trivia-night",
@@ -2677,7 +3249,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977797+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469834+00:00"
     },
     {
       "id": "burren-20260720-irish-session",
@@ -2703,7 +3275,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977790+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469828+00:00"
     },
     {
       "id": "burren-20260724-maya-salafia--hadley-johnson",
@@ -2729,7 +3301,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977813+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469853+00:00"
     },
     {
       "id": "burren-20260724-irish-session",
@@ -2755,7 +3327,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977804+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469840+00:00"
     },
     {
       "id": "burren-20260724-the-mockingbirds",
@@ -2781,7 +3353,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977820+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469859+00:00"
     },
     {
       "id": "burren-20260725-the-american-blues",
@@ -2807,7 +3379,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977835+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469871+00:00"
     },
     {
       "id": "burren-20260725-irish-session",
@@ -2833,7 +3405,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977828+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469865+00:00"
     },
     {
       "id": "burren-20260725-elephant-in-the-room",
@@ -2859,7 +3431,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977843+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469878+00:00"
     },
     {
       "id": "burren-20260726-irish-session",
@@ -2885,7 +3457,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977850+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469883+00:00"
     },
     {
       "id": "burren-20260726-brian-o-donovan-legacy-series-",
@@ -2911,7 +3483,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977870+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469898+00:00"
     },
     {
       "id": "burren-20260726-old-timey-session",
@@ -2937,7 +3509,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977858+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469889+00:00"
     },
     {
       "id": "burren-20260727-trivia-night",
@@ -2963,7 +3535,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977888+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469909+00:00"
     },
     {
       "id": "burren-20260727-irish-session",
@@ -2989,7 +3561,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977881+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469904+00:00"
     },
     {
       "id": "burren-20260728-the-django-cadre",
@@ -3015,7 +3587,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977895+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469915+00:00"
     },
     {
       "id": "burren-20260728-electric-hora",
@@ -3044,6 +3616,110 @@
       "last_scraped": "2026-06-15T00:24:55.977902+00:00"
     },
     {
+      "id": "burren-20260728-wagner---vino",
+      "title": "WAGNER & VINO",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-07-28T19:00:00",
+      "end": null,
+      "category": "other",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Music, merriment, & merlot w/young dramatic voices & budding Wagnerian singers from around the world in your favorite local pub!",
+      "image_url": "https://tickets.24hourmusic.com/uplimage/wineandwagner26summer.jpg",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-16T01:33:02.469922+00:00"
+    },
+    {
+      "id": "burren-20260730-crooked-diehl-ft--unmuted",
+      "title": "CROOKED DIEHL ft. UNMUTED",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-07-30T19:00:00",
+      "end": null,
+      "category": "other",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "",
+      "image_url": "https://tickets.24hourmusic.com/uplimage/crookeddiehlsw.jpg",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-16T01:33:02.469954+00:00"
+    },
+    {
+      "id": "burren-20260730-torn-and-frayed",
+      "title": "TORN AND FRAYED",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-07-30T19:30:00",
+      "end": null,
+      "category": "other",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Acoustic rock classics",
+      "image_url": "https://www.burren.com/images/mike verge.jpg",
+      "ticket_url": null,
+      "is_recurring": true,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-16T01:33:02.469946+00:00"
+    },
+    {
+      "id": "burren-20260730-tbd",
+      "title": "TBD",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-07-30T22:00:00",
+      "end": null,
+      "category": "other",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "COLLEGE BAND THURSDAYS!  College Night!",
+      "image_url": "https://www.burren.com/images/cover band.jpg",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-16T01:33:02.469960+00:00"
+    },
+    {
       "id": "burren-20260731-zafar\u00e1n---a-voice-without-bord",
       "title": "ZAFAR\u00c1N - A Voice Without Borders (Rescheduled from May)",
       "venue": "The Burren",
@@ -3067,7 +3743,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977926+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469976+00:00"
     },
     {
       "id": "burren-20260731-irish-session",
@@ -3093,7 +3769,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977909+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469965+00:00"
     },
     {
       "id": "burren-20260731-tbd",
@@ -3119,7 +3795,85 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977933+00:00"
+      "last_scraped": "2026-06-16T01:33:02.469983+00:00"
+    },
+    {
+      "id": "burren-20260801-travis-larson-with-special-gue",
+      "title": "TRAVIS LARSON with special guest PATRICK DECOSTE",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-08-01T19:00:00",
+      "end": null,
+      "category": "other",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "One of instrumental music\u2019s premiere acts Travis Larson w/special guest Patrick DeCoste",
+      "image_url": "https://tickets.24hourmusic.com/uplimage/travislarson2sw.jpg",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-16T01:33:02.469997+00:00"
+    },
+    {
+      "id": "burren-20260801-irish-session",
+      "title": "IRISH SESSION",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-08-01T21:30:00",
+      "end": null,
+      "category": "other",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Weekly session with Helena Delaney & friends",
+      "image_url": "https://www.burren.com/images/sat session.jpg",
+      "ticket_url": null,
+      "is_recurring": true,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-16T01:33:02.469989+00:00"
+    },
+    {
+      "id": "burren-20260801-b-a-m",
+      "title": "B.A.M.",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-08-01T22:00:00",
+      "end": null,
+      "category": "other",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Cover Band",
+      "image_url": "https://www.burren.com/images/bam.jpg",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-16T01:33:02.470003+00:00"
     },
     {
       "id": "burren-20260807-max-wareham---the-national-blu",
@@ -3145,7 +3899,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977950+00:00"
+      "last_scraped": "2026-06-16T01:33:02.470016+00:00"
     },
     {
       "id": "burren-20260807-irish-session",
@@ -3171,7 +3925,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977940+00:00"
+      "last_scraped": "2026-06-16T01:33:02.470009+00:00"
     },
     {
       "id": "burren-20260807-broken-heels",
@@ -3197,7 +3951,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977958+00:00"
+      "last_scraped": "2026-06-16T01:33:02.470022+00:00"
     },
     {
       "id": "burren-20260808-em-wise-farewell-show-w-cyan-s",
@@ -3223,7 +3977,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977984+00:00"
+      "last_scraped": "2026-06-16T01:33:02.470038+00:00"
     },
     {
       "id": "burren-20260808-irish-session",
@@ -3249,7 +4003,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977966+00:00"
+      "last_scraped": "2026-06-16T01:33:02.470028+00:00"
     },
     {
       "id": "burren-20260808-tbd",
@@ -3275,7 +4029,85 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977991+00:00"
+      "last_scraped": "2026-06-16T01:33:02.470044+00:00"
+    },
+    {
+      "id": "burren-20260819-grain-thief",
+      "title": "GRAIN THIEF",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-08-19T19:00:00",
+      "end": null,
+      "category": "other",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Americana",
+      "image_url": "https://www.burren.com/images/grain thief.jpeg",
+      "ticket_url": null,
+      "is_recurring": true,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-16T01:33:02.470049+00:00"
+    },
+    {
+      "id": "burren-20260819-alex-amber-with-special-guests",
+      "title": "ALEX AMBER with special guests EJ CAREY and MEHLANI",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-08-19T19:00:00",
+      "end": null,
+      "category": "other",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Pop rock artist Alex Amber with special guests EJ Carey and Mehlani",
+      "image_url": "https://tickets.24hourmusic.com/uplimage/alexambersw.jpg",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-16T01:33:02.470058+00:00"
+    },
+    {
+      "id": "burren-20260819-comedy-night",
+      "title": "COMEDY NIGHT",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-08-19T22:00:00",
+      "end": null,
+      "category": "other",
+      "cost": "Free",
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "FREE SHOW hosted by Cam Ohh!",
+      "image_url": "https://www.burren.com/images/comedy night 2.jpg",
+      "ticket_url": null,
+      "is_recurring": true,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-16T01:33:02.470064+00:00"
     },
     {
       "id": "burren-20260821-antje-duvekot",
@@ -3301,7 +4133,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.978005+00:00"
+      "last_scraped": "2026-06-16T01:33:02.470075+00:00"
     },
     {
       "id": "burren-20260821-irish-session",
@@ -3327,7 +4159,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.977998+00:00"
+      "last_scraped": "2026-06-16T01:33:02.470070+00:00"
     },
     {
       "id": "burren-20260821-the-mockingbirds",
@@ -3353,7 +4185,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.978012+00:00"
+      "last_scraped": "2026-06-16T01:33:02.470081+00:00"
     },
     {
       "id": "burren-20260825-the-django-cadre",
@@ -3379,7 +4211,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.978020+00:00"
+      "last_scraped": "2026-06-16T01:33:02.470087+00:00"
     },
     {
       "id": "burren-20260825-electric-hora",
@@ -3405,7 +4237,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.978027+00:00"
+      "last_scraped": "2026-06-16T01:33:02.470093+00:00"
     },
     {
       "id": "burren-20260830-irish-session",
@@ -3431,7 +4263,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.978034+00:00"
+      "last_scraped": "2026-06-16T01:33:02.470099+00:00"
     },
     {
       "id": "burren-20260830-old-timey-session",
@@ -3457,7 +4289,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.978041+00:00"
+      "last_scraped": "2026-06-16T01:33:02.470104+00:00"
     },
     {
       "id": "burren-20260830-5th-sunday-honky-tonk-dance-pa",
@@ -3483,7 +4315,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.978053+00:00"
+      "last_scraped": "2026-06-16T01:33:02.470113+00:00"
     },
     {
       "id": "burren-20260904-the-kennedys",
@@ -3509,7 +4341,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.978067+00:00"
+      "last_scraped": "2026-06-16T01:33:02.470125+00:00"
     },
     {
       "id": "burren-20260904-irish-session",
@@ -3535,7 +4367,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.978060+00:00"
+      "last_scraped": "2026-06-16T01:33:02.470119+00:00"
     },
     {
       "id": "burren-20260904-broken-heels",
@@ -3561,7 +4393,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.978085+00:00"
+      "last_scraped": "2026-06-16T01:33:02.470131+00:00"
     },
     {
       "id": "burren-20260905-bluegrass-jam",
@@ -3613,7 +4445,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.978112+00:00"
+      "last_scraped": "2026-06-16T01:33:02.470147+00:00"
     },
     {
       "id": "burren-20260905-irish-session",
@@ -3639,7 +4471,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.978100+00:00"
+      "last_scraped": "2026-06-16T01:33:02.470137+00:00"
     },
     {
       "id": "burren-20260905-jimmy-s-down",
@@ -3665,7 +4497,85 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.978119+00:00"
+      "last_scraped": "2026-06-16T01:33:02.470153+00:00"
+    },
+    {
+      "id": "burren-20260911-the-mammals",
+      "title": "THE MAMMALS",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-09-11T19:00:00",
+      "end": null,
+      "category": "other",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "",
+      "image_url": "https://tickets.24hourmusic.com/uplimage/mammals26sw.jpg",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-16T01:33:02.470165+00:00"
+    },
+    {
+      "id": "burren-20260911-irish-session",
+      "title": "IRISH SESSION",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-09-11T21:30:00",
+      "end": null,
+      "category": "other",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Weekly closed session with Callum Bell & friends",
+      "image_url": "https://www.burren.com/images/friday session.jpg",
+      "ticket_url": null,
+      "is_recurring": true,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-16T01:33:02.470159+00:00"
+    },
+    {
+      "id": "burren-20260911-inside-out",
+      "title": "INSIDE OUT",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-09-11T22:00:00",
+      "end": null,
+      "category": "other",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Cover Band",
+      "image_url": "https://www.burren.com/images/inside out.jpeg",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-16T01:33:02.470171+00:00"
     },
     {
       "id": "burren-20260919-bluegrass-jam",
@@ -3717,7 +4627,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.978146+00:00"
+      "last_scraped": "2026-06-16T01:33:02.470185+00:00"
     },
     {
       "id": "burren-20260919-irish-session",
@@ -3743,7 +4653,7 @@
       "is_recurring": true,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.978133+00:00"
+      "last_scraped": "2026-06-16T01:33:02.470177+00:00"
     },
     {
       "id": "burren-20260919-elephant-in-the-room",
@@ -3769,7 +4679,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-15T00:24:55.978154+00:00"
+      "last_scraped": "2026-06-16T01:33:02.470191+00:00"
     }
   ],
   "past_events": [
@@ -4136,6 +5046,136 @@
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
       "last_scraped": "2026-06-15T00:24:55.977097+00:00"
+    },
+    {
+      "id": "burren-20260613-the-nightflies",
+      "title": "THE NIGHTFLIES",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-06-13T19:00:00",
+      "end": null,
+      "category": "music",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Come sing along to some favorite Steely Dan tunes with the Nightflies!",
+      "image_url": "https://tickets.24hourmusic.com/uplimage/nightfliesSW2026.jpg",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-15T00:24:55.977105+00:00"
+    },
+    {
+      "id": "burren-20260613-irish-session",
+      "title": "IRISH SESSION",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-06-13T21:30:00",
+      "end": null,
+      "category": "music",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Weekly session with Helena Delaney & friends",
+      "image_url": "https://www.burren.com/images/sat session.jpg",
+      "ticket_url": null,
+      "is_recurring": true,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-15T00:24:55.977089+00:00"
+    },
+    {
+      "id": "burren-20260613-b-a-m",
+      "title": "B.A.M.",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-06-13T22:00:00",
+      "end": null,
+      "category": "music",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Cover Band",
+      "image_url": "https://www.burren.com/images/bam.jpg",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-15T00:24:55.977111+00:00"
+    },
+    {
+      "id": "burren-20260614-all-that-music-academy---summe",
+      "title": "ALL THAT MUSIC ACADEMY - SUMMER SHOWCASE!",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "address": "247 Elm St, Somerville, MA",
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "start": "2026-06-14T10:30:00",
+      "end": null,
+      "category": "music",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Musicians of all ages ROCKIN out!",
+      "image_url": "https://tickets.24hourmusic.com/uplimage/AllThatMusicSummerShowcaseSW.jpg",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-15T00:24:55.977144+00:00"
+    },
+    {
+      "id": "lamplighter-cx-20260614-brewery-yoga",
+      "title": "Brewery Yoga",
+      "venue": "Lamplighter Brewing - CX",
+      "venue_is_local": true,
+      "address": "525 Western Ave, Cambridge, MA",
+      "square": "Central",
+      "transit_line": "Red",
+      "transit_stop": "Central",
+      "walk_minutes": 12,
+      "start": "2026-06-14T12:30:00",
+      "end": "2026-06-14T13:30:00",
+      "category": "fitness",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": null,
+      "image_url": null,
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://lamplighterbrewing.com/collections/events",
+      "last_scraped": "2026-06-14T21:24:10.025004+00:00"
     }
   ]
 }
