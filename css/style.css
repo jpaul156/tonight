@@ -464,11 +464,12 @@ a:focus-visible {
   line-height: 1.25;
 }
 
-/* Transit badge + locality chip share a row, as on the cards. Left-aligned
-   here (not space-between) since the panel is wide. */
+/* Transit badge + locality chip share a row, transit anchored left and the
+   locality chip pinned right — same as the cards. */
 .detail-meta-row {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   flex-wrap: wrap;
   gap: 8px;
 }
@@ -693,6 +694,7 @@ a:focus-visible {
 
 /* locality pill in detail panel — same logic, slightly larger */
 .detail-locality-pill {
+  margin-top: 0;   /* reset base pill's margin so it aligns with the transit badge */
   font-size: 0.7rem;
   letter-spacing: 0.05em;
   line-height: normal;

@@ -375,11 +375,15 @@ function openDetail(e) {
   art.innerHTML = "";
   art.appendChild(buildArt(e, true));
 
-  const detailCost = document.getElementById("detail-cost");
-  detailCost.textContent = e.cost || "";
-  detailCost.style.display = e.cost ? "" : "none";
   document.getElementById("detail-title").textContent = e.title;
-  document.getElementById("detail-time").textContent = formatFullTimeRange(e.start, e.end);
+  const timeEl = document.getElementById("detail-time");
+  timeEl.textContent = formatFullTimeRange(e.start, e.end);
+  if (e.cost) {
+    const costSpan = document.createElement("span");
+    costSpan.className = "cost";
+    costSpan.textContent = e.cost;
+    timeEl.append(document.createTextNode(" · "), costSpan);
+  }
   document.getElementById("detail-description").textContent = e.description || "";
 
   // Locality pill in detail
