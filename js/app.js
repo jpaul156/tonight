@@ -375,8 +375,9 @@ function openDetail(e) {
   art.innerHTML = "";
   art.appendChild(buildArt(e, true));
 
-  document.getElementById("detail-category").textContent = e.category;
-  document.getElementById("detail-cost").textContent = e.cost || "";
+  const detailCost = document.getElementById("detail-cost");
+  detailCost.textContent = e.cost || "";
+  detailCost.style.display = e.cost ? "" : "none";
   document.getElementById("detail-title").textContent = e.title;
   document.getElementById("detail-time").textContent = formatFullTimeRange(e.start, e.end);
   document.getElementById("detail-description").textContent = e.description || "";
@@ -387,7 +388,7 @@ function openDetail(e) {
   const detailPill = buildLocalityPill(e, "detail-locality-pill");
   if (detailPill) {
     detailPill.id = "detail-locality";
-    document.getElementById("detail-description").insertAdjacentElement("beforebegin", detailPill);
+    document.getElementById("detail-transit").insertAdjacentElement("afterend", detailPill);
   }
 
   // Sponsored attribution line
