@@ -47,4 +47,6 @@ The front end's `getNow()` in `js/app.js` is the sole authority on what counts a
 
 ## Deployment
 
-GitHub Pages serves the repo root. Push to `main` → live within ~1 minute. The scraper is still run manually; GitHub Actions (`scrape.yml`) not yet set up.
+GitHub Pages serves the repo root. Push to `main` → live within ~1 minute. The scraper runs automatically via GitHub Actions (`scrape.yml`) daily at 6am ET and commits updated `events.json` directly to `main`.
+
+**Before pushing local scraper runs:** pull first (`git pull --rebase`) to avoid conflicts with the Action's commit. If `events.json` conflicts, use the scraper's `merge_events` function to reconcile both versions by event ID.

@@ -116,6 +116,35 @@ VENUES = [
         "extra_venues": [],
     },
 
+    # ----------------------------------------------------------
+    # The Tall Ship Boston — East Boston waterfront (Wix Events)
+    # ----------------------------------------------------------
+    {
+        "id": "tallship",
+        "name": "The Tall Ship Boston",
+        "address": "1 E Pier Dr, East Boston, MA",
+        "square": "Maverick",
+        "transit_line": "Blue",
+        "transit_stop": "Maverick",
+        "walk_minutes": 7,
+        "is_local": True,
+        "collection_url": "https://www.tallshipboston.com/events",
+        # wix_events: the full event list is server-rendered as JSON in the
+        # page's appsWarmupData blob, so we parse it directly (no LLM Pass 1).
+        # Title, image, description and times all come from the JSON.
+        # See parse_wix_datetime for the timezone handling.
+        #
+        # detail_pages skipped for now: detail URLs exist at
+        # /event-details/<slug> and return 200, but pricing isn't in the list
+        # JSON so ~30 extra fetches/run would only gain cost data. Enable later
+        # if cost matters or richer descriptions are wanted.
+        "scrape_strategy": "wix_events",
+        "detail_pages": False,
+        "url_contains": None,
+        "location_keywords": {},
+        "extra_venues": [],
+    },
+
 ]
 
 # Quick lookup by venue ID (used by the runner to resolve sibling venues)

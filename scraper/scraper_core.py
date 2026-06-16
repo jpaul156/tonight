@@ -251,6 +251,82 @@ def extract_burren_tables(html, base_url):
     return events  # returns list of dicts, not a text string
 
 
+def parse_wix_datetime(date_str, time_str):
+    """
+    Combine Wix's pre-formatted strings, e.g. "June 6, 2026" + "2:00 PM",
+    into a naive ISO 8601 string ("2026-06-06T14:00:00").
+
+    We deliberately parse the *Formatted strings rather than the UTC startDate.
+    Wix renders these in the event's configured timezone, which on this site is
+    misconfigured to America/Denver even though the venue is in Boston. The
+    formatted time is what the venue advertises and what patrons show up for, so
+    it is the correct wall-clock time to store — and it matches every other
+    venue here, which keep naive Eastern times. Converting the UTC startDate
+    would shift every event by the Denver/Eastern offset.
+    """
+    if not date_str or not time_str:
+        return None
+    from datetime import datetime as dt
+    try:
+        d = dt.strptime(f"{date_str.strip()} {time_str.strip()}", "%B %d, %Y %I:%M %p")
+    except ValueError:
+        return None
+    return d.strftime("%Y-%m-%dT%H:%M:00")
+
+
+def extract_wix_events(html, base_url):
+    """
+    Wix Events sites (e.g. The Tall Ship) server-render the full event list as
+    JSON inside the page's appsWarmupData blob. We parse it directly — the
+    structure is fully machine-readable, so no LLM is needed for extraction
+    (categories are still classified in Pass 3). Returns a list of event dicts.
+
+    Events with status 2 (ended) are skipped so we don't import past events.
+    """
+    anchor = '"events":{"events":'
+    i = html.find(anchor)
+    if i == -1:
+        print("  WARNING: no Wix events JSON found on page")
+        return []
+    try:
+        arr, _ = json.JSONDecoder().raw_decode(html[i + len(anchor):])
+    except ValueError as err:
+        print(f"  WARNING: could not decode Wix events JSON: {err}")
+        return []
+
+    events = []
+    for e in arr:
+        if e.get("status") == 2:  # ended
+            continue
+        sc = e.get("scheduling", {})
+        start = parse_wix_datetime(sc.get("startDateFormatted"), sc.get("startTimeFormatted"))
+        if not start:
+            continue
+        end = parse_wix_datetime(sc.get("endDateFormatted"), sc.get("endTimeFormatted"))
+        slug = e.get("slug")
+        source_url = f"{base_url}/event-details/{slug}" if slug else None
+        description = (e.get("description") or "").strip() or None
+        image_url = (e.get("mainImage") or {}).get("url")
+
+        events.append({
+            "title":       e.get("title"),
+            "start":       start,
+            "end":         end,
+            "location":    None,  # location.name is just the street address
+            "cost":        None,  # not present in the list JSON
+            "source_url":  source_url,
+            "performer":   None,
+            "description": description,
+            "image_url":   image_url,
+            "ticket_url":  None,
+            "is_recurring": False,
+            "recurrence_note": None,
+        })
+
+    print(f"  Parsed {len(events)} events from Wix JSON (no LLM needed)")
+    return events
+
+
 def extract_shopify_products(html, base_url):
     """
     For Shopify/Tailwind sites with no semantic class names.
@@ -745,6 +821,11 @@ def scrape_venue(venue_cfg, cache, verbose=True, force=False):
     if strategy == "burren_tables":
         # Direct HTML parse — no LLM needed for extraction
         raw_events = extract_burren_tables(html, base_url)
+        if verbose:
+            print(f"  Pass 1: {len(raw_events)} events (parsed directly, no LLM)")
+    elif strategy == "wix_events":
+        # Direct JSON parse from Wix appsWarmupData — no LLM needed
+        raw_events = extract_wix_events(html, base_url)
         if verbose:
             print(f"  Pass 1: {len(raw_events)} events (parsed directly, no LLM)")
     else:

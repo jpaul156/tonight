@@ -58,5 +58,20 @@
     "logo_url": null,
     "is_local": true,
     "notes": "Second Lamplighter taproom at Cambridge Crossing. Yoga, trivia, events."
+  },
+  "tallship": {
+    "id": "tallship",
+    "name": "The Tall Ship Boston",
+    "address": "1 E Pier Dr, East Boston, MA",
+    "neighborhood": "East Boston",
+    "square": "Maverick",
+    "transit_line": "Blue",
+    "transit_stop": "Maverick",
+    "walk_minutes": 7,
+    "website": "https://www.tallshipboston.com",
+    "phone": null,
+    "logo_url": null,
+    "is_local": true,
+    "notes": "Floating bar and restaurant on the East Boston waterfront. Live music, DJ sets, World Cup watch parties, and wellness events."
   }
 }
