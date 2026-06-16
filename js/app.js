@@ -43,6 +43,12 @@ function getNow() {
 }
 const NOW = getNow();
 
+// Wall-clock "now" for "has this moment passed?" checks. Distinct from NOW,
+// which rolls the DATE back before 4am to decide which day counts as "tonight."
+// That shifted value must NOT be used to test whether an event has ended, or
+// every event looks un-ended for the whole midnight-to-4am window.
+const REAL_NOW = new Date();
+
 let allEvents = [];
 let venueData = {};
 let activeSquare = "all";
@@ -226,7 +232,7 @@ function isTonightEvent(e) {
 }
 
 function hasEnded(e) {
-  return eventEndTime(e) <= NOW;
+  return eventEndTime(e) <= REAL_NOW;
 }
 
 function render() {
@@ -428,13 +434,13 @@ function openDetail(e) {
   }
 
   renderMoreFrom("more-venue", "more-venue-list", null,
-    allEvents.filter(o => o.venue === e.venue && o.id !== e.id && eventEndTime(o) > NOW));
+    allEvents.filter(o => o.venue === e.venue && o.id !== e.id && eventEndTime(o) > REAL_NOW));
 
   const performerHeading = document.getElementById("more-performer-heading");
   if (e.performer) performerHeading.textContent = `More from ${e.performer}`;
   renderMoreFrom("more-performer", "more-performer-list", null,
     e.performer
-      ? allEvents.filter(o => o.performer === e.performer && o.id !== e.id && eventEndTime(o) > NOW)
+      ? allEvents.filter(o => o.performer === e.performer && o.id !== e.id && eventEndTime(o) > REAL_NOW)
       : []);
 
   overlay.hidden = false;
