@@ -170,6 +170,15 @@ function addChip(row, label, value, group) {
 // Locality + sponsored helpers
 // ============================================================
 
+// Joins an event to its venue's display config in data/venues.json. Prefers
+// the stamped venue_id; falls back to parsing it out of the event id for
+// older events scraped before venue_id was stamped.
+function venueFor(e) {
+  return venueData[e.venue_id]
+    || venueData[e.id?.split("-").slice(0, 2).join("-")]
+    || {};
+}
+
 function localityState(e) {
   const venueLocal = !!e.venue_is_local;
   const perfLocal  = e.performer && e.performer_is_local === true;
@@ -418,12 +427,16 @@ function openDetail(e) {
     `${e.transit_stop} → ${e.walk_minutes} min`;
 
   document.getElementById("detail-venue-avatar").textContent = e.venue.charAt(0);
-  const vd = venueData[e.venue_id] || venueData[e.id?.split("-").slice(0,2).join("-")] || {};
+  const vd = venueFor(e);
+  // Event location wins over the venue's home address: e.address is only set
+  // when the event is somewhere other than the venue (e.g. a street festival).
+  // When it's null the event is at the venue, so fall back to vd.address.
+  const eventAddress = e.address || vd.address || "";
   document.getElementById("detail-venue-name").textContent = vd.name || e.venue;
-  document.getElementById("detail-venue-address").textContent = vd.address || e.address || "";
+  document.getElementById("detail-venue-address").textContent = eventAddress;
 
   document.getElementById("detail-directions").href =
-    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(vd.address || e.address || e.venue)}`;
+    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(eventAddress || e.venue)}`;
 
   const ticketBtn = document.getElementById("detail-tickets");
   if (e.ticket_url) {
@@ -485,6 +498,9 @@ function closeDetail() {
 // ============================================================
 
 function downloadICS(e) {
+  // Event-specific address (street festival, etc.) wins over the venue's home
+  // address, matching the detail view. See venueFor / showDetail.
+  const icsAddress = e.address || venueFor(e).address || "";
   const pad = n => String(n).padStart(2, "0");
   // Event times are floating local wall-clock strings (e.g. "2026-06-15T20:00:00"),
   // which is how the app displays them. Emit them as floating local (no Z) so the
@@ -514,7 +530,7 @@ function downloadICS(e) {
     `DTSTART:${fmtLocal(new Date(e.start))}`,
     ...(e.end ? [`DTEND:${fmtLocal(new Date(e.end))}`] : []),
     `SUMMARY:${esc(e.title)}`,
-    `LOCATION:${esc(e.venue + (e.address ? ", " + e.address : ""))}`,
+    `LOCATION:${esc(e.venue + (icsAddress ? ", " + icsAddress : ""))}`,
     `DESCRIPTION:${esc(e.description || "")}`,
     "END:VEVENT",
     "END:VCALENDAR"

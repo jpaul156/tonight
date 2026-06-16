@@ -29,6 +29,12 @@ Then open `http://localhost:8000`. Opening `index.html` directly won't work — 
 
 Both must be kept in sync for shared fields (transit_line, transit_stop, walk_minutes, square).
 
+## Event address vs venue address
+
+An event's `address` field is the *event's actual location*, set **only** when the event happens somewhere other than the venue (e.g. a street festival). When it's `null`, the event is at the venue and the front end inherits the venue address from `data/venues.json` via `venue_id` (`venueFor()` → `e.address || vd.address`). The scraper never stamps the venue address onto events anymore.
+
+Per-event address extraction is opt-in: set `event_address: True` on a venue in `scraper/venues.py` only if that source sometimes hosts events off-site. It costs extra LLM extraction, so most venues should leave it off. When set, the scraper also records the event-location `square` (validated against the front-end chip list) so the filter buckets the event where it actually happens.
+
 ## Transit color
 
 `transit_color` does not exist anywhere in the data. Color is derived from `transit_line` at render time via `LINE_COLORS` in `js/app.js`. Never add a `transit_color` field — the point is that a known line cannot render the wrong color.
@@ -41,7 +47,7 @@ The front end's `getNow()` in `js/app.js` is the sole authority on what counts a
 
 ## Known limitations
 
-- `venue_id` is not stamped on events yet — the front end joins on `id` string parsing as a fallback. Planned fix: stamp `venue_id`, join to `data/venues.json` in the front end so venue edits propagate without re-scraping.
+- `venue_id` is stamped on newly scraped events; the front end joins to `data/venues.json` via `venueFor()`, falling back to `id` string parsing for older events scraped before stamping. Re-scrape a venue with `--force` to migrate its events.
 - EDT/UTC-4 is hardcoded in `run_scraper.py` — off by one hour in winter (EST). Low priority until the app has winter users.
 - Club Passim captures ~7 events per scrape due to JS pagination. Playwright needed for the full calendar.
 

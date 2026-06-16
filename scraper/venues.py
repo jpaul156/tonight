@@ -32,6 +32,14 @@
 #                 venue IDs, used to route events to the right
 #                 physical location when a single collection page
 #                 covers multiple venues.
+#   event_address True if this venue sometimes hosts events at a DIFFERENT
+#                 address than its own (e.g. street festivals at partner
+#                 spaces). Opt-in because it costs extra LLM extraction —
+#                 only set it for sources known to do this. When set, the
+#                 scraper records the per-event address (and its square, for
+#                 filtering) on events whose address differs from the venue's;
+#                 events at the venue keep address=None and inherit the venue
+#                 address from data/venues.json at render time.
 
 VENUES = [
 
@@ -141,6 +149,48 @@ VENUES = [
         "scrape_strategy": "wix_events",
         "detail_pages": False,
         "url_contains": None,
+        "location_keywords": {},
+        "extra_venues": [],
+    },
+
+    # ----------------------------------------------------------
+    # Veronica Robles Cultural Center — East Boston
+    # ----------------------------------------------------------
+    {
+        "id": "vrcc",
+        "name": "Veronica Robles Cultural Center",
+        "address": "282 Meridian St., East Boston, MA",
+        "square": "Maverick",
+        "transit_line": "Blue",
+        "transit_stop": "Maverick",
+        "walk_minutes": 5,
+        "is_local": True,
+        "collection_url": "https://veronicaroblesculturalcenter.org/events-east-boston/",
+        # html_full_text: an Elementor (WordPress) page with no stable per-event
+        # container class and heavy per-card variation (TBD dates, end time only
+        # in the description, address in different spots, inconsistent/dead
+        # buttons). Only ~10 events on the page, so we send the whole stripped
+        # body to the LLM rather than parsing structure. Detail "buttons" are
+        # unreliable (external links, "More information soon"), so no Pass 2.
+        "scrape_strategy": "html_full_text",
+        "detail_pages": False,
+        "url_contains": None,
+        # Several events are off-site (Bremen St, Border St, Symphony Hall) while
+        # the center is at 282 Meridian St — exactly what event_address is for.
+        "event_address": True,
+        "prompt_notes": (
+            "- Each event card lists, in order: the title, then an address line, then a "
+            "description, then the date, then a time, then a button label. The address "
+            "and date/time belong to the event whose title appears just before them.\n"
+            "- Skip any event whose date or time is shown as 'TBD' or otherwise "
+            "unspecified — do not invent a date.\n"
+            "- Some events show only a start time in the time field but state the full "
+            "range in the description (e.g. '2:00–5:00 p.m.'). Use the description's "
+            "end time as the event end when it is given there.\n"
+            "- Ignore button labels such as 'More information', 'More information soon', "
+            "'More information here', and 'Details coming soon' — they are navigation, not "
+            "event data, and several are non-functional."
+        ),
         "location_keywords": {},
         "extra_venues": [],
     },

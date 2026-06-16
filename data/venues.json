@@ -73,5 +73,20 @@
     "logo_url": null,
     "is_local": true,
     "notes": "Floating bar and restaurant on the East Boston waterfront. Live music, DJ sets, World Cup watch parties, and wellness events."
+  },
+  "vrcc": {
+    "id": "vrcc",
+    "name": "Veronica Robles Cultural Center",
+    "address": "282 Meridian St., East Boston, MA",
+    "neighborhood": "East Boston",
+    "square": "Maverick",
+    "transit_line": "Blue",
+    "transit_stop": "Maverick",
+    "walk_minutes": 5,
+    "website": "https://veronicaroblesculturalcenter.org",
+    "phone": null,
+    "logo_url": null,
+    "is_local": true,
+    "notes": "Latino cultural center in East Boston. Festivals, family events, and community celebrations — some held off-site at partner venues."
   }
 }

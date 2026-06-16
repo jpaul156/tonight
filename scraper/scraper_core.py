@@ -18,6 +18,15 @@ VALID_CATEGORIES = [
     "karaoke", "community", "sports", "fitness", "food", "other"
 ]
 
+# Front-end filter chips (must match SQUARES in js/app.js). Only used to
+# validate an event-location square extracted for venues that opt into
+# per-event addresses (event_address: True). An invalid/unknown value falls
+# back to the venue's own square.
+SQUARES = [
+    "Davis", "Porter", "Harvard", "Central", "Kendall",
+    "Lechmere", "Union Square", "Maverick",
+]
+
 BASE_URL_PATTERN = re.compile(r"^https?://[^/]+")
 
 
@@ -515,6 +524,21 @@ Return ONLY the JSON array. No fences, no explanation. Start with [ end with ].
 Data:
 {text_chunk}"""
     else:
+        # Per-event address extraction is opt-in (event_address: True) so we
+        # only spend tokens on it for venues that actually host events off-site
+        # (street festivals, partner spaces). Most venues never do.
+        event_addr_fields = ""
+        if venue_cfg.get("event_address"):
+            event_addr_fields = (
+                '- event_address (string — the event\'s full street address EXACTLY as shown '
+                'on its card, e.g. "401 Bremen St., East Boston" or '
+                '"Boston Symphony Hall - 301 Mass Ave, Boston, MA". Return null if no address '
+                'is shown for the event.)\n'
+                f'- event_square (string — only if event_address is given, the closest '
+                f'neighborhood from this list: {", ".join(SQUARES)}. Choose one only if the '
+                'address clearly falls in it; otherwise null.)\n'
+            )
+
         prompt = f"""Below is content from the events page for {venue_cfg['name']} ({venue_cfg['collection_url']}).
 
 Extract every upcoming IN-PERSON event and return a JSON array.
@@ -524,7 +548,7 @@ For each event include:
 - start (ISO 8601 datetime, e.g. "{current_year}-06-14T19:00:00" — assume year {current_year} if not stated)
 - end (ISO 8601 datetime or null)
 - location (string — physical location or room name if stated, otherwise null)
-- cost (string — e.g. "Free", "$15", "$35 / Members $33", or null)
+{event_addr_fields}- cost (string — e.g. "Free", "$15", "$35 / Members $33", or null)
 - source_url (string — the URL: line before this event's text if present, else null)
 - performer (string — artist, band, or host name if explicitly stated, else null)
 - description (string — 1-2 sentence summary max, or null)
@@ -659,11 +683,17 @@ def get_all_venue_ids(venue_cfg):
 
 
 def venue_fields(vid, venue_cfg):
+    # NOTE: the venue's physical address is intentionally NOT stamped here.
+    # It lives in data/venues.json (display config) and is joined to the event
+    # at render time via venue_id. The event's own "address" field is reserved
+    # for cases where the event happens somewhere other than the venue (e.g. a
+    # street festival) — see build_events. "square" here is the venue default;
+    # build_events may override it with the event location's square.
     if vid == venue_cfg["id"]:
         return {
+            "venue_id": vid,
             "venue": venue_cfg["name"],
             "venue_is_local": venue_cfg["is_local"],
-            "address": venue_cfg["address"],
             "square": venue_cfg["square"],
             "transit_line": venue_cfg["transit_line"],
             "transit_stop": venue_cfg["transit_stop"],
@@ -672,15 +702,46 @@ def venue_fields(vid, venue_cfg):
     for sv in venue_cfg.get("extra_venues", []):
         if sv["id"] == vid:
             return {
+                "venue_id": vid,
                 "venue": sv["name"],
                 "venue_is_local": sv["is_local"],
-                "address": sv["address"],
                 "square": sv.get("square", venue_cfg["square"]),
                 "transit_line": sv.get("transit_line", venue_cfg["transit_line"]),
                 "transit_stop": sv.get("transit_stop", venue_cfg["transit_stop"]),
                 "walk_minutes": sv.get("walk_minutes", venue_cfg["walk_minutes"]),
             }
     return {}
+
+
+# ============================================================
+# Event location (address different from the venue's own)
+# ============================================================
+
+def _norm_addr(s):
+    """Lowercase, strip everything but alphanumerics — for loose address
+    comparison that ignores punctuation/spacing differences."""
+    return re.sub(r"[^a-z0-9]", "", (s or "").lower())
+
+
+def event_specific_address(raw_event, venue_cfg):
+    """Return the event's own address ONLY when the venue opts in
+    (event_address: True) AND the scraped address differs from the venue's
+    home address. Otherwise None — meaning "this event is at the venue", and
+    the front end falls back to the venue address from data/venues.json.
+
+    The comparison is substring-based so "282 Meridian St." and
+    "282 Meridian St., East Boston" are treated as the same place, while
+    "401 Bremen St." or "Boston Symphony Hall" are recognized as elsewhere.
+    """
+    if not venue_cfg.get("event_address"):
+        return None
+    addr = (raw_event.get("event_address") or "").strip()
+    if not addr:
+        return None
+    e, v = _norm_addr(addr), _norm_addr(venue_cfg.get("address"))
+    if not e or not v or e in v or v in e:
+        return None
+    return addr
 
 
 # ============================================================
@@ -715,6 +776,19 @@ def build_events(raw_events, category_map, detail_map, venue_cfg):
         if category not in VALID_CATEGORIES:
             category = "other"
 
+        # An event whose address differs from the venue's home address (e.g. a
+        # street festival). None for the common case of "at the venue", where
+        # the front end joins to the venue address via venue_id. The square
+        # follows the event location when we recognize it, so the front-end
+        # filter buckets the event where it actually happens, not where the
+        # organizing venue sits.
+        addr = event_specific_address(e, venue_cfg)
+        event_square = None
+        if addr:
+            sq = (e.get("event_square") or "").strip()
+            if sq in SQUARES:
+                event_square = sq
+
         for vid in venue_ids:
             fields = venue_fields(vid, venue_cfg)
             # Apply image_map for venues with known static image URLs
@@ -735,6 +809,8 @@ def build_events(raw_events, category_map, detail_map, venue_cfg):
                 "id": make_event_id(vid, e.get("start"), e.get("title", "event")),
                 "title": e.get("title"),
                 **fields,
+                "address": addr,
+                "square": event_square or fields["square"],
                 "start": e.get("start"),
                 "end": e.get("end"),
                 "category": category,
