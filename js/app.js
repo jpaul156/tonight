@@ -426,12 +426,18 @@ function openDetail(e) {
   document.getElementById("detail-transit-text").textContent =
     `${e.transit_stop} → ${e.walk_minutes} min`;
 
-  document.getElementById("detail-venue-avatar").textContent = e.venue.charAt(0);
   const vd = venueFor(e);
   // Event location wins over the venue's home address: e.address is only set
   // when the event is somewhere other than the venue (e.g. a street festival).
   // When it's null the event is at the venue, so fall back to vd.address.
   const eventAddress = e.address || vd.address || "";
+  const avatarEl = document.getElementById("detail-venue-avatar");
+  const logoSrc = vd.logo_thumb_url || vd.logo_url;
+  if (logoSrc) {
+    avatarEl.innerHTML = `<img src="${logoSrc}" alt="${vd.name || e.venue} logo">`;
+  } else {
+    avatarEl.textContent = e.venue.charAt(0);
+  }
   document.getElementById("detail-venue-name").textContent = vd.name || e.venue;
   document.getElementById("detail-venue-address").textContent = eventAddress;
 
