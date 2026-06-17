@@ -22,7 +22,9 @@
   </header>
   <div class="date-strip"><span class="date" id="today-date"></span></div>
 
-  <nav class="filter-row" id="square-filters" aria-label="Filter by square"></nav>
+  <div class="square-bar">
+    <button class="square-indicator" id="square-indicator" aria-haspopup="dialog" aria-label="Change square"></button>
+  </div>
   <nav class="filter-row category-row" id="category-filters" aria-label="Filter by category"></nav>
 
   <main class="event-list" id="event-list"></main>
@@ -31,6 +33,20 @@
   <footer class="footer">
     <p>Tonight · data refreshed nightly</p>
   </footer>
+
+  <div class="metro-overlay" id="metro-overlay" hidden>
+    <div class="metro-panel" role="dialog" aria-modal="true" aria-label="Choose a square">
+      <button class="metro-close" id="metro-close" aria-label="Close">✕</button>
+      <header class="metro-head">
+        <p class="metro-kicker">Where to tonight?</p>
+        <button class="metro-nearme" id="metro-nearme">
+          <span class="line-dot line-dot-all"></span> Near me — show everything
+        </button>
+      </header>
+      <div class="metro-lines" id="metro-line-tabs"></div>
+      <div class="metro-map" id="metro-map"></div>
+    </div>
+  </div>
 
   <div class="detail-overlay" id="detail-overlay" hidden>
     <div class="detail-panel" role="dialog" aria-modal="true" aria-labelledby="detail-title">

@@ -14,7 +14,34 @@ const ICONS = {
   community: `<path d="M4 19V5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><line x1="8" y1="8" x2="14" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="13" y2="16"/>`
 };
 
-const SQUARES = ["Davis", "Porter", "Harvard", "Central", "Kendall", "Lechmere", "Union Square", "Maverick"];
+// ============================================================
+// Transit model — the location filter is built like a metro map.
+// Each line is an ordered list of stops (north/west → south/east).
+// A handful of those stops are "squares" we actually surface as
+// filters (they have events); the rest are connectors that exist
+// only so the map shows real neighbors above and below your stop.
+// A stop's line(s) — and therefore its color(s) — are *derived*
+// from membership here, never stored, mirroring how transit_color
+// is derived from transit_line elsewhere.
+// ============================================================
+const LINES = {
+  Red:    ["Alewife", "Davis", "Porter", "Harvard", "Central", "Kendall", "Charles/MGH", "Park Street", "Downtown Crossing", "South Station"],
+  Orange: ["Sullivan Sq", "Assembly", "Community College", "North Station", "Haymarket", "State", "Downtown Crossing", "Chinatown"],
+  Green:  ["Union Square", "Lechmere", "Science Park", "North Station", "Haymarket", "Government Center", "Park Street", "Boylston"],
+  Blue:   ["Wonderland", "Airport", "Maverick", "Aquarium", "State", "Government Center", "Bowdoin"],
+};
+
+// The stops that are real filters. Value is the canonical name stored on
+// events as e.square, which here is always identical to the map label.
+const SQUARES = ["Davis", "Porter", "Harvard", "Central", "Kendall", "Downtown Crossing", "Assembly", "Lechmere", "Union Square", "Maverick"];
+const SQUARE_SET = new Set(SQUARES);
+
+// Which line(s) a stop sits on, in a stable display order, derived from LINES.
+const LINE_ORDER = ["Red", "Orange", "Green", "Blue"];
+function stationLines(name) {
+  return LINE_ORDER.filter(line => LINES[line].includes(name));
+}
+
 const CATEGORIES = ["music", "trivia", "comedy", "film", "market", "karaoke", "community", "sports", "fitness", "food"];
 
 // MBTA line/mode → brand color. Color is presentation, derived from the line
@@ -59,6 +86,8 @@ init();
 async function init() {
   setDate();
   buildFilterChips();
+  renderSquareIndicator();
+  wireMetroOverlay();
   [allEvents, venueData] = await Promise.all([loadEvents(), loadVenues()]);
   render();
   wireDetailOverlay();
@@ -141,17 +170,12 @@ async function loadEvents() {
 }
 
 function buildFilterChips() {
-  const squareRow = document.getElementById("square-filters");
   const categoryRow = document.getElementById("category-filters");
-
-  addChip(squareRow, "Near me", "all", "square");
-  SQUARES.forEach(sq => addChip(squareRow, sq, sq, "square"));
-
-  addChip(categoryRow, "All", "all", "category");
-  CATEGORIES.forEach(cat => addChip(categoryRow, capitalize(cat), cat, "category"));
+  addChip(categoryRow, "All", "all");
+  CATEGORIES.forEach(cat => addChip(categoryRow, capitalize(cat), cat));
 }
 
-function addChip(row, label, value, group) {
+function addChip(row, label, value) {
   const btn = document.createElement("button");
   btn.className = "chip" + (value === "all" ? " active" : "");
   btn.textContent = label;
@@ -159,11 +183,198 @@ function addChip(row, label, value, group) {
   btn.addEventListener("click", () => {
     row.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
     btn.classList.add("active");
-    if (group === "square") activeSquare = value;
-    if (group === "category") activeCategory = value;
+    activeCategory = value;
     render();
   });
   row.appendChild(btn);
+}
+
+// ============================================================
+// Square indicator — the destination board pinned at the top.
+// Reads like the transit badge on a card, but bigger and built
+// from line color(s): one colored dot per line the stop sits on,
+// so a multi-line hub (Downtown Crossing) shows two dots. Tapping
+// it opens the metro-map overlay.
+// ============================================================
+function lineDots(lines) {
+  // One dot per line, overlapping slightly so a multi-line stop reads as a
+  // little cluster — the "part of the outline in each color" idea, as dots.
+  if (lines.length === 0) {
+    return `<span class="line-dot line-dot-all"></span>`;
+  }
+  return lines
+    .map(l => `<span class="line-dot" style="--line-color:${lineColor(l)}"></span>`)
+    .join("");
+}
+
+function renderSquareIndicator() {
+  const el = document.getElementById("square-indicator");
+  const isAll = activeSquare === "all";
+  const lines = isAll ? [] : stationLines(activeSquare);
+  const name = isAll ? "Near me" : activeSquare;
+  const sub = isAll
+    ? "All squares"
+    : (lines.length ? lines.join(" · ") + (lines.length > 1 ? " lines" : " Line") : "");
+
+  el.classList.toggle("is-all", isAll);
+  el.innerHTML = `
+    <span class="si-dots">${lineDots(lines)}</span>
+    <span class="si-text">
+      <span class="si-name">${name}</span>
+      <span class="si-sub">${sub}</span>
+    </span>
+    <span class="si-chevron" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </span>
+  `;
+}
+
+// ============================================================
+// Metro overlay — the "get on the train" location picker.
+// Opens like the detail panel. Shows one line at a time as a
+// vertical strip (tabs switch lines); your current stop sits in
+// the middle with real neighbors above and below. Choosing a stop
+// runs a little train down the rail to it, then applies the filter.
+// ============================================================
+let metroLine = "Red"; // which line the overlay map is currently showing
+
+function wireMetroOverlay() {
+  document.getElementById("square-indicator").addEventListener("click", openMetro);
+  const overlay = document.getElementById("metro-overlay");
+  document.getElementById("metro-close").addEventListener("click", closeMetro);
+  overlay.addEventListener("click", ev => { if (ev.target === overlay) closeMetro(); });
+  document.getElementById("metro-nearme").addEventListener("click", () => selectSquare("all"));
+  document.addEventListener("keydown", ev => {
+    if (ev.key === "Escape" && !overlay.hidden) closeMetro();
+  });
+}
+
+function openMetro() {
+  const overlay = document.getElementById("metro-overlay");
+  // Start on the line your current stop is on (first one for a transfer hub),
+  // or the Red line when nothing is selected.
+  metroLine = activeSquare === "all" ? "Red" : (stationLines(activeSquare)[0] || "Red");
+  renderLineTabs();
+  renderMetroMap();
+  overlay.hidden = false;
+  document.body.style.overflow = "hidden";
+  requestAnimationFrame(() => scrollActiveIntoView());
+}
+
+function closeMetro() {
+  const overlay = document.getElementById("metro-overlay");
+  overlay.hidden = true;
+  document.body.style.overflow = "";
+}
+
+function renderLineTabs() {
+  const tabs = document.getElementById("metro-line-tabs");
+  tabs.innerHTML = "";
+  LINE_ORDER.forEach(line => {
+    const btn = document.createElement("button");
+    btn.className = "metro-tab" + (line === metroLine ? " active" : "");
+    btn.style.setProperty("--line-color", lineColor(line));
+    btn.innerHTML = `<span class="line-dot" style="--line-color:${lineColor(line)}"></span>${line}`;
+    btn.addEventListener("click", () => {
+      metroLine = line;
+      renderLineTabs();
+      renderMetroMap();
+      requestAnimationFrame(() => scrollActiveIntoView());
+    });
+    tabs.appendChild(btn);
+  });
+}
+
+function renderMetroMap() {
+  const map = document.getElementById("metro-map");
+  map.style.setProperty("--line-color", lineColor(metroLine));
+  map.innerHTML = "";
+
+  LINES[metroLine].forEach(stop => {
+    const filterable = SQUARE_SET.has(stop);
+    const current = stop === activeSquare;
+    const lines = stationLines(stop);
+    const transfer = lines.length > 1;
+
+    const row = document.createElement(filterable ? "button" : "div");
+    row.className = "metro-stop"
+      + (filterable ? " is-square" : " is-connector")
+      + (current ? " is-current" : "")
+      + (transfer ? " is-transfer" : "");
+    row.dataset.stop = stop;
+
+    row.innerHTML = `
+      <span class="stop-node"></span>
+      <span class="stop-name">${stop}</span>
+      ${transfer ? `<span class="stop-transfer">${lineDots(lines)}</span>` : ""}
+      ${current ? `<span class="stop-here">You are here</span>` : ""}
+    `;
+
+    if (filterable) row.addEventListener("click", () => travelTo(stop));
+    map.appendChild(row);
+  });
+
+  // The train marker that glides down the rail during a "trip".
+  const train = document.createElement("div");
+  train.className = "metro-train";
+  train.id = "metro-train";
+  train.hidden = true;
+  map.appendChild(train);
+}
+
+function stopRow(stop) {
+  return document.getElementById("metro-map")
+    .querySelector(`.metro-stop[data-stop="${stop}"]`);
+}
+
+function rowCenter(row) {
+  return row.offsetTop + row.offsetHeight / 2;
+}
+
+function scrollActiveIntoView() {
+  const map = document.getElementById("metro-map");
+  const target = map.querySelector(".metro-stop.is-current")
+    || map.querySelector(".metro-stop.is-square");
+  if (target) target.scrollIntoView({ block: "center", behavior: "auto" });
+}
+
+function travelTo(stop) {
+  if (stop === activeSquare) { closeMetro(); return; }
+
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const map = document.getElementById("metro-map");
+  const toRow = stopRow(stop);
+  // Depart from the current stop if it's on this line, otherwise from the top
+  // of the line so the trip still reads as travel after switching lines.
+  const fromRow = (activeSquare !== "all" && stopRow(activeSquare))
+    || map.querySelector(".metro-stop");
+
+  if (reduce || !toRow || !fromRow) { selectSquare(stop); return; }
+
+  const train = document.getElementById("metro-train");
+  const y0 = rowCenter(fromRow);
+  const y1 = rowCenter(toRow);
+
+  map.classList.add("is-traveling");
+  toRow.classList.add("is-target");
+  train.hidden = false;
+  train.style.transition = "none";
+  train.style.top = `${y0}px`;
+  train.getBoundingClientRect(); // flush, so the next change animates
+
+  const dur = Math.min(950, 280 + Math.abs(y1 - y0) * 1.1);
+  train.style.transition = `top ${dur}ms cubic-bezier(.45,0,.2,1)`;
+  train.style.top = `${y1}px`;
+  toRow.scrollIntoView({ block: "center", behavior: "smooth" });
+
+  setTimeout(() => selectSquare(stop), dur + 140);
+}
+
+function selectSquare(value) {
+  activeSquare = value;
+  renderSquareIndicator();
+  render();
+  closeMetro();
 }
 
 // ============================================================

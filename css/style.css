@@ -731,3 +731,347 @@ a:focus-visible {
 .cat-sports   { background: linear-gradient(145deg, #1a4a2e, #2d7a4a); }
 .cat-fitness  { background: linear-gradient(145deg, #3d2060, #7b4fa6); }
 .cat-food     { background: linear-gradient(145deg, #5a2d0c, #c4622d); }
+
+/* ============================================================
+   Line dots — one colored dot per MBTA line, reused by the
+   indicator, the line tabs, and transfer stops. Color comes in
+   via --line-color (derived from the line name in JS).
+   ============================================================ */
+.line-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--line-color, var(--text-muted));
+  box-shadow: 0 0 7px var(--line-color, transparent);
+  flex-shrink: 0;
+}
+/* The "all squares" dot has no single line, so it reads as amber. */
+.line-dot-all {
+  background: radial-gradient(circle at 35% 35%, #ffd98a, var(--amber) 60%, #b9762a);
+  box-shadow: 0 0 8px rgba(245, 185, 66, 0.6);
+}
+
+/* ============================================================
+   Square indicator — the destination board pinned up top.
+   Tapping it opens the metro overlay.
+   ============================================================ */
+.square-bar {
+  width: 100%;
+  max-width: var(--max-width);
+  display: flex;
+  justify-content: center;
+  padding: 8px 18px 4px;
+}
+
+.square-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 230px;
+  max-width: 100%;
+  padding: 9px 14px 9px 15px;
+  background: linear-gradient(180deg, var(--surface-2), var(--surface));
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, transform 0.1s ease;
+}
+.square-indicator:hover { border-color: var(--amber); }
+.square-indicator:active { transform: scale(0.99); }
+
+.si-dots {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+/* Multi-line hubs cluster their dots into a little stack. */
+.si-dots .line-dot { width: 13px; height: 13px; }
+.si-dots .line-dot + .line-dot { margin-left: -4px; }
+
+.si-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+  flex: 1;
+  min-width: 0;
+}
+.si-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.08rem;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.si-sub {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 3px;
+}
+.si-chevron { display: inline-flex; flex-shrink: 0; }
+.si-chevron svg {
+  width: 18px;
+  height: 18px;
+  stroke: var(--text-muted);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.square-indicator:hover .si-chevron svg { stroke: var(--amber); }
+
+/* ============================================================
+   Metro overlay — the "get on the train" location picker.
+   Bottom sheet, like the detail panel.
+   ============================================================ */
+.metro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(5, 7, 15, 0.72);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+.metro-overlay[hidden] { display: none; }
+
+.metro-panel {
+  width: 100%;
+  max-width: var(--max-width);
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: 18px 18px 0 0;
+  position: relative;
+  overflow: hidden;
+  animation: slide-up 0.22s ease-out;
+}
+
+.metro-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: var(--surface-2);
+  color: var(--text);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.metro-head { padding: 18px 18px 12px; }
+.metro-kicker {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin: 0 0 12px;
+}
+.metro-nearme {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+.metro-nearme:hover { border-color: var(--amber); }
+
+/* Line tabs */
+.metro-lines {
+  display: flex;
+  gap: 8px;
+  padding: 2px 18px 14px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid var(--border);
+}
+.metro-lines::-webkit-scrollbar { display: none; }
+
+.metro-tab {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 13px;
+  cursor: pointer;
+}
+.metro-tab:hover { color: var(--text); }
+.metro-tab.active {
+  color: var(--text);
+  border-color: var(--line-color);
+  box-shadow: inset 0 0 0 1px var(--line-color);
+}
+
+/* The vertical line strip. A rail runs down --rail-x with stop nodes on it. */
+.metro-map {
+  --rail-x: 34px;
+  position: relative;
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 0 28px;
+  scrollbar-width: none;
+}
+.metro-map::-webkit-scrollbar { display: none; }
+
+.metro-map::before {
+  content: "";
+  position: absolute;
+  left: var(--rail-x);
+  top: 26px;
+  bottom: 26px;
+  width: 6px;
+  transform: translateX(-50%);
+  border-radius: 3px;
+  background: var(--line-color, var(--border));
+  opacity: 0.9;
+}
+
+.metro-stop {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 18px 12px calc(var(--rail-x) + 22px);
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  text-align: left;
+}
+
+.stop-node {
+  position: absolute;
+  left: var(--rail-x);
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  box-sizing: border-box;
+  background: var(--bg);
+  border: 3px solid var(--line-color);
+  z-index: 1;
+}
+
+.stop-name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Connectors are orientation only — dimmed and not tappable. */
+.metro-stop.is-connector { cursor: default; }
+.metro-stop.is-connector .stop-name {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 0.82rem;
+  letter-spacing: 0.03em;
+  color: var(--text-muted);
+}
+.metro-stop.is-connector .stop-node {
+  width: 10px;
+  height: 10px;
+  border-width: 2px;
+  opacity: 0.65;
+}
+
+/* Squares are the real, tappable destinations. */
+.metro-stop.is-square { cursor: pointer; }
+.metro-stop.is-square:hover .stop-name { color: var(--amber); }
+.metro-stop.is-square:hover .stop-node { box-shadow: 0 0 10px var(--line-color); }
+
+/* Your current stop — a filled, glowing node with a tag. */
+.metro-stop.is-current .stop-node {
+  width: 18px;
+  height: 18px;
+  background: var(--line-color);
+  box-shadow: 0 0 0 4px var(--bg), 0 0 14px var(--line-color);
+}
+.stop-here {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #1a1306;
+  background: var(--amber);
+  border-radius: 999px;
+  padding: 3px 9px;
+  white-space: nowrap;
+}
+
+/* Transfer stops — a small cluster of line dots after the name. */
+.stop-transfer {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.stop-transfer .line-dot { width: 9px; height: 9px; }
+.stop-transfer .line-dot + .line-dot { margin-left: -3px; }
+
+/* The travelling train + the trip dimming */
+.metro-train {
+  position: absolute;
+  left: var(--rail-x);
+  width: 18px;
+  height: 26px;
+  border-radius: 6px;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(180deg, #ffe2a3, var(--amber));
+  box-shadow: 0 0 16px rgba(245, 185, 66, 0.85);
+  z-index: 3;
+}
+.metro-train[hidden] { display: none; }
+
+.metro-map.is-traveling .metro-stop:not(.is-target):not(.is-current) {
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+.metro-stop.is-target .stop-node {
+  animation: node-pulse 0.5s ease-in-out infinite alternate;
+}
+@keyframes node-pulse {
+  to { box-shadow: 0 0 0 5px var(--bg), 0 0 18px var(--line-color); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .metro-train, .metro-stop.is-target .stop-node { animation: none !important; }
+}

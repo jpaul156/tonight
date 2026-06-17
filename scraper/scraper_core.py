@@ -23,8 +23,8 @@ VALID_CATEGORIES = [
 # per-event addresses (event_address: True). An invalid/unknown value falls
 # back to the venue's own square.
 SQUARES = [
-    "Davis", "Porter", "Harvard", "Central", "Kendall",
-    "Lechmere", "Union Square", "Maverick",
+    "Davis", "Porter", "Harvard", "Central", "Kendall", "Downtown Crossing",
+    "Assembly", "Lechmere", "Union Square", "Maverick",
 ]
 
 BASE_URL_PATTERN = re.compile(r"^https?://[^/]+")
