@@ -1,303 +1,6 @@
 {
-  "generated_at": "2026-06-20T12:04:09.932424+00:00",
+  "generated_at": "2026-06-21T12:14:00.212759+00:00",
   "events": [
-    {
-      "id": "lamplighter-broadway-20260619-pepita-lo-fi-friday",
-      "title": "Pepita Lo-Fi Friday",
-      "venue_id": "lamplighter-broadway",
-      "venue": "Lamplighter Brewing - Broadway",
-      "venue_is_local": true,
-      "square": "Central",
-      "transit_line": "Red",
-      "transit_stop": "Central",
-      "walk_minutes": 8,
-      "address": null,
-      "start": "2026-06-19T08:00:00",
-      "end": "2026-06-19T13:00:00",
-      "category": "music",
-      "cost": "Free",
-      "performer": null,
-      "performer_is_local": null,
-      "sponsored": false,
-      "sponsor": null,
-      "description": "A Scholastic Book Fair partnership with More Than Words, a local nonprofit bookstore, featuring curated book and beer pairings. Proceeds support youth ages 16-24 in foster care, experiencing homelessness, or in the court system.",
-      "image_url": "https://lamplighterbrewing.com/cdn/shop/files/BookFairPost_1.png?v=1781103464",
-      "ticket_url": null,
-      "is_recurring": false,
-      "recurrence_note": null,
-      "source_url": "https://lamplighterbrewing.com/products/out-in-climate-drag-happy-hour",
-      "last_scraped": "2026-06-19T13:40:05.076172+00:00"
-    },
-    {
-      "id": "tallship-20260619-summer-of-soccer--usa-vs--aust",
-      "title": "Summer of Soccer: USA vs. Australia + Ticket Giveaway!",
-      "venue_id": "tallship",
-      "venue": "The Tall Ship Boston",
-      "venue_is_local": true,
-      "square": "Maverick",
-      "transit_line": "Blue",
-      "transit_stop": "Maverick",
-      "walk_minutes": 7,
-      "address": null,
-      "start": "2026-06-19T14:30:00",
-      "end": "2026-06-19T16:30:00",
-      "category": "sports",
-      "cost": null,
-      "performer": null,
-      "performer_is_local": null,
-      "sponsored": false,
-      "sponsor": null,
-      "description": "Are you ready to win FIFA World Cup\u2122 tickets, courtesy of @MichelobULTRA? Come in on Friday, June 19th at 2:30pm and play for your chance!",
-      "image_url": "https://static.wixstatic.com/media/081a16_4c27194c72f741dfa53bedef32caa115~mv2.png",
-      "ticket_url": null,
-      "is_recurring": false,
-      "recurrence_note": null,
-      "source_url": "https://www.tallshipboston.com/event-details/summer-of-soccer-usa-vs-australia-ticket-giveaway",
-      "last_scraped": "2026-06-19T13:40:24.975168+00:00"
-    },
-    {
-      "id": "tallship-20260619-summer-of-soccer-watch-parties",
-      "title": "Summer of Soccer Watch Parties",
-      "venue_id": "tallship",
-      "venue": "The Tall Ship Boston",
-      "venue_is_local": true,
-      "square": "Maverick",
-      "transit_line": "Blue",
-      "transit_stop": "Maverick",
-      "walk_minutes": 7,
-      "address": null,
-      "start": "2026-06-19T15:00:00",
-      "end": "2026-06-19T22:30:00",
-      "category": "sports",
-      "cost": null,
-      "performer": null,
-      "performer_is_local": null,
-      "sponsored": false,
-      "sponsor": null,
-      "description": "USA vs. Australia @3 PM | Scotland vs. Morocco @6 PM | Brazil vs. Haiti @8:30 PM",
-      "image_url": "https://static.wixstatic.com/media/081a16_a67d5f5c59444f72ac50184a2ccf4a0a~mv2.png",
-      "ticket_url": null,
-      "is_recurring": false,
-      "recurrence_note": null,
-      "source_url": "https://www.tallshipboston.com/event-details/summer-of-soccer-watch-parties-5",
-      "last_scraped": "2026-06-19T13:40:24.975190+00:00"
-    },
-    {
-      "id": "lamplighter-broadway-20260619-world-cup--usa-vs--australia",
-      "title": "World Cup: USA vs. Australia",
-      "venue_id": "lamplighter-broadway",
-      "venue": "Lamplighter Brewing - Broadway",
-      "venue_is_local": true,
-      "square": "Central",
-      "transit_line": "Red",
-      "transit_stop": "Central",
-      "walk_minutes": 8,
-      "address": null,
-      "start": "2026-06-19T15:00:00",
-      "end": "2026-06-19T17:00:00",
-      "category": "sports",
-      "cost": "Free",
-      "performer": null,
-      "performer_is_local": null,
-      "sponsored": false,
-      "sponsor": null,
-      "description": "A Scholastic Book Fair partnership with More Than Words, a local nonprofit bookstore, featuring curated book and beer pairings. Proceeds support youth ages 16-24 in foster care, experiencing homelessness, or in the court system.",
-      "image_url": "https://lamplighterbrewing.com/cdn/shop/files/BookFairPost_1.png?v=1781103464",
-      "ticket_url": null,
-      "is_recurring": false,
-      "recurrence_note": null,
-      "source_url": "https://lamplighterbrewing.com/products/out-in-climate-drag-happy-hour",
-      "last_scraped": "2026-06-19T13:40:05.076142+00:00"
-    },
-    {
-      "id": "tallship-20260619-live-music--dj-spiezio",
-      "title": "Live Music: DJ Spiezio",
-      "venue_id": "tallship",
-      "venue": "The Tall Ship Boston",
-      "venue_is_local": true,
-      "square": "Maverick",
-      "transit_line": "Blue",
-      "transit_stop": "Maverick",
-      "walk_minutes": 7,
-      "address": null,
-      "start": "2026-06-19T18:00:00",
-      "end": "2026-06-19T22:30:00",
-      "category": "music",
-      "cost": null,
-      "performer": null,
-      "performer_is_local": null,
-      "sponsored": false,
-      "sponsor": null,
-      "description": null,
-      "image_url": "https://static.wixstatic.com/media/081a16_0d7278dd6a6541f8b0efb568d62ae502~mv2.png",
-      "ticket_url": null,
-      "is_recurring": false,
-      "recurrence_note": null,
-      "source_url": "https://www.tallshipboston.com/event-details/live-music-dj-spiezio-1",
-      "last_scraped": "2026-06-19T13:40:24.975199+00:00"
-    },
-    {
-      "id": "lamplighter-broadway-20260619-world-cup--scotland-vs--morocc",
-      "title": "World Cup: Scotland vs. Morocco",
-      "venue_id": "lamplighter-broadway",
-      "venue": "Lamplighter Brewing - Broadway",
-      "venue_is_local": true,
-      "square": "Central",
-      "transit_line": "Red",
-      "transit_stop": "Central",
-      "walk_minutes": 8,
-      "address": null,
-      "start": "2026-06-19T18:00:00",
-      "end": "2026-06-19T21:00:00",
-      "category": "sports",
-      "cost": "Free",
-      "performer": null,
-      "performer_is_local": null,
-      "sponsored": false,
-      "sponsor": null,
-      "description": "A Scholastic Book Fair partnership with More Than Words, a local nonprofit bookstore, featuring curated book and beer pairings. Proceeds support youth ages 16-24 in foster care, experiencing homelessness, or in the court system.",
-      "image_url": "https://lamplighterbrewing.com/cdn/shop/files/BookFairPost_1.png?v=1781103464",
-      "ticket_url": null,
-      "is_recurring": false,
-      "recurrence_note": null,
-      "source_url": "https://lamplighterbrewing.com/products/out-in-climate-drag-happy-hour",
-      "last_scraped": "2026-06-19T13:40:05.076074+00:00"
-    },
-    {
-      "id": "burren-20260619-alastair-moock-trio-with-sean-",
-      "title": "ALASTAIR MOOCK TRIO with SEAN STAPLES and CHANDLER TRAVIS",
-      "venue_id": "burren",
-      "venue": "The Burren",
-      "venue_is_local": true,
-      "square": "Davis",
-      "transit_line": "Red",
-      "transit_stop": "Davis",
-      "walk_minutes": 4,
-      "address": null,
-      "start": "2026-06-19T19:00:00",
-      "end": null,
-      "category": "music",
-      "cost": null,
-      "performer": null,
-      "performer_is_local": null,
-      "sponsored": false,
-      "sponsor": null,
-      "description": "Award-winning singer-songwriter Alastair Moock is joined by Sean Staples, Chandler Travis, and more",
-      "image_url": "https://tickets.24hourmusic.com/uplimage/alastairmoocktrioSW.jpg",
-      "ticket_url": null,
-      "is_recurring": false,
-      "recurrence_note": null,
-      "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-20T12:03:29.194460+00:00"
-    },
-    {
-      "id": "passim-20260619-windborne",
-      "title": "Windborne",
-      "venue_id": "passim",
-      "venue": "Club Passim",
-      "venue_is_local": true,
-      "square": "Harvard",
-      "transit_line": "Red",
-      "transit_stop": "Harvard",
-      "walk_minutes": 4,
-      "address": null,
-      "start": "2026-06-19T20:00:00",
-      "end": null,
-      "category": "music",
-      "cost": "$35 / Members $33",
-      "performer": "Windborne",
-      "performer_is_local": null,
-      "sponsored": false,
-      "sponsor": null,
-      "description": "Windborne is a vocal ensemble known for innovative arrangements of traditional songs that blend polyphonic vocal harmony with contemporary interpretation. Drawing on 20 years of study in polyphonic music worldwide, the four singers deliver emotionally resonant performances spanning continents and centuries while honoring folk music's tradition of social activism.",
-      "image_url": "https://www.passim.org/wp-content/uploads/2018/07/Windborne-Banjo-Photo-by-Michelle-Frehsee-scaled.jpg",
-      "ticket_url": null,
-      "is_recurring": false,
-      "recurrence_note": null,
-      "source_url": "https://www.passim.org/live-music/events/windborne/",
-      "last_scraped": "2026-06-20T12:03:54.464680+00:00"
-    },
-    {
-      "id": "lamplighter-broadway-20260619-world-cup--brazil-vs--haiti",
-      "title": "World Cup: Brazil vs. Haiti",
-      "venue_id": "lamplighter-broadway",
-      "venue": "Lamplighter Brewing - Broadway",
-      "venue_is_local": true,
-      "square": "Central",
-      "transit_line": "Red",
-      "transit_stop": "Central",
-      "walk_minutes": 8,
-      "address": null,
-      "start": "2026-06-19T21:00:00",
-      "end": "2026-06-20T00:00:00",
-      "category": "sports",
-      "cost": "Free",
-      "performer": null,
-      "performer_is_local": null,
-      "sponsored": false,
-      "sponsor": null,
-      "description": "A Scholastic Book Fair partnership with More Than Words, a local nonprofit bookstore, featuring curated book and beer pairings. Proceeds support youth ages 16-24 in foster care, experiencing homelessness, or in the court system.",
-      "image_url": "https://lamplighterbrewing.com/cdn/shop/files/BookFairPost_1.png?v=1781103464",
-      "ticket_url": null,
-      "is_recurring": false,
-      "recurrence_note": null,
-      "source_url": "https://lamplighterbrewing.com/products/out-in-climate-drag-happy-hour",
-      "last_scraped": "2026-06-19T13:40:05.076047+00:00"
-    },
-    {
-      "id": "burren-20260619-irish-session",
-      "title": "IRISH SESSION",
-      "venue_id": "burren",
-      "venue": "The Burren",
-      "venue_is_local": true,
-      "square": "Davis",
-      "transit_line": "Red",
-      "transit_stop": "Davis",
-      "walk_minutes": 4,
-      "address": null,
-      "start": "2026-06-19T21:30:00",
-      "end": null,
-      "category": "music",
-      "cost": null,
-      "performer": null,
-      "performer_is_local": null,
-      "sponsored": false,
-      "sponsor": null,
-      "description": "Weekly closed session with Callum Bell & friends",
-      "image_url": "https://www.burren.com/images/friday session.jpg",
-      "ticket_url": null,
-      "is_recurring": true,
-      "recurrence_note": null,
-      "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-20T12:03:29.194451+00:00"
-    },
-    {
-      "id": "burren-20260619-the-mockingbirds",
-      "title": "THE MOCKINGBIRDS",
-      "venue_id": "burren",
-      "venue": "The Burren",
-      "venue_is_local": true,
-      "square": "Davis",
-      "transit_line": "Red",
-      "transit_stop": "Davis",
-      "walk_minutes": 4,
-      "address": null,
-      "start": "2026-06-19T22:00:00",
-      "end": null,
-      "category": "music",
-      "cost": null,
-      "performer": null,
-      "performer_is_local": null,
-      "sponsored": false,
-      "sponsor": null,
-      "description": "Cover Band",
-      "image_url": "https://www.burren.com/images/the mockingbirds.jpeg",
-      "ticket_url": null,
-      "is_recurring": false,
-      "recurrence_note": null,
-      "source_url": "https://www.burren.com/music.html",
-      "last_scraped": "2026-06-20T12:03:29.194467+00:00"
-    },
     {
       "id": "lamplighter-broadway-20260620-pepita-lo-fi-saturday",
       "title": "Pepita Lo-Fi Saturday",
@@ -404,7 +107,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.tallshipboston.com/event-details/summer-of-soccer-watch-parties-7",
-      "last_scraped": "2026-06-20T12:03:59.873545+00:00"
+      "last_scraped": "2026-06-21T12:13:50.358088+00:00"
     },
     {
       "id": "lamplighter-broadway-20260620-world-cup--netherlands-vs--swe",
@@ -458,7 +161,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.tallshipboston.com/event-details/live-music-dj-frank-white-7",
-      "last_scraped": "2026-06-20T12:03:59.873563+00:00"
+      "last_scraped": "2026-06-21T12:13:50.358114+00:00"
     },
     {
       "id": "burren-20260620-the-contemporaries",
@@ -539,7 +242,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.tallshipboston.com/event-details/live-music-dj-l-duke-4",
-      "last_scraped": "2026-06-20T12:03:59.873582+00:00"
+      "last_scraped": "2026-06-21T12:13:50.358123+00:00"
     },
     {
       "id": "passim-20260620-jake-swamp---the-pine",
@@ -674,7 +377,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.tallshipboston.com/event-details/summer-of-soccer-watch-parties-8",
-      "last_scraped": "2026-06-20T12:03:59.873599+00:00"
+      "last_scraped": "2026-06-21T12:13:50.358132+00:00"
     },
     {
       "id": "lamplighter-broadway-20260621-world-cup--spain-vs--saudi-ara",
@@ -701,7 +404,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://lamplighterbrewing.com/collections/events",
-      "last_scraped": "2026-06-20T12:03:16.958536+00:00"
+      "last_scraped": "2026-06-21T12:13:23.643617+00:00"
     },
     {
       "id": "burren-20260621-irish-session",
@@ -755,7 +458,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://lamplighterbrewing.com/collections/events",
-      "last_scraped": "2026-06-20T12:03:16.958519+00:00"
+      "last_scraped": "2026-06-21T12:13:23.643602+00:00"
     },
     {
       "id": "tallship-20260621-live-music--legends-of-summer",
@@ -782,7 +485,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.tallshipboston.com/event-details/live-music-legends-of-summer",
-      "last_scraped": "2026-06-20T12:03:59.873614+00:00"
+      "last_scraped": "2026-06-21T12:13:50.358139+00:00"
     },
     {
       "id": "burren-20260621-old-timey-session",
@@ -836,7 +539,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://lamplighterbrewing.com/collections/events",
-      "last_scraped": "2026-06-20T12:03:16.958565+00:00"
+      "last_scraped": "2026-06-21T12:13:23.643629+00:00"
     },
     {
       "id": "burren-20260621-preservation--a-kinks-tribute",
@@ -884,13 +587,13 @@
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "Joe Crookston is an acclaimed Americana singer-songwriter and fiddler who has toured with Gordon Lightfoot, headlined major US festivals, and been named Folk Alliance International Artist-in-Residence. Known for his infectious rhythm, poignant lyrics, and engaging stage presence, he weaves together lap slide songs and American Southern tunes that draw audiences into what he calls \"The Long Note\"\u2014a place of resonance and transcendence where music and community unite.",
+      "description": "Joe Crookston is a dynamic Americana singer-songwriter and fiddle player who has toured with Gordon Lightfoot, headlined major US festivals, and received Folk Alliance International Album of the Year honors. Known for his infectious rhythm, poignant lyrics, and ability to create moments of transcendence on stage, he weaves together lap slide songs and American Southern tunes that draw audiences in.",
       "image_url": "https://www.passim.org/wp-content/uploads/2018/01/joe-crookston-1-scaled.jpg",
       "ticket_url": null,
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.passim.org/live-music/events/joe-crookston/",
-      "last_scraped": "2026-06-20T12:03:54.464712+00:00"
+      "last_scraped": "2026-06-21T12:13:47.991573+00:00"
     },
     {
       "id": "tallship-20260622-summer-of-soccer-watch-parties",
@@ -917,7 +620,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.tallshipboston.com/event-details/summer-of-soccer-watch-parties-9",
-      "last_scraped": "2026-06-20T12:03:59.873631+00:00"
+      "last_scraped": "2026-06-21T12:13:50.358147+00:00"
     },
     {
       "id": "lamplighter-cx-20260622-jeopardy-bar-league",
@@ -944,7 +647,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://lamplighterbrewing.com/collections/events",
-      "last_scraped": "2026-06-20T12:03:16.958611+00:00"
+      "last_scraped": "2026-06-21T12:13:23.643681+00:00"
     },
     {
       "id": "passim-20260622-open-mic",
@@ -960,18 +663,18 @@
       "start": "2026-06-22T19:00:00",
       "end": null,
       "category": "music",
-      "cost": "$13 / Members $0",
+      "cost": "Free",
       "performer": null,
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "An open mic event where musicians can sign up to perform. See passim.org/openmic for guidelines and the sign-up sheet.",
+      "description": "An open mic event where musicians can perform. Sign up for guidelines and the sign-up sheet at passim.org/openmic.",
       "image_url": "https://www.passim.org/wp-content/uploads/2025/05/Open-Mic.jpg",
       "ticket_url": null,
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.passim.org/live-music/events/open-mic/",
-      "last_scraped": "2026-06-20T12:03:54.464720+00:00"
+      "last_scraped": "2026-06-21T12:13:47.991598+00:00"
     },
     {
       "id": "burren-20260622-trivia-night",
@@ -1052,7 +755,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.tallshipboston.com/event-details/summer-of-soccer-watch-parties-10",
-      "last_scraped": "2026-06-20T12:03:59.873644+00:00"
+      "last_scraped": "2026-06-21T12:13:50.358154+00:00"
     },
     {
       "id": "tallship-20260623-summer-of-soccer--england-vs--",
@@ -1079,7 +782,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.tallshipboston.com/event-details/summer-of-soccer-england-vs-ghana-stella-artois-pop-up",
-      "last_scraped": "2026-06-20T12:03:59.873661+00:00"
+      "last_scraped": "2026-06-21T12:13:50.358165+00:00"
     },
     {
       "id": "lamplighter-broadway-20260623-broadway-trivia",
@@ -1106,7 +809,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://lamplighterbrewing.com/collections/events",
-      "last_scraped": "2026-06-20T12:03:16.958660+00:00"
+      "last_scraped": "2026-06-21T12:13:23.643731+00:00"
     },
     {
       "id": "burren-20260623-the-django-cadre",
@@ -1181,13 +884,13 @@
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "A folk-rock band whose music explores themes of connection and shared humanity, calling out divisiveness while celebrating what we have in common. Time Sawyer has performed at major Southeast festivals including MerleFest and FloydFest.",
+      "description": "A folk-rock band whose name reflects the pull between past and future, performing Americana music that explores themes of connection and shared humanity. Time Sawyer has performed at major Southeast festivals and collaborated with artists like Steep Canyon Rangers and The Wood Brothers.",
       "image_url": "https://www.passim.org/wp-content/uploads/2023/05/JTR01113-2-scaled.jpg",
       "ticket_url": null,
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.passim.org/live-music/events/time-sawyer/",
-      "last_scraped": "2026-06-20T12:03:54.464728+00:00"
+      "last_scraped": "2026-06-21T12:13:47.991607+00:00"
     },
     {
       "id": "tallship-20260624-summer-of-soccer-watch-parties",
@@ -1214,7 +917,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.tallshipboston.com/event-details/summer-of-soccer-watch-parties-11",
-      "last_scraped": "2026-06-20T12:03:59.873675+00:00"
+      "last_scraped": "2026-06-21T12:13:50.358174+00:00"
     },
     {
       "id": "burren-20260624-grain-thief",
@@ -1289,13 +992,13 @@
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "Windborne is a vocal ensemble known for innovative arrangements of traditional songs that blend polyphonic vocal harmony with contemporary interpretation. Drawing on 20 years of study in polyphonic music worldwide, the four singers deliver emotionally resonant performances spanning continents and centuries while honoring folk music's tradition of social activism.",
+      "description": "Windborne is a vocal ensemble known for innovative arrangements of traditional songs from around the world, blending bold harmonies with deep emotional connection. With 20 years of experience studying polyphonic music, the group has gained nearly 500,000 followers through viral performances at iconic locations like Mont Saint Michel.",
       "image_url": "https://www.passim.org/wp-content/uploads/2018/07/Windborne-Banjo-Photo-by-Michelle-Frehsee-scaled.jpg",
       "ticket_url": null,
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.passim.org/live-music/events/windborne/",
-      "last_scraped": "2026-06-20T12:03:54.464736+00:00"
+      "last_scraped": "2026-06-21T12:13:47.991615+00:00"
     },
     {
       "id": "tallship-20260625-future-ix-family-watch-party",
@@ -1322,7 +1025,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.tallshipboston.com/event-details/future-ix-family-watch-party",
-      "last_scraped": "2026-06-20T12:03:59.873689+00:00"
+      "last_scraped": "2026-06-21T12:13:50.358182+00:00"
     },
     {
       "id": "tallship-20260625-summer-of-soccer-watch-parties",
@@ -1349,7 +1052,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.tallshipboston.com/event-details/summer-of-soccer-watch-parties-12",
-      "last_scraped": "2026-06-20T12:03:59.873702+00:00"
+      "last_scraped": "2026-06-21T12:13:50.358189+00:00"
     },
     {
       "id": "tallship-20260625-live-music--scully-from-dalton",
@@ -1376,7 +1079,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.tallshipboston.com/event-details/live-music-scully-from-dalton-the-sheriffs-2026-06-25-18-00",
-      "last_scraped": "2026-06-20T12:03:59.873716+00:00"
+      "last_scraped": "2026-06-21T12:13:50.358198+00:00"
     },
     {
       "id": "burren-20260625-carl-eisman",
@@ -1451,13 +1154,13 @@
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "Woody Giessmann, former drummer for Warner Brothers recording artists The Del Fuegos turned addiction specialist and interventionist, performs with Jim Mayer, who has been touring and recording with Jimmy Buffett's Coral Reefer band since 1989.",
+      "description": "Woody Giessmann, drummer for Warner Brothers recording artists The Del Fuegos who became an addiction specialist and interventionist, performs with Jim Mayer, a touring musician with Jimmy Buffett's Coral Reefer band since 1989 and founder of a music-based social-emotional learning platform for children.",
       "image_url": "https://www.passim.org/wp-content/uploads/2026/05/Woody-Giessmann-Jim-Mayer.png",
       "ticket_url": null,
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.passim.org/live-music/events/woody-giessmann-jim-mayer/",
-      "last_scraped": "2026-06-20T12:03:54.464744+00:00"
+      "last_scraped": "2026-06-21T12:13:47.991623+00:00"
     },
     {
       "id": "burren-20260625-count-off-entertainment",
@@ -1511,7 +1214,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://lamplighterbrewing.com/collections/events",
-      "last_scraped": "2026-06-20T12:03:16.958590+00:00"
+      "last_scraped": "2026-06-21T12:13:23.643657+00:00"
     },
     {
       "id": "tallship-20260626-live-music--dj-julee",
@@ -1538,7 +1241,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.tallshipboston.com/event-details/live-music-dj-julee-2",
-      "last_scraped": "2026-06-20T12:03:59.873729+00:00"
+      "last_scraped": "2026-06-21T12:13:50.358204+00:00"
     },
     {
       "id": "tallship-20260626-summer-of-soccer-watch-parties",
@@ -1565,7 +1268,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.tallshipboston.com/event-details/summer-of-soccer-watch-parties-13",
-      "last_scraped": "2026-06-20T12:03:59.873742+00:00"
+      "last_scraped": "2026-06-21T12:13:50.358212+00:00"
     },
     {
       "id": "burren-20260626-ethan-and-caleb-mccoy---the-up",
@@ -1593,6 +1296,33 @@
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
       "last_scraped": "2026-06-20T12:03:29.194600+00:00"
+    },
+    {
+      "id": "passim-20260626-dwight---nicole",
+      "title": "Dwight + Nicole",
+      "venue_id": "passim",
+      "venue": "Club Passim",
+      "venue_is_local": true,
+      "square": "Harvard",
+      "transit_line": "Red",
+      "transit_stop": "Harvard",
+      "walk_minutes": 4,
+      "address": null,
+      "start": "2026-06-26T20:00:00",
+      "end": null,
+      "category": "music",
+      "cost": "$35 / Members $33",
+      "performer": "Dwight + Nicole",
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Dwight + Nicole is a Burlington, Vermont-based band that blends blues, soul, R&B, dream pop, and alternative rock traditions. Led by Dwight Ritscher's soulful tenor and Nicole Nelson's four-octave vocal range (featured on NBC's The Voice season three), the duo creates emotionally resonant performances that have earned them recognition as a 'Band of the Year' and toured with artists like Mavis Staples and Norah Jones.",
+      "image_url": "https://www.passim.org/wp-content/uploads/2025/05/piano-scaled-e1775057712494.jpg",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://www.passim.org/live-music/events/dwight-nicole/",
+      "last_scraped": "2026-06-21T12:13:47.991630+00:00"
     },
     {
       "id": "burren-20260626-irish-session",
@@ -1673,7 +1403,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://lamplighterbrewing.com/collections/events",
-      "last_scraped": "2026-06-20T12:03:16.958636+00:00"
+      "last_scraped": "2026-06-21T12:13:23.643709+00:00"
     },
     {
       "id": "tallship-20260627-anchored---aligned--pilates-fo",
@@ -1700,7 +1430,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.tallshipboston.com/event-details/anchored-aligned-pilates-for-a-cause",
-      "last_scraped": "2026-06-20T12:03:59.873755+00:00"
+      "last_scraped": "2026-06-21T12:13:50.358220+00:00"
     },
     {
       "id": "burren-20260627-burren-babes-drag-brunch",
@@ -1754,7 +1484,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.tallshipboston.com/event-details/live-music-dj-bryce-2",
-      "last_scraped": "2026-06-20T12:03:59.873768+00:00"
+      "last_scraped": "2026-06-21T12:13:50.358227+00:00"
     },
     {
       "id": "lamplighter-cx-20260627-summer-reading-brewery-book-fa",
@@ -1781,7 +1511,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://lamplighterbrewing.com/collections/events",
-      "last_scraped": "2026-06-20T12:03:16.958463+00:00"
+      "last_scraped": "2026-06-21T12:13:23.643573+00:00"
     },
     {
       "id": "tallship-20260627-summer-of-soccer-watch-parties",
@@ -1808,7 +1538,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.tallshipboston.com/event-details/summer-of-soccer-watch-parties-14",
-      "last_scraped": "2026-06-20T12:03:59.873784+00:00"
+      "last_scraped": "2026-06-21T12:13:50.358234+00:00"
     },
     {
       "id": "tallship-20260627-live-music--dj-julee",
@@ -1835,7 +1565,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.tallshipboston.com/event-details/live-music-dj-julee-3",
-      "last_scraped": "2026-06-20T12:03:59.873797+00:00"
+      "last_scraped": "2026-06-21T12:13:50.358241+00:00"
     },
     {
       "id": "burren-20260627-sophia-saleh-with-special-gues",
@@ -1863,6 +1593,33 @@
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
       "last_scraped": "2026-06-20T12:03:29.194628+00:00"
+    },
+    {
+      "id": "passim-20260627-reed-foehl",
+      "title": "Reed Foehl",
+      "venue_id": "passim",
+      "venue": "Club Passim",
+      "venue_is_local": true,
+      "square": "Harvard",
+      "transit_line": "Red",
+      "transit_stop": "Harvard",
+      "walk_minutes": 4,
+      "address": null,
+      "start": "2026-06-27T20:00:00",
+      "end": null,
+      "category": "music",
+      "cost": "$30 / Members $28",
+      "performer": "Reed Foehl",
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Grammy-nominated Americana singer-songwriter from New England who writes weathered, honest folk songs with cinematic arrangements and lived-in vocals, drawing from themes of loss, love, and survival.",
+      "image_url": "https://www.passim.org/wp-content/uploads/2018/06/Copy-of-_L6A8945.jpg",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://www.passim.org/live-music/events/reed-foehl/",
+      "last_scraped": "2026-06-21T12:13:47.991638+00:00"
     },
     {
       "id": "burren-20260627-irish-session",
@@ -1943,7 +1700,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://lamplighterbrewing.com/collections/events",
-      "last_scraped": "2026-06-20T12:03:16.958652+00:00"
+      "last_scraped": "2026-06-21T12:13:23.643724+00:00"
     },
     {
       "id": "burren-20260628-irish-session",
@@ -1997,7 +1754,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.tallshipboston.com/event-details/live-music-salt-riot",
-      "last_scraped": "2026-06-20T12:03:59.873810+00:00"
+      "last_scraped": "2026-06-21T12:13:50.358247+00:00"
     },
     {
       "id": "burren-20260628-old-timey-session",
@@ -2051,7 +1808,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://lamplighterbrewing.com/collections/events",
-      "last_scraped": "2026-06-20T12:03:16.958601+00:00"
+      "last_scraped": "2026-06-21T12:13:23.643667+00:00"
     },
     {
       "id": "burren-20260629-trivia-night",
@@ -2132,7 +1889,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://lamplighterbrewing.com/collections/events",
-      "last_scraped": "2026-06-20T12:03:16.958676+00:00"
+      "last_scraped": "2026-06-21T12:13:23.643739+00:00"
     },
     {
       "id": "burren-20260630-the-django-cadre",
@@ -2213,7 +1970,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://lamplighterbrewing.com/collections/events",
-      "last_scraped": "2026-06-20T12:03:16.958580+00:00"
+      "last_scraped": "2026-06-21T12:13:23.643646+00:00"
     },
     {
       "id": "burren-20260701-grain-thief",
@@ -2428,7 +2185,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.tallshipboston.com/event-details/live-music-dj-spiezio-2",
-      "last_scraped": "2026-06-20T12:03:59.873822+00:00"
+      "last_scraped": "2026-06-21T12:13:50.358254+00:00"
     },
     {
       "id": "burren-20260703-irish-session",
@@ -2509,7 +2266,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://lamplighterbrewing.com/collections/events",
-      "last_scraped": "2026-06-20T12:03:16.958628+00:00"
+      "last_scraped": "2026-06-21T12:13:23.643701+00:00"
     },
     {
       "id": "tallship-20260704-live-music--dj-frank-white",
@@ -2536,7 +2293,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.tallshipboston.com/event-details/live-music-dj-frank-white-8",
-      "last_scraped": "2026-06-20T12:03:59.873836+00:00"
+      "last_scraped": "2026-06-21T12:13:50.358261+00:00"
     },
     {
       "id": "tallship-20260704-live-music--dj-l-duke",
@@ -2563,7 +2320,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.tallshipboston.com/event-details/live-music-dj-l-duke-5",
-      "last_scraped": "2026-06-20T12:03:59.873849+00:00"
+      "last_scraped": "2026-06-21T12:13:50.358268+00:00"
     },
     {
       "id": "burren-20260704-irish-session",
@@ -2670,7 +2427,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://lamplighterbrewing.com/collections/events",
-      "last_scraped": "2026-06-20T12:03:16.958644+00:00"
+      "last_scraped": "2026-06-21T12:13:23.643717+00:00"
     },
     {
       "id": "burren-20260705-irish-session",
@@ -2724,7 +2481,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.tallshipboston.com/event-details/live-music-vkl",
-      "last_scraped": "2026-06-20T12:03:59.873861+00:00"
+      "last_scraped": "2026-06-21T12:13:50.358275+00:00"
     },
     {
       "id": "burren-20260705-old-timey-session",
@@ -3021,7 +2778,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.tallshipboston.com/event-details/live-music-scully-from-dalton-the-sheriffs-2026-07-09-18-00",
-      "last_scraped": "2026-06-20T12:03:59.873876+00:00"
+      "last_scraped": "2026-06-21T12:13:50.358283+00:00"
     },
     {
       "id": "burren-20260709-janet-feld--erin-ash-sullivan-",
@@ -3236,7 +2993,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://lamplighterbrewing.com/collections/events",
-      "last_scraped": "2026-06-20T12:03:16.958620+00:00"
+      "last_scraped": "2026-06-21T12:13:23.643691+00:00"
     },
     {
       "id": "tallship-20260711-live-music--dj-frank-white",
@@ -3263,7 +3020,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.tallshipboston.com/event-details/live-music-dj-frank-white-9",
-      "last_scraped": "2026-06-20T12:03:59.873889+00:00"
+      "last_scraped": "2026-06-21T12:13:50.358290+00:00"
     },
     {
       "id": "lamplighter-broadway-20260711-brewery-tour---tasting",
@@ -3290,7 +3047,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://lamplighterbrewing.com/collections/events",
-      "last_scraped": "2026-06-20T12:03:16.958684+00:00"
+      "last_scraped": "2026-06-21T12:13:23.643752+00:00"
     },
     {
       "id": "burren-20260711-summer07--gov-t-disco",
@@ -3398,7 +3155,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.tallshipboston.com/event-details/the-collective-studios-tone-at-the-tall-ship",
-      "last_scraped": "2026-06-20T12:03:59.873904+00:00"
+      "last_scraped": "2026-06-21T12:13:50.358301+00:00"
     },
     {
       "id": "tallship-20260712-live-music--beach-nights",
@@ -3425,7 +3182,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://www.tallshipboston.com/event-details/live-music-beach-nights",
-      "last_scraped": "2026-06-20T12:03:59.873917+00:00"
+      "last_scraped": "2026-06-21T12:13:50.358308+00:00"
     },
     {
       "id": "burren-20260713-trivia-night",
@@ -4659,13 +4416,13 @@
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "A festival designed to showcase the beautiful and vibrant Colombian culture in Boston with authentic celebration featuring delicious food, folk dances, troubadours, music, and traditional art.",
+      "description": "A festival designed to showcase the beautiful and vibrant Colombian culture in Boston with delicious food, folk dances, troubadours, music, and traditional art.",
       "image_url": null,
       "ticket_url": null,
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://veronicaroblesculturalcenter.org/events-east-boston/",
-      "last_scraped": "2026-06-20T12:04:09.931424+00:00"
+      "last_scraped": "2026-06-21T12:14:00.211798+00:00"
     },
     {
       "id": "burren-20260808-em-wise-farewell-show-w-cyan-s",
@@ -5582,7 +5339,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://veronicaroblesculturalcenter.org/events-east-boston/",
-      "last_scraped": "2026-06-20T12:04:09.931437+00:00"
+      "last_scraped": "2026-06-21T12:14:00.211811+00:00"
     },
     {
       "id": "burren-20260919-bluegrass-jam",
@@ -5710,13 +5467,13 @@
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "Celebrate life, music, and the vibrant D\u00eda de Muertos spirit \u2014 where elegance meets rock energy! Ages 21+",
+      "description": "Celebrate life, music, and the vibrant D\u00eda de Muertos spirit \u2014 where elegance meets rock energy! Ages 21+. Come dressed as your favorite Catrina and rock the night away!",
       "image_url": null,
       "ticket_url": null,
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://veronicaroblesculturalcenter.org/events-east-boston/",
-      "last_scraped": "2026-06-20T12:04:09.931449+00:00"
+      "last_scraped": "2026-06-21T12:14:00.211822+00:00"
     },
     {
       "id": "vrcc-20261101-d\u00eda-de-muertos-festival",
@@ -5743,7 +5500,7 @@
       "is_recurring": true,
       "recurrence_note": "Annual",
       "source_url": "https://veronicaroblesculturalcenter.org/events-east-boston/",
-      "last_scraped": "2026-06-20T12:04:09.931458+00:00"
+      "last_scraped": "2026-06-21T12:14:00.211830+00:00"
     }
   ],
   "past_events": [
@@ -5772,7 +5529,7 @@
       "is_recurring": true,
       "recurrence_note": "Annual",
       "source_url": "https://veronicaroblesculturalcenter.org/events-east-boston/",
-      "last_scraped": "2026-06-20T12:04:09.931335+00:00"
+      "last_scraped": "2026-06-21T12:14:00.211709+00:00"
     },
     {
       "id": "vrcc-20260307-annual-fundraising-gala",
@@ -5796,10 +5553,10 @@
       "description": "Celebrate culture and the power of community at the Veronica Robles Cultural Center Fundraising Gala 2026.",
       "image_url": null,
       "ticket_url": null,
-      "is_recurring": false,
-      "recurrence_note": null,
+      "is_recurring": true,
+      "recurrence_note": "Annual",
       "source_url": "https://veronicaroblesculturalcenter.org/events-east-boston/",
-      "last_scraped": "2026-06-20T12:04:09.931364+00:00"
+      "last_scraped": "2026-06-21T12:14:00.211739+00:00"
     },
     {
       "id": "vrcc-20260426-d\u00eda-del-ni\u00f1o",
@@ -5826,7 +5583,7 @@
       "is_recurring": false,
       "recurrence_note": null,
       "source_url": "https://veronicaroblesculturalcenter.org/events-east-boston/",
-      "last_scraped": "2026-06-20T12:04:09.931380+00:00"
+      "last_scraped": "2026-06-21T12:14:00.211755+00:00"
     },
     {
       "id": "vrcc-20260523-viva-chile-boston-2026",
@@ -5853,7 +5610,7 @@
       "is_recurring": true,
       "recurrence_note": "Annual",
       "source_url": "https://veronicaroblesculturalcenter.org/events-east-boston/",
-      "last_scraped": "2026-06-20T12:04:09.931395+00:00"
+      "last_scraped": "2026-06-21T12:14:00.211771+00:00"
     },
     {
       "id": "burren-20260608-trivia-night",
@@ -6420,13 +6177,13 @@
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "The annual showcase by the Ver\u00f3nica Robles Cultural Center featuring over 110 multigenerational performers, celebrating the richness of Latin American culture through dance, music, and visual arts.",
+      "description": "The annual showcase by the Ver\u00f3nica Robles Cultural Center featuring over 110 multigenerational performers celebrating the richness of Latin American culture through dance, music, and visual arts.",
       "image_url": null,
       "ticket_url": null,
       "is_recurring": true,
       "recurrence_note": "Annual",
       "source_url": "https://veronicaroblesculturalcenter.org/events-east-boston/",
-      "last_scraped": "2026-06-20T12:04:09.931410+00:00"
+      "last_scraped": "2026-06-21T12:14:00.211785+00:00"
     },
     {
       "id": "burren-20260614-irish-session",
@@ -7568,6 +7325,303 @@
       "recurrence_note": null,
       "source_url": "https://www.burren.com/music.html",
       "last_scraped": "2026-06-20T12:03:29.194444+00:00"
+    },
+    {
+      "id": "lamplighter-broadway-20260619-pepita-lo-fi-friday",
+      "title": "Pepita Lo-Fi Friday",
+      "venue_id": "lamplighter-broadway",
+      "venue": "Lamplighter Brewing - Broadway",
+      "venue_is_local": true,
+      "square": "Central",
+      "transit_line": "Red",
+      "transit_stop": "Central",
+      "walk_minutes": 8,
+      "address": null,
+      "start": "2026-06-19T08:00:00",
+      "end": "2026-06-19T13:00:00",
+      "category": "music",
+      "cost": "Free",
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "A Scholastic Book Fair partnership with More Than Words, a local nonprofit bookstore, featuring curated book and beer pairings. Proceeds support youth ages 16-24 in foster care, experiencing homelessness, or in the court system.",
+      "image_url": "https://lamplighterbrewing.com/cdn/shop/files/BookFairPost_1.png?v=1781103464",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://lamplighterbrewing.com/products/out-in-climate-drag-happy-hour",
+      "last_scraped": "2026-06-19T13:40:05.076172+00:00"
+    },
+    {
+      "id": "tallship-20260619-summer-of-soccer--usa-vs--aust",
+      "title": "Summer of Soccer: USA vs. Australia + Ticket Giveaway!",
+      "venue_id": "tallship",
+      "venue": "The Tall Ship Boston",
+      "venue_is_local": true,
+      "square": "Maverick",
+      "transit_line": "Blue",
+      "transit_stop": "Maverick",
+      "walk_minutes": 7,
+      "address": null,
+      "start": "2026-06-19T14:30:00",
+      "end": "2026-06-19T16:30:00",
+      "category": "sports",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Are you ready to win FIFA World Cup\u2122 tickets, courtesy of @MichelobULTRA? Come in on Friday, June 19th at 2:30pm and play for your chance!",
+      "image_url": "https://static.wixstatic.com/media/081a16_4c27194c72f741dfa53bedef32caa115~mv2.png",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://www.tallshipboston.com/event-details/summer-of-soccer-usa-vs-australia-ticket-giveaway",
+      "last_scraped": "2026-06-19T13:40:24.975168+00:00"
+    },
+    {
+      "id": "tallship-20260619-summer-of-soccer-watch-parties",
+      "title": "Summer of Soccer Watch Parties",
+      "venue_id": "tallship",
+      "venue": "The Tall Ship Boston",
+      "venue_is_local": true,
+      "square": "Maverick",
+      "transit_line": "Blue",
+      "transit_stop": "Maverick",
+      "walk_minutes": 7,
+      "address": null,
+      "start": "2026-06-19T15:00:00",
+      "end": "2026-06-19T22:30:00",
+      "category": "sports",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "USA vs. Australia @3 PM | Scotland vs. Morocco @6 PM | Brazil vs. Haiti @8:30 PM",
+      "image_url": "https://static.wixstatic.com/media/081a16_a67d5f5c59444f72ac50184a2ccf4a0a~mv2.png",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://www.tallshipboston.com/event-details/summer-of-soccer-watch-parties-5",
+      "last_scraped": "2026-06-19T13:40:24.975190+00:00"
+    },
+    {
+      "id": "lamplighter-broadway-20260619-world-cup--usa-vs--australia",
+      "title": "World Cup: USA vs. Australia",
+      "venue_id": "lamplighter-broadway",
+      "venue": "Lamplighter Brewing - Broadway",
+      "venue_is_local": true,
+      "square": "Central",
+      "transit_line": "Red",
+      "transit_stop": "Central",
+      "walk_minutes": 8,
+      "address": null,
+      "start": "2026-06-19T15:00:00",
+      "end": "2026-06-19T17:00:00",
+      "category": "sports",
+      "cost": "Free",
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "A Scholastic Book Fair partnership with More Than Words, a local nonprofit bookstore, featuring curated book and beer pairings. Proceeds support youth ages 16-24 in foster care, experiencing homelessness, or in the court system.",
+      "image_url": "https://lamplighterbrewing.com/cdn/shop/files/BookFairPost_1.png?v=1781103464",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://lamplighterbrewing.com/products/out-in-climate-drag-happy-hour",
+      "last_scraped": "2026-06-19T13:40:05.076142+00:00"
+    },
+    {
+      "id": "tallship-20260619-live-music--dj-spiezio",
+      "title": "Live Music: DJ Spiezio",
+      "venue_id": "tallship",
+      "venue": "The Tall Ship Boston",
+      "venue_is_local": true,
+      "square": "Maverick",
+      "transit_line": "Blue",
+      "transit_stop": "Maverick",
+      "walk_minutes": 7,
+      "address": null,
+      "start": "2026-06-19T18:00:00",
+      "end": "2026-06-19T22:30:00",
+      "category": "music",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": null,
+      "image_url": "https://static.wixstatic.com/media/081a16_0d7278dd6a6541f8b0efb568d62ae502~mv2.png",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://www.tallshipboston.com/event-details/live-music-dj-spiezio-1",
+      "last_scraped": "2026-06-19T13:40:24.975199+00:00"
+    },
+    {
+      "id": "lamplighter-broadway-20260619-world-cup--scotland-vs--morocc",
+      "title": "World Cup: Scotland vs. Morocco",
+      "venue_id": "lamplighter-broadway",
+      "venue": "Lamplighter Brewing - Broadway",
+      "venue_is_local": true,
+      "square": "Central",
+      "transit_line": "Red",
+      "transit_stop": "Central",
+      "walk_minutes": 8,
+      "address": null,
+      "start": "2026-06-19T18:00:00",
+      "end": "2026-06-19T21:00:00",
+      "category": "sports",
+      "cost": "Free",
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "A Scholastic Book Fair partnership with More Than Words, a local nonprofit bookstore, featuring curated book and beer pairings. Proceeds support youth ages 16-24 in foster care, experiencing homelessness, or in the court system.",
+      "image_url": "https://lamplighterbrewing.com/cdn/shop/files/BookFairPost_1.png?v=1781103464",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://lamplighterbrewing.com/products/out-in-climate-drag-happy-hour",
+      "last_scraped": "2026-06-19T13:40:05.076074+00:00"
+    },
+    {
+      "id": "burren-20260619-alastair-moock-trio-with-sean-",
+      "title": "ALASTAIR MOOCK TRIO with SEAN STAPLES and CHANDLER TRAVIS",
+      "venue_id": "burren",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "address": null,
+      "start": "2026-06-19T19:00:00",
+      "end": null,
+      "category": "music",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Award-winning singer-songwriter Alastair Moock is joined by Sean Staples, Chandler Travis, and more",
+      "image_url": "https://tickets.24hourmusic.com/uplimage/alastairmoocktrioSW.jpg",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-20T12:03:29.194460+00:00"
+    },
+    {
+      "id": "passim-20260619-windborne",
+      "title": "Windborne",
+      "venue_id": "passim",
+      "venue": "Club Passim",
+      "venue_is_local": true,
+      "square": "Harvard",
+      "transit_line": "Red",
+      "transit_stop": "Harvard",
+      "walk_minutes": 4,
+      "address": null,
+      "start": "2026-06-19T20:00:00",
+      "end": null,
+      "category": "music",
+      "cost": "$35 / Members $33",
+      "performer": "Windborne",
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Windborne is a vocal ensemble known for innovative arrangements of traditional songs that blend polyphonic vocal harmony with contemporary interpretation. Drawing on 20 years of study in polyphonic music worldwide, the four singers deliver emotionally resonant performances spanning continents and centuries while honoring folk music's tradition of social activism.",
+      "image_url": "https://www.passim.org/wp-content/uploads/2018/07/Windborne-Banjo-Photo-by-Michelle-Frehsee-scaled.jpg",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://www.passim.org/live-music/events/windborne/",
+      "last_scraped": "2026-06-20T12:03:54.464680+00:00"
+    },
+    {
+      "id": "lamplighter-broadway-20260619-world-cup--brazil-vs--haiti",
+      "title": "World Cup: Brazil vs. Haiti",
+      "venue_id": "lamplighter-broadway",
+      "venue": "Lamplighter Brewing - Broadway",
+      "venue_is_local": true,
+      "square": "Central",
+      "transit_line": "Red",
+      "transit_stop": "Central",
+      "walk_minutes": 8,
+      "address": null,
+      "start": "2026-06-19T21:00:00",
+      "end": "2026-06-20T00:00:00",
+      "category": "sports",
+      "cost": "Free",
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "A Scholastic Book Fair partnership with More Than Words, a local nonprofit bookstore, featuring curated book and beer pairings. Proceeds support youth ages 16-24 in foster care, experiencing homelessness, or in the court system.",
+      "image_url": "https://lamplighterbrewing.com/cdn/shop/files/BookFairPost_1.png?v=1781103464",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://lamplighterbrewing.com/products/out-in-climate-drag-happy-hour",
+      "last_scraped": "2026-06-19T13:40:05.076047+00:00"
+    },
+    {
+      "id": "burren-20260619-irish-session",
+      "title": "IRISH SESSION",
+      "venue_id": "burren",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "address": null,
+      "start": "2026-06-19T21:30:00",
+      "end": null,
+      "category": "music",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Weekly closed session with Callum Bell & friends",
+      "image_url": "https://www.burren.com/images/friday session.jpg",
+      "ticket_url": null,
+      "is_recurring": true,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-20T12:03:29.194451+00:00"
+    },
+    {
+      "id": "burren-20260619-the-mockingbirds",
+      "title": "THE MOCKINGBIRDS",
+      "venue_id": "burren",
+      "venue": "The Burren",
+      "venue_is_local": true,
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "address": null,
+      "start": "2026-06-19T22:00:00",
+      "end": null,
+      "category": "music",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Cover Band",
+      "image_url": "https://www.burren.com/images/the mockingbirds.jpeg",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-06-20T12:03:29.194467+00:00"
     }
   ]
 }
