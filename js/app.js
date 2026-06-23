@@ -11,11 +11,10 @@ const ICONS = {
   film: `<rect x="3" y="5" width="18" height="14" rx="1"/><line x1="7" y1="5" x2="7" y2="19"/><line x1="17" y1="5" x2="17" y2="19"/><line x1="3" y1="10" x2="7" y2="10"/><line x1="17" y1="10" x2="21" y2="10"/><line x1="3" y1="15" x2="7" y2="15"/><line x1="17" y1="15" x2="21" y2="15"/>`,
   market: `<path d="M4 8h16l-1.5 11a1 1 0 0 1-1 1H6.5a1 1 0 0 1-1-1L4 8z"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/>`,
   karaoke: `<rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="9" y1="21" x2="15" y2="21"/>`,
-  community: `<path d="M4 19V5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><line x1="8" y1="8" x2="14" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="13" y2="16"/>`,
-  food: `<path d="M3 2v7a3 3 0 0 0 3 3v10"/><path d="M6 2v6"/><path d="M9 2v6"/><path d="M18 2c-1.7 0-3 2-3 5s1.3 4 3 4v11"/>`
+  community: `<path d="M4 19V5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><line x1="8" y1="8" x2="14" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="13" y2="16"/>`
 };
 
-const SQUARES = ["Davis", "Porter", "Harvard", "Central", "Kendall", "Lechmere", "Union Square", "Maverick", "Wonderland"];
+const SQUARES = ["Davis", "Porter", "Harvard", "Central", "Kendall", "Lechmere", "Union Square", "Maverick"];
 const CATEGORIES = ["music", "trivia", "comedy", "film", "market", "karaoke", "community", "sports", "fitness", "food"];
 
 // MBTA line/mode → brand color. Color is presentation, derived from the line
@@ -33,9 +32,7 @@ const LINE_COLORS = {
 };
 const DEFAULT_LINE_COLOR = "#8b93ad"; // text-muted, for unknown/missing lines
 function lineColor(line) {
-  // Accepts a brand name ("Red", from e.transit_line) or a branch route id
-  // ("Red (Ashmont)", from the metro tabs) — both resolve to one trunk color.
-  return LINE_COLORS[LINE_BASE[line] || line] || DEFAULT_LINE_COLOR;
+  return LINE_COLORS[line] || DEFAULT_LINE_COLOR;
 }
 
 // Real clock — 4am rollover so late-night events stay on "tonight"
@@ -45,9 +42,6 @@ function getNow() {
   return d;
 }
 const NOW = getNow();
-// The weekday "tonight" falls on, after the 4am rollover — drives which
-// recurring food deals are live (a deal lists the weekdays it runs).
-const NOW_WEEKDAY = NOW.toLocaleDateString("en-US", { weekday: "long" });
 
 // Wall-clock "now" for "has this moment passed?" checks. Distinct from NOW,
 // which rolls the DATE back before 4am to decide which day counts as "tonight."
@@ -65,9 +59,7 @@ init();
 async function init() {
   setDate();
   buildFilterChips();
-  let deals;
-  [allEvents, venueData, deals] = await Promise.all([loadEvents(), loadVenues(), loadDeals()]);
-  allEvents = allEvents.concat(deals);
+  [allEvents, venueData] = await Promise.all([loadEvents(), loadVenues()]);
   render();
   wireDetailOverlay();
   wireCollapsingHeader();
@@ -82,19 +74,6 @@ async function loadVenues() {
   } catch (err) {
     console.warn("Could not load venues.json", err);
     return {};
-  }
-}
-
-// Recurring food/drink specials, hand-curated (they change rarely). Kept out of
-// data/events.json so the scraper's daily rewrite can't clobber them. Each deal
-// carries the same display fields an event does, plus recurring_days + deal:true.
-async function loadDeals() {
-  try {
-    const res = await fetch("data/deals.json");
-    return await res.json();
-  } catch (err) {
-    console.warn("Could not load deals.json", err);
-    return [];
   }
 }
 
@@ -241,26 +220,19 @@ function buildLocalityPill(e, extraClass) {
 
 
 
-const DEFAULT_EVENT_HOURS = 3;
-
 function eventEndTime(e) {
-  // Use the listed end if we have one. Otherwise assume a DEFAULT_EVENT_HOURS
-  // event. This estimate is deliberately NOT shown anywhere (we never set
-  // e.end, so the card/detail keep showing just the start time) — it only
-  // decides when the event counts as "past", so it drops to the bottom of the
-  // list and dims like every other ended event instead of lingering until 4am.
+  // Use end if available, otherwise treat start as the cutoff
+  // (for events with no listed end time, show until midnight of that day)
   if (e.end) return new Date(e.end);
   if (e.start) {
     const d = new Date(e.start);
-    d.setHours(d.getHours() + DEFAULT_EVENT_HOURS);
+    d.setHours(23, 59, 59);
     return d;
   }
   return new Date(0);
 }
 
 function isTonightEvent(e) {
-  // A recurring deal is "tonight" whenever today's weekday is one it runs on.
-  if (e.deal) return Array.isArray(e.recurring_days) && e.recurring_days.includes(NOW_WEEKDAY);
   if (!e.start) return false;
   const start = new Date(e.start);
   const todayStr = NOW.toDateString();
@@ -269,14 +241,7 @@ function isTonightEvent(e) {
 }
 
 function hasEnded(e) {
-  // Deals run all night with no clock time, so they never drop to "ended".
-  if (e.deal) return false;
   return eventEndTime(e) <= REAL_NOW;
-}
-
-// Sort key in ms. Deals have no start time; float them after timed events.
-function startMs(e) {
-  return e.start ? new Date(e.start).getTime() : (e.deal ? Infinity : 0);
 }
 
 function render() {
@@ -294,11 +259,11 @@ function render() {
 
   const sortFn = (a, b) =>
     activeSquare === "all"
-      ? a.walk_minutes - b.walk_minutes || startMs(a) - startMs(b)
-      : startMs(a) - startMs(b);
+      ? a.walk_minutes - b.walk_minutes || new Date(a.start) - new Date(b.start)
+      : new Date(a.start) - new Date(b.start);
 
   const active = filtered.filter(e => !hasEnded(e)).sort(sortFn);
-  const ended  = filtered.filter(e =>  hasEnded(e)).sort((a, b) => startMs(a) - startMs(b));
+  const ended  = filtered.filter(e =>  hasEnded(e)).sort((a, b) => new Date(a.start) - new Date(b.start));
 
   if (active.length === 0 && ended.length === 0) {
     empty.hidden = false;
@@ -348,7 +313,7 @@ function renderCard(e) {
       <span class="card-venue">${e.venue}</span>
       ${e.cost ? `<span class="cost">${e.cost}</span>` : ""}
     </div>
-    <p class="card-time">${e.deal ? dealTimeLabel(e) : formatTimeRange(e.start, e.end)}</p>
+    <p class="card-time">${formatTimeRange(e.start, e.end)}</p>
     <div class="card-footer">
       <div class="transit-badge" style="--line-color:${lineColor(e.transit_line)}">
         <span class="transit-dot"></span>
@@ -427,9 +392,7 @@ function openDetail(e) {
 
   document.getElementById("detail-title").textContent = e.title;
   const timeEl = document.getElementById("detail-time");
-  timeEl.textContent = e.deal ? dealFullTimeLabel(e) : formatFullTimeRange(e.start, e.end);
-  // A standing weekly deal isn't a calendar event — hide "Add to calendar".
-  document.getElementById("detail-calendar").hidden = !!e.deal;
+  timeEl.textContent = formatFullTimeRange(e.start, e.end);
   if (e.cost) {
     const costSpan = document.createElement("span");
     costSpan.className = "cost";
@@ -541,8 +504,6 @@ function closeDetail() {
 // ============================================================
 
 function downloadICS(e) {
-  if (e.deal) return; // recurring deals have no single date to export
-
   // Event-specific address (street festival, etc.) wins over the venue's home
   // address, matching the detail view. See venueFor / showDetail.
   const icsAddress = e.address || venueFor(e).address || "";
@@ -614,20 +575,6 @@ function shareEvent(e) {
 // ============================================================
 // Formatting helpers
 // ============================================================
-
-function dealLabel(e) {
-  return (e.recurring_days || []).join(" & ");
-}
-// Short form for cards: "All night · every Tuesday".
-function dealTimeLabel(e) {
-  const days = dealLabel(e);
-  return days ? `All night · every ${days}` : "All night";
-}
-// Long form for the detail panel: "Every Tuesday · all night".
-function dealFullTimeLabel(e) {
-  const days = dealLabel(e);
-  return days ? `Every ${days} · all night` : "All night";
-}
 
 function formatTimeRange(start, end) {
   const opts = { hour: "numeric", minute: "2-digit" };
