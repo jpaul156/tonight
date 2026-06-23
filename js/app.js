@@ -11,7 +11,8 @@ const ICONS = {
   film: `<rect x="3" y="5" width="18" height="14" rx="1"/><line x1="7" y1="5" x2="7" y2="19"/><line x1="17" y1="5" x2="17" y2="19"/><line x1="3" y1="10" x2="7" y2="10"/><line x1="17" y1="10" x2="21" y2="10"/><line x1="3" y1="15" x2="7" y2="15"/><line x1="17" y1="15" x2="21" y2="15"/>`,
   market: `<path d="M4 8h16l-1.5 11a1 1 0 0 1-1 1H6.5a1 1 0 0 1-1-1L4 8z"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/>`,
   karaoke: `<rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="9" y1="21" x2="15" y2="21"/>`,
-  community: `<path d="M4 19V5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><line x1="8" y1="8" x2="14" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="13" y2="16"/>`
+  community: `<path d="M4 19V5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><line x1="8" y1="8" x2="14" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="13" y2="16"/>`,
+  food: `<path d="M3 2v7a3 3 0 0 0 3 3v10"/><path d="M6 2v6"/><path d="M9 2v6"/><path d="M18 2c-1.7 0-3 2-3 5s1.3 4 3 4v11"/>`
 };
 
 // ============================================================
@@ -24,23 +25,65 @@ const ICONS = {
 // from membership here, never stored, mirroring how transit_color
 // is derived from transit_line elsewhere.
 // ============================================================
+// Each key is a *route* — a full end-to-end ride, north/west → south/east —
+// imported from prototype/stations.csv (only its Include=TRUE stops, plus any
+// stop that has events). Branching lines (Red, Green) get one route per branch
+// because a single vertical strip can't show a fork; they share a brand color.
+// Lechmere is Include=FALSE in the CSV but kept because it has events — see the
+// SQUARE filter rule below (a stop is only a *filter* if events happen there).
 const LINES = {
-  Red:    ["Alewife", "Davis", "Porter", "Harvard", "Central", "Kendall", "Charles/MGH", "Park Street", "Downtown Crossing", "South Station"],
-  Orange: ["Sullivan Sq", "Assembly", "Community College", "North Station", "Haymarket", "State", "Downtown Crossing", "Chinatown"],
-  Green:  ["Union Square", "Lechmere", "Science Park", "North Station", "Haymarket", "Government Center", "Park Street", "Boylston"],
-  Blue:   ["Wonderland", "Airport", "Maverick", "Aquarium", "State", "Government Center", "Bowdoin"],
+  "Red":          ["Alewife", "Davis", "Porter", "Harvard", "Central", "Kendall/MIT", "Charles/MGH", "Park Street", "Downtown Crossing", "South Station", "Broadway", "JFK/UMass", "Wollaston", "Quincy Center", "Braintree"],
+  "Red (Ashmont)":["Alewife", "Davis", "Porter", "Harvard", "Central", "Kendall/MIT", "Charles/MGH", "Park Street", "Downtown Crossing", "South Station", "Broadway", "JFK/UMass", "Fields Corner", "Ashmont"],
+  "Orange":       ["Oak Grove", "Malden Center", "Assembly", "Sullivan Square", "North Station", "Haymarket", "State", "Downtown Crossing", "Chinatown", "Tufts Medical Center", "Back Bay", "Forest Hills"],
+  "Green (B)":    ["Government Center", "Park Street", "Boylston", "Copley", "Kenmore", "Babcock Street", "Harvard Avenue", "Boston College"],
+  "Green (C)":    ["Government Center", "Park Street", "Boylston", "Copley", "Kenmore", "Coolidge Corner", "Washington Square", "Cleveland Circle"],
+  "Green (D)":    ["Lechmere", "Government Center", "Park Street", "Boylston", "Copley", "Kenmore", "Fenway", "Brookline Village", "Reservoir", "Newton Centre"],
+  "Green (E)":    ["Lechmere", "Government Center", "Park Street", "Boylston", "Copley", "Symphony", "Brigham Circle"],
+  "Blue":         ["Wonderland", "Maverick", "Aquarium", "State", "Government Center"],
 };
 
-// The stops that are real filters. Value is the canonical name stored on
-// events as e.square, which here is always identical to the map label.
-const SQUARES = ["Davis", "Porter", "Harvard", "Central", "Kendall", "Downtown Crossing", "Assembly", "Lechmere", "Union Square", "Maverick"];
-const SQUARE_SET = new Set(SQUARES);
+// Route → brand color name. Branch routes ("Red (Ashmont)", "Green (D)") all
+// fold back to their trunk color, so the map never invents a new hue.
+const LINE_BASE = {
+  "Red": "Red", "Red (Ashmont)": "Red",
+  "Orange": "Orange",
+  "Green (B)": "Green", "Green (C)": "Green", "Green (D)": "Green", "Green (E)": "Green",
+  "Blue": "Blue",
+};
 
-// Which line(s) a stop sits on, in a stable display order, derived from LINES.
-const LINE_ORDER = ["Red", "Orange", "Green", "Blue"];
-function stationLines(name) {
-  return LINE_ORDER.filter(line => LINES[line].includes(name));
+// Friendlier display labels for a few stops (the CSV's "Alt Square Name").
+// Cosmetic only — events still store the canonical station name in e.square.
+const STATION_ALIASES = {
+  "Broadway": "Southie",
+  "Sullivan Square": "East Somerville",
+  "Kenmore": "Fenway Park",
+  "Babcock Street": "BU",
+  "Harvard Avenue": "Allston",
+};
+function stationLabel(name) {
+  return STATION_ALIASES[name] || name;
 }
+
+// Tab order in the metro overlay (one tab per route).
+const LINE_ORDER = ["Red", "Red (Ashmont)", "Orange", "Green (B)", "Green (C)", "Green (D)", "Green (E)", "Blue"];
+// Brand-color order, used when collapsing a stop's routes down to colored dots.
+const BASE_LINE_ORDER = ["Red", "Orange", "Green", "Blue"];
+
+// Routes a stop sits on (used to pick which tab to open).
+function routesForStation(name) {
+  return LINE_ORDER.filter(route => LINES[route].includes(name));
+}
+// Distinct brand colors a stop sits on, for badges/dots — so a stop on two
+// Green branches reads as one Green dot, not two.
+function stationLines(name) {
+  const bases = new Set(routesForStation(name).map(r => LINE_BASE[r]));
+  return BASE_LINE_ORDER.filter(b => bases.has(b));
+}
+
+// Stops that are actually offered as filters: only those where events happen.
+// Populated from loaded events (incl. food deals) in init() — a stop with no
+// events shows on the map as a connector but can't be selected.
+let eventSquares = new Set();
 
 const CATEGORIES = ["music", "trivia", "comedy", "film", "market", "karaoke", "community", "sports", "fitness", "food"];
 
@@ -59,7 +102,9 @@ const LINE_COLORS = {
 };
 const DEFAULT_LINE_COLOR = "#8b93ad"; // text-muted, for unknown/missing lines
 function lineColor(line) {
-  return LINE_COLORS[line] || DEFAULT_LINE_COLOR;
+  // Accepts a brand name ("Red", from e.transit_line) or a branch route id
+  // ("Red (Ashmont)", from the metro tabs) — both resolve to one trunk color.
+  return LINE_COLORS[LINE_BASE[line] || line] || DEFAULT_LINE_COLOR;
 }
 
 // Real clock — 4am rollover so late-night events stay on "tonight"
@@ -69,6 +114,9 @@ function getNow() {
   return d;
 }
 const NOW = getNow();
+// The weekday "tonight" falls on, after the 4am rollover — drives which
+// recurring food deals are live (a deal lists the weekdays it runs).
+const NOW_WEEKDAY = NOW.toLocaleDateString("en-US", { weekday: "long" });
 
 // Wall-clock "now" for "has this moment passed?" checks. Distinct from NOW,
 // which rolls the DATE back before 4am to decide which day counts as "tonight."
@@ -88,7 +136,13 @@ async function init() {
   buildFilterChips();
   renderSquareIndicator();
   wireMetroOverlay();
-  [allEvents, venueData] = await Promise.all([loadEvents(), loadVenues()]);
+  let deals;
+  [allEvents, venueData, deals] = await Promise.all([loadEvents(), loadVenues(), loadDeals()]);
+  // Recurring food deals live alongside one-off events in the same feed; they
+  // just match "tonight" by weekday instead of a calendar date (see isTonightEvent).
+  allEvents = allEvents.concat(deals);
+  // A stop is filterable only if something happens there tonight-or-otherwise.
+  eventSquares = new Set(allEvents.map(e => e.square).filter(Boolean));
   render();
   wireDetailOverlay();
   wireCollapsingHeader();
@@ -103,6 +157,19 @@ async function loadVenues() {
   } catch (err) {
     console.warn("Could not load venues.json", err);
     return {};
+  }
+}
+
+// Recurring food/drink specials, hand-curated (they change rarely). Kept out of
+// data/events.json so the scraper's daily rewrite can't clobber them. Each deal
+// carries the same display fields an event does, plus recurring_days + deal:true.
+async function loadDeals() {
+  try {
+    const res = await fetch("data/deals.json");
+    return await res.json();
+  } catch (err) {
+    console.warn("Could not load deals.json", err);
+    return [];
   }
 }
 
@@ -253,7 +320,7 @@ function openMetro() {
   const overlay = document.getElementById("metro-overlay");
   // Start on the line your current stop is on (first one for a transfer hub),
   // or the Red line when nothing is selected.
-  metroLine = activeSquare === "all" ? "Red" : (stationLines(activeSquare)[0] || "Red");
+  metroLine = activeSquare === "all" ? "Red" : (routesForStation(activeSquare)[0] || "Red");
   renderLineTabs();
   renderMetroMap();
   overlay.hidden = false;
@@ -291,7 +358,7 @@ function renderMetroMap() {
   map.innerHTML = "";
 
   LINES[metroLine].forEach(stop => {
-    const filterable = SQUARE_SET.has(stop);
+    const filterable = eventSquares.has(stop);
     const current = stop === activeSquare;
     const lines = stationLines(stop);
     const transfer = lines.length > 1;
@@ -305,7 +372,7 @@ function renderMetroMap() {
 
     row.innerHTML = `
       <span class="stop-node"></span>
-      <span class="stop-name">${stop}</span>
+      <span class="stop-name">${stationLabel(stop)}</span>
       ${transfer ? `<span class="stop-transfer">${lineDots(lines)}</span>` : ""}
       ${current ? `<span class="stop-here">You are here</span>` : ""}
     `;
@@ -431,19 +498,26 @@ function buildLocalityPill(e, extraClass) {
 
 
 
+const DEFAULT_EVENT_HOURS = 3;
+
 function eventEndTime(e) {
-  // Use end if available, otherwise treat start as the cutoff
-  // (for events with no listed end time, show until midnight of that day)
+  // Use the listed end if we have one. Otherwise assume a DEFAULT_EVENT_HOURS
+  // event. This estimate is deliberately NOT shown anywhere (we never set
+  // e.end, so the card/detail keep showing just the start time) — it only
+  // decides when the event counts as "past", so it drops to the bottom of the
+  // list and dims like every other ended event instead of lingering until 4am.
   if (e.end) return new Date(e.end);
   if (e.start) {
     const d = new Date(e.start);
-    d.setHours(23, 59, 59);
+    d.setHours(d.getHours() + DEFAULT_EVENT_HOURS);
     return d;
   }
   return new Date(0);
 }
 
 function isTonightEvent(e) {
+  // A recurring deal is "tonight" whenever today's weekday is one it runs on.
+  if (e.deal) return Array.isArray(e.recurring_days) && e.recurring_days.includes(NOW_WEEKDAY);
   if (!e.start) return false;
   const start = new Date(e.start);
   const todayStr = NOW.toDateString();
@@ -452,7 +526,14 @@ function isTonightEvent(e) {
 }
 
 function hasEnded(e) {
+  // Deals run all night with no clock time, so they never drop to "ended".
+  if (e.deal) return false;
   return eventEndTime(e) <= REAL_NOW;
+}
+
+// Sort key in ms. Deals have no start time; float them after timed events.
+function startMs(e) {
+  return e.start ? new Date(e.start).getTime() : (e.deal ? Infinity : 0);
 }
 
 function render() {
@@ -470,11 +551,11 @@ function render() {
 
   const sortFn = (a, b) =>
     activeSquare === "all"
-      ? a.walk_minutes - b.walk_minutes || new Date(a.start) - new Date(b.start)
-      : new Date(a.start) - new Date(b.start);
+      ? a.walk_minutes - b.walk_minutes || startMs(a) - startMs(b)
+      : startMs(a) - startMs(b);
 
   const active = filtered.filter(e => !hasEnded(e)).sort(sortFn);
-  const ended  = filtered.filter(e =>  hasEnded(e)).sort((a, b) => new Date(a.start) - new Date(b.start));
+  const ended  = filtered.filter(e =>  hasEnded(e)).sort((a, b) => startMs(a) - startMs(b));
 
   if (active.length === 0 && ended.length === 0) {
     empty.hidden = false;
@@ -524,7 +605,7 @@ function renderCard(e) {
       <span class="card-venue">${e.venue}</span>
       ${e.cost ? `<span class="cost">${e.cost}</span>` : ""}
     </div>
-    <p class="card-time">${formatTimeRange(e.start, e.end)}</p>
+    <p class="card-time">${e.deal ? dealTimeLabel(e) : formatTimeRange(e.start, e.end)}</p>
     <div class="card-footer">
       <div class="transit-badge" style="--line-color:${lineColor(e.transit_line)}">
         <span class="transit-dot"></span>
@@ -603,7 +684,9 @@ function openDetail(e) {
 
   document.getElementById("detail-title").textContent = e.title;
   const timeEl = document.getElementById("detail-time");
-  timeEl.textContent = formatFullTimeRange(e.start, e.end);
+  timeEl.textContent = e.deal ? dealFullTimeLabel(e) : formatFullTimeRange(e.start, e.end);
+  // A standing weekly deal isn't a calendar event — hide "Add to calendar".
+  document.getElementById("detail-calendar").hidden = !!e.deal;
   if (e.cost) {
     const costSpan = document.createElement("span");
     costSpan.className = "cost";
@@ -715,6 +798,8 @@ function closeDetail() {
 // ============================================================
 
 function downloadICS(e) {
+  if (e.deal) return; // recurring deals have no single date to export
+
   // Event-specific address (street festival, etc.) wins over the venue's home
   // address, matching the detail view. See venueFor / showDetail.
   const icsAddress = e.address || venueFor(e).address || "";
@@ -786,6 +871,20 @@ function shareEvent(e) {
 // ============================================================
 // Formatting helpers
 // ============================================================
+
+function dealLabel(e) {
+  return (e.recurring_days || []).join(" & ");
+}
+// Short form for cards: "All night · every Tuesday".
+function dealTimeLabel(e) {
+  const days = dealLabel(e);
+  return days ? `All night · every ${days}` : "All night";
+}
+// Long form for the detail panel: "Every Tuesday · all night".
+function dealFullTimeLabel(e) {
+  const days = dealLabel(e);
+  return days ? `Every ${days} · all night` : "All night";
+}
 
 function formatTimeRange(start, end) {
   const opts = { hour: "numeric", minute: "2-digit" };
