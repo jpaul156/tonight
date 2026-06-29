@@ -427,6 +427,86 @@ def extract_seatengine(html, base_url):
     return events
 
 
+def _jsonld_price(offers):
+    """schema.org offers → display cost string ('$25', '$25 – 75', 'Free', None)."""
+    if not offers:
+        return None
+    o = offers[0] if isinstance(offers, list) else offers
+    price = o.get("price") or o.get("lowPrice")
+    if price in (None, ""):
+        return None
+    price = str(price).strip()
+    if price in ("0", "0.0", "0.00"):
+        return "Free"
+    return price if price.startswith("$") else f"${price}"
+
+
+def extract_jsonld_events(html, base_url):
+    """
+    Generic schema.org Event extractor for pages that server-render their
+    schedule as JSON-LD (e.g. The Rockwell, a WordPress/The Events Calendar
+    site). Reads every Event object found in any <script type="application/
+    ld+json"> block — directly, no LLM. Handles a bare array, a single object,
+    or an @graph wrapper.
+
+    Parse the JSON without pre-unescaping: the blocks are valid JSON whose
+    string values may legitimately contain &lt;/&gt;; we unescape per field
+    afterward (title) or strip with BeautifulSoup (description).
+    """
+    soup = BeautifulSoup(html, "html.parser")
+    raw = []
+    for tag in soup.find_all("script", type="application/ld+json"):
+        try:
+            data = json.loads(tag.string or "")
+        except (ValueError, TypeError):
+            continue
+        candidates = data if isinstance(data, list) else [data]
+        for c in candidates:
+            if not isinstance(c, dict):
+                continue
+            if isinstance(c.get("@graph"), list):
+                candidates.extend(c["@graph"])
+            if c.get("@type") == "Event":
+                raw.append(c)
+
+    events = []
+    seen = set()
+    for e in raw:
+        start = (e.get("startDate") or "")[:16]
+        if len(start) < 16:
+            continue
+        title = html_unescape(e.get("name") or "").strip() or None
+        key = (title, start)
+        if key in seen:
+            continue
+        seen.add(key)
+        desc = None
+        if e.get("description"):
+            desc = BeautifulSoup(html_unescape(e["description"]), "html.parser").get_text(" ").strip() or None
+        img = e.get("image")
+        if isinstance(img, list):
+            img = img[0] if img else None
+        if isinstance(img, dict):
+            img = img.get("url")
+        events.append({
+            "title":       title,
+            "start":       start,
+            "end":         (e.get("endDate") or "")[:16] or None,
+            "location":    None,
+            "cost":        _jsonld_price(e.get("offers")),
+            "source_url":  e.get("url"),
+            "performer":   None,
+            "description": desc,
+            "image_url":   img,
+            "ticket_url":  e.get("url"),
+            "is_recurring": False,
+            "recurrence_note": None,
+        })
+
+    print(f"  Parsed {len(events)} events from JSON-LD (no LLM needed)")
+    return events
+
+
 def extract_squarespace_events(text, base_url):
     """
     Squarespace events collections (e.g. McCarthy's & Toad's /music calendar)
@@ -1070,6 +1150,11 @@ def scrape_venue(venue_cfg, cache, verbose=True, force=False):
     elif strategy == "squarespace_events":
         # Direct parse of a Squarespace events collection (?format=json) — no LLM
         raw_events = extract_squarespace_events(html, base_url)
+        if verbose:
+            print(f"  Pass 1: {len(raw_events)} events (parsed directly, no LLM)")
+    elif strategy == "jsonld_events":
+        # Generic schema.org Event JSON-LD parse — no LLM
+        raw_events = extract_jsonld_events(html, base_url)
         if verbose:
             print(f"  Pass 1: {len(raw_events)} events (parsed directly, no LLM)")
     else:

@@ -1,4 +1,29 @@
-# New venue scraping assessment — Sheet2 batch
+# New venue scraping assessment
+
+## Sheet3 batch (2026-06-29)
+
+**Added & live:**
+| Venue | Square | Strategy | Result |
+|---|---|---|---|
+| The Rockwell | Davis | `jsonld_events` (new, reusable) | 67 events — server-rendered schema.org Event JSON-LD w/ price ranges + images |
+| The Lilypad | Inman Sq | `squarespace_events` | 125 events — jazz/avant-garde; collection at `/home` (found via sitemap) |
+| Bow Market | Union Sq | `squarespace_events` | Wired but **0 now** — its `/upcomingevents` collection is stale (nothing after 2026-06-14); self-populates if resumed |
+
+**Not added — documented for later:**
+| Venue | Why | Path |
+|---|---|---|
+| Phoenix Landing | `/events` is recurring weekly programming written as prose ("Wednesdays 7pm Trivia…"), not dated events | Better as curated recurring entries (like `deals.json`) |
+| Cantab Lounge | Custom site; the event calendar isn't on the homepage and wasn't located | Find the calendar page/feed |
+| Brighton Music Hall | Shopify (Crossroads/AEG umbrella); events not exposed via products.json or JSON-LD | Investigate the shows feed |
+| Laugh Boston | **Tixr** platform (calendar.laughboston.com); also out-of-core (Seaport) | Tixr API parser (new) if in scope |
+| Improv Asylum | **Tixr** platform; out-of-core (North End) | Same as above |
+
+New reusable strategy this batch: **`jsonld_events`** — parses any page that
+server-renders schema.org `Event` JSON-LD (The Events Calendar, etc.).
+
+---
+
+# Sheet2 batch
 
 ## Build status (2026-06-29)
 

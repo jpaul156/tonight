@@ -206,5 +206,53 @@
     "is_local": true,
     "logo_url": null,
     "logo_thumb_url": null
+  },
+  "rockwell": {
+    "id": "rockwell",
+    "name": "The Rockwell",
+    "square": "Davis",
+    "transit_line": "Red",
+    "transit_stop": "Davis",
+    "walk_minutes": 2,
+    "address": "255 Elm St, Somerville, MA",
+    "neighborhood": "Davis Square",
+    "phone": null,
+    "website": "https://therockwell.org",
+    "notes": "Cabaret/variety theater: comedy, drag, music, classes, and special events.",
+    "is_local": true,
+    "logo_url": null,
+    "logo_thumb_url": null
+  },
+  "lilypad": {
+    "id": "lilypad",
+    "name": "The Lilypad",
+    "square": "Inman Square",
+    "transit_line": "Bus",
+    "transit_stop": "Inman Square",
+    "walk_minutes": 1,
+    "address": "1353 Cambridge St, Cambridge, MA",
+    "neighborhood": "Inman Square",
+    "phone": null,
+    "website": "https://www.lilypadinman.com",
+    "notes": "Small Inman Square room for jazz and avant-garde music; multiple sets a night.",
+    "is_local": true,
+    "logo_url": null,
+    "logo_thumb_url": null
+  },
+  "bow-market": {
+    "id": "bow-market",
+    "name": "Bow Market",
+    "square": "Union Square",
+    "transit_line": "Green",
+    "transit_stop": "Union Square",
+    "walk_minutes": 3,
+    "address": "1 Bow Market Way, Somerville, MA",
+    "neighborhood": "Union Square",
+    "phone": null,
+    "website": "https://www.bowmarketsomerville.com",
+    "notes": "Open-air market with food, bars, and shops; hosts comedy, markets, and events.",
+    "is_local": true,
+    "logo_url": null,
+    "logo_thumb_url": null
   }
 }

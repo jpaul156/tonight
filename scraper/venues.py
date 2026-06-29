@@ -309,6 +309,66 @@ VENUES = [
         "extra_venues": [],
     },
 
+    {
+        "id": "rockwell",
+        "name": "The Rockwell",
+        "address": "255 Elm St, Somerville, MA",
+        "square": "Davis",
+        "transit_line": "Red",
+        "transit_stop": "Davis",
+        "walk_minutes": 2,
+        "is_local": True,
+        # WordPress/The Events Calendar site that server-renders the full
+        # schedule as schema.org Event JSON-LD — parsed directly, no LLM.
+        "collection_url": "https://therockwell.org/calendar/",
+        "scrape_strategy": "jsonld_events",
+        "detail_pages": False,
+        "url_contains": None,
+        "location_keywords": {},
+        "extra_venues": [],
+    },
+
+    {
+        "id": "lilypad",
+        "name": "The Lilypad",
+        "address": "1353 Cambridge St, Cambridge, MA",
+        "square": "Inman Square",
+        "transit_line": "Bus",
+        "transit_stop": "Inman Square",
+        "walk_minutes": 1,
+        "is_local": True,
+        # Squarespace events collection lives at /home (per sitemap) — jazz and
+        # avant-garde shows, often several a night. Parsed from ?format=json.
+        "collection_url": "https://www.lilypadinman.com/home?format=json",
+        "scrape_strategy": "squarespace_events",
+        "detail_pages": False,
+        "url_contains": None,
+        "location_keywords": {},
+        "extra_venues": [],
+    },
+
+    {
+        "id": "bow-market",
+        "name": "Bow Market",
+        "address": "1 Bow Market Way, Somerville, MA",
+        "square": "Union Square",
+        "transit_line": "Green",
+        "transit_stop": "Union Square",
+        "walk_minutes": 3,
+        "is_local": True,
+        # Squarespace events collection at /upcomingevents (per sitemap). NOTE:
+        # as of 2026-06 this collection is stale — nothing posted after mid-June,
+        # so it currently yields 0 upcoming. Config is correct and will populate
+        # automatically if Bow Market resumes posting here. (Multi-tenant market;
+        # treated as one venue per the project decision.)
+        "collection_url": "https://www.bowmarketsomerville.com/upcomingevents?format=json",
+        "scrape_strategy": "squarespace_events",
+        "detail_pages": False,
+        "url_contains": None,
+        "location_keywords": {},
+        "extra_venues": [],
+    },
+
 ]
 
 # Quick lookup by venue ID (used by the runner to resolve sibling venues)
