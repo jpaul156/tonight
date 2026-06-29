@@ -93,7 +93,7 @@
     "logo_url": "assets/venues/orig/vrcc.jpg",
     "logo_thumb_url": null,
     "is_local": true,
-    "notes": "Latino cultural center in East Boston. Festivals, family events, and community celebrations \u2014 some held off-site at partner venues."
+    "notes": "Latino cultural center in East Boston. Festivals, family events, and community celebrations — some held off-site at partner venues."
   },
   "mission": {
     "id": "mission",
@@ -110,5 +110,69 @@
     "logo_thumb_url": null,
     "is_local": true,
     "notes": "Beachfront bar and restaurant at Revere Beach. Rotating weekday food deals: $1 oysters (Mon), half-price fried (Tue), 1/2-off sandwiches (Wed), $1 wings (Thu)."
+  },
+  "sally-obriens": {
+    "id": "sally-obriens",
+    "name": "Sally O'Brien's",
+    "square": "Union Square",
+    "transit_line": "Green",
+    "transit_stop": "Union Square",
+    "walk_minutes": 3,
+    "address": "335 Somerville Ave, Somerville, MA",
+    "neighborhood": "Union Square",
+    "phone": "(617) 666-3589",
+    "website": "https://www.sallyobriensbar.com",
+    "notes": "Long-running Union Square live music bar; free shows most nights.",
+    "is_local": true,
+    "logo_url": null,
+    "logo_thumb_url": null
+  },
+  "arts-armory": {
+    "id": "arts-armory",
+    "name": "Arts at the Armory",
+    "square": "Davis",
+    "transit_line": "Green",
+    "transit_stop": "Magoun",
+    "walk_minutes": 10,
+    "address": "191 Highland Ave, Somerville, MA",
+    "neighborhood": "Davis Square",
+    "phone": "(617) 718-2191",
+    "website": "https://artsatthearmory.org",
+    "notes": "Community arts hall: music, markets, talks, performances.",
+    "is_local": true,
+    "logo_url": null,
+    "logo_thumb_url": null
+  },
+  "plough-stars": {
+    "id": "plough-stars",
+    "name": "The Plough and Stars",
+    "square": "Central",
+    "transit_line": "Red",
+    "transit_stop": "Central",
+    "walk_minutes": 8,
+    "address": "912 Massachusetts Ave, Cambridge, MA",
+    "neighborhood": "Central Square",
+    "phone": "(617) 576-0032",
+    "website": "https://www.ploughandstars.com",
+    "notes": "Irish pub with nightly live music.",
+    "is_local": true,
+    "logo_url": null,
+    "logo_thumb_url": null
+  },
+  "sinclair": {
+    "id": "sinclair",
+    "name": "The Sinclair",
+    "square": "Harvard",
+    "transit_line": "Red",
+    "transit_stop": "Harvard",
+    "walk_minutes": 3,
+    "address": "52 Church St, Cambridge, MA",
+    "neighborhood": "Harvard Square",
+    "phone": "(617) 547-5200",
+    "website": "https://www.sinclaircambridge.com",
+    "notes": "AEG live music venue and restaurant in Harvard Square.",
+    "is_local": false,
+    "logo_url": null,
+    "logo_thumb_url": null
   }
 }

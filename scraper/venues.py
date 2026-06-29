@@ -195,6 +195,78 @@ VENUES = [
         "extra_venues": [],
     },
 
+    # ----------------------------------------------------------
+    # Sheet2 batch (added 2026-06-29). All html_full_text + LLM:
+    # event text is server-rendered, no inline JSON-LD Event data.
+    # See scraper/NEW_VENUES.md for the per-venue parse assessment.
+    # detail_pages left False on the first pass — turn on per venue
+    # only if a calendar lacks image/description we want.
+    # ----------------------------------------------------------
+    {
+        "id": "sally-obriens",
+        "name": "Sally O'Brien's",
+        "address": "335 Somerville Ave, Somerville, MA",
+        "square": "Union Square",
+        "transit_line": "Green",
+        "transit_stop": "Union Square",
+        "walk_minutes": 3,
+        "is_local": True,
+        "collection_url": "https://www.sallyobriensbar.com/music/",
+        "scrape_strategy": "html_full_text",
+        "detail_pages": False,
+        "url_contains": None,
+        "location_keywords": {},
+        "extra_venues": [],
+    },
+    {
+        "id": "arts-armory",
+        "name": "Arts at the Armory",
+        "address": "191 Highland Ave, Somerville, MA",
+        "square": "Davis",
+        "transit_line": "Green",
+        "transit_stop": "Magoun",
+        "walk_minutes": 10,
+        "is_local": True,
+        "collection_url": "https://artsatthearmory.org/upcoming-events/",
+        "scrape_strategy": "html_full_text",
+        "detail_pages": False,
+        "url_contains": None,
+        "location_keywords": {},
+        "extra_venues": [],
+    },
+    {
+        "id": "plough-stars",
+        "name": "The Plough and Stars",
+        "address": "912 Massachusetts Ave, Cambridge, MA",
+        "square": "Central",
+        "transit_line": "Red",
+        "transit_stop": "Central",
+        "walk_minutes": 8,
+        "is_local": True,
+        "collection_url": "https://calendar.ploughandstars.com/events/calendar",
+        "scrape_strategy": "html_full_text",
+        "detail_pages": False,
+        "url_contains": None,
+        "location_keywords": {},
+        "extra_venues": [],
+    },
+    {
+        "id": "sinclair",
+        "name": "The Sinclair",
+        "address": "52 Church St, Cambridge, MA",
+        "square": "Harvard",
+        "transit_line": "Red",
+        "transit_stop": "Harvard",
+        "walk_minutes": 3,
+        "is_local": False,
+        "collection_url": "https://www.sinclaircambridge.com/events",
+        "scrape_strategy": "html_full_text",
+        "detail_pages": False,
+        "url_contains": None,
+        "location_keywords": {},
+        "extra_venues": [],
+    },
+
 ]
 
 # Quick lookup by venue ID (used by the runner to resolve sibling venues)
