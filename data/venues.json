@@ -174,5 +174,21 @@
     "is_local": false,
     "logo_url": null,
     "logo_thumb_url": null
+  },
+  "comedy-studio": {
+    "id": "comedy-studio",
+    "name": "The Comedy Studio",
+    "square": "Harvard",
+    "transit_line": "Red",
+    "transit_stop": "Harvard",
+    "walk_minutes": 2,
+    "address": "5 John F. Kennedy St, Cambridge, MA",
+    "neighborhood": "Harvard Square",
+    "phone": null,
+    "website": "https://www.thecomedystudio.com",
+    "notes": "Stand-up showcase in Harvard Square; SeatEngine box office.",
+    "is_local": true,
+    "logo_url": null,
+    "logo_thumb_url": null
   }
 }

@@ -336,6 +336,96 @@ def extract_wix_events(html, base_url):
     return events
 
 
+def _seatengine_cost(offers):
+    """First offer's price → display string ('$20', 'Free', or None)."""
+    if not offers:
+        return None
+    o = offers[0] if isinstance(offers, list) else offers
+    price = o.get("price")
+    if price in (None, ""):
+        return None
+    try:
+        val = float(price)
+    except (TypeError, ValueError):
+        return None
+    if val == 0:
+        return "Free"
+    # drop trailing .00 so $20.00 reads as $20
+    return f"${val:.2f}".rstrip("0").rstrip(".")
+
+
+def extract_seatengine(html, base_url):
+    """
+    SeatEngine box-office sites (comedy clubs like The Comedy Studio) embed the
+    full schedule as a JSON-LD EventVenue with an events[] array of schema.org
+    Event objects — title, start/end (ISO, local offset), description, image,
+    price (offers), performer, and a checkout URL. Fully machine-readable, so no
+    LLM is needed for extraction (categories are still classified in Pass 3).
+
+    Note: parse the venue's SeatEngine site (the *-seatengine-sites.com host),
+    not the club's own /events page — the latter is a React shell whose JSON-LD
+    carries the venue but zero events.
+    """
+    soup = BeautifulSoup(html, "html.parser")
+    venue = None
+    for tag in soup.find_all("script", type="application/ld+json"):
+        try:
+            data = json.loads(tag.string or "")
+        except (ValueError, TypeError):
+            continue
+        if isinstance(data, dict) and data.get("@type") == "EventVenue":
+            venue = data
+            break
+    if not venue:
+        print("  WARNING: no SeatEngine EventVenue JSON-LD found on page")
+        return []
+
+    events = []
+    for e in venue.get("events", []):
+        status = (e.get("eventStatus") or "")
+        if "Cancelled" in status or "Postponed" in status:
+            continue
+        start = (e.get("startDate") or "")[:16]  # 'YYYY-MM-DDThh:mm' local wall time
+        if len(start) < 16:
+            continue
+        end = (e.get("endDate") or "")[:16] or None
+
+        # Description is HTML and ends with a boilerplate "The Bar" footer on
+        # every event — strip tags and cut the footer so cards stay clean.
+        desc = None
+        if e.get("description"):
+            text = BeautifulSoup(e["description"], "html.parser").get_text("\n").strip()
+            text = re.split(r"\n?\s*The Bar\s*\n", text)[0].strip()
+            desc = text or None
+
+        offers = e.get("offers") or []
+        ticket_url = (offers[0].get("url") if offers else None)
+        performer = None
+        perf = e.get("performer")
+        if isinstance(perf, list) and perf:
+            performer = perf[0].get("name")
+        elif isinstance(perf, dict):
+            performer = perf.get("name")
+
+        events.append({
+            "title":       e.get("name"),
+            "start":       start,
+            "end":         end,
+            "location":    None,
+            "cost":        _seatengine_cost(offers),
+            "source_url":  ticket_url,
+            "performer":   performer,
+            "description": desc,
+            "image_url":   e.get("image"),
+            "ticket_url":  ticket_url,
+            "is_recurring": False,
+            "recurrence_note": None,
+        })
+
+    print(f"  Parsed {len(events)} events from SeatEngine JSON-LD (no LLM needed)")
+    return events
+
+
 def extract_shopify_products(html, base_url):
     """
     For Shopify/Tailwind sites with no semantic class names.
@@ -613,12 +703,19 @@ Text:
     return detail
 
 
-def llm_classify_categories(raw_events):
+def llm_classify_categories(raw_events, venue_cfg=None):
     if not raw_events:
         return {}
     titles = [{"index": i, "title": e.get("title", "")} for i, e in enumerate(raw_events)]
+    # A single-purpose venue (e.g. a comedy club) can set default_category so
+    # generically-titled shows ("Certified Fresh", "Comedy Gold") still bucket
+    # correctly instead of falling to "other".
+    default = (venue_cfg or {}).get("default_category")
+    hint = (f"\nAll of these events are at {venue_cfg.get('name')}, a {default} venue — "
+            f"when a title is ambiguous, prefer \"{default}\".\n") if default else ""
     prompt = f"""Classify each event title into exactly one category:
 {", ".join(VALID_CATEGORIES)}
+{hint}
 
 Definitions:
 - music: live band, DJ, concert, open mic, ambient/lo-fi session, folk, jazz, etc.
@@ -638,9 +735,11 @@ Return ONLY a JSON array with "index" and "category" per item. No fences.
 Events:
 {json.dumps(titles, indent=2)}"""
 
+    # ~25 tokens/event in the response; budget generously so high-volume venues
+    # (a 150-show comedy calendar) don't get truncated and silently fall back.
     msg = client.messages.create(
         model="claude-haiku-4-5",
-        max_tokens=1000,
+        max_tokens=max(1000, len(titles) * 30),
         messages=[{"role": "user", "content": prompt}]
     )
     try:
@@ -772,9 +871,12 @@ def build_events(raw_events, category_map, detail_map, venue_cfg):
         else:
             venue_ids = [resolve_venue_id(location_str, description, venue_cfg)]
 
-        category = category_map.get(i, "other")
+        # Fall back to the venue's default_category (e.g. a comedy club) rather
+        # than "other" when the classifier didn't label this event.
+        fallback = venue_cfg.get("default_category") or "other"
+        category = category_map.get(i, fallback)
         if category not in VALID_CATEGORIES:
-            category = "other"
+            category = fallback if fallback in VALID_CATEGORIES else "other"
 
         # An event whose address differs from the venue's home address (e.g. a
         # street festival). None for the common case of "at the venue", where
@@ -904,6 +1006,11 @@ def scrape_venue(venue_cfg, cache, verbose=True, force=False):
         raw_events = extract_wix_events(html, base_url)
         if verbose:
             print(f"  Pass 1: {len(raw_events)} events (parsed directly, no LLM)")
+    elif strategy == "seatengine":
+        # Direct JSON-LD parse from a SeatEngine box-office site — no LLM needed
+        raw_events = extract_seatengine(html, base_url)
+        if verbose:
+            print(f"  Pass 1: {len(raw_events)} events (parsed directly, no LLM)")
     else:
         # Text extraction + LLM
         if strategy == "shopify_products":
@@ -973,7 +1080,7 @@ def scrape_venue(venue_cfg, cache, verbose=True, force=False):
     # --- Pass 3: classify categories ---
     if verbose:
         print(f"  Pass 3: classifying categories...")
-    category_map = llm_classify_categories(raw_events)
+    category_map = llm_classify_categories(raw_events, venue_cfg)
     if verbose:
         for i, cat in category_map.items():
             title = raw_events[i].get("title", "?")[:40]

@@ -18,7 +18,7 @@ parser or headless render):
 
 | Venue | Reality | Next step |
 |---|---|---|
-| The Comedy Studio | React app, tickets via **Dice.fm** — `html_full_text` stripped to 156 chars → 0 events | Parse the Dice.fm API (venue feed) — reusable for other Dice venues. |
+| ~~The Comedy Studio~~ **DONE** | Not Dice after all — the Dice block was vestigial. Real box office is **SeatEngine**, which ships a JSON-LD `EventVenue.events[]` (151 events w/ price, image, performer). Built `seatengine` strategy (no LLM); 136 active events. Parser is reusable for any SeatEngine comedy club. |
 | Porter Square Books | JS calendar; TEC REST API returns **403** | Find the calendar's JSON feed with the right headers, or headless. |
 | McCarthy's and Toad | Squarespace JS calendar; `/calendar` is a page shell, static HTML nearly empty | Locate the Squarespace **events collection** slug → `?format=json`. |
 

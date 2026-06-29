@@ -267,6 +267,28 @@ VENUES = [
         "extra_venues": [],
     },
 
+    {
+        "id": "comedy-studio",
+        "name": "The Comedy Studio",
+        "address": "5 John F. Kennedy St, Cambridge, MA",
+        "square": "Harvard",
+        "transit_line": "Red",
+        "transit_stop": "Harvard",
+        "walk_minutes": 2,
+        "is_local": True,
+        # The club's own /events page is a React shell; the real schedule lives
+        # on its SeatEngine box-office site as JSON-LD (EventVenue.events[]).
+        # Parsed directly via the seatengine strategy — no LLM. The v-<uuid> host
+        # is this venue's stable SeatEngine site id.
+        "collection_url": "https://v-cf2b1561-bf36-40b8-8380-9c2a3bd0e4e3.seatengine-sites.com",
+        "scrape_strategy": "seatengine",
+        "default_category": "comedy",  # a comedy club — bias ambiguous titles to comedy
+        "detail_pages": False,
+        "url_contains": None,
+        "location_keywords": {},
+        "extra_venues": [],
+    },
+
 ]
 
 # Quick lookup by venue ID (used by the runner to resolve sibling venues)
