@@ -847,7 +847,12 @@ a:focus-visible {
 .metro-panel {
   width: 100%;
   max-width: var(--max-width);
-  max-height: 88vh;
+  /* Fill almost the whole screen — a near-full sheet, not a bottom half. The
+     stage (flex: 1) soaks up the extra height for a big map. */
+  height: 96vh;
+  height: 96dvh;
+  max-height: 96vh;
+  max-height: 96dvh;
   display: flex;
   flex-direction: column;
   background: var(--bg);
