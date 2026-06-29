@@ -80,6 +80,12 @@ The transit navigation layer lives in three standalone HTML files at the repo ro
 - **Square coverage on the in-app metro map:** the overlay filters by station *name* (an event's `square` joins to a grid node's `name` in `transit-layer.json`). Most squares map fine (Union Square, Magoun Square, Lechmere are all present). The known gap is **Inman Square** (The Lilypad) — a bus neighborhood with no train station. By design Inman Sq has no map node, so The Lilypad shows in the full "Near me" list but is never tied to a station square (the `square === activeSquare` filter never matches it). This is the intended behavior for bus-only neighborhoods.
 - **Bus-connected squares (planned):** add a strategy to surface squares served only by buses (like Inman). For such a square, display the bus routes that connect to it **with service frequency of 15 min or better** — MBTA now runs several frequent bus routes (the Frequent Bus Network / former "Key Bus Routes"). Likely sourced from GTFS `routes.txt` + `frequencies.txt`/headway analysis via the V3 API. Decide how these render on/near the metro map (e.g. a bus node or a frequency badge) so a bus-only square still has a navigable home.
 
+## Pending product work
+
+- **Weekly event verification:** Some recurring events (trivia nights, sessions) get cancelled week-to-week without the calendar being updated (e.g. Grainne O'Malley's was skipped). We need a mechanism for venues to confirm their recurring events are still on — e.g. a venue-facing view where they click a button to verify for the current day/week. Until this exists, treat weekly-only calendars cautiously (Grainne O'Malley's is on hold for this reason).
+
+- **Movies / cinema listings:** Add Apple Cinemas, Coolidge Corner Theatre, and similar to the venue list. Movie showtimes should be hidden from the main event feed by default (since the app prioritizes live events) — likely a separate category or `event_type: "film"` filter that must be opted into. Design the opt-in UX before adding cinema venues.
+
 ## Deployment
 
 GitHub Pages serves the repo root. Push to `main` → live within ~1 minute. The scraper runs automatically via GitHub Actions (`scrape.yml`) daily at 6am ET and commits updated `events.json` directly to `main`.

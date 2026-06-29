@@ -369,6 +369,210 @@ VENUES = [
         "extra_venues": [],
     },
 
+    # ----------------------------------------------------------
+    # Midway Cafe — Jamaica Plain (Green Street, Orange)
+    # ----------------------------------------------------------
+    {
+        "id": "midway-cafe",
+        "name": "Midway Cafe",
+        "address": "3496 Washington St, Jamaica Plain, MA",
+        "square": "Green Street",
+        "transit_line": "Orange",
+        "transit_stop": "Green Street",
+        "walk_minutes": 12,
+        "is_local": True,
+        # Custom HTML calendar page with a simple table grid. No JSON-LD,
+        # no CMS plugin — send full page body to LLM.
+        "collection_url": "https://midwaycafe.com/our/calendar",
+        "scrape_strategy": "html_full_text",
+        "detail_pages": False,
+        "url_contains": None,
+        "location_keywords": {},
+        "extra_venues": [],
+    },
+
+    # ----------------------------------------------------------
+    # Dorchester Brewing Co. — Dorchester (Andrew, Red)
+    # ----------------------------------------------------------
+    {
+        "id": "dorchester-brewing",
+        "name": "Dorchester Brewing Co.",
+        "address": "1250 Massachusetts Ave, Dorchester, MA",
+        "square": "Andrew Square",
+        "transit_line": "Red",
+        "transit_stop": "Andrew",
+        "walk_minutes": 12,
+        "is_local": True,
+        # WordPress site; calendar page renders event HTML without JSON-LD.
+        "collection_url": "https://www.dorchesterbrewing.com/events-calendar/",
+        "scrape_strategy": "html_full_text",
+        "detail_pages": False,
+        "url_contains": None,
+        "prompt_notes": (
+            "- Skip any listing whose title contains 'Private Event' or 'Private Party'."
+        ),
+        "location_keywords": {},
+        "extra_venues": [],
+    },
+
+    # ----------------------------------------------------------
+    # The Lizard Lounge — Cambridge (Porter, Red)
+    # ----------------------------------------------------------
+    {
+        "id": "lizard-lounge",
+        "name": "The Lizard Lounge",
+        "address": "1667 Massachusetts Ave, Cambridge, MA",
+        "square": "Porter",
+        "transit_line": "Red",
+        "transit_stop": "Porter",
+        "walk_minutes": 8,
+        "is_local": True,
+        # WordPress + The Events Calendar plugin. JSON-LD Event schema embedded
+        # in the page — parse directly, no LLM needed.
+        "collection_url": "https://lizardloungeclub.com/calendar/",
+        "scrape_strategy": "jsonld_events",
+        "detail_pages": False,
+        "url_contains": None,
+        "location_keywords": {},
+        "extra_venues": [],
+    },
+
+    # ----------------------------------------------------------
+    # Idle Hands Craft Ales — Malden Center (Orange)
+    # ----------------------------------------------------------
+    {
+        "id": "idle-hands",
+        "name": "Idle Hands Craft Ales",
+        "address": "35 Medford St, Malden, MA",
+        "square": "Malden Center",
+        "transit_line": "Orange",
+        "transit_stop": "Malden Center",
+        "walk_minutes": 10,
+        "is_local": True,
+        # Squarespace events collection confirmed via ?format=json (returns
+        # "upcoming" array with title, startDate, endDate, image, etc.).
+        "collection_url": "https://www.idlehandscraftales.com/events?format=json",
+        "scrape_strategy": "squarespace_events",
+        "detail_pages": False,
+        "url_contains": None,
+        "location_keywords": {},
+        "extra_venues": [],
+    },
+
+    # ----------------------------------------------------------
+    # Faces Brewing Co. — Malden Center (Orange)
+    # ----------------------------------------------------------
+    {
+        "id": "faces-brewing",
+        "name": "Faces Brewing Co.",
+        "address": "107 Ferry St, Malden, MA",
+        "square": "Malden Center",
+        "transit_line": "Orange",
+        "transit_stop": "Malden Center",
+        "walk_minutes": 12,
+        "is_local": True,
+        # Squarespace site — events collection at /events?format=json.
+        "collection_url": "https://www.facesbrewing.com/events?format=json",
+        "scrape_strategy": "squarespace_events",
+        "detail_pages": False,
+        "url_contains": None,
+        "location_keywords": {},
+        "extra_venues": [],
+    },
+
+    # ----------------------------------------------------------
+    # Medford Brewing Company — Medford Square (Bus)
+    # ----------------------------------------------------------
+    {
+        "id": "medford-brewing",
+        "name": "Medford Brewing Company",
+        "address": "30 Harvard Ave, Medford, MA",
+        "square": "Medford Square",
+        "transit_line": "Bus",
+        "transit_stop": "Medford Square",
+        "walk_minutes": 5,
+        "is_local": True,
+        # WordPress + The Events Calendar plugin. JSON-LD Event schema on the
+        # events page — same pattern as The Rockwell.
+        "collection_url": "https://medfordbrew.com/events/",
+        "scrape_strategy": "jsonld_events",
+        "detail_pages": False,
+        "url_contains": None,
+        "location_keywords": {},
+        "extra_venues": [],
+    },
+
+    # ----------------------------------------------------------
+    # Deep Cuts — Medford Square (Bus)
+    # ----------------------------------------------------------
+    {
+        "id": "deep-cuts",
+        "name": "Deep Cuts",
+        "address": "21 Main St, Medford, MA",
+        "square": "Medford Square",
+        "transit_line": "Bus",
+        "transit_stop": "Medford Square",
+        "walk_minutes": 3,
+        "is_local": True,
+        # Events page appears JS-rendered (WebFetch returned blank). Trying
+        # html_full_text first; may need Playwright if the page stays empty.
+        "collection_url": "https://www.deepcuts.rocks/events",
+        "scrape_strategy": "html_full_text",
+        "detail_pages": False,
+        "url_contains": None,
+        "location_keywords": {},
+        "extra_venues": [],
+    },
+
+    # ----------------------------------------------------------
+    # Village Social Club — Brookline Village (Green D)
+    # ----------------------------------------------------------
+    {
+        "id": "village-social",
+        "name": "Village Social Club",
+        "address": "27 Harvard St, Brookline, MA",
+        "square": "Brookline Village",
+        "transit_line": "Green",
+        "transit_stop": "Brookline Village",
+        "walk_minutes": 3,
+        "is_local": True,
+        # BentoBox CMS — calendar page at /event-calendar/. May be JS-rendered;
+        # if html_full_text yields nothing, Playwright will be needed.
+        "collection_url": "https://www.villagesocialclub.com/event-calendar/",
+        "scrape_strategy": "html_full_text",
+        "detail_pages": False,
+        "url_contains": None,
+        "prompt_notes": (
+            "- Skip any listing whose title is 'Private Event' or 'Private Party' "
+            "or contains the word 'Private'."
+        ),
+        "location_keywords": {},
+        "extra_venues": [],
+    },
+
+    # ----------------------------------------------------------
+    # Hamilton Restaurant & Bar — Coolidge Corner (Green C)
+    # ----------------------------------------------------------
+    {
+        "id": "hamilton-brookline",
+        "name": "Hamilton Restaurant & Bar",
+        "address": "1 Longwood Ave, Brookline, MA",
+        "square": "Coolidge Corner",
+        "transit_line": "Green",
+        "transit_stop": "Coolidge Corner",
+        "walk_minutes": 3,
+        "is_local": True,
+        # SpotApps CMS events page. Currently hosts one recurring event:
+        # Geeks Who Drink Trivia, every Monday at 7:30pm. html_full_text
+        # to pick up any additional events that get added.
+        "collection_url": "https://hamiltonbrookline.com/brookline-coolidge-corner-hamilton-restaurant-and-bar-events",
+        "scrape_strategy": "html_full_text",
+        "detail_pages": False,
+        "url_contains": None,
+        "location_keywords": {},
+        "extra_venues": [],
+    },
+
 ]
 
 # Quick lookup by venue ID (used by the runner to resolve sibling venues)

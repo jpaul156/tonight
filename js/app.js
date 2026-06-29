@@ -832,6 +832,18 @@ function startMs(e) {
   return e.start ? new Date(e.start).getTime() : (e.deal ? Infinity : 0);
 }
 
+// Stable pseudo-random key derived from the event id, so "Near me" can shuffle
+// events without them jumping around on every re-render.
+function randKey(e) {
+  const s = String(e.id ?? "");
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return (h >>> 0) / 4294967296;
+}
+
 function render() {
   const list = document.getElementById("event-list");
   const empty = document.getElementById("empty-state");
@@ -845,9 +857,15 @@ function render() {
       return squareMatch && categoryMatch;
     });
 
+  // In "Near me" there is no user location, so walk_minutes (distance from the
+  // event's own station) is not a meaningful order — it just floats whichever
+  // venue happens to sit closest to any station (e.g. The Lilypad, 1 min from
+  // Inman) to the top. Until we have a real location, randomize instead. The
+  // random key is stable per event id so the order doesn't reshuffle on every
+  // re-render.
   const sortFn = (a, b) =>
     activeSquare === "all"
-      ? a.walk_minutes - b.walk_minutes || startMs(a) - startMs(b)
+      ? randKey(a) - randKey(b)
       : startMs(a) - startMs(b);
 
   const active = filtered.filter(e => !hasEnded(e)).sort(sortFn);
