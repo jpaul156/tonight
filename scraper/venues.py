@@ -381,8 +381,10 @@ VENUES = [
         "transit_stop": "Green Street",
         "walk_minutes": 12,
         "is_local": True,
-        # Custom HTML calendar page with a simple table grid. No JSON-LD,
-        # no CMS plugin — send full page body to LLM.
+        # Calendar at /our/calendar is JS-rendered — strips to ~300 chars with
+        # no event data. Facebook is their primary schedule but has no structured
+        # feed. Needs Playwright. Config is correct; will work once Playwright
+        # support is added.
         "collection_url": "https://midwaycafe.com/our/calendar",
         "scrape_strategy": "html_full_text",
         "detail_pages": False,
@@ -403,8 +405,9 @@ VENUES = [
         "transit_stop": "Andrew",
         "walk_minutes": 12,
         "is_local": True,
-        # WordPress site; calendar page renders event HTML without JSON-LD.
-        "collection_url": "https://www.dorchesterbrewing.com/events-calendar/",
+        # WordPress site. /events-calendar/ is JS-rendered (body strips to ~400
+        # chars). /events/ is the tile view and server-renders full event HTML.
+        "collection_url": "https://www.dorchesterbrewing.com/events/",
         "scrape_strategy": "html_full_text",
         "detail_pages": False,
         "url_contains": None,
@@ -471,9 +474,12 @@ VENUES = [
         "transit_stop": "Malden Center",
         "walk_minutes": 12,
         "is_local": True,
-        # Squarespace site — events collection at /events?format=json.
-        "collection_url": "https://www.facesbrewing.com/events?format=json",
-        "scrape_strategy": "squarespace_events",
+        # Squarespace site, but ?format=json items embed date as freetext in
+        # excerpt ("8 pm - July 8th, 2026") with no startDate/endDate fields —
+        # incompatible with squarespace_events. Use html_full_text instead;
+        # the /events page server-renders all event cards.
+        "collection_url": "https://www.facesbrewing.com/events",
+        "scrape_strategy": "html_full_text",
         "detail_pages": False,
         "url_contains": None,
         "location_keywords": {},
@@ -514,8 +520,10 @@ VENUES = [
         "transit_stop": "Medford Square",
         "walk_minutes": 3,
         "is_local": True,
-        # Events page appears JS-rendered (WebFetch returned blank). Trying
-        # html_full_text first; may need Playwright if the page stays empty.
+        # Events page is fully JS-rendered — html_full_text gets 0 chars.
+        # No structured alternative (Bandsintown/Eventbrite are aggregators,
+        # not a direct feed). Needs Playwright. Disabled with a stub URL until
+        # Playwright support is added; swap collection_url back to /events then.
         "collection_url": "https://www.deepcuts.rocks/events",
         "scrape_strategy": "html_full_text",
         "detail_pages": False,
