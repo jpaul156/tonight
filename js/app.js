@@ -128,6 +128,10 @@ let allEvents = [];
 let venueData = {};
 let activeSquare = "all";
 let activeCategory = "all";
+// Your "home" square — where the metro map centers and the train departs when
+// no square is selected ("Near me"). Hardcoded for now; will come from a user
+// profile once profiles land, letting each user pick their own Home Square.
+const HOME_SQUARE = "Davis";
 
 init();
 
@@ -336,10 +340,11 @@ function openMetro() {
   const overlay = document.getElementById("metro-overlay");
   overlay.hidden = false;
   document.body.style.overflow = "hidden";
-  // Origin is your current square (null = "Near me", no train to ride).
-  // The canvas can't measure itself until the panel is on screen, so fit
-  // on the next frame.
-  requestAnimationFrame(() => MetroMap.show(activeSquare === "all" ? null : activeSquare));
+  // Origin is your current square, or your Home Square when nothing's selected
+  // ("Near me") — so the map always opens zoomed in around a real place. The
+  // canvas can't measure itself until the panel is on screen, so wait a frame.
+  const origin = activeSquare === "all" ? HOME_SQUARE : activeSquare;
+  requestAnimationFrame(() => MetroMap.show(origin));
 }
 
 function closeMetro() {
@@ -370,6 +375,13 @@ const MetroMap = (() => {
   const TRANSFER_PENALTY = 6;      // extra cost (in cells) to change trains
   const keyOf = (c, r) => c + "," + r;
   const cellCenter = (c, r) => ({ x: (c + 0.5) * CELL, y: (r + 0.5) * CELL });
+
+  // Pixel-art terrain (land/water) drawn under the network. It's a 140×140-tile
+  // export, so it stretches to the grid extent — tile count, not pixel size, is
+  // the contract with the Tiled map. Drawn dimmed so the lines/labels still read.
+  const BASE_IMG_SRC = encodeURI("tilemap/boston v1.png");
+  const BASE_IMG_ALPHA = 0.8;
+  let baseImg = null;
 
   let canvas, ctx, stage;
   let graph = null, data = null;
@@ -483,6 +495,19 @@ const MetroMap = (() => {
     view.x = sx - b.x * view.scale; view.y = sy - b.y * view.scale;
     draw();
   }
+  // Center a node and zoom so ~radius tiles are visible to the nearest edge —
+  // the "start near home" view. Falls back to fit() when the node is unknown.
+  const FOCUS_RADIUS = 30;
+  function focusOn(key, radius = FOCUS_RADIUS) {
+    const nd = key && graph.nodes.get(key);
+    const w = stage.clientWidth, h = stage.clientHeight;
+    if (!nd || !w || !h) { fit(); return; }
+    const c = cellCenter(nd.c, nd.r);
+    view.scale = Math.max(0.1, Math.min(8, Math.min(w, h) / (2 * radius * CELL)));
+    view.x = w / 2 - c.x * view.scale;
+    view.y = h / 2 - c.y * view.scale;
+    draw();
+  }
 
   // ---- render
   function strokeRounded(pts) {
@@ -515,6 +540,15 @@ const MetroMap = (() => {
     ctx.save(); ctx.translate(view.x, view.y); ctx.scale(view.scale, view.scale);
     ctx.lineJoin = "round"; ctx.lineCap = "round";
 
+    // terrain base, stretched to the grid extent (nearest-neighbor to stay crisp)
+    if (baseImg && baseImg.complete && baseImg.naturalWidth) {
+      ctx.globalAlpha = BASE_IMG_ALPHA;
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(baseImg, 0, 0, cols * CELL, rows * CELL);
+      ctx.imageSmoothingEnabled = true;
+      ctx.globalAlpha = 1;
+    }
+
     // lines
     data.lines.forEach(ln => {
       ctx.strokeStyle = lineColor(ln.line);
@@ -542,10 +576,16 @@ const MetroMap = (() => {
         ctx.beginPath(); ctx.arc(p.x, p.y, CELL * 0.62, 0, 7); ctx.stroke();
       }
       if (lit && nd.name) {                       // label only the stops you can pick
-        ctx.fillStyle = k === originKey ? "#f5b942" : "#fff";
+        const label = stationLabel(nd.name), lx = p.x + CELL * 0.7;
         ctx.font = `${600} ${11 / view.scale}px ${getComputedStyle(document.body).getPropertyValue("--font-display") || "sans-serif"}`;
         ctx.textAlign = "left"; ctx.textBaseline = "middle";
-        ctx.fillText(stationLabel(nd.name), p.x + CELL * 0.7, p.y);
+        // thin black outline so names stay legible over the terrain
+        ctx.lineJoin = "round";
+        ctx.strokeStyle = "rgba(0, 0, 0, 0.85)";
+        ctx.lineWidth = 2.5 / view.scale;
+        ctx.strokeText(label, lx, p.y);
+        ctx.fillStyle = k === originKey ? "#f5b942" : "#fff";
+        ctx.fillText(label, lx, p.y);
       }
     });
 
@@ -673,6 +713,9 @@ const MetroMap = (() => {
     canvas = document.getElementById("metro-canvas");
     stage = document.getElementById("metro-stage");
     ctx = canvas.getContext("2d");
+    baseImg = new Image();
+    baseImg.onload = () => draw();   // redraw once the terrain arrives
+    baseImg.src = BASE_IMG_SRC;
     wirePointer();
     window.addEventListener("resize", () => { if (!document.getElementById("metro-overlay").hidden) resize(); });
   }
@@ -680,7 +723,10 @@ const MetroMap = (() => {
     if (!graph) return;
     cancelAnimationFrame(raf); train = null; anim = null;
     originKey = originName ? (nameToKey.get(originName) || null) : null;
-    resize(); fit();   // resize first (panel now has real dimensions), then frame the map
+    // resize first (panel now has real dimensions), then open zoomed in around
+    // your origin/home square rather than framing the whole network.
+    resize();
+    originKey ? focusOn(originKey) : fit();
   }
   function stop() { cancelAnimationFrame(raf); train = null; anim = null; }
   function ready() { return !!graph; }
