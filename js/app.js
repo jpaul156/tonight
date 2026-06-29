@@ -11,10 +11,80 @@ const ICONS = {
   film: `<rect x="3" y="5" width="18" height="14" rx="1"/><line x1="7" y1="5" x2="7" y2="19"/><line x1="17" y1="5" x2="17" y2="19"/><line x1="3" y1="10" x2="7" y2="10"/><line x1="17" y1="10" x2="21" y2="10"/><line x1="3" y1="15" x2="7" y2="15"/><line x1="17" y1="15" x2="21" y2="15"/>`,
   market: `<path d="M4 8h16l-1.5 11a1 1 0 0 1-1 1H6.5a1 1 0 0 1-1-1L4 8z"/><path d="M8 8V6a4 4 0 0 1 8 0v2"/>`,
   karaoke: `<rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="9" y1="21" x2="15" y2="21"/>`,
-  community: `<path d="M4 19V5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><line x1="8" y1="8" x2="14" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="13" y2="16"/>`
+  community: `<path d="M4 19V5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><line x1="8" y1="8" x2="14" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="13" y2="16"/>`,
+  food: `<path d="M3 2v7a3 3 0 0 0 3 3v10"/><path d="M6 2v6"/><path d="M9 2v6"/><path d="M18 2c-1.7 0-3 2-3 5s1.3 4 3 4v11"/>`
 };
 
-const SQUARES = ["Davis", "Porter", "Harvard", "Central", "Kendall", "Lechmere", "Union Square", "Maverick"];
+// ============================================================
+// Transit model — the location filter is built like a metro map.
+// Each line is an ordered list of stops (north/west → south/east).
+// A handful of those stops are "squares" we actually surface as
+// filters (they have events); the rest are connectors that exist
+// only so the map shows real neighbors above and below your stop.
+// A stop's line(s) — and therefore its color(s) — are *derived*
+// from membership here, never stored, mirroring how transit_color
+// is derived from transit_line elsewhere.
+// ============================================================
+// Each key is a *route* — a full end-to-end ride, north/west → south/east —
+// imported from prototype/stations.csv (only its Include=TRUE stops, plus any
+// stop that has events). Branching lines (Red, Green) get one route per branch
+// because a single vertical strip can't show a fork; they share a brand color.
+// Lechmere is Include=FALSE in the CSV but kept because it has events — see the
+// SQUARE filter rule below (a stop is only a *filter* if events happen there).
+const LINES = {
+  "Red":          ["Alewife", "Davis", "Porter", "Harvard", "Central", "Kendall/MIT", "Charles/MGH", "Park Street", "Downtown Crossing", "South Station", "Broadway", "JFK/UMass", "Wollaston", "Quincy Center", "Braintree"],
+  "Red (Ashmont)":["Alewife", "Davis", "Porter", "Harvard", "Central", "Kendall/MIT", "Charles/MGH", "Park Street", "Downtown Crossing", "South Station", "Broadway", "JFK/UMass", "Fields Corner", "Ashmont"],
+  "Orange":       ["Oak Grove", "Malden Center", "Assembly", "Sullivan Square", "North Station", "Haymarket", "State", "Downtown Crossing", "Chinatown", "Tufts Medical Center", "Back Bay", "Forest Hills"],
+  "Green (B)":    ["Government Center", "Park Street", "Boylston", "Copley", "Kenmore", "Babcock Street", "Harvard Avenue", "Boston College"],
+  "Green (C)":    ["Government Center", "Park Street", "Boylston", "Copley", "Kenmore", "Coolidge Corner", "Washington Square", "Cleveland Circle"],
+  "Green (D)":    ["Lechmere", "Government Center", "Park Street", "Boylston", "Copley", "Kenmore", "Fenway", "Brookline Village", "Reservoir", "Newton Centre"],
+  "Green (E)":    ["Lechmere", "Government Center", "Park Street", "Boylston", "Copley", "Symphony", "Brigham Circle"],
+  "Blue":         ["Wonderland", "Maverick", "Aquarium", "State", "Government Center"],
+};
+
+// Route → brand color name. Branch routes ("Red (Ashmont)", "Green (D)") all
+// fold back to their trunk color, so the map never invents a new hue.
+const LINE_BASE = {
+  "Red": "Red", "Red (Ashmont)": "Red",
+  "Orange": "Orange",
+  "Green (B)": "Green", "Green (C)": "Green", "Green (D)": "Green", "Green (E)": "Green",
+  "Blue": "Blue",
+};
+
+// Friendlier display labels for a few stops (the CSV's "Alt Square Name").
+// Cosmetic only — events still store the canonical station name in e.square.
+const STATION_ALIASES = {
+  "Broadway": "Southie",
+  "Sullivan Square": "East Somerville",
+  "Kenmore": "Fenway Park",
+  "Babcock Street": "BU",
+  "Harvard Avenue": "Allston",
+};
+function stationLabel(name) {
+  return STATION_ALIASES[name] || name;
+}
+
+// Tab order in the metro overlay (one tab per route).
+const LINE_ORDER = ["Red", "Red (Ashmont)", "Orange", "Green (B)", "Green (C)", "Green (D)", "Green (E)", "Blue"];
+// Brand-color order, used when collapsing a stop's routes down to colored dots.
+const BASE_LINE_ORDER = ["Red", "Orange", "Green", "Blue"];
+
+// Routes a stop sits on (used to pick which tab to open).
+function routesForStation(name) {
+  return LINE_ORDER.filter(route => LINES[route].includes(name));
+}
+// Distinct brand colors a stop sits on, for badges/dots — so a stop on two
+// Green branches reads as one Green dot, not two.
+function stationLines(name) {
+  const bases = new Set(routesForStation(name).map(r => LINE_BASE[r]));
+  return BASE_LINE_ORDER.filter(b => bases.has(b));
+}
+
+// Stops that are actually offered as filters: only those where events happen.
+// Populated from loaded events (incl. food deals) in init() — a stop with no
+// events shows on the map as a connector but can't be selected.
+let eventSquares = new Set();
+
 const CATEGORIES = ["music", "trivia", "comedy", "film", "market", "karaoke", "community", "sports", "fitness", "food"];
 
 // MBTA line/mode → brand color. Color is presentation, derived from the line
@@ -32,7 +102,9 @@ const LINE_COLORS = {
 };
 const DEFAULT_LINE_COLOR = "#8b93ad"; // text-muted, for unknown/missing lines
 function lineColor(line) {
-  return LINE_COLORS[line] || DEFAULT_LINE_COLOR;
+  // Accepts a brand name ("Red", from e.transit_line) or a branch route id
+  // ("Red (Ashmont)", from the metro tabs) — both resolve to one trunk color.
+  return LINE_COLORS[LINE_BASE[line] || line] || DEFAULT_LINE_COLOR;
 }
 
 // Real clock — 4am rollover so late-night events stay on "tonight"
@@ -42,6 +114,9 @@ function getNow() {
   return d;
 }
 const NOW = getNow();
+// The weekday "tonight" falls on, after the 4am rollover — drives which
+// recurring food deals are live (a deal lists the weekdays it runs).
+const NOW_WEEKDAY = NOW.toLocaleDateString("en-US", { weekday: "long" });
 
 // Wall-clock "now" for "has this moment passed?" checks. Distinct from NOW,
 // which rolls the DATE back before 4am to decide which day counts as "tonight."
@@ -59,7 +134,18 @@ init();
 async function init() {
   setDate();
   buildFilterChips();
-  [allEvents, venueData] = await Promise.all([loadEvents(), loadVenues()]);
+  renderSquareIndicator();
+  wireMetroOverlay();
+  let deals, transit;
+  [allEvents, venueData, deals, transit] = await Promise.all([loadEvents(), loadVenues(), loadDeals(), loadTransit()]);
+  // Recurring food deals live alongside one-off events in the same feed; they
+  // just match "tonight" by weekday instead of a calendar date (see isTonightEvent).
+  allEvents = allEvents.concat(deals);
+  // A stop is filterable only if something happens there tonight-or-otherwise.
+  eventSquares = new Set(allEvents.map(e => e.square).filter(Boolean));
+  // Build the overlay's metro map once events are known (eventSquares decides
+  // which stations light up). Tapping a station applies its square as the filter.
+  if (transit) MetroMap.setup(transit, selectSquare);
   render();
   wireDetailOverlay();
   wireCollapsingHeader();
@@ -74,6 +160,33 @@ async function loadVenues() {
   } catch (err) {
     console.warn("Could not load venues.json", err);
     return {};
+  }
+}
+
+// Recurring food/drink specials, hand-curated (they change rarely). Kept out of
+// data/events.json so the scraper's daily rewrite can't clobber them. Each deal
+// carries the same display fields an event does, plus recurring_days + deal:true.
+async function loadDeals() {
+  try {
+    const res = await fetch("data/deals.json");
+    return await res.json();
+  } catch (err) {
+    console.warn("Could not load deals.json", err);
+    return [];
+  }
+}
+
+// The traced MBTA network (schema tonight.transit/1) that drives the metro
+// overlay's canvas map. Optional — if it's missing the overlay still opens with
+// the "Near me" button, just without a map (MetroMap.setup is simply skipped).
+async function loadTransit() {
+  try {
+    const res = await fetch("transit-layer.json");
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (err) {
+    console.warn("Could not load transit-layer.json", err);
+    return null;
   }
 }
 
@@ -141,17 +254,12 @@ async function loadEvents() {
 }
 
 function buildFilterChips() {
-  const squareRow = document.getElementById("square-filters");
   const categoryRow = document.getElementById("category-filters");
-
-  addChip(squareRow, "Near me", "all", "square");
-  SQUARES.forEach(sq => addChip(squareRow, sq, sq, "square"));
-
-  addChip(categoryRow, "All", "all", "category");
-  CATEGORIES.forEach(cat => addChip(categoryRow, capitalize(cat), cat, "category"));
+  addChip(categoryRow, "All", "all");
+  CATEGORIES.forEach(cat => addChip(categoryRow, capitalize(cat), cat));
 }
 
-function addChip(row, label, value, group) {
+function addChip(row, label, value) {
   const btn = document.createElement("button");
   btn.className = "chip" + (value === "all" ? " active" : "");
   btn.textContent = label;
@@ -159,11 +267,431 @@ function addChip(row, label, value, group) {
   btn.addEventListener("click", () => {
     row.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
     btn.classList.add("active");
-    if (group === "square") activeSquare = value;
-    if (group === "category") activeCategory = value;
+    activeCategory = value;
     render();
   });
   row.appendChild(btn);
+}
+
+// ============================================================
+// Square indicator — the destination board pinned at the top.
+// Reads like the transit badge on a card, but bigger and built
+// from line color(s): one colored dot per line the stop sits on,
+// so a multi-line hub (Downtown Crossing) shows two dots. Tapping
+// it opens the metro-map overlay.
+// ============================================================
+function lineDots(lines) {
+  // One dot per line, overlapping slightly so a multi-line stop reads as a
+  // little cluster — the "part of the outline in each color" idea, as dots.
+  if (lines.length === 0) {
+    return `<span class="line-dot line-dot-all"></span>`;
+  }
+  return lines
+    .map(l => `<span class="line-dot" style="--line-color:${lineColor(l)}"></span>`)
+    .join("");
+}
+
+function renderSquareIndicator() {
+  const el = document.getElementById("square-indicator");
+  const isAll = activeSquare === "all";
+  const lines = isAll ? [] : stationLines(activeSquare);
+  const name = isAll ? "Near me" : activeSquare;
+  const sub = isAll
+    ? "All squares"
+    : (lines.length ? lines.join(" · ") + (lines.length > 1 ? " lines" : " Line") : "");
+
+  el.classList.toggle("is-all", isAll);
+  el.innerHTML = `
+    <span class="si-dots">${lineDots(lines)}</span>
+    <span class="si-text">
+      <span class="si-name">${name}</span>
+      <span class="si-sub">${sub}</span>
+    </span>
+    <span class="si-chevron" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </span>
+  `;
+}
+
+// ============================================================
+// Metro overlay — the "get on the train" location picker.
+// Opens like the detail panel and shows the real MBTA network on a
+// canvas (the same traced map as transit-layer.json). Your current
+// square is the origin; tapping a lit-up station routes a train there
+// (Dijkstra + transfer dwell), then applies the filter on arrival.
+// The map/graph/animation all live in the MetroMap module below.
+// ============================================================
+function wireMetroOverlay() {
+  document.getElementById("square-indicator").addEventListener("click", openMetro);
+  const overlay = document.getElementById("metro-overlay");
+  document.getElementById("metro-close").addEventListener("click", closeMetro);
+  overlay.addEventListener("click", ev => { if (ev.target === overlay) closeMetro(); });
+  document.getElementById("metro-nearme").addEventListener("click", () => selectSquare("all"));
+  document.addEventListener("keydown", ev => {
+    if (ev.key === "Escape" && !overlay.hidden) closeMetro();
+  });
+}
+
+function openMetro() {
+  const overlay = document.getElementById("metro-overlay");
+  overlay.hidden = false;
+  document.body.style.overflow = "hidden";
+  // Origin is your current square (null = "Near me", no train to ride).
+  // The canvas can't measure itself until the panel is on screen, so fit
+  // on the next frame.
+  requestAnimationFrame(() => MetroMap.show(activeSquare === "all" ? null : activeSquare));
+}
+
+function closeMetro() {
+  const overlay = document.getElementById("metro-overlay");
+  overlay.hidden = true;
+  document.body.style.overflow = "";
+  MetroMap.stop();
+}
+
+// ============================================================
+// MetroMap — the canvas network inside the overlay.
+//
+// Ported from transit-animation-preview.html (the standalone tool):
+// builds a coordinate-keyed graph from transit-layer.json, routes
+// origin→destination with Dijkstra + a transfer penalty, and animates
+// a train along the path with a brief dwell (color morph + rotate) at
+// every line change or sharp branch reversal — never at plain stops.
+//
+// Adapted for the app: no dropdowns/readout/base image. The current
+// square is the fixed origin; a tap picks the nearest *filterable*
+// station (one with events) as the destination and, on arrival, calls
+// onArrive(name) → selectSquare. Color is always lineColor(), and only
+// stations with events are drawn lit + labelled; the rest are dimmed
+// connectors so the network still reads as a real map.
+// ============================================================
+const MetroMap = (() => {
+  const CELL = 16;                 // world px per grid cell — the editor/Tiled contract
+  const TRANSFER_PENALTY = 6;      // extra cost (in cells) to change trains
+  const keyOf = (c, r) => c + "," + r;
+  const cellCenter = (c, r) => ({ x: (c + 0.5) * CELL, y: (r + 0.5) * CELL });
+
+  let canvas, ctx, stage;
+  let graph = null, data = null;
+  let cols = 0, rows = 0;
+  let nameToKey = new Map();       // station name → graph key, for resolving the origin
+  let view = { scale: 1, x: 0, y: 0 };
+  let originKey = null;            // current square's node (green "you are here"); null for "Near me"
+  let onArrive = () => {};
+  let train = null;                // {x,y,angle,color} while a trip runs
+  let anim = null, raf = 0, lastTs = 0;
+
+  const s2w = (sx, sy) => ({ x: (sx - view.x) / view.scale, y: (sy - view.y) / view.scale });
+  const w2s = (wx, wy) => ({ x: wx * view.scale + view.x, y: wy * view.scale + view.y });
+  const isFilterable = name => name && eventSquares.has(name);
+
+  // ---- graph build: nodes keyed by coordinate, so a shared (c,r) is a junction/transfer
+  function buildGraph(d) {
+    const nodes = new Map(), adj = new Map();
+    const ensure = (n, line) => {
+      const k = keyOf(n.c, n.r);
+      let nd = nodes.get(k);
+      if (!nd) { nd = { c: n.c, r: n.r, name: n.name || "", station: !!n.station, lines: new Set() }; nodes.set(k, nd); adj.set(k, []); }
+      if (n.name) nd.name = n.name;   // never let "" overwrite a real name (branch-start convention)
+      if (n.station) nd.station = true;
+      nd.lines.add(line);
+      return k;
+    };
+    d.lines.forEach(ln => ln.branches.forEach(br => {
+      for (let i = 0; i < br.nodes.length; i++) {
+        const k = ensure(br.nodes[i], ln.line);
+        if (i > 0) {
+          const a = br.nodes[i - 1], ka = keyOf(a.c, a.r);
+          const w = Math.hypot(br.nodes[i].c - a.c, br.nodes[i].r - a.r);
+          adj.get(ka).push({ to: k, w, line: ln.line });
+          adj.get(k).push({ to: ka, w, line: ln.line });
+        }
+      }
+    }));
+    return { nodes, adj };
+  }
+
+  // ---- routing: Dijkstra over (node, came-from, line). Penalty applies once per
+  // "change trains" moment — a line transfer OR a sharp (>90°) same-line reversal.
+  function route(srcKey, dstKey) {
+    if (srcKey === dstKey) return { path: [srcKey], segLines: [] };
+    const { adj, nodes } = graph;
+    const dist = new Map(), prev = new Map();
+    const startId = srcKey + "||";
+    dist.set(startId, 0);
+    const pq = [{ id: startId, key: srcKey, from: null, line: null, d: 0 }];
+    let end = null;
+    while (pq.length) {
+      let mi = 0; for (let i = 1; i < pq.length; i++) if (pq[i].d < pq[mi].d) mi = i;
+      const cur = pq.splice(mi, 1)[0];
+      if (cur.d > (dist.get(cur.id) ?? Infinity)) continue;
+      if (cur.key === dstKey) { end = cur; break; }
+      const here = nodes.get(cur.key);
+      let inAng = null;
+      if (cur.from) { const f = nodes.get(cur.from); inAng = Math.atan2(here.r - f.r, here.c - f.c); }
+      for (const e of (adj.get(cur.key) || [])) {
+        const to = nodes.get(e.to);
+        const outAng = Math.atan2(to.r - here.r, to.c - here.c);
+        const lineChange = cur.line && cur.line !== e.line;
+        const sharp = inAng !== null && cur.line === e.line &&
+          Math.abs(angleDiff(inAng, outAng)) > Math.PI / 2 + 1e-6;
+        const pen = (lineChange || sharp) ? TRANSFER_PENALTY : 0;
+        const nd = cur.d + e.w + pen;
+        const nid = e.to + "|" + cur.key + "|" + e.line;
+        if (nd < (dist.get(nid) ?? Infinity)) {
+          dist.set(nid, nd);
+          prev.set(nid, { from: cur.id, key: cur.key, line: e.line });
+          pq.push({ id: nid, key: e.to, from: cur.key, line: e.line, d: nd });
+        }
+      }
+    }
+    if (!end) return null;
+    const path = [], segLines = [];
+    let id = end.id, key = end.key;
+    while (id) {
+      path.push(key);
+      const p = prev.get(id);
+      if (!p) break;
+      segLines.push(p.line);
+      id = p.from; key = p.key;
+    }
+    path.reverse(); segLines.reverse();
+    return { path, segLines };
+  }
+
+  // ---- geometry / view
+  function resize() {
+    if (!canvas) return;
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = stage.clientWidth * dpr;
+    canvas.height = stage.clientHeight * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    draw();
+  }
+  function fit() {
+    const w = stage.clientWidth, h = stage.clientHeight, pad = 36;
+    if (!w || !h) return;
+    const s = Math.min((w - pad) / (cols * CELL), (h - pad) / (rows * CELL));
+    view.scale = s;
+    view.x = (w - cols * CELL * s) / 2;
+    view.y = (h - rows * CELL * s) / 2;
+    draw();
+  }
+  function zoomAt(sx, sy, f) {
+    const b = s2w(sx, sy);
+    view.scale = Math.max(0.1, Math.min(8, view.scale * f));
+    view.x = sx - b.x * view.scale; view.y = sy - b.y * view.scale;
+    draw();
+  }
+
+  // ---- render
+  function strokeRounded(pts) {
+    ctx.beginPath();
+    if (pts.length === 1) { ctx.moveTo(pts[0].x, pts[0].y); ctx.lineTo(pts[0].x, pts[0].y); ctx.stroke(); return; }
+    ctx.moveTo(pts[0].x, pts[0].y);
+    const baseT = CELL * 0.85;
+    for (let i = 1; i < pts.length - 1; i++) {
+      const a = pts[i - 1], b = pts[i], c2 = pts[i + 1];
+      const L1 = Math.hypot(a.x - b.x, a.y - b.y), L2 = Math.hypot(c2.x - b.x, c2.y - b.y);
+      let cosA = ((a.x - b.x) * (c2.x - b.x) + (a.y - b.y) * (c2.y - b.y)) / ((L1 * L2) || 1);
+      cosA = Math.max(-1, Math.min(1, cosA));
+      const alpha = Math.acos(cosA);
+      if (alpha > Math.PI - 0.05) { ctx.lineTo(b.x, b.y); continue; }
+      const t = Math.min(baseT, L1 / 2, L2 / 2);
+      ctx.arcTo(b.x, b.y, c2.x, c2.y, t * Math.tan(alpha / 2));
+    }
+    ctx.lineTo(pts.at(-1).x, pts.at(-1).y);
+    ctx.stroke();
+  }
+  function roundRect(x, y, w, h, r) {
+    ctx.beginPath(); ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+  }
+
+  function draw() {
+    if (!ctx || !graph) return;
+    ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+    ctx.save(); ctx.translate(view.x, view.y); ctx.scale(view.scale, view.scale);
+    ctx.lineJoin = "round"; ctx.lineCap = "round";
+
+    // lines
+    data.lines.forEach(ln => {
+      ctx.strokeStyle = lineColor(ln.line);
+      ctx.lineWidth = 4 / view.scale;
+      ln.branches.forEach(br => { if (br.nodes.length) strokeRounded(br.nodes.map(n => cellCenter(n.c, n.r))); });
+    });
+
+    // nodes — lit + labelled where events happen, dimmed connectors otherwise
+    graph.nodes.forEach((nd, k) => {
+      const p = cellCenter(nd.c, nd.r);
+      const lit = isFilterable(nd.name) || k === originKey;
+      ctx.globalAlpha = lit ? 1 : 0.4;
+      if (nd.lines.size > 1) {                  // interchange — white diamond
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(Math.PI / 4);
+        ctx.fillStyle = "#fff"; ctx.strokeStyle = "#10131a"; ctx.lineWidth = 2 / view.scale;
+        const s = CELL * 0.42; ctx.fillRect(-s, -s, 2 * s, 2 * s); ctx.strokeRect(-s, -s, 2 * s, 2 * s); ctx.restore();
+      } else if (nd.station) {                  // plain station — ring
+        ctx.fillStyle = "#fff"; ctx.strokeStyle = lineColor([...nd.lines][0]); ctx.lineWidth = 2.5 / view.scale;
+        ctx.beginPath(); ctx.arc(p.x, p.y, CELL * 0.3, 0, 7); ctx.fill(); ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+
+      if (k === originKey) {                     // "you are here" — amber halo
+        ctx.strokeStyle = "#f5b942"; ctx.lineWidth = 3 / view.scale;
+        ctx.beginPath(); ctx.arc(p.x, p.y, CELL * 0.62, 0, 7); ctx.stroke();
+      }
+      if (lit && nd.name) {                       // label only the stops you can pick
+        ctx.fillStyle = k === originKey ? "#f5b942" : "#fff";
+        ctx.font = `${600} ${11 / view.scale}px ${getComputedStyle(document.body).getPropertyValue("--font-display") || "sans-serif"}`;
+        ctx.textAlign = "left"; ctx.textBaseline = "middle";
+        ctx.fillText(stationLabel(nd.name), p.x + CELL * 0.7, p.y);
+      }
+    });
+
+    // train
+    if (train) {
+      ctx.save(); ctx.translate(train.x, train.y); ctx.rotate(train.angle);
+      const L = CELL * 1.5, W = CELL * 0.9;
+      ctx.fillStyle = train.color; ctx.strokeStyle = "#fff"; ctx.lineWidth = 2 / view.scale;
+      roundRect(-L / 2, -W / 2, L, W, CELL * 0.3); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(L / 2 - CELL * 0.35, 0, CELL * 0.16, 0, 7); ctx.fill();
+      ctx.restore();
+    }
+    ctx.restore();
+  }
+
+  // ---- animation helpers
+  const lerp = (a, b, t) => a + (b - a) * t;
+  function hex2rgb(h) { const n = parseInt(h.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+  function mixColor(a, b, t) { const A = hex2rgb(a), B = hex2rgb(b); return `rgb(${Math.round(lerp(A[0], B[0], t))},${Math.round(lerp(A[1], B[1], t))},${Math.round(lerp(A[2], B[2], t))})`; }
+  function angleDiff(a, b) { let d = (b - a) % (2 * Math.PI); if (d > Math.PI) d -= 2 * Math.PI; if (d < -Math.PI) d += 2 * Math.PI; return d; }
+  function lerpAngle(a, b, t) { return a + angleDiff(a, b) * t; }
+  function segAngle(pts, i) { const a = pts[i], b = pts[i + 1]; return Math.atan2(b.y - a.y, b.x - a.x); }
+
+  // ---- run a trip from origin → destination, then fire onArrive(destName)
+  function runTrip(srcKey, dstKey, destName) {
+    cancelAnimationFrame(raf);
+    const r = route(srcKey, dstKey);
+    if (!r || r.path.length < 2) { onArrive(destName); return; }
+    const pts = r.path.map(k => { const n = graph.nodes.get(k); return { ...cellCenter(n.c, n.r), name: n.name, station: n.station, key: k }; });
+    const segColors = r.segLines.map(lineColor);
+    anim = { pts, segColors, segLines: r.segLines, i: 0, t: 0, mode: "run", destName,
+             color: segColors[0], angle: segAngle(pts, 0) };
+    lastTs = performance.now();
+    raf = requestAnimationFrame(tick);
+  }
+
+  const SPEED = 27;   // cells/sec — brisk but readable on a phone-sized map
+  function tick(ts) {
+    const dt = Math.min(0.05, (ts - lastTs) / 1000); lastTs = ts;
+    const a = anim, pts = a.pts;
+    if (a.mode === "run") {
+      const A = pts[a.i], B = pts[a.i + 1];
+      const segLen = Math.hypot(B.x - A.x, B.y - A.y) / CELL || 0.001;
+      a.t += SPEED * dt / segLen;
+      a.color = a.segColors[a.i];
+      a.angle = segAngle(pts, a.i);
+      if (a.t >= 1) {
+        a.t = 1;
+        if (a.i + 1 >= pts.length - 1) { train = trainAt(B.x, B.y, a.angle, a.color); draw(); finishTrip(); return; }
+        // Dwell only at a "change trains" moment — a line transfer or a sharp
+        // (>90°) reversal through a branch junction. Plain stops get no pause.
+        const inA = segAngle(pts, a.i), outA = segAngle(pts, a.i + 1);
+        const transfer = a.segLines[a.i] !== a.segLines[a.i + 1];
+        const sharp = Math.abs(angleDiff(inA, outA)) > Math.PI / 2 + 1e-6;
+        if (transfer || sharp) {
+          a.mode = "dwell"; a.dwellT = 0; a.dwellDur = 0.475;
+          a.fromAngle = inA; a.toAngle = outA;
+          a.fromColor = a.segColors[a.i]; a.toColor = transfer ? a.segColors[a.i + 1] : a.segColors[a.i];
+        } else { a.i++; a.t = 0; }
+      }
+    } else if (a.mode === "dwell") {
+      a.dwellT += dt;
+      const k = Math.min(1, a.dwellT / a.dwellDur);
+      a.angle = lerpAngle(a.fromAngle, a.toAngle, k);
+      a.color = mixColor(a.fromColor, a.toColor, k);
+      if (a.dwellT >= a.dwellDur) { a.i++; a.t = 0; a.mode = "run"; a.angle = a.toAngle; a.color = a.toColor; }
+    }
+    const A = pts[a.i], B = pts[Math.min(a.i + 1, pts.length - 1)];
+    train = trainAt(lerp(A.x, B.x, a.t), lerp(A.y, B.y, a.t), a.angle, a.color);
+    draw();
+    raf = requestAnimationFrame(tick);
+  }
+  function trainAt(x, y, angle, color) { return { x, y, angle, color }; }
+  function finishTrip() { cancelAnimationFrame(raf); const name = anim && anim.destName; anim = null; onArrive(name); }
+
+  // ---- pointer: pan / pinch-zoom, with a tap = pick destination
+  function nearestFilterable(sx, sy) {
+    let best = null, bd = 26 * 26;
+    graph.nodes.forEach((nd, k) => {
+      if (!isFilterable(nd.name)) return;
+      const cc = cellCenter(nd.c, nd.r), p = w2s(cc.x, cc.y);
+      const d = (p.x - sx) ** 2 + (p.y - sy) ** 2;
+      if (d < bd) { bd = d; best = { key: k, name: nd.name }; }
+    });
+    return best;
+  }
+  function pickAt(sx, sy) {
+    const hit = nearestFilterable(sx, sy);
+    if (!hit) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce || !originKey || originKey === hit.key) { onArrive(hit.name); return; }
+    runTrip(originKey, hit.key, hit.name);
+  }
+  function wirePointer() {
+    const pts = new Map(); let dragging = false, pinch = 0, downPt = null, moved = false;
+    const local = e => { const r = canvas.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+    canvas.addEventListener("pointerdown", e => {
+      canvas.setPointerCapture(e.pointerId); const p = local(e); pts.set(e.pointerId, p);
+      if (pts.size === 2) { const [a, b] = [...pts.values()]; pinch = Math.hypot(a.x - b.x, a.y - b.y); }
+      dragging = true; downPt = p; moved = false;
+    });
+    canvas.addEventListener("pointermove", e => {
+      const p = local(e), prev = pts.get(e.pointerId); if (pts.has(e.pointerId)) pts.set(e.pointerId, p);
+      if (pts.size === 2) { const [a, b] = [...pts.values()]; const d = Math.hypot(a.x - b.x, a.y - b.y); const m = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 }; if (pinch) zoomAt(m.x, m.y, d / pinch); pinch = d; moved = true; return; }
+      if (downPt && Math.hypot(p.x - downPt.x, p.y - downPt.y) > 4) moved = true;
+      if (dragging && prev) { view.x += p.x - prev.x; view.y += p.y - prev.y; draw(); }
+    });
+    const up = e => {
+      const p = local(e), wasClick = (!moved && pts.size === 1);
+      pts.delete(e.pointerId); if (pts.size < 2) pinch = 0; if (pts.size === 0) dragging = false;
+      if (wasClick) pickAt(p.x, p.y);
+    };
+    canvas.addEventListener("pointerup", up); canvas.addEventListener("pointercancel", up);
+    stage.addEventListener("wheel", e => { e.preventDefault(); const p = local(e); zoomAt(p.x, p.y, e.deltaY < 0 ? 1.12 : 1 / 1.12); }, { passive: false });
+  }
+
+  // ---- public API
+  function setup(transitData, arriveCb) {
+    data = transitData;
+    cols = data.grid.cols; rows = data.grid.rows;
+    graph = buildGraph(data);
+    nameToKey = new Map();
+    graph.nodes.forEach((nd, k) => { if (nd.name) nameToKey.set(nd.name, k); });
+    onArrive = arriveCb;
+    canvas = document.getElementById("metro-canvas");
+    stage = document.getElementById("metro-stage");
+    ctx = canvas.getContext("2d");
+    wirePointer();
+    window.addEventListener("resize", () => { if (!document.getElementById("metro-overlay").hidden) resize(); });
+  }
+  function show(originName) {
+    if (!graph) return;
+    cancelAnimationFrame(raf); train = null; anim = null;
+    originKey = originName ? (nameToKey.get(originName) || null) : null;
+    resize(); fit();   // resize first (panel now has real dimensions), then frame the map
+  }
+  function stop() { cancelAnimationFrame(raf); train = null; anim = null; }
+  function ready() { return !!graph; }
+  return { setup, show, stop, ready };
+})();
+
+function selectSquare(value) {
+  activeSquare = value;
+  renderSquareIndicator();
+  render();
+  closeMetro();
 }
 
 // ============================================================
@@ -220,19 +748,26 @@ function buildLocalityPill(e, extraClass) {
 
 
 
+const DEFAULT_EVENT_HOURS = 3;
+
 function eventEndTime(e) {
-  // Use end if available, otherwise treat start as the cutoff
-  // (for events with no listed end time, show until midnight of that day)
+  // Use the listed end if we have one. Otherwise assume a DEFAULT_EVENT_HOURS
+  // event. This estimate is deliberately NOT shown anywhere (we never set
+  // e.end, so the card/detail keep showing just the start time) — it only
+  // decides when the event counts as "past", so it drops to the bottom of the
+  // list and dims like every other ended event instead of lingering until 4am.
   if (e.end) return new Date(e.end);
   if (e.start) {
     const d = new Date(e.start);
-    d.setHours(23, 59, 59);
+    d.setHours(d.getHours() + DEFAULT_EVENT_HOURS);
     return d;
   }
   return new Date(0);
 }
 
 function isTonightEvent(e) {
+  // A recurring deal is "tonight" whenever today's weekday is one it runs on.
+  if (e.deal) return Array.isArray(e.recurring_days) && e.recurring_days.includes(NOW_WEEKDAY);
   if (!e.start) return false;
   const start = new Date(e.start);
   const todayStr = NOW.toDateString();
@@ -241,7 +776,14 @@ function isTonightEvent(e) {
 }
 
 function hasEnded(e) {
+  // Deals run all night with no clock time, so they never drop to "ended".
+  if (e.deal) return false;
   return eventEndTime(e) <= REAL_NOW;
+}
+
+// Sort key in ms. Deals have no start time; float them after timed events.
+function startMs(e) {
+  return e.start ? new Date(e.start).getTime() : (e.deal ? Infinity : 0);
 }
 
 function render() {
@@ -259,11 +801,11 @@ function render() {
 
   const sortFn = (a, b) =>
     activeSquare === "all"
-      ? a.walk_minutes - b.walk_minutes || new Date(a.start) - new Date(b.start)
-      : new Date(a.start) - new Date(b.start);
+      ? a.walk_minutes - b.walk_minutes || startMs(a) - startMs(b)
+      : startMs(a) - startMs(b);
 
   const active = filtered.filter(e => !hasEnded(e)).sort(sortFn);
-  const ended  = filtered.filter(e =>  hasEnded(e)).sort((a, b) => new Date(a.start) - new Date(b.start));
+  const ended  = filtered.filter(e =>  hasEnded(e)).sort((a, b) => startMs(a) - startMs(b));
 
   if (active.length === 0 && ended.length === 0) {
     empty.hidden = false;
@@ -313,7 +855,7 @@ function renderCard(e) {
       <span class="card-venue">${e.venue}</span>
       ${e.cost ? `<span class="cost">${e.cost}</span>` : ""}
     </div>
-    <p class="card-time">${formatTimeRange(e.start, e.end)}</p>
+    <p class="card-time">${e.deal ? dealTimeLabel(e) : formatTimeRange(e.start, e.end)}</p>
     <div class="card-footer">
       <div class="transit-badge" style="--line-color:${lineColor(e.transit_line)}">
         <span class="transit-dot"></span>
@@ -392,7 +934,9 @@ function openDetail(e) {
 
   document.getElementById("detail-title").textContent = e.title;
   const timeEl = document.getElementById("detail-time");
-  timeEl.textContent = formatFullTimeRange(e.start, e.end);
+  timeEl.textContent = e.deal ? dealFullTimeLabel(e) : formatFullTimeRange(e.start, e.end);
+  // A standing weekly deal isn't a calendar event — hide "Add to calendar".
+  document.getElementById("detail-calendar").hidden = !!e.deal;
   if (e.cost) {
     const costSpan = document.createElement("span");
     costSpan.className = "cost";
@@ -504,6 +1048,8 @@ function closeDetail() {
 // ============================================================
 
 function downloadICS(e) {
+  if (e.deal) return; // recurring deals have no single date to export
+
   // Event-specific address (street festival, etc.) wins over the venue's home
   // address, matching the detail view. See venueFor / showDetail.
   const icsAddress = e.address || venueFor(e).address || "";
@@ -575,6 +1121,20 @@ function shareEvent(e) {
 // ============================================================
 // Formatting helpers
 // ============================================================
+
+function dealLabel(e) {
+  return (e.recurring_days || []).join(" & ");
+}
+// Short form for cards: "All night · every Tuesday".
+function dealTimeLabel(e) {
+  const days = dealLabel(e);
+  return days ? `All night · every ${days}` : "All night";
+}
+// Long form for the detail panel: "Every Tuesday · all night".
+function dealFullTimeLabel(e) {
+  const days = dealLabel(e);
+  return days ? `Every ${days} · all night` : "All night";
+}
 
 function formatTimeRange(start, end) {
   const opts = { hour: "numeric", minute: "2-digit" };
