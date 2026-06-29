@@ -900,178 +900,38 @@ a:focus-visible {
 }
 .metro-nearme:hover { border-color: var(--amber); }
 
-/* Line tabs */
-.metro-lines {
-  display: flex;
-  gap: 8px;
-  padding: 2px 18px 14px;
-  overflow-x: auto;
-  scrollbar-width: none;
-  border-bottom: 1px solid var(--border);
-}
-.metro-lines::-webkit-scrollbar { display: none; }
-
-.metro-tab {
-  flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 6px 13px;
-  cursor: pointer;
-}
-.metro-tab:hover { color: var(--text); }
-.metro-tab.active {
-  color: var(--text);
-  border-color: var(--line-color);
-  box-shadow: inset 0 0 0 1px var(--line-color);
-}
-
-/* The vertical line strip. A rail runs down --rail-x with stop nodes on it. */
-.metro-map {
-  --rail-x: 34px;
+/* The canvas network map. Fills the panel below the header; the train
+   and stations are drawn by MetroMap in js/app.js, so there are no
+   per-stop DOM nodes here — just the stage, the canvas, and a hint. */
+.metro-stage {
   position: relative;
   flex: 1;
-  overflow-y: auto;
-  padding: 20px 0 28px;
-  scrollbar-width: none;
-}
-.metro-map::-webkit-scrollbar { display: none; }
-
-.metro-map::before {
-  content: "";
-  position: absolute;
-  left: var(--rail-x);
-  top: 26px;
-  bottom: 26px;
-  width: 6px;
-  transform: translateX(-50%);
-  border-radius: 3px;
-  background: var(--line-color, var(--border));
-  opacity: 0.9;
-}
-
-.metro-stop {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  padding: 12px 18px 12px calc(var(--rail-x) + 22px);
-  font: inherit;
-  color: inherit;
-  background: none;
-  border: none;
-  text-align: left;
-}
-
-.stop-node {
-  position: absolute;
-  left: var(--rail-x);
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  box-sizing: border-box;
-  background: var(--bg);
-  border: 3px solid var(--line-color);
-  z-index: 1;
-}
-
-.stop-name {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 1rem;
-  color: var(--text);
-  min-width: 0;
+  min-height: 320px;
+  border-top: 1px solid var(--border);
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(255, 255, 255, 0.03), transparent 60%),
+    var(--bg);
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  touch-action: none; /* we handle pan/pinch ourselves */
 }
+.metro-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+.metro-canvas:active { cursor: grabbing; }
 
-/* Connectors are orientation only — dimmed and not tappable. */
-.metro-stop.is-connector { cursor: default; }
-.metro-stop.is-connector .stop-name {
-  font-family: var(--font-mono);
-  font-weight: 400;
-  font-size: 0.82rem;
-  letter-spacing: 0.03em;
-  color: var(--text-muted);
-}
-.metro-stop.is-connector .stop-node {
-  width: 10px;
-  height: 10px;
-  border-width: 2px;
-  opacity: 0.65;
-}
-
-/* Squares are the real, tappable destinations. */
-.metro-stop.is-square { cursor: pointer; }
-.metro-stop.is-square:hover .stop-name { color: var(--amber); }
-.metro-stop.is-square:hover .stop-node { box-shadow: 0 0 10px var(--line-color); }
-
-/* Your current stop — a filled, glowing node with a tag. */
-.metro-stop.is-current .stop-node {
-  width: 18px;
-  height: 18px;
-  background: var(--line-color);
-  box-shadow: 0 0 0 4px var(--bg), 0 0 14px var(--line-color);
-}
-.stop-here {
-  margin-left: auto;
-  flex-shrink: 0;
-  font-family: var(--font-mono);
-  font-size: 0.56rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #1a1306;
-  background: var(--amber);
-  border-radius: 999px;
-  padding: 3px 9px;
-  white-space: nowrap;
-}
-
-/* Transfer stops — a small cluster of line dots after the name. */
-.stop-transfer {
-  display: inline-flex;
-  align-items: center;
-  flex-shrink: 0;
-}
-.stop-transfer .line-dot { width: 9px; height: 9px; }
-.stop-transfer .line-dot + .line-dot { margin-left: -3px; }
-
-/* The travelling train + the trip dimming */
-.metro-train {
+.metro-hint {
   position: absolute;
-  left: var(--rail-x);
-  width: 18px;
-  height: 26px;
-  border-radius: 6px;
-  transform: translate(-50%, -50%);
-  background: linear-gradient(180deg, #ffe2a3, var(--amber));
-  box-shadow: 0 0 16px rgba(245, 185, 66, 0.85);
-  z-index: 3;
-}
-.metro-train[hidden] { display: none; }
-
-.metro-map.is-traveling .metro-stop:not(.is-target):not(.is-current) {
-  opacity: 0.5;
-  transition: opacity 0.3s ease;
-}
-.metro-stop.is-target .stop-node {
-  animation: node-pulse 0.5s ease-in-out infinite alternate;
-}
-@keyframes node-pulse {
-  to { box-shadow: 0 0 0 5px var(--bg), 0 0 18px var(--line-color); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .metro-train, .metro-stop.is-target .stop-node { animation: none !important; }
+  left: 0;
+  right: 0;
+  bottom: 12px;
+  margin: 0;
+  text-align: center;
+  pointer-events: none;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
 }

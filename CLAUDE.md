@@ -51,6 +51,34 @@ The front end's `getNow()` in `js/app.js` is the sole authority on what counts a
 - EDT/UTC-4 is hardcoded in `run_scraper.py` — off by one hour in winter (EST). Low priority until the app has winter users.
 - Club Passim captures ~7 events per scrape due to JS pagination. Playwright needed for the full calendar.
 
+## Transit map — tool files
+
+The transit navigation layer lives in three standalone HTML files at the repo root (no build step, open via `python3 -m http.server 8000`):
+
+- **`transit-layer-editor.html`** — draw MBTA-style lines on a 140×140 tile grid matching the Tiled terrain map. Export `transit-layer.json` (schema `tonight.transit/1`) and `transit-layer.png`.
+- **`transit-animation-preview.html`** — load `transit-layer.json`, auto-load `transit-layer.png` as base image, pick origin/destination, animate a train with Dijkstra routing + transfer penalty.
+- **`sample-transit.json`** — 70×70 stylized MBTA sample (Red/Orange/Green/Blue) used as fallback when `transit-layer.json` isn't served.
+
+### Data files
+
+- **`transit-layer.json`** — the real traced MBTA network (140×140 grid). Station names are filled in. User maintains this; update via the editor and re-export.
+- **`prototype/station_list.csv`** — authoritative station list (renamed from `stations.csv`). Format: `Line/Branch, Station Name, Include, Alt Square Name`. Includes Armory Street (Green B consolidation). Source of truth for the label tool's bulk-fill and autocomplete.
+
+### Key design rules
+
+- **Color is always derived from the line name** via `LINE_COLORS` in `js/app.js`. Never store `transit_color` anywhere — same rule as the event/venue data.
+- **`transit-layer.json` schema:** nodes are `{c, r, station, name, square?}`. `square` maps to the app's filter chip. Interchanges are detected automatically by shared `(c,r)` coordinates across branches/lines — no explicit interchange field.
+- **Branch-start naming convention:** when a branch begins at a node that already exists on the main branch (e.g. JFK/UMass on Red Braintree/Ashmont, Kenmore on Green sub-branches), the branch-start node is left with `name: ""`. The graph builder picks up the name from whichever copy has it. Never use `" "` (a space) as a placeholder — that is truthy in JS and will overwrite a valid name from a sibling branch.
+- **Routing:** Dijkstra over `(node, came-from, line)` state tuples. Transfer penalty `TRANSFER_PENALTY=6` (fake cell distance) applies on line changes AND same-line heading reversals >90° (branch junctions like JFK/UMass). Never convert this penalty to display time.
+- **Animation:** arc-length interpolation (cells/sec, not fixed duration). 0.95s dwell only at line transfers and >90° branch reversals — not at plain stations. Train morphs color and rotates the short way during dwell.
+- **Grid alignment:** tile count (140×140), not pixel size, is the contract between editor, Tiled terrain map, and app. CELL=16 world px in both tools.
+
+### Pending transit work
+
+- Generate `station_list.csv` from MBTA GTFS `stops.txt` (V3 API: `https://api-v3.mbta.com/stops`) to stay current with service changes. Add stable GTFS `id` field to each station node.
+- Use `status` field (`open` / `temporary_closed` / `closed`) instead of deleting stations for closures like Symphony renovation.
+- **Square coverage on the in-app metro map:** the overlay filters by station *name* (an event's `square` joins to a grid node's `name`). Most current events match a station, but any `square` value with no matching named node in `transit-layer.json` is unreachable on the map — it can't be tapped to filter. Audit `eventSquares` against the grid's node names and backfill missing stations (or add an explicit `square` field) so every filterable square has a home on the map.
+
 ## Deployment
 
 GitHub Pages serves the repo root. Push to `main` → live within ~1 minute. The scraper runs automatically via GitHub Actions (`scrape.yml`) daily at 6am ET and commits updated `events.json` directly to `main`.

@@ -136,13 +136,16 @@ async function init() {
   buildFilterChips();
   renderSquareIndicator();
   wireMetroOverlay();
-  let deals;
-  [allEvents, venueData, deals] = await Promise.all([loadEvents(), loadVenues(), loadDeals()]);
+  let deals, transit;
+  [allEvents, venueData, deals, transit] = await Promise.all([loadEvents(), loadVenues(), loadDeals(), loadTransit()]);
   // Recurring food deals live alongside one-off events in the same feed; they
   // just match "tonight" by weekday instead of a calendar date (see isTonightEvent).
   allEvents = allEvents.concat(deals);
   // A stop is filterable only if something happens there tonight-or-otherwise.
   eventSquares = new Set(allEvents.map(e => e.square).filter(Boolean));
+  // Build the overlay's metro map once events are known (eventSquares decides
+  // which stations light up). Tapping a station applies its square as the filter.
+  if (transit) MetroMap.setup(transit, selectSquare);
   render();
   wireDetailOverlay();
   wireCollapsingHeader();
@@ -170,6 +173,20 @@ async function loadDeals() {
   } catch (err) {
     console.warn("Could not load deals.json", err);
     return [];
+  }
+}
+
+// The traced MBTA network (schema tonight.transit/1) that drives the metro
+// overlay's canvas map. Optional — if it's missing the overlay still opens with
+// the "Near me" button, just without a map (MetroMap.setup is simply skipped).
+async function loadTransit() {
+  try {
+    const res = await fetch("transit-layer.json");
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (err) {
+    console.warn("Could not load transit-layer.json", err);
+    return null;
   }
 }
 
@@ -298,13 +315,12 @@ function renderSquareIndicator() {
 
 // ============================================================
 // Metro overlay — the "get on the train" location picker.
-// Opens like the detail panel. Shows one line at a time as a
-// vertical strip (tabs switch lines); your current stop sits in
-// the middle with real neighbors above and below. Choosing a stop
-// runs a little train down the rail to it, then applies the filter.
+// Opens like the detail panel and shows the real MBTA network on a
+// canvas (the same traced map as transit-layer.json). Your current
+// square is the origin; tapping a lit-up station routes a train there
+// (Dijkstra + transfer dwell), then applies the filter on arrival.
+// The map/graph/animation all live in the MetroMap module below.
 // ============================================================
-let metroLine = "Red"; // which line the overlay map is currently showing
-
 function wireMetroOverlay() {
   document.getElementById("square-indicator").addEventListener("click", openMetro);
   const overlay = document.getElementById("metro-overlay");
@@ -318,124 +334,358 @@ function wireMetroOverlay() {
 
 function openMetro() {
   const overlay = document.getElementById("metro-overlay");
-  // Start on the line your current stop is on (first one for a transfer hub),
-  // or the Red line when nothing is selected.
-  metroLine = activeSquare === "all" ? "Red" : (routesForStation(activeSquare)[0] || "Red");
-  renderLineTabs();
-  renderMetroMap();
   overlay.hidden = false;
   document.body.style.overflow = "hidden";
-  requestAnimationFrame(() => scrollActiveIntoView());
+  // Origin is your current square (null = "Near me", no train to ride).
+  // The canvas can't measure itself until the panel is on screen, so fit
+  // on the next frame.
+  requestAnimationFrame(() => MetroMap.show(activeSquare === "all" ? null : activeSquare));
 }
 
 function closeMetro() {
   const overlay = document.getElementById("metro-overlay");
   overlay.hidden = true;
   document.body.style.overflow = "";
+  MetroMap.stop();
 }
 
-function renderLineTabs() {
-  const tabs = document.getElementById("metro-line-tabs");
-  tabs.innerHTML = "";
-  LINE_ORDER.forEach(line => {
-    const btn = document.createElement("button");
-    btn.className = "metro-tab" + (line === metroLine ? " active" : "");
-    btn.style.setProperty("--line-color", lineColor(line));
-    btn.innerHTML = `<span class="line-dot" style="--line-color:${lineColor(line)}"></span>${line}`;
-    btn.addEventListener("click", () => {
-      metroLine = line;
-      renderLineTabs();
-      renderMetroMap();
-      requestAnimationFrame(() => scrollActiveIntoView());
+// ============================================================
+// MetroMap — the canvas network inside the overlay.
+//
+// Ported from transit-animation-preview.html (the standalone tool):
+// builds a coordinate-keyed graph from transit-layer.json, routes
+// origin→destination with Dijkstra + a transfer penalty, and animates
+// a train along the path with a brief dwell (color morph + rotate) at
+// every line change or sharp branch reversal — never at plain stops.
+//
+// Adapted for the app: no dropdowns/readout/base image. The current
+// square is the fixed origin; a tap picks the nearest *filterable*
+// station (one with events) as the destination and, on arrival, calls
+// onArrive(name) → selectSquare. Color is always lineColor(), and only
+// stations with events are drawn lit + labelled; the rest are dimmed
+// connectors so the network still reads as a real map.
+// ============================================================
+const MetroMap = (() => {
+  const CELL = 16;                 // world px per grid cell — the editor/Tiled contract
+  const TRANSFER_PENALTY = 6;      // extra cost (in cells) to change trains
+  const keyOf = (c, r) => c + "," + r;
+  const cellCenter = (c, r) => ({ x: (c + 0.5) * CELL, y: (r + 0.5) * CELL });
+
+  let canvas, ctx, stage;
+  let graph = null, data = null;
+  let cols = 0, rows = 0;
+  let nameToKey = new Map();       // station name → graph key, for resolving the origin
+  let view = { scale: 1, x: 0, y: 0 };
+  let originKey = null;            // current square's node (green "you are here"); null for "Near me"
+  let onArrive = () => {};
+  let train = null;                // {x,y,angle,color} while a trip runs
+  let anim = null, raf = 0, lastTs = 0;
+
+  const s2w = (sx, sy) => ({ x: (sx - view.x) / view.scale, y: (sy - view.y) / view.scale });
+  const w2s = (wx, wy) => ({ x: wx * view.scale + view.x, y: wy * view.scale + view.y });
+  const isFilterable = name => name && eventSquares.has(name);
+
+  // ---- graph build: nodes keyed by coordinate, so a shared (c,r) is a junction/transfer
+  function buildGraph(d) {
+    const nodes = new Map(), adj = new Map();
+    const ensure = (n, line) => {
+      const k = keyOf(n.c, n.r);
+      let nd = nodes.get(k);
+      if (!nd) { nd = { c: n.c, r: n.r, name: n.name || "", station: !!n.station, lines: new Set() }; nodes.set(k, nd); adj.set(k, []); }
+      if (n.name) nd.name = n.name;   // never let "" overwrite a real name (branch-start convention)
+      if (n.station) nd.station = true;
+      nd.lines.add(line);
+      return k;
+    };
+    d.lines.forEach(ln => ln.branches.forEach(br => {
+      for (let i = 0; i < br.nodes.length; i++) {
+        const k = ensure(br.nodes[i], ln.line);
+        if (i > 0) {
+          const a = br.nodes[i - 1], ka = keyOf(a.c, a.r);
+          const w = Math.hypot(br.nodes[i].c - a.c, br.nodes[i].r - a.r);
+          adj.get(ka).push({ to: k, w, line: ln.line });
+          adj.get(k).push({ to: ka, w, line: ln.line });
+        }
+      }
+    }));
+    return { nodes, adj };
+  }
+
+  // ---- routing: Dijkstra over (node, came-from, line). Penalty applies once per
+  // "change trains" moment — a line transfer OR a sharp (>90°) same-line reversal.
+  function route(srcKey, dstKey) {
+    if (srcKey === dstKey) return { path: [srcKey], segLines: [] };
+    const { adj, nodes } = graph;
+    const dist = new Map(), prev = new Map();
+    const startId = srcKey + "||";
+    dist.set(startId, 0);
+    const pq = [{ id: startId, key: srcKey, from: null, line: null, d: 0 }];
+    let end = null;
+    while (pq.length) {
+      let mi = 0; for (let i = 1; i < pq.length; i++) if (pq[i].d < pq[mi].d) mi = i;
+      const cur = pq.splice(mi, 1)[0];
+      if (cur.d > (dist.get(cur.id) ?? Infinity)) continue;
+      if (cur.key === dstKey) { end = cur; break; }
+      const here = nodes.get(cur.key);
+      let inAng = null;
+      if (cur.from) { const f = nodes.get(cur.from); inAng = Math.atan2(here.r - f.r, here.c - f.c); }
+      for (const e of (adj.get(cur.key) || [])) {
+        const to = nodes.get(e.to);
+        const outAng = Math.atan2(to.r - here.r, to.c - here.c);
+        const lineChange = cur.line && cur.line !== e.line;
+        const sharp = inAng !== null && cur.line === e.line &&
+          Math.abs(angleDiff(inAng, outAng)) > Math.PI / 2 + 1e-6;
+        const pen = (lineChange || sharp) ? TRANSFER_PENALTY : 0;
+        const nd = cur.d + e.w + pen;
+        const nid = e.to + "|" + cur.key + "|" + e.line;
+        if (nd < (dist.get(nid) ?? Infinity)) {
+          dist.set(nid, nd);
+          prev.set(nid, { from: cur.id, key: cur.key, line: e.line });
+          pq.push({ id: nid, key: e.to, from: cur.key, line: e.line, d: nd });
+        }
+      }
+    }
+    if (!end) return null;
+    const path = [], segLines = [];
+    let id = end.id, key = end.key;
+    while (id) {
+      path.push(key);
+      const p = prev.get(id);
+      if (!p) break;
+      segLines.push(p.line);
+      id = p.from; key = p.key;
+    }
+    path.reverse(); segLines.reverse();
+    return { path, segLines };
+  }
+
+  // ---- geometry / view
+  function resize() {
+    if (!canvas) return;
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = stage.clientWidth * dpr;
+    canvas.height = stage.clientHeight * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    draw();
+  }
+  function fit() {
+    const w = stage.clientWidth, h = stage.clientHeight, pad = 36;
+    if (!w || !h) return;
+    const s = Math.min((w - pad) / (cols * CELL), (h - pad) / (rows * CELL));
+    view.scale = s;
+    view.x = (w - cols * CELL * s) / 2;
+    view.y = (h - rows * CELL * s) / 2;
+    draw();
+  }
+  function zoomAt(sx, sy, f) {
+    const b = s2w(sx, sy);
+    view.scale = Math.max(0.1, Math.min(8, view.scale * f));
+    view.x = sx - b.x * view.scale; view.y = sy - b.y * view.scale;
+    draw();
+  }
+
+  // ---- render
+  function strokeRounded(pts) {
+    ctx.beginPath();
+    if (pts.length === 1) { ctx.moveTo(pts[0].x, pts[0].y); ctx.lineTo(pts[0].x, pts[0].y); ctx.stroke(); return; }
+    ctx.moveTo(pts[0].x, pts[0].y);
+    const baseT = CELL * 0.85;
+    for (let i = 1; i < pts.length - 1; i++) {
+      const a = pts[i - 1], b = pts[i], c2 = pts[i + 1];
+      const L1 = Math.hypot(a.x - b.x, a.y - b.y), L2 = Math.hypot(c2.x - b.x, c2.y - b.y);
+      let cosA = ((a.x - b.x) * (c2.x - b.x) + (a.y - b.y) * (c2.y - b.y)) / ((L1 * L2) || 1);
+      cosA = Math.max(-1, Math.min(1, cosA));
+      const alpha = Math.acos(cosA);
+      if (alpha > Math.PI - 0.05) { ctx.lineTo(b.x, b.y); continue; }
+      const t = Math.min(baseT, L1 / 2, L2 / 2);
+      ctx.arcTo(b.x, b.y, c2.x, c2.y, t * Math.tan(alpha / 2));
+    }
+    ctx.lineTo(pts.at(-1).x, pts.at(-1).y);
+    ctx.stroke();
+  }
+  function roundRect(x, y, w, h, r) {
+    ctx.beginPath(); ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+  }
+
+  function draw() {
+    if (!ctx || !graph) return;
+    ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
+    ctx.save(); ctx.translate(view.x, view.y); ctx.scale(view.scale, view.scale);
+    ctx.lineJoin = "round"; ctx.lineCap = "round";
+
+    // lines
+    data.lines.forEach(ln => {
+      ctx.strokeStyle = lineColor(ln.line);
+      ctx.lineWidth = 4 / view.scale;
+      ln.branches.forEach(br => { if (br.nodes.length) strokeRounded(br.nodes.map(n => cellCenter(n.c, n.r))); });
     });
-    tabs.appendChild(btn);
-  });
-}
 
-function renderMetroMap() {
-  const map = document.getElementById("metro-map");
-  map.style.setProperty("--line-color", lineColor(metroLine));
-  map.innerHTML = "";
+    // nodes — lit + labelled where events happen, dimmed connectors otherwise
+    graph.nodes.forEach((nd, k) => {
+      const p = cellCenter(nd.c, nd.r);
+      const lit = isFilterable(nd.name) || k === originKey;
+      ctx.globalAlpha = lit ? 1 : 0.4;
+      if (nd.lines.size > 1) {                  // interchange — white diamond
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(Math.PI / 4);
+        ctx.fillStyle = "#fff"; ctx.strokeStyle = "#10131a"; ctx.lineWidth = 2 / view.scale;
+        const s = CELL * 0.42; ctx.fillRect(-s, -s, 2 * s, 2 * s); ctx.strokeRect(-s, -s, 2 * s, 2 * s); ctx.restore();
+      } else if (nd.station) {                  // plain station — ring
+        ctx.fillStyle = "#fff"; ctx.strokeStyle = lineColor([...nd.lines][0]); ctx.lineWidth = 2.5 / view.scale;
+        ctx.beginPath(); ctx.arc(p.x, p.y, CELL * 0.3, 0, 7); ctx.fill(); ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
 
-  LINES[metroLine].forEach(stop => {
-    const filterable = eventSquares.has(stop);
-    const current = stop === activeSquare;
-    const lines = stationLines(stop);
-    const transfer = lines.length > 1;
+      if (k === originKey) {                     // "you are here" — amber halo
+        ctx.strokeStyle = "#f5b942"; ctx.lineWidth = 3 / view.scale;
+        ctx.beginPath(); ctx.arc(p.x, p.y, CELL * 0.62, 0, 7); ctx.stroke();
+      }
+      if (lit && nd.name) {                       // label only the stops you can pick
+        ctx.fillStyle = k === originKey ? "#f5b942" : "#fff";
+        ctx.font = `${600} ${11 / view.scale}px ${getComputedStyle(document.body).getPropertyValue("--font-display") || "sans-serif"}`;
+        ctx.textAlign = "left"; ctx.textBaseline = "middle";
+        ctx.fillText(stationLabel(nd.name), p.x + CELL * 0.7, p.y);
+      }
+    });
 
-    const row = document.createElement(filterable ? "button" : "div");
-    row.className = "metro-stop"
-      + (filterable ? " is-square" : " is-connector")
-      + (current ? " is-current" : "")
-      + (transfer ? " is-transfer" : "");
-    row.dataset.stop = stop;
+    // train
+    if (train) {
+      ctx.save(); ctx.translate(train.x, train.y); ctx.rotate(train.angle);
+      const L = CELL * 1.5, W = CELL * 0.9;
+      ctx.fillStyle = train.color; ctx.strokeStyle = "#fff"; ctx.lineWidth = 2 / view.scale;
+      roundRect(-L / 2, -W / 2, L, W, CELL * 0.3); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(L / 2 - CELL * 0.35, 0, CELL * 0.16, 0, 7); ctx.fill();
+      ctx.restore();
+    }
+    ctx.restore();
+  }
 
-    row.innerHTML = `
-      <span class="stop-node"></span>
-      <span class="stop-name">${stationLabel(stop)}</span>
-      ${transfer ? `<span class="stop-transfer">${lineDots(lines)}</span>` : ""}
-      ${current ? `<span class="stop-here">You are here</span>` : ""}
-    `;
+  // ---- animation helpers
+  const lerp = (a, b, t) => a + (b - a) * t;
+  function hex2rgb(h) { const n = parseInt(h.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+  function mixColor(a, b, t) { const A = hex2rgb(a), B = hex2rgb(b); return `rgb(${Math.round(lerp(A[0], B[0], t))},${Math.round(lerp(A[1], B[1], t))},${Math.round(lerp(A[2], B[2], t))})`; }
+  function angleDiff(a, b) { let d = (b - a) % (2 * Math.PI); if (d > Math.PI) d -= 2 * Math.PI; if (d < -Math.PI) d += 2 * Math.PI; return d; }
+  function lerpAngle(a, b, t) { return a + angleDiff(a, b) * t; }
+  function segAngle(pts, i) { const a = pts[i], b = pts[i + 1]; return Math.atan2(b.y - a.y, b.x - a.x); }
 
-    if (filterable) row.addEventListener("click", () => travelTo(stop));
-    map.appendChild(row);
-  });
+  // ---- run a trip from origin → destination, then fire onArrive(destName)
+  function runTrip(srcKey, dstKey, destName) {
+    cancelAnimationFrame(raf);
+    const r = route(srcKey, dstKey);
+    if (!r || r.path.length < 2) { onArrive(destName); return; }
+    const pts = r.path.map(k => { const n = graph.nodes.get(k); return { ...cellCenter(n.c, n.r), name: n.name, station: n.station, key: k }; });
+    const segColors = r.segLines.map(lineColor);
+    anim = { pts, segColors, segLines: r.segLines, i: 0, t: 0, mode: "run", destName,
+             color: segColors[0], angle: segAngle(pts, 0) };
+    lastTs = performance.now();
+    raf = requestAnimationFrame(tick);
+  }
 
-  // The train marker that glides down the rail during a "trip".
-  const train = document.createElement("div");
-  train.className = "metro-train";
-  train.id = "metro-train";
-  train.hidden = true;
-  map.appendChild(train);
-}
+  const SPEED = 27;   // cells/sec — brisk but readable on a phone-sized map
+  function tick(ts) {
+    const dt = Math.min(0.05, (ts - lastTs) / 1000); lastTs = ts;
+    const a = anim, pts = a.pts;
+    if (a.mode === "run") {
+      const A = pts[a.i], B = pts[a.i + 1];
+      const segLen = Math.hypot(B.x - A.x, B.y - A.y) / CELL || 0.001;
+      a.t += SPEED * dt / segLen;
+      a.color = a.segColors[a.i];
+      a.angle = segAngle(pts, a.i);
+      if (a.t >= 1) {
+        a.t = 1;
+        if (a.i + 1 >= pts.length - 1) { train = trainAt(B.x, B.y, a.angle, a.color); draw(); finishTrip(); return; }
+        // Dwell only at a "change trains" moment — a line transfer or a sharp
+        // (>90°) reversal through a branch junction. Plain stops get no pause.
+        const inA = segAngle(pts, a.i), outA = segAngle(pts, a.i + 1);
+        const transfer = a.segLines[a.i] !== a.segLines[a.i + 1];
+        const sharp = Math.abs(angleDiff(inA, outA)) > Math.PI / 2 + 1e-6;
+        if (transfer || sharp) {
+          a.mode = "dwell"; a.dwellT = 0; a.dwellDur = 0.475;
+          a.fromAngle = inA; a.toAngle = outA;
+          a.fromColor = a.segColors[a.i]; a.toColor = transfer ? a.segColors[a.i + 1] : a.segColors[a.i];
+        } else { a.i++; a.t = 0; }
+      }
+    } else if (a.mode === "dwell") {
+      a.dwellT += dt;
+      const k = Math.min(1, a.dwellT / a.dwellDur);
+      a.angle = lerpAngle(a.fromAngle, a.toAngle, k);
+      a.color = mixColor(a.fromColor, a.toColor, k);
+      if (a.dwellT >= a.dwellDur) { a.i++; a.t = 0; a.mode = "run"; a.angle = a.toAngle; a.color = a.toColor; }
+    }
+    const A = pts[a.i], B = pts[Math.min(a.i + 1, pts.length - 1)];
+    train = trainAt(lerp(A.x, B.x, a.t), lerp(A.y, B.y, a.t), a.angle, a.color);
+    draw();
+    raf = requestAnimationFrame(tick);
+  }
+  function trainAt(x, y, angle, color) { return { x, y, angle, color }; }
+  function finishTrip() { cancelAnimationFrame(raf); const name = anim && anim.destName; anim = null; onArrive(name); }
 
-function stopRow(stop) {
-  return document.getElementById("metro-map")
-    .querySelector(`.metro-stop[data-stop="${stop}"]`);
-}
+  // ---- pointer: pan / pinch-zoom, with a tap = pick destination
+  function nearestFilterable(sx, sy) {
+    let best = null, bd = 26 * 26;
+    graph.nodes.forEach((nd, k) => {
+      if (!isFilterable(nd.name)) return;
+      const cc = cellCenter(nd.c, nd.r), p = w2s(cc.x, cc.y);
+      const d = (p.x - sx) ** 2 + (p.y - sy) ** 2;
+      if (d < bd) { bd = d; best = { key: k, name: nd.name }; }
+    });
+    return best;
+  }
+  function pickAt(sx, sy) {
+    const hit = nearestFilterable(sx, sy);
+    if (!hit) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce || !originKey || originKey === hit.key) { onArrive(hit.name); return; }
+    runTrip(originKey, hit.key, hit.name);
+  }
+  function wirePointer() {
+    const pts = new Map(); let dragging = false, pinch = 0, downPt = null, moved = false;
+    const local = e => { const r = canvas.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+    canvas.addEventListener("pointerdown", e => {
+      canvas.setPointerCapture(e.pointerId); const p = local(e); pts.set(e.pointerId, p);
+      if (pts.size === 2) { const [a, b] = [...pts.values()]; pinch = Math.hypot(a.x - b.x, a.y - b.y); }
+      dragging = true; downPt = p; moved = false;
+    });
+    canvas.addEventListener("pointermove", e => {
+      const p = local(e), prev = pts.get(e.pointerId); if (pts.has(e.pointerId)) pts.set(e.pointerId, p);
+      if (pts.size === 2) { const [a, b] = [...pts.values()]; const d = Math.hypot(a.x - b.x, a.y - b.y); const m = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 }; if (pinch) zoomAt(m.x, m.y, d / pinch); pinch = d; moved = true; return; }
+      if (downPt && Math.hypot(p.x - downPt.x, p.y - downPt.y) > 4) moved = true;
+      if (dragging && prev) { view.x += p.x - prev.x; view.y += p.y - prev.y; draw(); }
+    });
+    const up = e => {
+      const p = local(e), wasClick = (!moved && pts.size === 1);
+      pts.delete(e.pointerId); if (pts.size < 2) pinch = 0; if (pts.size === 0) dragging = false;
+      if (wasClick) pickAt(p.x, p.y);
+    };
+    canvas.addEventListener("pointerup", up); canvas.addEventListener("pointercancel", up);
+    stage.addEventListener("wheel", e => { e.preventDefault(); const p = local(e); zoomAt(p.x, p.y, e.deltaY < 0 ? 1.12 : 1 / 1.12); }, { passive: false });
+  }
 
-function rowCenter(row) {
-  return row.offsetTop + row.offsetHeight / 2;
-}
-
-function scrollActiveIntoView() {
-  const map = document.getElementById("metro-map");
-  const target = map.querySelector(".metro-stop.is-current")
-    || map.querySelector(".metro-stop.is-square");
-  if (target) target.scrollIntoView({ block: "center", behavior: "auto" });
-}
-
-function travelTo(stop) {
-  if (stop === activeSquare) { closeMetro(); return; }
-
-  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const map = document.getElementById("metro-map");
-  const toRow = stopRow(stop);
-  // Depart from the current stop if it's on this line, otherwise from the top
-  // of the line so the trip still reads as travel after switching lines.
-  const fromRow = (activeSquare !== "all" && stopRow(activeSquare))
-    || map.querySelector(".metro-stop");
-
-  if (reduce || !toRow || !fromRow) { selectSquare(stop); return; }
-
-  const train = document.getElementById("metro-train");
-  const y0 = rowCenter(fromRow);
-  const y1 = rowCenter(toRow);
-
-  map.classList.add("is-traveling");
-  toRow.classList.add("is-target");
-  train.hidden = false;
-  train.style.transition = "none";
-  train.style.top = `${y0}px`;
-  train.getBoundingClientRect(); // flush, so the next change animates
-
-  const dur = Math.min(950, 280 + Math.abs(y1 - y0) * 1.1);
-  train.style.transition = `top ${dur}ms cubic-bezier(.45,0,.2,1)`;
-  train.style.top = `${y1}px`;
-  toRow.scrollIntoView({ block: "center", behavior: "smooth" });
-
-  setTimeout(() => selectSquare(stop), dur + 140);
-}
+  // ---- public API
+  function setup(transitData, arriveCb) {
+    data = transitData;
+    cols = data.grid.cols; rows = data.grid.rows;
+    graph = buildGraph(data);
+    nameToKey = new Map();
+    graph.nodes.forEach((nd, k) => { if (nd.name) nameToKey.set(nd.name, k); });
+    onArrive = arriveCb;
+    canvas = document.getElementById("metro-canvas");
+    stage = document.getElementById("metro-stage");
+    ctx = canvas.getContext("2d");
+    wirePointer();
+    window.addEventListener("resize", () => { if (!document.getElementById("metro-overlay").hidden) resize(); });
+  }
+  function show(originName) {
+    if (!graph) return;
+    cancelAnimationFrame(raf); train = null; anim = null;
+    originKey = originName ? (nameToKey.get(originName) || null) : null;
+    resize(); fit();   // resize first (panel now has real dimensions), then frame the map
+  }
+  function stop() { cancelAnimationFrame(raf); train = null; anim = null; }
+  function ready() { return !!graph; }
+  return { setup, show, stop, ready };
+})();
 
 function selectSquare(value) {
   activeSquare = value;
