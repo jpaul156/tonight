@@ -9,7 +9,8 @@ import hashlib
 import requests
 from bs4 import BeautifulSoup
 import anthropic
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
+from html import unescape as html_unescape
 
 client = anthropic.Anthropic()
 
@@ -423,6 +424,61 @@ def extract_seatengine(html, base_url):
         })
 
     print(f"  Parsed {len(events)} events from SeatEngine JSON-LD (no LLM needed)")
+    return events
+
+
+def extract_squarespace_events(text, base_url):
+    """
+    Squarespace events collections (e.g. McCarthy's & Toad's /music calendar)
+    are JavaScript-rendered, so the page HTML is nearly empty — but the full
+    schedule is served as JSON at the collection URL + '?format=json'. Point the
+    venue's collection_url at that JSON endpoint; we parse 'upcoming' directly
+    (title, start/end, image, description), no LLM needed.
+
+    startDate/endDate are epoch-millisecond UTC instants; we convert to Boston
+    local with the project's fixed EDT (-4) assumption (see run_scraper.py).
+    """
+    try:
+        data = json.loads(text)
+    except ValueError:
+        print("  WARNING: Squarespace JSON did not parse (is collection_url the ?format=json endpoint?)")
+        return []
+
+    root = re.match(r"https?://[^/]+", base_url)
+    root = root.group(0) if root else ""
+    ET = timezone(timedelta(hours=-4))
+
+    def ms_to_local(ms):
+        if not isinstance(ms, (int, float)):
+            return None
+        return datetime.fromtimestamp(ms / 1000, timezone.utc).astimezone(ET).strftime("%Y-%m-%dT%H:%M")
+
+    events = []
+    for it in data.get("upcoming", []):
+        start = ms_to_local(it.get("startDate"))
+        if not start:
+            continue
+        full = it.get("fullUrl") or ""
+        source_url = (root + full) if full.startswith("/") else (full or None)
+        description = None
+        if it.get("body"):
+            description = BeautifulSoup(it["body"], "html.parser").get_text(" ").strip() or None
+        events.append({
+            "title":       html_unescape(it.get("title") or "").strip() or None,
+            "start":       start,
+            "end":         ms_to_local(it.get("endDate")),
+            "location":    None,  # Squarespace location is an unset NYC default; ignore
+            "cost":        None,  # not in the feed
+            "source_url":  source_url,
+            "performer":   None,
+            "description": description,
+            "image_url":   it.get("assetUrl"),
+            "ticket_url":  None,
+            "is_recurring": False,
+            "recurrence_note": None,
+        })
+
+    print(f"  Parsed {len(events)} events from Squarespace JSON (no LLM needed)")
     return events
 
 
@@ -1009,6 +1065,11 @@ def scrape_venue(venue_cfg, cache, verbose=True, force=False):
     elif strategy == "seatengine":
         # Direct JSON-LD parse from a SeatEngine box-office site — no LLM needed
         raw_events = extract_seatengine(html, base_url)
+        if verbose:
+            print(f"  Pass 1: {len(raw_events)} events (parsed directly, no LLM)")
+    elif strategy == "squarespace_events":
+        # Direct parse of a Squarespace events collection (?format=json) — no LLM
+        raw_events = extract_squarespace_events(html, base_url)
         if verbose:
             print(f"  Pass 1: {len(raw_events)} events (parsed directly, no LLM)")
     else:

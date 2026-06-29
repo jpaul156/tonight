@@ -190,5 +190,21 @@
     "is_local": true,
     "logo_url": null,
     "logo_thumb_url": null
+  },
+  "mccarthys-toad": {
+    "id": "mccarthys-toad",
+    "name": "McCarthy's and Toad",
+    "square": "Porter",
+    "transit_line": "Red",
+    "transit_stop": "Porter",
+    "walk_minutes": 6,
+    "address": "1912 Massachusetts Ave, Cambridge, MA",
+    "neighborhood": "Porter / Inman",
+    "phone": "(617) 491-9938",
+    "website": "https://www.mccarthystoad.com",
+    "notes": "Adjoining bars (McCarthy's + Toad) with live music nightly: Irish sessions, open mics, trivia, local bands.",
+    "is_local": true,
+    "logo_url": null,
+    "logo_thumb_url": null
   }
 }

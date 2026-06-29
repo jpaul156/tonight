@@ -289,6 +289,26 @@ VENUES = [
         "extra_venues": [],
     },
 
+    {
+        "id": "mccarthys-toad",
+        "name": "McCarthy's and Toad",
+        "address": "1912 Massachusetts Ave, Cambridge, MA",
+        "square": "Porter",
+        "transit_line": "Red",
+        "transit_stop": "Porter",
+        "walk_minutes": 6,
+        "is_local": True,
+        # Squarespace JS calendar — its /calendar page renders no event text, but
+        # the events collection serves the full schedule (incl. images) as JSON.
+        # Point collection_url at the ?format=json endpoint; parsed directly.
+        "collection_url": "https://www.mccarthystoad.com/music?format=json",
+        "scrape_strategy": "squarespace_events",
+        "detail_pages": False,
+        "url_contains": None,
+        "location_keywords": {},
+        "extra_venues": [],
+    },
+
 ]
 
 # Quick lookup by venue ID (used by the runner to resolve sibling venues)
