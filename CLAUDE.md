@@ -77,7 +77,7 @@ The transit navigation layer lives in three standalone HTML files at the repo ro
 
 - Generate `station_list.csv` from MBTA GTFS `stops.txt` (V3 API: `https://api-v3.mbta.com/stops`) to stay current with service changes. Add stable GTFS `id` field to each station node.
 - Use `status` field (`open` / `temporary_closed` / `closed`) instead of deleting stations for closures like Symphony renovation.
-- **Square coverage on the in-app metro map:** the overlay filters by station *name* (an event's `square` joins to a grid node's `name`). Most current events match a station, but any `square` value with no matching named node in `transit-layer.json` is unreachable on the map — it can't be tapped to filter. Audit `eventSquares` against the grid's node names and backfill missing stations (or add an explicit `square` field) so every filterable square has a home on the map.
+- **Square coverage on the in-app metro map:** the overlay filters by station *name* (an event's `square` joins to a grid node's `name` in `transit-layer.json`). Most squares map fine (Union Square, Magoun Square, Lechmere are all present). The known gap is **Inman Square** (The Lilypad) — a bus neighborhood with no train station, so it's not tappable on the map. Decide whether to add a non-station node for bus-only squares, or accept that they filter by `square` but don't appear on the map.
 
 ## Deployment
 

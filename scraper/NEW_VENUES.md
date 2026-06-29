@@ -99,10 +99,11 @@ JS calendars, but the platform exposes machine-readable event data.
 | **Aeronaut Brewing** | Returns **403** to a plain request and the events live in a JS widget at `#events` (no server-rendered event text). Needs better headers, the widget's API, or headless rendering. Investigate separately. |
 
 ## Cross-cutting flags
-- **Square coverage:** several sit at **Union Square / Magoun (GLX Green)** —
-  squares that are **not yet on the metro map** (`LINES` in `js/app.js`). They'll
-  scrape fine but won't be tappable on the map until backfilled (see the
-  "square coverage" item in CLAUDE.md → Pending transit work).
+- **Square coverage:** the metro map is now the full `transit-layer.json`
+  network, so Union Square, Magoun Square, and Lechmere **are** on the map
+  (Lechmere already shows for Lamplighter CX). The only square in these batches
+  with no map node is **Inman Square** (The Lilypad) — it's a bus location, not
+  a train station, so it won't be tappable on the map until/unless added.
 - **New display fields:** each venue needs `square`, `transit_line`,
   `transit_stop`, `walk_minutes`, `is_local` in **both** `scraper/venues.py`
   and `data/venues.json`. The CSV's transit guesses cover most of this.
