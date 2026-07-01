@@ -93,7 +93,7 @@
     "logo_url": "assets/venues/orig/vrcc.jpg",
     "logo_thumb_url": null,
     "is_local": true,
-    "notes": "Latino cultural center in East Boston. Festivals, family events, and community celebrations — some held off-site at partner venues."
+    "notes": "Latino cultural center in East Boston. Festivals, family events, and community celebrations \u2014 some held off-site at partner venues."
   },
   "mission": {
     "id": "mission",
@@ -298,7 +298,7 @@
     "neighborhood": "Porter Square",
     "phone": null,
     "website": "https://lizardloungeclub.com",
-    "notes": "105-cap basement club, 21+. Wed–Sun: local bands, touring acts, weekly poetry jam.",
+    "notes": "105-cap basement club, 21+. Wed\u2013Sun: local bands, touring acts, weekly poetry jam.",
     "is_local": true,
     "logo_url": null,
     "logo_thumb_url": null
@@ -362,7 +362,7 @@
     "neighborhood": "Medford Square",
     "phone": "(781) 219-3815",
     "website": "https://www.deepcuts.rocks",
-    "notes": "240-cap brewery, eatery, and live music venue in Medford Square. Tue–Sat shows.",
+    "notes": "240-cap brewery, eatery, and live music venue in Medford Square. Tue\u2013Sat shows.",
     "is_local": true,
     "logo_url": null,
     "logo_thumb_url": null
@@ -414,5 +414,85 @@
     "is_local": true,
     "logo_url": null,
     "logo_thumb_url": null
+  },
+  "mideast-downstairs": {
+    "id": "mideast-downstairs",
+    "name": "The Middle East - Downstairs",
+    "address": "472 Massachusetts Ave, Cambridge, MA",
+    "neighborhood": "Central Square",
+    "square": "Central",
+    "transit_line": "Red",
+    "transit_stop": "Central",
+    "walk_minutes": 3,
+    "website": "https://www.mideastclub.com",
+    "phone": "617-864-3278",
+    "logo_url": null,
+    "logo_thumb_url": null,
+    "is_local": true,
+    "notes": "Legendary Central Square rock club \u2014 the large basement room. National and local touring acts."
+  },
+  "mideast-upstairs": {
+    "id": "mideast-upstairs",
+    "name": "The Middle East - Upstairs",
+    "address": "472 Massachusetts Ave, Cambridge, MA",
+    "neighborhood": "Central Square",
+    "square": "Central",
+    "transit_line": "Red",
+    "transit_stop": "Central",
+    "walk_minutes": 3,
+    "website": "https://www.mideastclub.com",
+    "phone": "617-864-3278",
+    "logo_url": null,
+    "logo_thumb_url": null,
+    "is_local": true,
+    "notes": "Intimate upstairs room at the Middle East complex. Indie, punk, and emerging local bands."
+  },
+  "mideast-corner": {
+    "id": "mideast-corner",
+    "name": "The Middle East - Corner",
+    "address": "480 Massachusetts Ave, Cambridge, MA",
+    "neighborhood": "Central Square",
+    "square": "Central",
+    "transit_line": "Red",
+    "transit_stop": "Central",
+    "walk_minutes": 3,
+    "website": "https://www.mideastclub.com",
+    "phone": "617-864-3278",
+    "logo_url": null,
+    "logo_thumb_url": null,
+    "is_local": true,
+    "notes": "The Corner (Bakery) stage \u2014 free and low-cover shows, DJs, karaoke, and residencies."
+  },
+  "mideast-zuzu": {
+    "id": "mideast-zuzu",
+    "name": "ZuZu",
+    "address": "474 Massachusetts Ave, Cambridge, MA",
+    "neighborhood": "Central Square",
+    "square": "Central",
+    "transit_line": "Red",
+    "transit_stop": "Central",
+    "walk_minutes": 3,
+    "website": "https://www.mideastclub.com",
+    "phone": "617-864-3278",
+    "logo_url": null,
+    "logo_thumb_url": null,
+    "is_local": true,
+    "notes": "Restaurant and bar at the Middle East complex with nightly live music and DJ sets."
+  },
+  "mideast-sonia": {
+    "id": "mideast-sonia",
+    "name": "Sonia",
+    "address": "10 Brookline St, Cambridge, MA",
+    "neighborhood": "Central Square",
+    "square": "Central",
+    "transit_line": "Red",
+    "transit_stop": "Central",
+    "walk_minutes": 4,
+    "website": "https://www.mideastclub.com",
+    "phone": "617-864-3278",
+    "logo_url": null,
+    "logo_thumb_url": null,
+    "is_local": true,
+    "notes": "Concert venue around the corner from the Middle East. Touring bands and dance nights."
   }
 }

@@ -261,6 +261,129 @@ def extract_burren_tables(html, base_url):
     return events  # returns list of dicts, not a text string
 
 
+def extract_mideast_events(html, base_url):
+    """
+    The Middle East complex (mideastclub.com) is a WordPress site whose home
+    page embeds a TicketWeb plugin that server-renders every upcoming show as a
+    `.event-list .row` card. Each card is fully machine-readable — a dedicated
+    class per field — so we parse directly, no LLM for extraction:
+
+      .tw-event-date   "6.30"  (month.day, no year)
+      .tw-event-time   "Show: 5:00PM"
+      .tw-name a       title (+ href = ticketweb ticket URL)
+      .tw-venue-name   "@ Middle East - Upstairs"  (the room)
+      .tw-price        "$24.18"  (optional)
+      img.event-img    poster image (ticketweb CDN)
+
+    The room string is returned as `location`; venues.py routes it to the right
+    sub-venue (Upstairs / Downstairs / Corner / Zuzu / Sonia) via
+    location_keywords. Category is left to the Pass 3 classifier.
+
+    The five rooms are peers, not a headquarters with satellites, so an
+    unrecognized room must NOT silently fall back to the config's primary
+    (Downstairs) and masquerade as a real Downstairs show. We warn on any room
+    string that matches none of the known keywords so a new/renamed TicketWeb
+    room is caught instead of quietly misrouted. Keep KNOWN_ROOM_KEYWORDS in
+    sync with location_keywords in venues.py.
+    """
+    KNOWN_ROOM_KEYWORDS = ("downstairs", "upstairs", "corner", "zuzu", "sonia")
+
+    soup = BeautifulSoup(html, "html.parser")
+    lst = soup.find(class_="event-list")
+    if not lst:
+        print("  WARNING: no .event-list found — page structure may have changed")
+        return []
+
+    events = []
+    for row in lst.select(".row"):
+        name_el = row.find(class_="tw-name")
+        date_el = row.find(class_="tw-event-date")
+        if not (name_el and date_el):
+            continue
+
+        title = name_el.get_text(strip=True)
+        time_el  = row.find(class_="tw-event-time")
+        start = parse_mideast_datetime(
+            date_el.get_text(strip=True),
+            time_el.get_text(strip=True) if time_el else "",
+        )
+        if not start:
+            continue
+
+        room_el  = row.find(class_="tw-venue-name")
+        location = room_el.get_text(strip=True).lstrip("@").strip() if room_el else None
+        if not location or not any(kw in location.lower() for kw in KNOWN_ROOM_KEYWORDS):
+            print(f"  WARNING: unrecognized room {location!r} for '{title}' — "
+                  f"will fall back to the primary venue; add it to "
+                  f"location_keywords + KNOWN_ROOM_KEYWORDS")
+
+        price_el = row.find(class_="tw-price")
+        cost = price_el.get_text(strip=True) if price_el else None
+
+        img = row.find("img", class_="event-img")
+        image_url = img.get("src").strip() if img and img.get("src") else None
+
+        tix = row.find("a", class_="tw-buy-tix-btn")
+        ticket_url = tix.get("href") if tix and tix.get("href") else None
+
+        title_upper = title.upper()
+        is_recurring = any(kw in title_upper for kw in
+                           ["KARAOKE", "TRIVIA", "OPEN MIC", "NETWORK WEDNESDAYS"])
+
+        events.append({
+            "title":       title,
+            "start":       start,
+            "end":         None,
+            "location":    location,
+            "cost":        cost,
+            "source_url":  None,
+            "performer":   None,
+            "description": None,
+            "image_url":   image_url,
+            "ticket_url":  ticket_url,
+            "is_recurring": is_recurring,
+            "recurrence_note": None,
+        })
+
+    print(f"  Parsed {len(events)} events from TicketWeb cards (no LLM needed)")
+    return events
+
+
+def parse_mideast_datetime(month_day, time_str):
+    """
+    Combine the Middle East card's "6.30" (month.day, no year) and
+    "Show: 5:00PM" into a naive ISO 8601 string ("2026-06-30T17:00:00").
+
+    Year is inferred as the current year, rolling forward when the resulting
+    date is well in the past (handles the Dec->Jan wrap). Times are kept naive
+    Eastern wall-clock, matching every other venue here.
+    """
+    m = re.match(r"\s*(\d{1,2})\.(\d{1,2})\s*$", month_day or "")
+    if not m:
+        return None
+    month, day = int(m.group(1)), int(m.group(2))
+
+    t = re.sub(r"(?i)(show|doors)\s*:", "", time_str or "").strip()
+    tm = None
+    for fmt in ("%I:%M%p", "%I%p", "%I:%M %p"):
+        try:
+            tm = datetime.strptime(t, fmt)
+            break
+        except ValueError:
+            continue
+    if tm is None:
+        return None
+
+    now = datetime.now(timezone.utc)
+    try:
+        dt = datetime(now.year, month, day, tm.hour, tm.minute)
+    except ValueError:
+        return None
+    if dt.replace(tzinfo=timezone.utc) < now - timedelta(days=60):
+        dt = dt.replace(year=now.year + 1)
+    return dt.strftime("%Y-%m-%dT%H:%M:00")
+
+
 def parse_wix_datetime(date_str, time_str):
     """
     Combine Wix's pre-formatted strings, e.g. "June 6, 2026" + "2:00 PM",
@@ -1072,7 +1195,7 @@ def build_events(raw_events, category_map, detail_map, venue_cfg):
 
         description = detail.get("description") or e.get("description")
         image_url = detail.get("image_url") or e.get("image_url")
-        ticket_url = detail.get("ticket_url")
+        ticket_url = detail.get("ticket_url") or e.get("ticket_url")
         cost = detail.get("cost") or e.get("cost")
         performer = detail.get("performer") or e.get("performer")
 
@@ -1236,6 +1359,12 @@ def scrape_venue(venue_cfg, cache, verbose=True, force=False):
     elif strategy == "aeronaut_events":
         # Direct parse of Aeronaut's CDN JSON feed — no LLM, native categories
         raw_events = extract_aeronaut_events(html, base_url)
+        if verbose:
+            print(f"  Pass 1: {len(raw_events)} events (parsed directly, no LLM)")
+    elif strategy == "mideast_events":
+        # Direct parse of the Middle East's TicketWeb event cards — no LLM.
+        # Room-per-card routes to sub-venues via location_keywords.
+        raw_events = extract_mideast_events(html, base_url)
         if verbose:
             print(f"  Pass 1: {len(raw_events)} events (parsed directly, no LLM)")
     else:

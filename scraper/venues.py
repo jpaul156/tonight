@@ -658,6 +658,86 @@ VENUES = [
         "extra_venues": [],
     },
 
+    # ----------------------------------------------------------
+    # The Middle East complex — Central Square (Red)
+    # ----------------------------------------------------------
+    # One WordPress home page (mideastclub.com) embeds a TicketWeb plugin that
+    # server-renders every show across all five rooms, each card tagged with its
+    # room ("@ Middle East - Upstairs", "@ Sonia", ...). Parsed directly by the
+    # mideast_events strategy (no LLM for extraction); location_keywords routes
+    # each event to the right physical room (same routing mechanism as
+    # Lamplighter — though these five are peer stages in one complex, not
+    # separate locations of one company). The five rooms are peers; the config
+    # format just requires ONE entry to own the collection page + strategy and
+    # act as the no-match fallback, and Downstairs holds that role arbitrarily.
+    # A room label that matches no keyword is NOT silently accepted as a
+    # Downstairs show — extract_mideast_events warns so a new/renamed TicketWeb
+    # room is caught. All five are in/around Central Square on the Red line.
+    # Keep these fields in sync with data/venues.json.
+    {
+        "id": "mideast-downstairs",
+        "name": "The Middle East - Downstairs",
+        "address": "472 Massachusetts Ave, Cambridge, MA",
+        "square": "Central",
+        "transit_line": "Red",
+        "transit_stop": "Central",
+        "walk_minutes": 3,
+        "is_local": True,
+        "collection_url": "https://www.mideastclub.com",
+        "scrape_strategy": "mideast_events",
+        "detail_pages": False,
+        "url_contains": None,
+        "location_keywords": {
+            "downstairs": "mideast-downstairs",
+            "upstairs": "mideast-upstairs",
+            "corner": "mideast-corner",
+            "zuzu": "mideast-zuzu",
+            "sonia": "mideast-sonia",
+        },
+        "extra_venues": [
+            {
+                "id": "mideast-upstairs",
+                "name": "The Middle East - Upstairs",
+                "address": "472 Massachusetts Ave, Cambridge, MA",
+                "square": "Central",
+                "transit_line": "Red",
+                "transit_stop": "Central",
+                "walk_minutes": 3,
+                "is_local": True,
+            },
+            {
+                "id": "mideast-corner",
+                "name": "The Middle East - Corner",
+                "address": "480 Massachusetts Ave, Cambridge, MA",
+                "square": "Central",
+                "transit_line": "Red",
+                "transit_stop": "Central",
+                "walk_minutes": 3,
+                "is_local": True,
+            },
+            {
+                "id": "mideast-zuzu",
+                "name": "ZuZu",
+                "address": "474 Massachusetts Ave, Cambridge, MA",
+                "square": "Central",
+                "transit_line": "Red",
+                "transit_stop": "Central",
+                "walk_minutes": 3,
+                "is_local": True,
+            },
+            {
+                "id": "mideast-sonia",
+                "name": "Sonia",
+                "address": "10 Brookline St, Cambridge, MA",
+                "square": "Central",
+                "transit_line": "Red",
+                "transit_stop": "Central",
+                "walk_minutes": 4,
+                "is_local": True,
+            },
+        ],
+    },
+
 ]
 
 # Quick lookup by venue ID (used by the runner to resolve sibling venues)
