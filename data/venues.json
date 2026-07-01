@@ -398,5 +398,21 @@
     "is_local": true,
     "logo_url": null,
     "logo_thumb_url": null
+  },
+  "aeronaut": {
+    "id": "aeronaut",
+    "name": "Aeronaut Brewing Company",
+    "square": "Union Square",
+    "transit_line": "Green",
+    "transit_stop": "Union Square",
+    "walk_minutes": 8,
+    "address": "14 Tyler St, Somerville, MA",
+    "neighborhood": "Union Square",
+    "phone": "(617) 987-4236",
+    "website": "https://www.aeronautbrewing.com",
+    "notes": "Union Square brewery and taproom; live music, trivia, and community events most nights.",
+    "is_local": true,
+    "logo_url": null,
+    "logo_thumb_url": null
   }
 }

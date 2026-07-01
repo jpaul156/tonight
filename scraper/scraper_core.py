@@ -562,6 +562,74 @@ def extract_squarespace_events(text, base_url):
     return events
 
 
+# Aeronaut's feed carries its own event category. Map it to our taxonomy so we
+# never spend an LLM call classifying (see extract_aeronaut_events). Categories
+# not listed here fall through to "other". "closed" / "modified hours" are
+# operational notices, not events — dropped in the extractor, not mapped here.
+AERONAUT_CATEGORY_MAP = {
+    "music":     "music",
+    "trivia":    "trivia",
+    "community": "community",
+    "meetup":    "community",
+    "bike":      "community",
+    "party":     "community",
+    "ticketed":  "other",   # mixed bag (lectures, tile club, drag) — no content signal
+}
+
+
+def extract_aeronaut_events(text, base_url):
+    """
+    Aeronaut Brewing's public calendar (WordPress/Elementor page) is JS-injected
+    from a static JSON feed on their CDN. Point collection_url at that feed
+    (https://d3izki9aezxlkr.cloudfront.net/public_events.json) and we parse it
+    directly — no LLM for extraction OR categorization, since each item carries
+    its own category (mapped via AERONAUT_CATEGORY_MAP).
+
+    The feed covers only the Somerville taproom today but includes a venue_slug
+    per item; we filter to somerville so an Allston split later won't leak in.
+    Operational notices ("closed", "modified hours") are dropped.
+    """
+    try:
+        data = json.loads(text)
+    except ValueError:
+        print("  WARNING: Aeronaut JSON did not parse (is collection_url the CDN feed?)")
+        return []
+
+    DROP = {"closed", "modified hours"}
+    events = []
+    for it in data:
+        if it.get("venue_slug") != "somerville":
+            continue
+        cat = (it.get("category") or "").strip().lower()
+        if cat in DROP:
+            continue
+        date = (it.get("date") or "").strip()
+        start_t = (it.get("start") or "").strip()
+        if not date or not start_t:
+            continue
+        end_t = (it.get("end") or "").strip()
+        ext = (it.get("extlink") or "").strip() or None
+        tickets = (it.get("tickets") or "").strip() or None
+        events.append({
+            "title":       html_unescape(it.get("name") or "").strip() or None,
+            "start":       f"{date}T{start_t}",
+            "end":         f"{date}T{end_t}" if end_t else None,
+            "location":    None,
+            "cost":        None,  # not in the feed
+            "source_url":  ext or tickets,
+            "performer":   None,
+            "description": (it.get("description") or "").strip() or None,
+            "image_url":   it.get("img_url") or None,
+            "ticket_url":  tickets,
+            "category":    AERONAUT_CATEGORY_MAP.get(cat, "other"),
+            "is_recurring": False,
+            "recurrence_note": None,
+        })
+
+    print(f"  Parsed {len(events)} events from Aeronaut CDN feed (no LLM needed)")
+    return events
+
+
 def extract_shopify_products(html, base_url):
     """
     For Shopify/Tailwind sites with no semantic class names.
@@ -632,8 +700,14 @@ def extract_html_page(html, venue_cfg, extra_pages=None):
         all_text_parts = []
         for source_html in all_html_sources:
             soup = BeautifulSoup(source_html, "html.parser")
-            for tag in soup(["script", "style", "nav", "footer", "header"]):
+            for tag in soup(["script", "style", "nav"]):
                 tag.decompose()
+            # Strip site-level header/footer but preserve those inside <article>
+            # (some sites put event titles in <header class="entry-header"> and
+            # dates/times in <footer class="entry-footer"> within each article).
+            for tag in soup.find_all(["header", "footer"]):
+                if not tag.find_parent("article"):
+                    tag.decompose()
             # Preserve event page links in the text so the LLM can set
             # source_url on each event. Without this, get_text() strips all
             # hrefs and every event falls back to the collection URL, which
@@ -1010,7 +1084,9 @@ def build_events(raw_events, category_map, detail_map, venue_cfg):
         # Fall back to the venue's default_category (e.g. a comedy club) rather
         # than "other" when the classifier didn't label this event.
         fallback = venue_cfg.get("default_category") or "other"
-        category = category_map.get(i, fallback)
+        # Prefer a category the extractor already resolved from a structured feed
+        # (e.g. aeronaut_events); otherwise use the LLM classifier's result.
+        category = e.get("category") or category_map.get(i, fallback)
         if category not in VALID_CATEGORIES:
             category = fallback if fallback in VALID_CATEGORIES else "other"
 
@@ -1157,6 +1233,11 @@ def scrape_venue(venue_cfg, cache, verbose=True, force=False):
         raw_events = extract_jsonld_events(html, base_url)
         if verbose:
             print(f"  Pass 1: {len(raw_events)} events (parsed directly, no LLM)")
+    elif strategy == "aeronaut_events":
+        # Direct parse of Aeronaut's CDN JSON feed — no LLM, native categories
+        raw_events = extract_aeronaut_events(html, base_url)
+        if verbose:
+            print(f"  Pass 1: {len(raw_events)} events (parsed directly, no LLM)")
     else:
         # Text extraction + LLM
         if strategy == "shopify_products":
@@ -1224,9 +1305,16 @@ def scrape_venue(venue_cfg, cache, verbose=True, force=False):
             print(f"  Pass 2: fetched {fetched}, skipped {skipped} unchanged")
 
     # --- Pass 3: classify categories ---
-    if verbose:
-        print(f"  Pass 3: classifying categories...")
-    category_map = llm_classify_categories(raw_events, venue_cfg)
+    # Skip entirely when the extractor already assigned every event a category
+    # from a structured feed (e.g. aeronaut_events) — no LLM call needed.
+    if raw_events and all(e.get("category") for e in raw_events):
+        if verbose:
+            print(f"  Pass 3: skipped (categories from feed)")
+        category_map = {}
+    else:
+        if verbose:
+            print(f"  Pass 3: classifying categories...")
+        category_map = llm_classify_categories(raw_events, venue_cfg)
     if verbose:
         for i, cat in category_map.items():
             title = raw_events[i].get("title", "?")[:40]

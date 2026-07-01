@@ -559,6 +559,57 @@ VENUES = [
     },
 
     # ----------------------------------------------------------
+    # Somerville Theatre — Davis Square (Red)
+    # ----------------------------------------------------------
+    {
+        "id": "somerville-theatre",
+        "name": "Somerville Theatre",
+        "address": "55 Davis Square, Somerville, MA",
+        "square": "Davis Square",
+        "transit_line": "Red",
+        "transit_stop": "Davis",
+        "walk_minutes": 2,
+        "is_local": True,
+        # WP Theatre Manager plugin renders events server-side — no JS needed.
+        # /events = live music/theater/comedy only (no films). /calendar and
+        # /schedule are film listings; hold for the cinema feature design.
+        # Crystal Ballroom is a separate venue in the same building with its
+        # own website and event calendar — see crystal-ballroom below.
+        "collection_url": "https://www.somervilletheatre.com/events/",
+        "scrape_strategy": "html_full_text",
+        "detail_pages": False,
+        "url_contains": None,
+        "prompt_notes": (
+            "- Events are music, comedy, theater, and lectures only — no film screenings."
+        ),
+        "location_keywords": {},
+        "extra_venues": [],
+    },
+
+    # ----------------------------------------------------------
+    # Crystal Ballroom — Davis Square (Red)
+    # ----------------------------------------------------------
+    {
+        "id": "crystal-ballroom",
+        "name": "Crystal Ballroom",
+        "address": "55 Davis Square, Somerville, MA",
+        "square": "Davis Square",
+        "transit_line": "Red",
+        "transit_stop": "Davis",
+        "walk_minutes": 2,
+        "is_local": True,
+        # Separate venue from Somerville Theatre despite sharing the building.
+        # Custom WordPress theme; events are server-rendered in h2.entry-title
+        # blocks with dates/times in entry-footer — no JS needed.
+        "collection_url": "https://www.crystalballroomboston.com/events/",
+        "scrape_strategy": "html_full_text",
+        "detail_pages": False,
+        "url_contains": None,
+        "location_keywords": {},
+        "extra_venues": [],
+    },
+
+    # ----------------------------------------------------------
     # Hamilton Restaurant & Bar — Coolidge Corner (Green C)
     # ----------------------------------------------------------
     {
@@ -575,6 +626,32 @@ VENUES = [
         # to pick up any additional events that get added.
         "collection_url": "https://hamiltonbrookline.com/brookline-coolidge-corner-hamilton-restaurant-and-bar-events",
         "scrape_strategy": "html_full_text",
+        "detail_pages": False,
+        "url_contains": None,
+        "location_keywords": {},
+        "extra_venues": [],
+    },
+
+    # ----------------------------------------------------------
+    # Aeronaut Brewing Company — Union Square (Green)
+    # ----------------------------------------------------------
+    {
+        "id": "aeronaut",
+        "name": "Aeronaut Brewing Company",
+        "address": "14 Tyler St, Somerville, MA",
+        "square": "Union Square",
+        "transit_line": "Green",
+        "transit_stop": "Union Square",
+        "walk_minutes": 8,
+        "is_local": True,
+        # The public /events/ page (WordPress/Elementor, Cloudflare-fronted) is
+        # a JS-injected teaser; the real calendar loads from a static CDN feed.
+        # Point collection_url straight at that feed and parse it directly —
+        # no LLM for extraction or categorization (native category per item).
+        # The feed is Somerville-only today but carries venue_slug; the parser
+        # filters to somerville so a future Allston split can't leak in.
+        "collection_url": "https://d3izki9aezxlkr.cloudfront.net/public_events.json",
+        "scrape_strategy": "aeronaut_events",
         "detail_pages": False,
         "url_contains": None,
         "location_keywords": {},
