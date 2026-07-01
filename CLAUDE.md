@@ -45,6 +45,10 @@ Supported line names: `Red`, `Orange`, `Green`, `Blue`, `Silver`, `Bus`, `Commut
 
 The front end's `getNow()` in `js/app.js` is the sole authority on what counts as "tonight." The scraper's `cutoff_datetime()` in `run_scraper.py` is intentionally loose (36h lookback) — it only archives old events so the active list doesn't grow forever. Do not make the scraper cutoff precise; see NOTES.md for the bug this prevented.
 
+## Native categories from structured feeds
+
+Some structured feeds carry their own event category (e.g. Aeronaut's CDN JSON feed). When they do, map it to `VALID_CATEGORIES` in the extractor and set `category` on each raw event: `build_events` prefers an extractor-supplied category, and the LLM classify pass (Pass 3) is skipped entirely when *every* event already has one. Prefer this over the LLM classifier whenever the source gives a usable category — it's free and deterministic. See `AERONAUT_CATEGORY_MAP` / `extract_aeronaut_events` in `scraper_core.py` for the pattern.
+
 ## Known limitations
 
 - `venue_id` is stamped on newly scraped events; the front end joins to `data/venues.json` via `venueFor()`, falling back to `id` string parsing for older events scraped before stamping. Re-scrape a venue with `--force` to migrate its events.
