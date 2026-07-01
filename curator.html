@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tonight · Curator</title>
+<style>
+  :root {
+    --bg: #14161f; --panel: #1c1f2b; --panel2: #232735; --line: #2f3446;
+    --text: #e7e9f2; --muted: #8b93ad; --amber: #f0a63c; --green: #57c88a;
+    --red: #e05c5c; --blue: #5c8ce0;
+    --mono: ui-monospace, "SF Mono", Menlo, monospace;
+    --sans: system-ui, -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--sans); }
+  header {
+    position: sticky; top: 0; z-index: 10; background: var(--panel);
+    border-bottom: 1px solid var(--line); padding: 12px 18px;
+    display: flex; gap: 14px; align-items: center; flex-wrap: wrap;
+  }
+  header h1 { font-size: 1rem; margin: 0; font-family: var(--mono); letter-spacing: 0.04em; }
+  header h1 span { color: var(--amber); }
+  .spacer { flex: 1; }
+  .tabs { display: flex; gap: 4px; }
+  .tab {
+    font-family: var(--mono); font-size: 0.75rem; padding: 5px 11px; border-radius: 7px;
+    background: var(--panel2); border: 1px solid var(--line); color: var(--muted); cursor: pointer;
+  }
+  .tab.active { color: var(--text); border-color: var(--amber); }
+  .tab b { color: var(--amber); }
+  button.export {
+    font-family: var(--mono); font-size: 0.75rem; padding: 6px 12px; border-radius: 7px;
+    background: var(--panel2); border: 1px solid var(--line); color: var(--text); cursor: pointer;
+  }
+  button.export.dirty { border-color: var(--green); color: var(--green); }
+  main { max-width: 900px; margin: 0 auto; padding: 18px; display: grid; gap: 14px; }
+  .hint { color: var(--muted); font-size: 0.8rem; line-height: 1.5; }
+  .row {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+    padding: 14px; display: grid; grid-template-columns: 340px 1fr; gap: 16px;
+  }
+  @media (max-width: 720px) { .row { grid-template-columns: 1fr; } }
+  .art {
+    position: relative; width: 100%; height: 200px; border-radius: 8px; overflow: hidden;
+    background: var(--panel2); user-select: none;
+  }
+  .art img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+  .art .noimg {
+    display: flex; align-items: center; justify-content: center; height: 100%;
+    color: var(--muted); font-family: var(--mono); font-size: 0.75rem; text-align: center; padding: 12px;
+  }
+  .art .dot {
+    position: absolute; width: 22px; height: 22px; margin: -11px 0 0 -11px;
+    border: 2px solid #fff; border-radius: 50%; box-shadow: 0 0 0 2px rgba(0,0,0,.5);
+    pointer-events: none;
+  }
+  .art.draggable { cursor: crosshair; }
+  .art .poslabel {
+    position: absolute; bottom: 6px; left: 6px; font-family: var(--mono); font-size: 0.68rem;
+    background: rgba(0,0,0,.6); padding: 2px 6px; border-radius: 5px; color: #fff;
+  }
+  .meta h2 { font-size: 0.98rem; margin: 0 0 3px; }
+  .meta .sub { color: var(--muted); font-size: 0.78rem; font-family: var(--mono); margin-bottom: 10px; }
+  .tag { font-family: var(--mono); font-size: 0.68rem; padding: 1px 6px; border-radius: 5px; }
+  .tag.match { background: rgba(87,200,138,.15); color: var(--green); }
+  .tag.nomatch { background: rgba(224,92,92,.15); color: var(--red); }
+  .tag.img { background: rgba(92,140,224,.15); color: var(--blue); }
+  .field { margin-top: 8px; }
+  .field label { display: block; font-size: 0.7rem; color: var(--muted); font-family: var(--mono); margin-bottom: 3px; }
+  .field input {
+    width: 100%; background: var(--panel2); border: 1px solid var(--line); border-radius: 7px;
+    color: var(--text); padding: 7px 9px; font-size: 0.82rem; font-family: var(--sans);
+  }
+  .field input:focus { outline: none; border-color: var(--amber); }
+  .actions { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .actions button {
+    font-family: var(--mono); font-size: 0.72rem; padding: 6px 11px; border-radius: 7px;
+    background: var(--panel2); border: 1px solid var(--line); color: var(--text); cursor: pointer;
+  }
+  .actions button.primary { border-color: var(--amber); color: var(--amber); }
+  .saved { color: var(--green); font-size: 0.72rem; font-family: var(--mono); align-self: center; }
+  .count { color: var(--muted); font-family: var(--mono); font-size: 0.75rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Tonight · <span>Curator</span></h1>
+  <div class="tabs" id="tabs"></div>
+  <div class="spacer"></div>
+  <button class="export" id="export-artists">↓ artists.json</button>
+  <button class="export" id="export-crops">↓ image-crops.json</button>
+</header>
+<main id="main">
+  <p class="hint">Loading data…</p>
+</main>
+
+<script src="js/artist-match.js"></script>
+<script>
+// ============================================================
+// Tonight Curator — a local, static "morning polish" tool. It never writes to
+// disk directly (same as the transit editors); you export the two hand-
+// maintained files and commit them:
+//   • data/artists.json   — band website + image_url + alt_names
+//   • data/image-crops.json — image URL -> CSS object-position focal point
+// Uses the SAME matcher as the app (js/artist-match.js) so what you see here is
+// exactly what the app will render.
+// ============================================================
+
+let EVENTS = [];          // deduped-by-title event rows for the worklist
+let ARTISTS = [];         // mutable artists array
+let ARTIST_DOC = {};      // full loaded doc (to preserve _schema/_readme on export)
+let CROPS = {};           // url -> "x% y%"
+let INDEX = null;
+let activeTab = "image";
+let dirtyArtists = false, dirtyCrops = false;
+
+// Generic recurring labels that are never a bookable "artist" — kept out of the
+// "add an artist" nudge so the worklist isn't cluttered with them.
+const GENERIC = /open mic|trivia|rotating|karaoke|dj night|line dancing|session with rotating/i;
+
+async function loadJSON(path, fallback) {
+  try {
+    const res = await fetch(path);
+    if (!res.ok) return fallback;
+    return await res.json();
+  } catch { return fallback; }
+}
+
+async function boot() {
+  const [evDoc, artDoc, crops] = await Promise.all([
+    loadJSON("data/events.json", { events: [] }),
+    loadJSON("data/artists.json", { artists: [] }),
+    loadJSON("data/image-crops.json", {}),
+  ]);
+  ARTIST_DOC = artDoc;
+  ARTISTS = artDoc.artists || [];
+  CROPS = crops || {};
+  rebuildIndex();
+
+  // Dedup events by title — recurring shows collapse to one worklist item, so
+  // fixing an artist/crop once fixes every future occurrence. Keep the first
+  // event that carries an image (so the crop preview has a photo when any does).
+  const all = Array.isArray(evDoc) ? evDoc : (evDoc.events || []);
+  const byTitle = new Map();
+  for (const e of all) {
+    if (!e.title) continue;
+    const prev = byTitle.get(e.title);
+    if (!prev || (!prev.image_url && e.image_url)) byTitle.set(e.title, e);
+  }
+  EVENTS = [...byTitle.values()].sort((a, b) => (a.title || "").localeCompare(b.title || ""));
+  renderTabs();
+  render();
+}
+
+function rebuildIndex() { INDEX = ArtistMatch.buildIndex(ARTISTS); }
+
+// The image the app would show for this event (event photo wins, else matched
+// artist's photo), plus the current crop.
+function resolved(e) {
+  const info = ArtistMatch.matchInfo(INDEX, e.title);
+  const artist = info ? info.artist : null;
+  const url = e.image_url || (artist && artist.image_url) || null;
+  return {
+    artist, reason: info ? info.reason : null, url,
+    pos: url ? (CROPS[url] || null) : null, ownImage: !!e.image_url,
+  };
+}
+
+// Find an existing artist by (normalized) name, or create a blank one. Used by
+// the "reassign" control so correcting a wrong match also spawns the right
+// entry if it doesn't exist yet.
+function findOrCreateArtist(name) {
+  const key = ArtistMatch.normName(name);
+  let a = ARTISTS.find(x => ArtistMatch.normName(x.name) === key
+    || (x.alt_names || []).some(n => ArtistMatch.normName(n) === key));
+  if (!a) {
+    a = { name: name.trim(), alt_names: [], website: null, image_url: null, notes: null };
+    ARTISTS.push(a);
+  }
+  return a;
+}
+
+// Force an exact event title to always resolve to `artist` (highest-priority
+// `titles` override) — the deterministic way to fix a wrong auto-match.
+function forceTitle(title, artist) {
+  artist.titles = artist.titles || [];
+  if (!artist.titles.includes(title)) artist.titles.push(title);
+  // If the title was being grabbed by some OTHER entry's override, drop it there.
+  for (const other of ARTISTS) {
+    if (other !== artist && other.titles) {
+      other.titles = other.titles.filter(t => t !== title);
+    }
+  }
+  markArtists(); rebuildIndex(); rerender();
+}
+
+function bucket(e) {
+  const r = resolved(e);
+  if (!r.url) return "image";     // needs an image (and maybe an artist)
+  return "crop";                   // has an image → focal point candidate
+}
+
+// ---- Tabs -------------------------------------------------------------------
+
+function renderTabs() {
+  const counts = { image: 0, crop: 0, all: EVENTS.length };
+  for (const e of EVENTS) counts[bucket(e)]++;
+  const defs = [
+    ["image", "Needs image", counts.image],
+    ["crop", "Crop focal point", counts.crop],
+    ["all", "All", counts.all],
+  ];
+  document.getElementById("tabs").innerHTML = defs.map(([id, label, n]) =>
+    `<button class="tab ${id === activeTab ? "active" : ""}" data-tab="${id}">${label} <b>${n}</b></button>`
+  ).join("");
+  document.querySelectorAll("[data-tab]").forEach(b =>
+    b.onclick = () => { activeTab = b.dataset.tab; renderTabs(); render(); });
+}
+
+// ---- Render -----------------------------------------------------------------
+
+function render() {
+  const main = document.getElementById("main");
+  main.innerHTML = "";
+  const hint = document.createElement("p");
+  hint.className = "hint";
+  hint.innerHTML = activeTab === "image"
+    ? "Events with no photo. Match them to an artist and give that artist an <b>image_url</b> (and website) — it fills in here and in the app for every future date."
+    : activeTab === "crop"
+    ? "Events with a photo. Drag the white dot to pick the focal point shown on the home card (default is centered). Saved per image URL."
+    : "Every distinct event title.";
+  main.appendChild(hint);
+
+  const list = EVENTS.filter(e => activeTab === "all" || bucket(e) === activeTab);
+  const count = document.createElement("p");
+  count.className = "count";
+  count.textContent = `${list.length} item${list.length === 1 ? "" : "s"}`;
+  main.appendChild(count);
+
+  for (const e of list) main.appendChild(rowFor(e));
+}
+
+function rowFor(e) {
+  const r = resolved(e);
+  const row = document.createElement("div");
+  row.className = "row";
+
+  // --- Art / crop editor (left column: art + toolbar) ---
+  const left = document.createElement("div");
+  const art = document.createElement("div");
+  art.className = "art";
+  if (r.url) {
+    const img = document.createElement("img");
+    img.src = r.url;
+    img.onerror = () => { art.innerHTML = `<div class="noimg">image failed to load<br>${r.url.slice(0, 60)}…</div>`; };
+    const [px, py] = parsePos(r.pos);
+    img.style.objectPosition = `${px}% ${py}%`;
+    art.appendChild(img);
+    const dot = document.createElement("div");
+    dot.className = "dot";
+    dot.style.left = px + "%"; dot.style.top = py + "%";
+    art.appendChild(dot);
+    const label = document.createElement("div");
+    label.className = "poslabel";
+    label.textContent = r.pos || "center (default)";
+    art.appendChild(label);
+    art.classList.add("draggable");
+    wireCrop(art, img, dot, label, r.url);
+  } else {
+    art.innerHTML = `<div class="noimg">no photo<br>(add an artist image_url →)</div>`;
+  }
+  left.appendChild(art);
+  if (r.url) left.appendChild(imageToolbar(e, r, art));
+  row.appendChild(left);
+
+  // --- Meta / editors ---
+  const meta = document.createElement("div");
+  meta.className = "meta";
+  const perf = ArtistMatch.performerFromTitle(e.title);
+  meta.innerHTML = `
+    <h2>${escapeHtml(e.title)}</h2>
+    <div class="sub">${escapeHtml(e.venue || e.venue_id || "")} · performer parsed as “${escapeHtml(perf)}”</div>
+    <div>${r.artist
+      ? `<span class="tag match">matched: ${escapeHtml(r.artist.name)} · ${escapeHtml(r.reason)}</span>`
+      : `<span class="tag nomatch">no artist match</span>`}
+      ${r.ownImage ? `<span class="tag img">own photo</span>` : (r.url ? `<span class="tag img">artist photo</span>` : "")}
+    </div>`;
+
+  if (r.artist) meta.appendChild(artistEditor(r.artist, e, r));
+  else meta.appendChild(createArtistEditor(perf, e));
+
+  row.appendChild(meta);
+  return row;
+}
+
+// Buttons under a photo: reset the focal point, and (for the event's own photo)
+// promote it to the matched artist's image so future dates reuse it.
+function imageToolbar(e, r, art) {
+  const bar = document.createElement("div");
+  bar.className = "actions";
+
+  const reset = document.createElement("button");
+  reset.textContent = "⭯ reset focus";
+  reset.onclick = () => {
+    delete CROPS[r.url];
+    const img = art.querySelector("img"), dot = art.querySelector(".dot"), label = art.querySelector(".poslabel");
+    if (img) img.style.objectPosition = "50% 50%";
+    if (dot) { dot.style.left = "50%"; dot.style.top = "50%"; }
+    if (label) label.textContent = "center (default)";
+    markCrops();
+  };
+  bar.appendChild(reset);
+
+  // "Use as band image" — only meaningful when the photo is the EVENT's own and
+  // there's an artist to attach it to that isn't already using it. Because crops
+  // are keyed by URL, the focus you tuned on this event photo carries straight
+  // over to the artist image (same URL) with no extra step.
+  if (r.ownImage && r.artist && r.artist.image_url !== e.image_url) {
+    const use = document.createElement("button");
+    use.className = "primary";
+    use.textContent = "★ use as band image";
+    use.title = "Sets this photo as " + r.artist.name + "'s image (and keeps its focus).";
+    use.onclick = () => {
+      r.artist.image_url = e.image_url;
+      markArtists(); rebuildIndex(); rerender();
+    };
+    bar.appendChild(use);
+  } else if (r.ownImage && !r.artist) {
+    const note = document.createElement("span");
+    note.className = "saved";
+    note.style.color = "var(--muted)";
+    note.textContent = "match/create an artist to reuse this photo →";
+    bar.appendChild(note);
+  }
+  return bar;
+}
+
+// Editor for an already-matched artist: website + image_url + add-alt-name,
+// plus a "wrong match?" reassign control and a catch-all "title contains" rule.
+function artistEditor(artist, e, r) {
+  const wrap = document.createElement("div");
+  const site = fieldInput("website", artist.website || "", v => { artist.website = v || null; markArtists(); });
+  const img = fieldInput("image_url", artist.image_url || "", v => { artist.image_url = v || null; markArtists(); rerender(); });
+  wrap.append(site, img);
+
+  // Add an alias so a differently-phrased title matches this same artist.
+  wrap.appendChild(inlineAdd("add alt name (adds a matching alias)", "+ alt name", v => {
+    artist.alt_names = artist.alt_names || [];
+    if (!artist.alt_names.includes(v)) artist.alt_names.push(v);
+    markArtists(); rerender();
+  }));
+
+  // Catch-all: give this entry (e.g. a house "Irish Session" photo) a substring
+  // that matches any title containing it — lowest priority, so specific bands
+  // still win.
+  wrap.appendChild(inlineAdd("catch-all: title contains…", "+ contains rule", v => {
+    artist.match_contains = artist.match_contains || [];
+    if (!artist.match_contains.includes(v)) artist.match_contains.push(v);
+    markArtists(); rerender();
+  }, artist.match_contains && artist.match_contains.length
+      ? `contains: ${artist.match_contains.join(", ")}` : ""));
+
+  // Wrong match? Force THIS exact title to a (possibly new) artist. Highest
+  // priority — overrides the auto-match. Fixes cases like a quoted series name
+  // ("Banjo Mondays") winning over the actual musician.
+  wrap.appendChild(inlineAdd("wrong? reassign this title to…", "→ reassign", v => {
+    forceTitle(e.title, findOrCreateArtist(v));
+  }, "", true));
+
+  return wrap;
+}
+
+// A one-line "input + button" row, with an optional caption above and optional
+// warning styling. Clears the input after a non-empty submit.
+function inlineAdd(placeholder, btnLabel, onSubmit, caption, warn) {
+  const box = document.createElement("div");
+  if (caption) {
+    const c = document.createElement("div");
+    c.className = "saved"; c.style.color = "var(--muted)"; c.style.margin = "8px 0 2px";
+    c.textContent = caption;
+    box.appendChild(c);
+  }
+  const row = document.createElement("div");
+  row.className = "actions";
+  const input = document.createElement("input");
+  input.placeholder = placeholder;
+  input.style.cssText = "flex:1;min-width:180px;background:var(--panel2);border:1px solid var(--line);border-radius:7px;color:var(--text);padding:6px 9px;font-size:0.8rem;";
+  const btn = document.createElement("button");
+  if (warn) btn.style.borderColor = "var(--red)", btn.style.color = "var(--red)";
+  btn.textContent = btnLabel;
+  const submit = () => { const v = input.value.trim(); if (!v) return; input.value = ""; onSubmit(v); };
+  btn.onclick = submit;
+  input.addEventListener("keydown", ev => { if (ev.key === "Enter") submit(); });
+  row.append(input, btn);
+  box.appendChild(row);
+  return box;
+}
+
+// Editor to create a NEW artist from an unmatched event.
+function createArtistEditor(performer, e) {
+  const wrap = document.createElement("div");
+  if (GENERIC.test(e.title)) {
+    const p = document.createElement("p");
+    p.className = "hint";
+    p.textContent = "Looks like a recurring/generic event (open mic, trivia…) — usually no artist to add.";
+    wrap.appendChild(p);
+  }
+  const nameF = fieldInput("new artist name", performer, null, "artist-name");
+  const siteF = fieldInput("website", "", null, "artist-site");
+  const imgF = fieldInput("image_url", "", null, "artist-img");
+  wrap.append(nameF, siteF, imgF);
+  const actions = document.createElement("div");
+  actions.className = "actions";
+  const btn = document.createElement("button");
+  btn.className = "primary";
+  btn.textContent = "+ create artist";
+  btn.onclick = () => {
+    const name = nameF.querySelector("input").value.trim();
+    if (!name) return;
+    ARTISTS.push({
+      name,
+      alt_names: name === performer ? [] : [performer],
+      website: siteF.querySelector("input").value.trim() || null,
+      image_url: imgF.querySelector("input").value.trim() || null,
+      notes: null,
+    });
+    markArtists(); rebuildIndex(); rerender();
+  };
+  actions.appendChild(btn);
+  wrap.appendChild(actions);
+  return wrap;
+}
+
+function fieldInput(label, value, onChange, cls) {
+  const f = document.createElement("div");
+  f.className = "field";
+  f.innerHTML = `<label>${label}</label>`;
+  const input = document.createElement("input");
+  input.value = value;
+  if (cls) input.className = cls;
+  if (onChange) input.onchange = () => onChange(input.value.trim());
+  f.appendChild(input);
+  return f;
+}
+
+// ---- Crop drag --------------------------------------------------------------
+
+function parsePos(pos) {
+  if (!pos) return [50, 50];
+  const m = pos.match(/([\d.]+)%\s+([\d.]+)%/);
+  return m ? [parseFloat(m[1]), parseFloat(m[2])] : [50, 50];
+}
+
+function wireCrop(art, img, dot, label, url) {
+  let dragging = false;
+  const apply = ev => {
+    const rect = art.getBoundingClientRect();
+    const cx = "touches" in ev ? ev.touches[0].clientX : ev.clientX;
+    const cy = "touches" in ev ? ev.touches[0].clientY : ev.clientY;
+    let x = clamp(Math.round((cx - rect.left) / rect.width * 100), 0, 100);
+    let y = clamp(Math.round((cy - rect.top) / rect.height * 100), 0, 100);
+    const pos = `${x}% ${y}%`;
+    img.style.objectPosition = pos;
+    dot.style.left = x + "%"; dot.style.top = y + "%";
+    label.textContent = pos;
+    if (x === 50 && y === 50) { delete CROPS[url]; label.textContent = "center (default)"; }
+    else CROPS[url] = pos;
+    markCrops();
+  };
+  const down = ev => { dragging = true; ev.preventDefault(); apply(ev); };
+  const move = ev => { if (dragging) apply(ev); };
+  const up = () => { dragging = false; };
+  art.addEventListener("mousedown", down);
+  window.addEventListener("mousemove", move);
+  window.addEventListener("mouseup", up);
+  art.addEventListener("touchstart", down, { passive: false });
+  art.addEventListener("touchmove", move, { passive: false });
+  art.addEventListener("touchend", up);
+}
+
+// ---- Dirty state / export ---------------------------------------------------
+
+function markArtists() { dirtyArtists = true; refreshExportButtons(); }
+function markCrops() { dirtyCrops = true; refreshExportButtons(); }
+function refreshExportButtons() {
+  document.getElementById("export-artists").classList.toggle("dirty", dirtyArtists);
+  document.getElementById("export-crops").classList.toggle("dirty", dirtyCrops);
+}
+
+// Re-render but keep the active tab; also refresh tab counts.
+function rerender() { renderTabs(); render(); refreshExportButtons(); }
+
+function download(filename, text) {
+  const blob = new Blob([text], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+document.getElementById("export-artists").onclick = () => {
+  const doc = { ...ARTIST_DOC, artists: ARTISTS };
+  download("artists.json", JSON.stringify(doc, null, 2) + "\n");
+  dirtyArtists = false; refreshExportButtons();
+};
+document.getElementById("export-crops").onclick = () => {
+  download("image-crops.json", JSON.stringify(CROPS, null, 2) + "\n");
+  dirtyCrops = false; refreshExportButtons();
+};
+
+// ---- utils ------------------------------------------------------------------
+
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+function escapeHtml(s) {
+  return (s || "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+}
+
+boot();
+</script>
+</body>
+</html>

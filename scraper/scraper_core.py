@@ -656,6 +656,16 @@ def extract_squarespace_events(text, base_url):
             return None
         return datetime.fromtimestamp(ms / 1000, timezone.utc).astimezone(ET).strftime("%Y-%m-%dT%H:%M")
 
+    def real_image(url):
+        # Squarespace serves a system placeholder (a slash-like grey tile) for
+        # events with no uploaded photo, at static1.squarespace.com/static/...
+        # Only genuine uploads live on the image CDN (images.squarespace-cdn.com
+        # or a /content/v1/ path). Anything else is the placeholder → drop it so
+        # the front end shows no image rather than the broken slash tile.
+        if not url:
+            return None
+        return url if ("images.squarespace-cdn.com" in url or "/content/v1/" in url) else None
+
     events = []
     for it in data.get("upcoming", []):
         start = ms_to_local(it.get("startDate"))
@@ -666,16 +676,24 @@ def extract_squarespace_events(text, base_url):
         description = None
         if it.get("body"):
             description = BeautifulSoup(it["body"], "html.parser").get_text(" ").strip() or None
+        title = html_unescape(it.get("title") or "").strip() or None
+        # Some Squarespace calendars (McCarthy's & Toad) run multiple stages in
+        # one complex and encode the stage as a title prefix ("Toad: ...",
+        # "Upstairs - ..."). Surface it into `location` so location_keywords can
+        # route each event to the right stage (same mechanism as the Middle East
+        # rooms). Squarespace's own location is an unset NYC default — ignore it.
+        stage_m = re.match(r"\s*(McCarthys|Toad|Upstairs)\b", title or "", re.I)
+        location = stage_m.group(1) if stage_m else None
         events.append({
-            "title":       html_unescape(it.get("title") or "").strip() or None,
+            "title":       title,
             "start":       start,
             "end":         ms_to_local(it.get("endDate")),
-            "location":    None,  # Squarespace location is an unset NYC default; ignore
+            "location":    location,
             "cost":        None,  # not in the feed
             "source_url":  source_url,
             "performer":   None,
             "description": description,
-            "image_url":   it.get("assetUrl"),
+            "image_url":   real_image(it.get("assetUrl")),
             "ticket_url":  None,
             "is_recurring": False,
             "recurrence_note": None,
@@ -1186,6 +1204,21 @@ def make_event_id(vid, start, title):
     return f"{vid}-{date}-{slug[:30]}"
 
 
+def is_private_event(title, description):
+    """True when an event is a private/closed-to-the-public booking that the
+    main feed should hide. Deliberately narrow: the title says "private event"
+    (e.g. the Lilypad's "** Private Event **") or the description explicitly
+    states the venue is closed to the public. A passing mention of private-event
+    booking in a footer ("Book the Lilypad for your next private event") does NOT
+    trigger this — that phrasing lacks both signals.
+    """
+    if "private event" in (title or "").lower():
+        return True
+    if "closed to the public" in (description or "").lower():
+        return True
+    return False
+
+
 def build_events(raw_events, category_map, detail_map, venue_cfg):
     results = []
     for i, e in enumerate(raw_events):
@@ -1226,6 +1259,14 @@ def build_events(raw_events, category_map, detail_map, venue_cfg):
             if sq in SQUARES:
                 event_square = sq
 
+        # Private/closed-to-the-public bookings (e.g. the Lilypad's
+        # "** Private Event **") aren't attendable, so the front end hides them
+        # from the main feed. We flag rather than drop so a venue view can still
+        # show "closed tonight". Detection is deliberately narrow — the title
+        # phrase or an explicit "closed to the public" line — so an event that
+        # merely mentions private bookings in a footer isn't caught.
+        private = is_private_event(e.get("title"), description)
+
         for vid in venue_ids:
             fields = venue_fields(vid, venue_cfg)
             # Apply image_map for venues with known static image URLs
@@ -1261,6 +1302,7 @@ def build_events(raw_events, category_map, detail_map, venue_cfg):
                 "ticket_url": ticket_url,
                 "is_recurring": e.get("is_recurring", False),
                 "recurrence_note": e.get("recurrence_note"),
+                "private": private,
                 "source_url": source_url,
                 "last_scraped": datetime.now(timezone.utc).isoformat(),
             })

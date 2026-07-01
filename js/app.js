@@ -126,6 +126,9 @@ const REAL_NOW = new Date();
 
 let allEvents = [];
 let venueData = {};
+// Optional per-image crop focal points: { "<image url>": "<object-position>" }.
+// Keyed by URL so a hand-picked crop outlives the scraper's daily rewrite.
+let cropOverrides = {};
 let activeSquare = "all";
 let activeCategory = "all";
 // Your "home" square — where the metro map centers and the train departs when
@@ -140,13 +143,18 @@ async function init() {
   buildFilterChips();
   renderSquareIndicator();
   wireMetroOverlay();
-  let deals, transit;
-  [allEvents, venueData, deals, transit] = await Promise.all([loadEvents(), loadVenues(), loadDeals(), loadTransit()]);
+  let deals, transit, artists;
+  [allEvents, venueData, deals, transit, artists, cropOverrides] = await Promise.all([
+    loadEvents(), loadVenues(), loadDeals(), loadTransit(), loadArtists(), loadCrops()
+  ]);
+  buildArtistIndex(artists);
   // Recurring food deals live alongside one-off events in the same feed; they
   // just match "tonight" by weekday instead of a calendar date (see isTonightEvent).
   allEvents = allEvents.concat(deals);
-  // A stop is filterable only if something happens there tonight-or-otherwise.
-  eventSquares = new Set(allEvents.map(e => e.square).filter(Boolean));
+  // A stop is filterable only if something PUBLIC happens there — a private
+  // booking (hidden from the feed) shouldn't light up a station with nothing to
+  // show behind it.
+  eventSquares = new Set(allEvents.filter(e => !e.private).map(e => e.square).filter(Boolean));
   // Build the overlay's metro map once events are known (eventSquares decides
   // which stations light up). Tapping a station applies its square as the filter.
   if (transit) MetroMap.setup(transit, selectSquare);
@@ -177,6 +185,33 @@ async function loadDeals() {
   } catch (err) {
     console.warn("Could not load deals.json", err);
     return [];
+  }
+}
+
+// Hand-maintained artist enrichment (schema tonight.artists/1). Optional — if
+// it's missing, events simply fall back to their own image / the category icon.
+async function loadArtists() {
+  try {
+    const res = await fetch("data/artists.json");
+    if (!res.ok) return [];
+    const doc = await res.json();
+    return doc.artists || [];
+  } catch (err) {
+    console.warn("Could not load artists.json", err);
+    return [];
+  }
+}
+
+// Optional per-image crop focal points (data/image-crops.json), a flat map of
+// image URL -> CSS object-position (e.g. "50% 20%"). Missing file is fine.
+async function loadCrops() {
+  try {
+    const res = await fetch("data/image-crops.json");
+    if (!res.ok) return {};
+    return await res.json();
+  } catch (err) {
+    console.warn("Could not load image-crops.json", err);
+    return {};
   }
 }
 
@@ -753,6 +788,36 @@ function venueFor(e) {
     || {};
 }
 
+// ============================================================
+// Artist enrichment — data/artists.json (schema tonight.artists/1)
+// A hand-maintained lookup that decorates events with a band photo and
+// website when the venue feed has neither. See the matching notes below.
+// ============================================================
+
+// Matching logic lives in js/artist-match.js (window.ArtistMatch), shared with
+// the curator tool so the two never drift. This just holds the built index.
+let artistIndex = { byKey: new Map(), entries: [] };
+
+function buildArtistIndex(artists) {
+  artistIndex = ArtistMatch.buildIndex(artists);
+}
+
+// Resolve an event to an artist record, or null.
+function artistFor(e) {
+  return ArtistMatch.match(artistIndex, e.title);
+}
+
+// The single source of truth for "what image does this event show, and how is
+// it cropped." Event photo wins; the matched artist's image only fills in when
+// the event has none. object-position comes from the optional crop overrides
+// keyed by the image URL (see loadCrops) so a hand-picked focal point survives
+// the scraper's daily rewrite of events.json.
+function eventImage(e) {
+  const url = e.image_url || (artistFor(e)?.image_url) || null;
+  if (!url) return null;
+  return { url, position: cropOverrides[url] || null };
+}
+
 function localityState(e) {
   const venueLocal = !!e.venue_is_local;
   const perfLocal  = e.performer && e.performer_is_local === true;
@@ -851,6 +916,10 @@ function render() {
 
   const filtered = allEvents
     .filter(isTonightEvent)
+    // Private/closed-to-the-public bookings (e.private) are hidden from the main
+    // feed — they aren't attendable. They still surface in a venue's "More from
+    // this venue" list (see renderMoreFrom) so a venue view shows it's booked.
+    .filter(e => !e.private)
     .filter(e => {
       const squareMatch = activeSquare === "all" || e.square === activeSquare;
       const categoryMatch = activeCategory === "all" || e.category === activeCategory;
@@ -901,11 +970,16 @@ function renderCard(e) {
 
   const art = document.createElement("div");
   art.className = `card-art cat-${e.category}`;
-  if (e.image_url) {
+  const cardImg = eventImage(e);
+  if (cardImg) {
     const img = document.createElement("img");
-    img.src = e.image_url;
+    img.src = cardImg.url;
     img.alt = "";
     img.style.cssText = "width:100%;height:100%;object-fit:cover;";
+    if (cardImg.position) img.style.objectPosition = cardImg.position;
+    // A stored image_url can go stale (a venue deletes its photo, or an artist
+    // image URL rots). Degrade to the category icon instead of a broken tile.
+    img.onerror = () => { img.replaceWith(categoryIcon(e)); };
     art.appendChild(img);
   } else {
     art.appendChild(buildArt(e));
@@ -938,17 +1012,26 @@ function renderCard(e) {
 }
 
 function buildArt(e, large) {
-  if (e.image_url) {
+  const resolved = eventImage(e);
+  if (resolved) {
     const img = document.createElement("img");
-    img.src = e.image_url;
+    img.src = resolved.url;
     img.alt = "";
     if (!large) {
       img.style.width = "100%";
       img.style.height = "100%";
       img.style.objectFit = "cover";
+      if (resolved.position) img.style.objectPosition = resolved.position;
     }
+    img.onerror = () => { img.replaceWith(categoryIcon(e)); };
     return img;
   }
+  return categoryIcon(e);
+}
+
+// The category-icon SVG shown when an event has no image (or its image failed
+// to load). Kept separate so the onerror fallback can reuse it.
+function categoryIcon(e) {
   const wrapper = document.createElement("div");
   wrapper.innerHTML = `<svg viewBox="0 0 24 24">${ICONS[e.category] || ""}</svg>`;
   return wrapper.firstElementChild;
@@ -997,7 +1080,7 @@ function openDetail(e) {
   art.appendChild(buildArt(e, true));
   // Tap a real event image to expand it to full (uncropped) view, tap again to shrink.
   // Only applies when there's an actual photo — the category SVG fallback stays fixed.
-  if (e.image_url) {
+  if (eventImage(e)) {
     art.classList.add("expandable");
     art.onclick = () => art.classList.toggle("expanded");
   } else {
@@ -1056,6 +1139,22 @@ function openDetail(e) {
   }
   document.getElementById("detail-venue-name").textContent = vd.name || e.venue;
   document.getElementById("detail-venue-address").textContent = eventAddress;
+
+  // Artist link — when the matched artist carries a website/social page, offer a
+  // small link out. Rebuilt each open; removed when there's no match or no site.
+  const existingArtistLink = document.getElementById("detail-artist-link");
+  if (existingArtistLink) existingArtistLink.remove();
+  const artist = artistFor(e);
+  if (artist && artist.website) {
+    const link = document.createElement("a");
+    link.id = "detail-artist-link";
+    link.href = artist.website;
+    link.target = "_blank";
+    link.rel = "noopener";
+    link.className = "detail-artist-link";
+    link.textContent = `${artist.name} ↗`;
+    document.getElementById("detail-description").insertAdjacentElement("afterend", link);
+  }
 
   document.getElementById("detail-directions").href =
     `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(eventAddress || e.venue)}`;

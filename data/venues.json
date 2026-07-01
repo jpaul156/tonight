@@ -191,9 +191,9 @@
     "logo_url": null,
     "logo_thumb_url": null
   },
-  "mccarthys-toad": {
-    "id": "mccarthys-toad",
-    "name": "McCarthy's and Toad",
+  "mccarthys": {
+    "id": "mccarthys",
+    "name": "McCarthy's",
     "square": "Porter",
     "transit_line": "Red",
     "transit_stop": "Porter",
@@ -202,7 +202,39 @@
     "neighborhood": "Porter / Inman",
     "phone": "(617) 491-9938",
     "website": "https://www.mccarthystoad.com",
-    "notes": "Adjoining bars (McCarthy's + Toad) with live music nightly: Irish sessions, open mics, trivia, local bands.",
+    "notes": "Traditional Irish sessions nightly with rotating local musicians.",
+    "is_local": true,
+    "logo_url": null,
+    "logo_thumb_url": null
+  },
+  "toad": {
+    "id": "toad",
+    "name": "Toad",
+    "square": "Porter",
+    "transit_line": "Red",
+    "transit_stop": "Porter",
+    "walk_minutes": 6,
+    "address": "1912 Massachusetts Ave, Cambridge, MA",
+    "neighborhood": "Porter / Inman",
+    "phone": "(617) 491-9938",
+    "website": "https://www.mccarthystoad.com",
+    "notes": "Tiny adjoining rock/roots bar — free live music nightly, local bands and cover sets.",
+    "is_local": true,
+    "logo_url": null,
+    "logo_thumb_url": null
+  },
+  "mccarthys-upstairs": {
+    "id": "mccarthys-upstairs",
+    "name": "McCarthy's - Upstairs",
+    "square": "Porter",
+    "transit_line": "Red",
+    "transit_stop": "Porter",
+    "walk_minutes": 6,
+    "address": "1912 Massachusetts Ave, Cambridge, MA",
+    "neighborhood": "Porter / Inman",
+    "phone": "(617) 491-9938",
+    "website": "https://www.mccarthystoad.com",
+    "notes": "Upstairs room — line dancing, comedy, and special events.",
     "is_local": true,
     "logo_url": null,
     "logo_thumb_url": null

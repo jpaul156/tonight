@@ -289,9 +289,16 @@ VENUES = [
         "extra_venues": [],
     },
 
+    # McCarthy's complex — three peer stages under one Squarespace calendar,
+    # each encoded as a title prefix ("McCarthys: ...", "Toad: ...",
+    # "Upstairs: ..."). Same multi-stage pattern as the Middle East rooms: one
+    # entry owns the collection page + strategy and is the no-match fallback
+    # (McCarthy's — the Irish-session room), extras are peer stages. The
+    # squarespace_events extractor lifts the stage prefix into `location` so
+    # location_keywords routes each event. Keep in sync with data/venues.json.
     {
-        "id": "mccarthys-toad",
-        "name": "McCarthy's and Toad",
+        "id": "mccarthys",
+        "name": "McCarthy's",
         "address": "1912 Massachusetts Ave, Cambridge, MA",
         "square": "Porter",
         "transit_line": "Red",
@@ -305,8 +312,33 @@ VENUES = [
         "scrape_strategy": "squarespace_events",
         "detail_pages": False,
         "url_contains": None,
-        "location_keywords": {},
-        "extra_venues": [],
+        "location_keywords": {
+            "mccarthys": "mccarthys",
+            "toad": "toad",
+            "upstairs": "mccarthys-upstairs",
+        },
+        "extra_venues": [
+            {
+                "id": "toad",
+                "name": "Toad",
+                "address": "1912 Massachusetts Ave, Cambridge, MA",
+                "square": "Porter",
+                "transit_line": "Red",
+                "transit_stop": "Porter",
+                "walk_minutes": 6,
+                "is_local": True,
+            },
+            {
+                "id": "mccarthys-upstairs",
+                "name": "McCarthy's - Upstairs",
+                "address": "1912 Massachusetts Ave, Cambridge, MA",
+                "square": "Porter",
+                "transit_line": "Red",
+                "transit_stop": "Porter",
+                "walk_minutes": 6,
+                "is_local": True,
+            },
+        ],
     },
 
     {

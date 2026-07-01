@@ -35,6 +35,27 @@ An event's `address` field is the *event's actual location*, set **only** when t
 
 Per-event address extraction is opt-in: set `event_address: True` on a venue in `scraper/venues.py` only if that source sometimes hosts events off-site. It costs extra LLM extraction, so most venues should leave it off. When set, the scraper also records the event-location `square` (validated against the front-end chip list) so the filter buckets the event where it actually happens.
 
+## Private / closed-to-the-public events
+
+Some feeds list private bookings (e.g. the Lilypad's "** Private Event **", where the venue is closed to the public). `is_private_event()` in `scraper_core.py` flags these with `private: true` on the event — detection is narrow on purpose (title contains "private event", or description says "closed to the public") so an event that merely mentions private-booking availability in a footer isn't caught. The front end **hides `private` events from the main feed and from the metro-map square list** (`render()` and `eventSquares` in `js/app.js`), but keeps them in a venue's "More from this venue" list so a venue view still shows it's booked. We flag rather than drop so that "closed tonight" signal survives. Events scraped before this flag existed simply lack the field — `!e.private` treats missing as not-private (shown), so re-scraping is optional.
+
+## Artist enrichment & image crops — hand-maintained overlays
+
+Two optional front-end-only files decorate events without the scraper ever touching them (same contract as `data/venues.json` — the daily scrape can't clobber them):
+
+- **`data/artists.json`** (schema `tonight.artists/1`) — per-performer `website` + `image_url`. The front end (`artistFor()` in `js/app.js`) matches an event to an artist and, **only when the event has no image of its own**, uses the artist's photo. `eventImage()` is the single source of truth for which image + crop an event shows. The artist website surfaces as a link in the detail overlay. Adding an artist never creates events — it only decorates existing ones.
+- **`data/image-crops.json`** — flat map of image URL → CSS `object-position` (e.g. `"50% 20%"`). Keyed by URL so a hand-picked focal point outlives the scraper's daily rewrite of `events.json`. Applied to card + detail art.
+
+**Fuzzy matching (`js/artist-match.js`, shared by app + `curator.html`):** deliberately conservative to avoid false positives. `performerFromTitle()` strips a stage prefix and prefers a quoted act / the part after "with"; `normName()` folds case, apostrophes, `&`, leading articles and a trailing "band". Match precedence, most-to-least specific:
+1. **`titles`** — exact event titles force-mapped to an entry (the way to *correct* a wrong auto-match, e.g. a quoted series name like "Banjo Mondays" outranking the real musician).
+2. **exact key** — normalized name or any `alt_names`, on the parsed performer then the de-staged title.
+3. **token subset** — fires **only for multi-word acts** (all the artist's words appear in the title). Single short names (LDQ, Indigo) match by exact key only.
+4. **`match_contains`** — catch-all substrings, for house/generic images (e.g. one shared "Irish Session" photo). Specific artists always win over this.
+
+When a title phrases an act in a way the extractor misses, the fix is an `alt_names` (or `titles`) entry — a one-time edit that improves every future day with no rescrape. The `curator.html` tool writes all of these.
+
+**Dead images degrade gracefully:** a stored `image_url` can rot (a venue deletes its photo, an artist page moves). `img.onerror` in `js/app.js` swaps a failed image for the category icon (`categoryIcon()`) instead of a broken tile — so reusing a venue CDN URL as an artist image is safe, though for keepers prefer downloading + committing a stable copy over hotlinking.
+
 ## Transit color
 
 `transit_color` does not exist anywhere in the data. Color is derived from `transit_line` at render time via `LINE_COLORS` in `js/app.js`. Never add a `transit_color` field — the point is that a known line cannot render the wrong color.
