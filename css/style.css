@@ -430,6 +430,23 @@ a:focus-visible {
   align-items: center;
   justify-content: center;
   border-radius: 18px 18px 0 0;
+  overflow: hidden;
+  transition: height 0.25s ease;
+}
+
+/* Tap the event image to expand it to full (uncropped) view */
+.detail-art.expandable {
+  cursor: zoom-in;
+}
+
+.detail-art.expanded {
+  height: auto;
+  cursor: zoom-out;
+}
+
+.detail-art.expanded img {
+  height: auto;
+  object-fit: contain;
 }
 
 .detail-art svg {

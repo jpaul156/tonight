@@ -995,6 +995,14 @@ function openDetail(e) {
   art.className = `detail-art cat-${e.category}`;
   art.innerHTML = "";
   art.appendChild(buildArt(e, true));
+  // Tap a real event image to expand it to full (uncropped) view, tap again to shrink.
+  // Only applies when there's an actual photo — the category SVG fallback stays fixed.
+  if (e.image_url) {
+    art.classList.add("expandable");
+    art.onclick = () => art.classList.toggle("expanded");
+  } else {
+    art.onclick = null;
+  }
 
   document.getElementById("detail-title").textContent = e.title;
   const timeEl = document.getElementById("detail-time");
