@@ -110,6 +110,14 @@
     .offmap .sq { font-weight: 600; }
     .offmap .hint { color: var(--text-muted); font-size: 0.8rem; }
     .offmap .item.loud .hint { color: #ffb3b3; }
+    .offmap .item:not(.loud):not(.calm) { background: var(--surface-2); border: 1px solid var(--border); }
+
+    /* ---- frequent bus ---- */
+    .fb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 6px 14px; }
+    .fb-route { font-size: 0.8rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .fb-route b { display: inline-block; min-width: 30px; color: var(--text); font-family: var(--font-mono); }
+    .fb-route.silver b { color: #b9c0cc; }
+    .fb-chip { display: inline-block; font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; padding: 1px 7px; margin: 0 3px; border-radius: 6px; background: var(--surface-2); border: 1px solid var(--border); }
 
     /* ---- todo ---- */
     .todo-area { margin-bottom: 18px; }
@@ -160,10 +168,12 @@
         return;
       }
       try { const r = await fetch("data/todo.json", { cache: "no-store" }); if (r.ok) todo = await r.json(); } catch (e) {}
-      render(health, todo);
+      let freqBus = null;
+      try { const r = await fetch("data/frequent_bus.json", { cache: "no-store" }); if (r.ok) freqBus = await r.json(); } catch (e) {}
+      render(health, todo, freqBus);
     }
 
-    function render(h, todo) {
+    function render(h, todo, freqBus) {
       const t = h.totals;
       const errs = t.venues_error, warns = t.venues_warning;
       const ageH = (Date.now() - new Date(h.generated_at).getTime()) / 3600000;
@@ -229,8 +239,49 @@
             ${offCalm.map(o => esc(o.square)).join(", ")} — bus-only neighbourhoods, no map station by design.</div>` : ""}
         </div>
 
+        ${freqBus ? renderFrequentBus(freqBus) : ""}
+
         ${todo ? renderTodo(todo) : ""}
       `;
+    }
+
+    // MBTA Frequent Bus Network — refreshed weekly from the V3 API. Loudly
+    // flags routes that joined/left the network or changed endpoints since the
+    // last refresh, plus (once bus routes are drawn on the map) coverage gaps.
+    function renderFrequentBus(fb) {
+      const ch = fb.changes || { added: [], dropped: [], endpoint_changed: [] };
+      const map = fb.map || {};
+      const chips = list => list.map(s => `<span class="fb-chip">${esc(s)}</span>`).join("");
+      const flags = [];
+      if (ch.dropped && ch.dropped.length)
+        flags.push(`<div class="item loud"><span class="st error"><span class="d"></span></span>
+          <span class="hint"><b>Dropped from Frequent Bus:</b> ${chips(ch.dropped)} — if drawn on the map, its line should be hidden/removed.</span></div>`);
+      if (ch.added && ch.added.length)
+        flags.push(`<div class="item"><span class="st ok"><span class="d"></span></span>
+          <span class="hint"><b>Newly frequent:</b> ${chips(ch.added)} — consider drawing on the map.</span></div>`);
+      (ch.endpoint_changed || []).forEach(c =>
+        flags.push(`<div class="item loud"><span class="st error"><span class="d"></span></span>
+          <span class="hint"><b>Route ${esc(c.short_name)} endpoints changed:</b> "${esc(c.was)}" → "${esc(c.now)}" — re-check its drawn path.</span></div>`));
+      // Coverage gaps only matter once at least one bus route is drawn.
+      if (map.tracking && map.drawn_not_frequent && map.drawn_not_frequent.length)
+        flags.push(`<div class="item loud"><span class="st error"><span class="d"></span></span>
+          <span class="hint"><b>Drawn but no longer frequent:</b> ${chips(map.drawn_not_frequent)}</span></div>`);
+      if (map.tracking && map.missing_from_map && map.missing_from_map.length)
+        flags.push(`<div class="item"><span class="st"><span class="d"></span></span>
+          <span class="hint"><b>Frequent but not yet drawn:</b> ${chips(map.missing_from_map)}</span></div>`);
+
+      const changedNote = fb.last_change_at ? ` · last change ${REL(fb.last_change_at)}` : " · stable";
+      return `
+        <h2>Frequent bus network <span class="count">${fb.count} routes · MBTA-listed · refreshed ${REL(fb.generated_at)}${changedNote}</span></h2>
+        ${flags.length ? `<div class="offmap">${flags.join("")}</div>` : ""}
+        <div class="panel">
+          <div class="fb-grid">
+            ${(fb.routes || []).map(r => `
+              <span class="fb-route ${r.silver_line ? "silver" : ""}" title="${esc(r.long_name)}">
+                <b>${esc(r.short_name)}</b> ${esc(r.long_name)}
+              </span>`).join("")}
+          </div>
+        </div>`;
     }
 
     function testLabel(tests) {

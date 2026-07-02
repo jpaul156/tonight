@@ -25,25 +25,15 @@ const ICONS = {
 // from membership here, never stored, mirroring how transit_color
 // is derived from transit_line elsewhere.
 // ============================================================
-// Each key is a *route* — a full end-to-end ride, north/west → south/east —
-// imported from prototype/stations.csv (only its Include=TRUE stops, plus any
-// stop that has events). Branching lines (Red, Green) get one route per branch
-// because a single vertical strip can't show a fork; they share a brand color.
-// Lechmere is Include=FALSE in the CSV but kept because it has events — see the
-// SQUARE filter rule below (a stop is only a *filter* if events happen there).
-const LINES = {
-  "Red":          ["Alewife", "Davis", "Porter", "Harvard", "Central", "Kendall/MIT", "Charles/MGH", "Park Street", "Downtown Crossing", "South Station", "Broadway", "JFK/UMass", "Wollaston", "Quincy Center", "Braintree"],
-  "Red (Ashmont)":["Alewife", "Davis", "Porter", "Harvard", "Central", "Kendall/MIT", "Charles/MGH", "Park Street", "Downtown Crossing", "South Station", "Broadway", "JFK/UMass", "Fields Corner", "Ashmont"],
-  "Orange":       ["Oak Grove", "Malden Center", "Assembly", "Sullivan Square", "North Station", "Haymarket", "State", "Downtown Crossing", "Chinatown", "Tufts Medical Center", "Back Bay", "Forest Hills"],
-  "Green (B)":    ["Government Center", "Park Street", "Boylston", "Copley", "Kenmore", "Babcock Street", "Harvard Avenue", "Boston College"],
-  "Green (C)":    ["Government Center", "Park Street", "Boylston", "Copley", "Kenmore", "Coolidge Corner", "Washington Square", "Cleveland Circle"],
-  "Green (D)":    ["Lechmere", "Government Center", "Park Street", "Boylston", "Copley", "Kenmore", "Fenway", "Brookline Village", "Reservoir", "Newton Centre"],
-  "Green (E)":    ["Lechmere", "Government Center", "Park Street", "Boylston", "Copley", "Symphony", "Brigham Circle"],
-  "Blue":         ["Wonderland", "Maverick", "Aquarium", "State", "Government Center"],
-};
+// Which trunk line(s) a station sits on is derived at load time from
+// transit-layer.json (the same traced map the metro overlay draws), so
+// there is a single source of truth — add a station to the map and its
+// square lights up here automatically, no hand-maintained station list to
+// keep in sync. Built by buildStationLineIndex() after loadTransit().
+let stationLineIndex = {};       // station name → ["Green", ...] (BASE_LINE_ORDER order)
 
-// Route → brand color name. Branch routes ("Red (Ashmont)", "Green (D)") all
-// fold back to their trunk color, so the map never invents a new hue.
+// Branch route id → trunk color name, so lineColor() can still resolve a
+// branch label like "Green (D)" (from older data) back to its trunk hue.
 const LINE_BASE = {
   "Red": "Red", "Red (Ashmont)": "Red",
   "Orange": "Orange",
@@ -64,20 +54,36 @@ function stationLabel(name) {
   return STATION_ALIASES[name] || name;
 }
 
-// Tab order in the metro overlay (one tab per route).
-const LINE_ORDER = ["Red", "Red (Ashmont)", "Orange", "Green (B)", "Green (C)", "Green (D)", "Green (E)", "Blue"];
-// Brand-color order, used when collapsing a stop's routes down to colored dots.
+// Brand-color order, used when collapsing a stop's lines down to colored dots.
 const BASE_LINE_ORDER = ["Red", "Orange", "Green", "Blue"];
 
-// Routes a stop sits on (used to pick which tab to open).
-function routesForStation(name) {
-  return LINE_ORDER.filter(route => LINES[route].includes(name));
+// Walk the loaded transit map and record, per station name, which trunk
+// colors it sits on. A station shared across branches (e.g. two Green
+// branches) collapses to one entry, and an interchange (State, Downtown
+// Crossing) picks up every line that names it. Keyed by station name so it
+// joins to an event's e.square exactly like the old hand-maintained table.
+function buildStationLineIndex(transit) {
+  const acc = {}; // name → Set of trunk colors
+  if (!transit || !Array.isArray(transit.lines)) return;
+  for (const ln of transit.lines) {
+    const base = LINE_BASE[ln.line] || ln.line;
+    for (const br of ln.branches || []) {
+      for (const n of br.nodes || []) {
+        if (!n.station || !n.name) continue;
+        (acc[n.name] || (acc[n.name] = new Set())).add(base);
+      }
+    }
+  }
+  stationLineIndex = {};
+  for (const [name, set] of Object.entries(acc)) {
+    stationLineIndex[name] = BASE_LINE_ORDER.filter(b => set.has(b));
+  }
 }
-// Distinct brand colors a stop sits on, for badges/dots — so a stop on two
+
+// Distinct trunk colors a stop sits on, for badges/dots — so a stop on two
 // Green branches reads as one Green dot, not two.
 function stationLines(name) {
-  const bases = new Set(routesForStation(name).map(r => LINE_BASE[r]));
-  return BASE_LINE_ORDER.filter(b => bases.has(b));
+  return stationLineIndex[name] || [];
 }
 
 // Stops that are actually offered as filters: only those where events happen.
@@ -155,6 +161,10 @@ async function init() {
   // booking (hidden from the feed) shouldn't light up a station with nothing to
   // show behind it.
   eventSquares = new Set(allEvents.filter(e => !e.private).map(e => e.square).filter(Boolean));
+  // Derive station → line colors from the traced map before anything renders a
+  // line dot, so the pinned square indicator shows the right color(s).
+  buildStationLineIndex(transit);
+  renderSquareIndicator();
   // Build the overlay's metro map once events are known (eventSquares decides
   // which stations light up). Tapping a station applies its square as the filter.
   if (transit) MetroMap.setup(transit, selectSquare);
@@ -441,6 +451,11 @@ const MetroMap = (() => {
       if (!nd) { nd = { c: n.c, r: n.r, name: n.name || "", station: !!n.station, lines: new Set() }; nodes.set(k, nd); adj.set(k, []); }
       if (n.name) nd.name = n.name;   // never let "" overwrite a real name (branch-start convention)
       if (n.station) nd.station = true;
+      // minor = a low-priority infill stop (SL terminal stops, residential Green
+      // Line surface stops). A full-size copy anywhere wins, so a station shared
+      // with a major branch never renders minor regardless of node order.
+      if (n.station && !n.minor) nd.major = true;
+      if (n.minor) nd.minor = true;
       nd.lines.add(line);
       return k;
     };
@@ -600,9 +615,11 @@ const MetroMap = (() => {
         ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(Math.PI / 4);
         ctx.fillStyle = "#fff"; ctx.strokeStyle = "#10131a"; ctx.lineWidth = 2 / view.scale;
         const s = CELL * 0.42; ctx.fillRect(-s, -s, 2 * s, 2 * s); ctx.strokeRect(-s, -s, 2 * s, 2 * s); ctx.restore();
-      } else if (nd.station) {                  // plain station — ring
-        ctx.fillStyle = "#fff"; ctx.strokeStyle = lineColor([...nd.lines][0]); ctx.lineWidth = 2.5 / view.scale;
-        ctx.beginPath(); ctx.arc(p.x, p.y, CELL * 0.3, 0, 7); ctx.fill(); ctx.stroke();
+      } else if (nd.station) {                  // plain station — ring (minor = smaller/thinner)
+        const isMinor = nd.minor && !nd.major;
+        ctx.fillStyle = "#fff"; ctx.strokeStyle = lineColor([...nd.lines][0]);
+        ctx.lineWidth = (isMinor ? 1.6 : 2.5) / view.scale;
+        ctx.beginPath(); ctx.arc(p.x, p.y, CELL * (isMinor ? 0.2 : 0.3), 0, 7); ctx.fill(); ctx.stroke();
       }
       ctx.globalAlpha = 1;
 

@@ -1,0 +1,295 @@
+{
+  "schema": "tonight.frequentbus/1",
+  "generated_at": "2026-07-02T01:13:13.030882+00:00",
+  "source": "MBTA V3 API /routes filter[type]=3, description='Frequent Bus'",
+  "count": 25,
+  "routes": [
+    {
+      "id": "1",
+      "short_name": "1",
+      "long_name": "Harvard Square - Nubian Station",
+      "endpoints": [
+        "Harvard Square",
+        "Nubian Station"
+      ],
+      "color": "FFC72C",
+      "silver_line": false
+    },
+    {
+      "id": "9",
+      "short_name": "9",
+      "long_name": "City Point - Copley Square",
+      "endpoints": [
+        "City Point",
+        "Copley Square"
+      ],
+      "color": "FFC72C",
+      "silver_line": false
+    },
+    {
+      "id": "15",
+      "short_name": "15",
+      "long_name": "Fields Corner Station - Ruggles Station",
+      "endpoints": [
+        "Fields Corner Station",
+        "Ruggles Station"
+      ],
+      "color": "FFC72C",
+      "silver_line": false
+    },
+    {
+      "id": "22",
+      "short_name": "22",
+      "long_name": "Ashmont Station - Ruggles Station via Talbot Ave",
+      "endpoints": [
+        "Ashmont Station",
+        "Ruggles Station"
+      ],
+      "color": "FFC72C",
+      "silver_line": false
+    },
+    {
+      "id": "23",
+      "short_name": "23",
+      "long_name": "Ashmont Station - Ruggles Station via Washington Street",
+      "endpoints": [
+        "Ashmont Station",
+        "Ruggles Station"
+      ],
+      "color": "FFC72C",
+      "silver_line": false
+    },
+    {
+      "id": "28",
+      "short_name": "28",
+      "long_name": "Mattapan Station - Ruggles Station",
+      "endpoints": [
+        "Mattapan Station",
+        "Ruggles Station"
+      ],
+      "color": "FFC72C",
+      "silver_line": false
+    },
+    {
+      "id": "31",
+      "short_name": "31",
+      "long_name": "Mattapan Station - Forest Hills Station via Morton Street",
+      "endpoints": [
+        "Mattapan Station",
+        "Forest Hills Station"
+      ],
+      "color": "FFC72C",
+      "silver_line": false
+    },
+    {
+      "id": "32",
+      "short_name": "32",
+      "long_name": "Wolcott or Cleary Square - Forest Hills Station",
+      "endpoints": [
+        "Wolcott or Cleary Square",
+        "Forest Hills Station"
+      ],
+      "color": "FFC72C",
+      "silver_line": false
+    },
+    {
+      "id": "39",
+      "short_name": "39",
+      "long_name": "Forest Hills Station - Back Bay Station",
+      "endpoints": [
+        "Forest Hills Station",
+        "Back Bay Station"
+      ],
+      "color": "FFC72C",
+      "silver_line": false
+    },
+    {
+      "id": "57",
+      "short_name": "57",
+      "long_name": "Watertown Yard - Kenmore Station",
+      "endpoints": [
+        "Watertown Yard",
+        "Kenmore Station"
+      ],
+      "color": "FFC72C",
+      "silver_line": false
+    },
+    {
+      "id": "66",
+      "short_name": "66",
+      "long_name": "Harvard Square - Nubian Station",
+      "endpoints": [
+        "Harvard Square",
+        "Nubian Station"
+      ],
+      "color": "FFC72C",
+      "silver_line": false
+    },
+    {
+      "id": "71",
+      "short_name": "71",
+      "long_name": "Watertown Square - Harvard Station",
+      "endpoints": [
+        "Watertown Square",
+        "Harvard Station"
+      ],
+      "color": "FFC72C",
+      "silver_line": false
+    },
+    {
+      "id": "73",
+      "short_name": "73",
+      "long_name": "Waverley Square - Harvard Station",
+      "endpoints": [
+        "Waverley Square",
+        "Harvard Station"
+      ],
+      "color": "FFC72C",
+      "silver_line": false
+    },
+    {
+      "id": "77",
+      "short_name": "77",
+      "long_name": "Arlington Heights - Harvard Station",
+      "endpoints": [
+        "Arlington Heights",
+        "Harvard Station"
+      ],
+      "color": "FFC72C",
+      "silver_line": false
+    },
+    {
+      "id": "104",
+      "short_name": "104",
+      "long_name": "Malden Center Station - Airport Station",
+      "endpoints": [
+        "Malden Center Station",
+        "Airport Station"
+      ],
+      "color": "FFC72C",
+      "silver_line": false
+    },
+    {
+      "id": "109",
+      "short_name": "109",
+      "long_name": "Linden Square - Harvard Square via Sullivan",
+      "endpoints": [
+        "Linden Square",
+        "Harvard Square"
+      ],
+      "color": "FFC72C",
+      "silver_line": false
+    },
+    {
+      "id": "110",
+      "short_name": "110",
+      "long_name": "Wonderland Station - Wellington Station",
+      "endpoints": [
+        "Wonderland Station",
+        "Wellington Station"
+      ],
+      "color": "FFC72C",
+      "silver_line": false
+    },
+    {
+      "id": "111",
+      "short_name": "111",
+      "long_name": "Woodlawn - Haymarket Station",
+      "endpoints": [
+        "Woodlawn",
+        "Haymarket Station"
+      ],
+      "color": "FFC72C",
+      "silver_line": false
+    },
+    {
+      "id": "116",
+      "short_name": "116",
+      "long_name": "Wonderland Station - Maverick Station",
+      "endpoints": [
+        "Wonderland Station",
+        "Maverick Station"
+      ],
+      "color": "FFC72C",
+      "silver_line": false
+    },
+    {
+      "id": "741",
+      "short_name": "SL1",
+      "long_name": "Logan Airport Terminals - South Station",
+      "endpoints": [
+        "Logan Airport Terminals",
+        "South Station"
+      ],
+      "color": "7C878E",
+      "silver_line": true
+    },
+    {
+      "id": "742",
+      "short_name": "SL2",
+      "long_name": "Design Center - South Station",
+      "endpoints": [
+        "Design Center",
+        "South Station"
+      ],
+      "color": "7C878E",
+      "silver_line": true
+    },
+    {
+      "id": "743",
+      "short_name": "SL3",
+      "long_name": "Chelsea Station - South Station",
+      "endpoints": [
+        "Chelsea Station",
+        "South Station"
+      ],
+      "color": "7C878E",
+      "silver_line": true
+    },
+    {
+      "id": "751",
+      "short_name": "SL4",
+      "long_name": "Nubian Station - South Station",
+      "endpoints": [
+        "Nubian Station",
+        "South Station"
+      ],
+      "color": "7C878E",
+      "silver_line": true
+    },
+    {
+      "id": "749",
+      "short_name": "SL5",
+      "long_name": "Nubian Station - Temple Place",
+      "endpoints": [
+        "Nubian Station",
+        "Temple Place"
+      ],
+      "color": "7C878E",
+      "silver_line": true
+    },
+    {
+      "id": "746",
+      "short_name": "SLW",
+      "long_name": "Silver Line Way - South Station",
+      "endpoints": [
+        "Silver Line Way",
+        "South Station"
+      ],
+      "color": "7C878E",
+      "silver_line": true
+    }
+  ],
+  "changes": {
+    "added": [],
+    "dropped": [],
+    "endpoint_changed": []
+  },
+  "last_change_at": null,
+  "map": {
+    "tracking": false,
+    "drawn": [],
+    "missing_from_map": [],
+    "drawn_not_frequent": []
+  }
+}

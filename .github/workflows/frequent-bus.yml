@@ -1,0 +1,37 @@
+name: Refresh Frequent Bus Network
+
+on:
+  schedule:
+    - cron: '0 12 * * 1'   # Mondays 8am ET — MBTA rating/service changes are weekly at most
+  workflow_dispatch:        # allow manual runs from the Actions tab
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      # Diffs against the committed data/frequent_bus.json, so route
+      # add/drop/endpoint changes are recorded in the file for the dashboard.
+      - name: Refresh frequent bus list
+        run: python3 scraper/refresh_frequent_bus.py
+        env:
+          MBTA_API_KEY: ${{ secrets.MBTA_API_KEY }}   # optional; anonymous works at this volume
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/frequent_bus.json
+          git diff --staged --quiet || git commit -m "chore: refresh frequent bus network [skip ci]"
+          git push
