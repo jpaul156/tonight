@@ -1,0 +1,5 @@
+# Dev/test dependencies (not needed to run the scraper in production).
+#   pip install -r requirements-dev.txt
+#   python3 scraper/run_tests.py     # runs pytest + writes data/test_status.json
+pytest>=8.0
+freezegun>=1.4

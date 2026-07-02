@@ -34,17 +34,30 @@ jobs:
           restore-keys: scraper-cache-
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+
+      # Runs before the scrape so the fresh test status is folded into
+      # scrape_health.json. Non-blocking (|| true) — a failing test still gets
+      # recorded and surfaced on the dashboard, and shouldn't stop the daily
+      # scrape. The "Surface test failures" step below turns the run red.
+      - name: Run tests
+        run: python3 scraper/run_tests.py || true
 
       - name: Run scraper
         run: python3 scraper/run_scraper.py
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
-      - name: Commit updated events
+      - name: Commit updated data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/events.json
+          git add data/events.json data/archive.json data/scrape_health.json data/test_status.json
           git diff --staged --quiet || git commit -m "chore: update events [skip ci]"
           git push
+
+      - name: Surface test failures
+        run: |
+          python3 -c "import json,sys; s=json.load(open('data/test_status.json')); sys.exit(1 if s.get('status')=='fail' else 0)"

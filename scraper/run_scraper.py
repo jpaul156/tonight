@@ -9,12 +9,20 @@
 import json
 import sys
 import os
+import time
 from datetime import datetime, timezone, timedelta
 
 from venues import VENUES
-from scraper_core import scrape_venue, load_cache, save_cache
+from scraper_core import (
+    scrape_venue, load_cache, save_cache, get_all_venue_ids,
+    LLM_STRATEGIES,
+)
 
 OUTPUT_FILE = "data/events.json"
+ARCHIVE_FILE = "data/archive.json"
+HEALTH_FILE = "data/scrape_health.json"
+TEST_STATUS_FILE = "data/test_status.json"
+TRANSIT_FILE = "transit-layer.json"
 CACHE_FILE = "scraper_cache.json"
 
 
@@ -38,55 +46,216 @@ def merge_events(existing_map, new_events):
     return list(merged.values())
 
 
-# How far back the archival cutoff reaches. This is deliberately loose: the
-# scraper's only job here is to keep the active list from growing without
-# bound, NOT to decide what counts as "tonight." The front end re-filters
-# every event against its own 4am-rollover clock at view time (see getNow in
-# js/app.js), so it is the single source of truth for "tonight." We therefore
-# only need a boundary that can never archive something the front end might
-# still show. 36h comfortably covers the worst case — an event from yesterday
-# evening, viewed at 3:59am before the 4am rollover — with margin to spare,
-# and sidesteps any timezone/DST precision that bit the precise version.
+# How far back the "just ended" active window reaches. Deliberately loose: the
+# scraper never decides what counts as "tonight" — the front end re-filters
+# every event against its own 4am-rollover clock (getNow in js/app.js). 36h
+# comfortably covers the worst case (an event from yesterday evening, viewed at
+# 3:59am before the 4am rollover) so nothing the front end might still show is
+# ever pushed out of the active list.
 ARCHIVE_LOOKBACK = timedelta(hours=36)
 
+# How long a *past* event stays in events.json before moving to archive.json.
+# The front end ignores past_events entirely, so this window exists only to (a)
+# give the scraper a rolling record for "was live yesterday, gone today"
+# detection and (b) keep the shipped events.json bounded. Anything older than
+# this is appended to archive.json (which the app never fetches) and dropped
+# from events.json. See the dashboard/archive notes in CLAUDE.md.
+ARCHIVE_RETENTION = timedelta(days=7)
 
-def cutoff_datetime():
-    """
-    Events whose end (or start, if no end) is older than ARCHIVE_LOOKBACK are
-    moved to 'past_events'. Past events are preserved, never deleted.
 
-    Intentionally loose — see ARCHIVE_LOOKBACK. The front end, not this cutoff,
-    decides what is "tonight."
+def _event_time(e):
+    """The event's end (or start, if no end) as an aware UTC datetime, or None
+    if neither parses. Naive strings are treated as UTC, matching the stored
+    floating-local convention used everywhere else here."""
+    time_str = e.get("end") or e.get("start")
+    if not time_str:
+        return None
+    try:
+        t = datetime.fromisoformat(time_str)
+    except ValueError:
+        return None
+    return t.replace(tzinfo=timezone.utc) if t.tzinfo is None else t
+
+
+def partition_events(events):
+    """Split every event into three tiers by age:
+      active      — end/start >= now-36h (tonight + future + just-ended)
+      recent_past — between 36h and 7 days old (kept in events.json)
+      archived    — older than 7 days (moved to archive.json, app never fetches)
+    Events with no parseable time are kept active (never archived blindly).
     """
-    return datetime.now(timezone.utc) - ARCHIVE_LOOKBACK
+    now = datetime.now(timezone.utc)
+    active_cut = now - ARCHIVE_LOOKBACK
+    archive_cut = now - ARCHIVE_RETENTION
+    active, recent_past, archived = [], [], []
+    for e in events:
+        t = _event_time(e)
+        if t is None:
+            active.append(e)
+        elif t >= active_cut:
+            active.append(e)
+        elif t >= archive_cut:
+            recent_past.append(e)
+        else:
+            archived.append(e)
+    return active, recent_past, archived
+
+
+def load_archive(path):
+    """Existing archive.json as an {id: event} map (bare list on disk)."""
+    if not os.path.exists(path):
+        return {}
+    try:
+        with open(path) as f:
+            data = json.load(f)
+    except (json.JSONDecodeError, OSError):
+        return {}
+    items = data if isinstance(data, list) else data.get("events", [])
+    return {e["id"]: e for e in items}
 
 
 def sort_events(events):
     return sorted(events, key=lambda e: e.get("start") or "9999")
 
 
-def split_past_future(events):
-    """Split events into active (tonight + future) and past."""
-    cutoff = cutoff_datetime()
-    active, past = [], []
-    for e in events:
-        # Use end time if available, otherwise start time
-        time_str = e.get("end") or e.get("start")
-        if not time_str:
-            active.append(e)
-            continue
-        try:
-            # Parse naive datetime as UTC for comparison
-            t = datetime.fromisoformat(time_str)
-            if t.tzinfo is None:
-                t = t.replace(tzinfo=timezone.utc)
-            if t < cutoff:
-                past.append(e)
-            else:
-                active.append(e)
-        except ValueError:
-            active.append(e)
-    return active, past
+def load_json(path, default):
+    if not os.path.exists(path):
+        return default
+    try:
+        with open(path) as f:
+            return json.load(f)
+    except (json.JSONDecodeError, OSError):
+        return default
+
+
+# ============================================================
+# Health report — feeds app_health.html via data/scrape_health.json
+# ============================================================
+
+def map_station_names(path):
+    """Every named station in transit-layer.json — the set of squares the app's
+    metro map can actually surface as a filter. Events whose `square` isn't in
+    here can't be reached from the map (see off_map_squares)."""
+    data = load_json(path, None)
+    if not data:
+        return set()
+    names = set()
+    for ln in data.get("lines", []):
+        for br in ln.get("branches", []):
+            for n in br.get("nodes", []):
+                if n.get("name"):
+                    names.add(n["name"])
+                if n.get("square"):
+                    names.add(n["square"])
+    return names
+
+
+def build_off_map_squares(active_events, station_names):
+    """Squares used by active events that have no matching map station. Flags a
+    probable typo when an off-map square contains an on-map station name (the
+    'Davis Square' vs 'Davis' class of bug), and marks bus-only squares (all
+    events on the Bus line) as expected rather than broken."""
+    from collections import defaultdict
+    buckets = defaultdict(list)
+    for e in active_events:
+        sq = e.get("square")
+        if sq and sq not in station_names:
+            buckets[sq].append(e)
+    out = []
+    for sq, evs in sorted(buckets.items(), key=lambda kv: -len(kv[1])):
+        bus_only = all((e.get("transit_line") == "Bus") for e in evs)
+        probable = None
+        for name in station_names:
+            # e.g. off-map "Davis Square" contains on-map "Davis"
+            if name and name != sq and name in sq:
+                probable = name
+                break
+        out.append({
+            "square": sq,
+            "events": len(evs),
+            "bus_only": bus_only,
+            "probable_match": probable,
+        })
+    return out
+
+
+def build_health(venue_reports, active_events, archived_now_count,
+                 duration_s, test_status, station_names, payload):
+    from collections import Counter
+    by_square = Counter(e.get("square") for e in active_events if e.get("square"))
+    no_image = sum(1 for e in active_events if not e.get("image_url"))
+    total = len(active_events)
+
+    status_counts = Counter(v["status"] for v in venue_reports)
+    return {
+        "schema": "tonight.health/1",
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "duration_seconds": round(duration_s, 1),
+        "totals": {
+            "active_events": total,
+            # What a visitor actually downloads on open: events.json is the one
+            # payload that grows with the catalog. gzip is what's transferred
+            # (GitHub Pages compresses), raw is the parse cost on-device.
+            "payload_bytes": payload["raw"],
+            "payload_gzip_bytes": payload["gzip"],
+            "archived_this_run": archived_now_count,
+            "venues_total": len(venue_reports),
+            "venues_ok": status_counts.get("ok", 0),
+            "venues_idle": status_counts.get("idle", 0),
+            "venues_warning": status_counts.get("warning", 0),
+            "venues_error": status_counts.get("error", 0),
+            "no_image": no_image,
+            "no_image_pct": round(100 * no_image / total, 1) if total else 0,
+        },
+        "by_square": dict(sorted(by_square.items(), key=lambda kv: -kv[1])),
+        "off_map_squares": build_off_map_squares(active_events, station_names),
+        "tests": test_status,
+        "venues": venue_reports,
+    }
+
+
+# Rank for sorting the dashboard venue list: loudest first.
+STATUS_RANK = {"error": 0, "warning": 1, "idle": 2, "ok": 3}
+
+
+def venue_status(cfg, outcome, feed_count, prev_feed_count):
+    """Derive a venue's health status + note. `outcome` carries this run's
+    result: {events, report, errored}. `feed_count` is how many of this venue's
+    events are currently in the live feed; `prev_feed_count` is that number at
+    the previous run (for the delta and breakage detection).
+
+    The breakage signal keys off this run's *yield*, not the feed count, because
+    a venue can break while its already-scraped future events keep the feed
+    count non-zero for weeks.
+    """
+    events = outcome["events"]
+    report = outcome["report"]
+    expected_empty = cfg.get("expected_empty", False)
+    errored = outcome["errored"] or bool(report.get("error"))
+    empty = events is not None and len(events) == 0
+
+    # A known-broken venue (stale calendar, or a JS-only page awaiting
+    # Playwright) reads as calm "idle" whether its empty page makes the LLM
+    # return [] or unparseable junk — we already know it yields nothing, so it
+    # must never show up as a loud error alongside genuine breakage.
+    if expected_empty and (errored or empty or events is None):
+        return "idle", "0 events (known — awaiting fix, see venues.py)"
+
+    if errored:
+        return "error", report.get("error") or "scrape raised an exception"
+
+    if events is None:  # cache hit — collection page unchanged, LLM skipped
+        return "ok", "unchanged since last run (cache hit)"
+
+    if empty:
+        if prev_feed_count > 0:
+            return "error", f"yielded 0 events (feed had {prev_feed_count}) — likely broken"
+        return "warning", "yields 0 events and never has — check config"
+
+    if report.get("truncated"):
+        return "warning", report.get("note", "truncated extraction")
+
+    return "ok", ""
 
 
 def print_summary(events, venue_names):
@@ -109,6 +278,7 @@ def print_summary(events, venue_names):
 
 
 def main():
+    run_start = time.time()
     filters = [a.lower() for a in sys.argv[1:] if not a.startswith("--")]
     force = "--force" in sys.argv
     if filters:
@@ -127,9 +297,11 @@ def main():
     for v in venues_to_run:
         print(f"  - {v['name']}")
 
-    # Load cache and existing events
+    # Load cache, existing events, and the previous health report (for deltas).
     cache = load_cache(CACHE_FILE)
     existing_map = load_existing_events(OUTPUT_FILE)
+    prev_health = load_json(HEALTH_FILE, {})
+    prev = {v["id"]: v for v in prev_health.get("venues", [])}
     print(f"\nCache: {len(cache)} URLs tracked")
     print(f"Events: {len(existing_map)} existing")
 
@@ -137,12 +309,16 @@ def main():
     scraped_venue_names = []
     skipped_venues = []
     errors = []
+    outcomes = {}  # venue_id -> {events, report, errored}
 
     for venue_cfg in venues_to_run:
+        report = {}
+        events = None
+        errored = False
         try:
-            events = scrape_venue(venue_cfg, cache=cache, verbose=True, force=force)
+            events = scrape_venue(venue_cfg, cache=cache, verbose=True,
+                                  force=force, report=report)
             if events is None:
-                # None = cache hit, collection page unchanged
                 skipped_venues.append(venue_cfg["name"])
             else:
                 all_new_events.extend(events)
@@ -150,36 +326,103 @@ def main():
         except Exception as err:
             print(f"\n  ERROR scraping {venue_cfg['name']}: {err}")
             errors.append((venue_cfg["name"], str(err)))
+            report["error"] = str(err)
+            errored = True
         finally:
-            # Always save cache after each venue so progress isn't lost
             save_cache(cache, CACHE_FILE)
+        outcomes[venue_cfg["id"]] = {"events": events, "report": report, "errored": errored}
 
-    # Merge and write output
+    # --- Partition into active / recent-past / archived ---
     merged = merge_events(existing_map, all_new_events)
-    active, past = split_past_future(merged)
+    active, recent_past, archived_now = partition_events(merged)
     active_sorted = sort_events(active)
-    past_sorted = sort_events(past)
+    past_sorted = sort_events(recent_past)
 
-    # Wrap in a generated_at envelope so the front end can check freshness
+    # --- Per-venue health (built after partitioning so event_count reflects the
+    # venue's real contribution to the live feed) ---
+    from collections import Counter
+    feed_counts = Counter(e.get("venue_id") for e in active_sorted)
+    venue_reports = []
+    now_iso = datetime.now(timezone.utc).isoformat()
+    for venue_cfg in venues_to_run:
+        outcome = outcomes[venue_cfg["id"]]
+        feed_count = sum(feed_counts.get(vid, 0) for vid in get_all_venue_ids(venue_cfg))
+        pv = prev.get(venue_cfg["id"], {})
+        prev_feed = pv.get("event_count", feed_count)
+        status, note = venue_status(venue_cfg, outcome, feed_count, prev_feed)
+        strategy = venue_cfg.get("scrape_strategy", "html_page")
+        got_fresh = outcome["events"] is not None and len(outcome["events"]) > 0
+        venue_reports.append({
+            "id": venue_cfg["id"],
+            "name": venue_cfg["name"],
+            "square": venue_cfg["square"],
+            "strategy": strategy,
+            "uses_llm": strategy in LLM_STRATEGIES or bool(venue_cfg.get("detail_pages")),
+            "status": status,
+            "event_count": feed_count,
+            "delta": feed_count - prev_feed,
+            "note": note,
+            "last_success": now_iso if got_fresh else pv.get("last_success"),
+        })
+
+    # Include venues that weren't in this run (partial run) so the dashboard
+    # still shows their last-known state rather than dropping them.
+    run_ids = {v["id"] for v in venues_to_run}
+    for pv in prev_health.get("venues", []):
+        if pv["id"] not in run_ids:
+            venue_reports.append({**pv, "note": "not scraped this run (last-known state)"})
+
+    # Sort loudest-first for the dashboard.
+    venue_reports.sort(key=lambda v: (STATUS_RANK.get(v["status"], 9), -v["event_count"]))
+
     output = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "events": active_sorted,
         "past_events": past_sorted,
     }
-
     with open(OUTPUT_FILE, "w") as f:
         json.dump(output, f, indent=2)
+
+    # Measure what the front end downloads on open (raw + gzipped transfer size).
+    import gzip
+    raw_bytes = open(OUTPUT_FILE, "rb").read()
+    payload = {"raw": len(raw_bytes), "gzip": len(gzip.compress(raw_bytes))}
+
+    # --- Merge newly-archived events into the growing archive.json ---
+    archive_map = load_archive(ARCHIVE_FILE)
+    before = len(archive_map)
+    for e in archived_now:
+        archive_map[e["id"]] = e
+    archived_added = len(archive_map) - before
+    archive_out = {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "events": sort_events(list(archive_map.values())),
+    }
+    with open(ARCHIVE_FILE, "w") as f:
+        json.dump(archive_out, f, indent=2)
+
+    # --- Write the health report for the dashboard ---
+    station_names = map_station_names(TRANSIT_FILE)
+    test_status = load_json(TEST_STATUS_FILE, {"status": "unknown"})
+    health = build_health(venue_reports, active_sorted, len(archived_now),
+                          time.time() - run_start, test_status, station_names, payload)
+    with open(HEALTH_FILE, "w") as f:
+        json.dump(health, f, indent=2)
 
     if scraped_venue_names:
         print_summary(active_sorted, scraped_venue_names)
 
-    print(f"\nWrote {len(active_sorted)} active + {len(past_sorted)} past events to {OUTPUT_FILE}")
+    print(f"\nWrote {len(active_sorted)} active + {len(past_sorted)} recent-past events to {OUTPUT_FILE}")
+    print(f"Archive: {len(archive_map)} total ({archived_added} moved this run) in {ARCHIVE_FILE}")
+    print(f"Health: {HEALTH_FILE} "
+          f"({health['totals']['venues_error']} error, "
+          f"{health['totals']['venues_warning']} warning, "
+          f"{health['totals']['venues_ok']} ok)")
     if all_new_events:
         print(f"  {len(all_new_events)} new/updated events from this run")
     if skipped_venues:
         print(f"  Skipped (no change): {', '.join(skipped_venues)}")
 
-    # Show cache stats
     unchanged = sum(1 for v in cache.values() if v.get("last_changed") != v.get("last_fetched"))
     print(f"\nCache: {len(cache)} URLs tracked, {unchanged} unchanged on this run")
 

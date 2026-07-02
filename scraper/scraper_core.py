@@ -12,12 +12,26 @@ import anthropic
 from datetime import datetime, timezone, timedelta
 from html import unescape as html_unescape
 
-client = anthropic.Anthropic()
+# Lazy client so importing this module (e.g. from the test suite) doesn't
+# require ANTHROPIC_API_KEY — it's only needed when an LLM pass actually runs.
+_client = None
+
+
+def get_client():
+    global _client
+    if _client is None:
+        _client = anthropic.Anthropic()
+    return _client
 
 VALID_CATEGORIES = [
     "music", "trivia", "comedy", "film", "market",
     "karaoke", "community", "sports", "fitness", "food", "other"
 ]
+
+# Strategies whose Pass 1 extraction goes through the LLM. Everything else
+# parses a structured feed directly. Used by the health report to show which
+# venues still cost tokens (and are more fragile to prompt/format drift).
+LLM_STRATEGIES = {"html_page", "html_full_text", "shopify_products"}
 
 # Front-end filter chips (must match SQUARES in js/app.js). Only used to
 # validate an event-location square extracted for venues that opt into
@@ -906,7 +920,13 @@ def extract_html_page(html, venue_cfg, extra_pages=None):
 # LLM calls
 # ============================================================
 
-def clean_json(raw):
+def clean_json(raw, report=None):
+    """Normalize an LLM JSON response into parseable text. Stripping code fences
+    or a prefix is routine and NOT a data-loss signal; only the truncation
+    salvage branch (closing off a response cut mid-array) drops trailing events.
+    When `report` is passed, that — and only that — case sets report["truncated"]
+    so the health dashboard flags real loss instead of every fenced response.
+    """
     text = raw.strip()
     if text.startswith("```"):
         lines = text.splitlines()
@@ -915,21 +935,25 @@ def clean_json(raw):
             inner = inner[:-1]
         text = "\n".join(inner).strip()
 
-    # Try parsing as-is first
+    # Fence-stripped text that parses cleanly is complete — not truncated.
     try:
         json.loads(text)
         return text
     except json.JSONDecodeError:
         pass
 
-    # Recovery: if the response was truncated mid-event, try to find
-    # the last complete object boundary (closing '}') and close the array.
+    # Recovery: the response was truncated mid-event. Find the last complete
+    # object boundary (closing '}') and close the array — trailing events lost.
     last_close = text.rfind("}")
     if last_close != -1:
         candidate = text[:last_close + 1].rstrip().rstrip(",") + "\n]"
         try:
             json.loads(candidate)
             print(f"  WARNING: JSON was truncated — recovered {candidate.count('{') - candidate.count('}')} partial events")
+            if report is not None:
+                report["truncated"] = True
+                report["note"] = ("extraction hit the token limit and was "
+                                  "truncated — trailing events are missing")
             return candidate
         except json.JSONDecodeError:
             pass
@@ -1003,9 +1027,13 @@ Return ONLY the JSON array. No fences, no explanation. Start with [ end with ].
 Content:
 {text_chunk}"""
 
-    msg = client.messages.create(
+    # High-volume calendars (e.g. The Sinclair) overflow a 6000-token response
+    # and get truncated — trailing events are silently lost (the health report
+    # flags this as report["truncated"]). Default higher and let a busy venue
+    # raise it further via max_output_tokens in its config.
+    msg = get_client().messages.create(
         model="claude-haiku-4-5",
-        max_tokens=6000,
+        max_tokens=venue_cfg.get("max_output_tokens", 8000),
         messages=[{"role": "user", "content": prompt}]
     )
     return msg.content[0].text
@@ -1040,7 +1068,7 @@ Return ONLY a JSON object. No fences.
 Text:
 {body}"""
 
-    msg = client.messages.create(
+    msg = get_client().messages.create(
         model="claude-haiku-4-5",
         max_tokens=500,
         messages=[{"role": "user", "content": prompt}]
@@ -1088,7 +1116,7 @@ Events:
 
     # ~25 tokens/event in the response; budget generously so high-volume venues
     # (a 150-show comedy calendar) don't get truncated and silently fall back.
-    msg = client.messages.create(
+    msg = get_client().messages.create(
         model="claude-haiku-4-5",
         max_tokens=max(1000, len(titles) * 30),
         messages=[{"role": "user", "content": prompt}]
@@ -1313,7 +1341,12 @@ def build_events(raw_events, category_map, detail_map, venue_cfg):
 # Main scrape function — called by the runner
 # ============================================================
 
-def scrape_venue(venue_cfg, cache, verbose=True, force=False):
+def scrape_venue(venue_cfg, cache, verbose=True, force=False, report=None):
+    # `report` (optional mutable dict) collects health signals that don't
+    # survive into events.json — a truncated/failed extraction, a warning note —
+    # so the runner can write them to scrape_health.json for the dashboard.
+    if report is None:
+        report = {}
     name = venue_cfg["name"]
     collection_url = venue_cfg["collection_url"]
     base_url = BASE_URL_PATTERN.match(collection_url).group(0)
@@ -1420,12 +1453,16 @@ def scrape_venue(venue_cfg, cache, verbose=True, force=False):
             print(f"  Sending {len(text_chunk):,} chars to Pass 1")
 
         raw_json = llm_extract_events(text_chunk, venue_cfg)
-        cleaned = clean_json(raw_json)
+        # clean_json sets report["truncated"] only when it salvages a genuinely
+        # truncated array (trailing events lost) — not for routine fence/prefix
+        # stripping, which is complete data.
+        cleaned = clean_json(raw_json, report=report)
         try:
             raw_events = json.loads(cleaned)
         except Exception as err:
             print(f"  ERROR: Pass 1 JSON parse failed: {err}")
             print(cleaned[:300])
+            report["error"] = f"Pass 1 JSON parse failed: {err}"
             return []
 
         if verbose:

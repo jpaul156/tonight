@@ -1,0 +1,70 @@
+{
+  "schema": "tonight.todo/1",
+  "updated": "2026-07-01",
+  "note": "Hand-maintained running to-do list, surfaced on app_health.html. Mirror of the 'Pending work' sections in CLAUDE.md — keep the two roughly in sync. priority: high | med | low. status: open | in_progress | blocked.",
+  "items": [
+    {
+      "title": "Trim the front-end load to a future window (60/90/180 days)",
+      "area": "product",
+      "priority": "med",
+      "status": "open",
+      "detail": "events.json ships every future event (unbounded), so the download grows with how far ahead venues post. Once the 'Page download' tile on this dashboard trends large, have the app fetch only events within N days out (exact N TBD — 60/90/180). Options: filter client-side after load (simplest, no payload win), or split events.json into a near-window file + a lazy-loaded remainder (real payload win). Decide N by watching the payload tile."
+    },
+    {
+      "title": "Weekly event verification for recurring shows",
+      "area": "product",
+      "priority": "med",
+      "status": "open",
+      "detail": "Recurring events (trivia, sessions) get cancelled week-to-week without the calendar updating (e.g. Grainne O'Malley's). Build a venue-facing view to confirm a recurring event is still on for the day/week. Until then treat weekly-only calendars cautiously."
+    },
+    {
+      "title": "Movies / cinema listings with opt-in filter",
+      "area": "product",
+      "priority": "low",
+      "status": "open",
+      "detail": "Add Apple Cinemas, Coolidge Corner, Somerville Theatre /calendar + /schedule. Hide showtimes from the main feed by default via an event_type:'film' filter that must be opted into. Design the opt-in UX before adding cinema venues; Somerville's mixed blockbuster/repertory content needs a wide-release vs niche label."
+    },
+    {
+      "title": "Generate station_list.csv from MBTA GTFS",
+      "area": "transit",
+      "priority": "med",
+      "status": "open",
+      "detail": "Build prototype/station_list.csv from GTFS stops.txt (V3 API https://api-v3.mbta.com/stops) to stay current with service changes, and add a stable GTFS id to each station node in transit-layer.json. This also fixes the LINES-topology / transit-layer.json duplication."
+    },
+    {
+      "title": "Station status field instead of deletion for closures",
+      "area": "transit",
+      "priority": "low",
+      "status": "open",
+      "detail": "Use a status field (open / temporary_closed / closed) on station nodes for closures like the Symphony renovation, rather than deleting the station."
+    },
+    {
+      "title": "Bus-connected squares on the metro map",
+      "area": "transit",
+      "priority": "low",
+      "status": "open",
+      "detail": "Surface squares served only by frequent buses (Inman, Medford Square) — show the connecting bus routes with 15-min-or-better headways (Frequent Bus Network) via GTFS routes.txt + frequencies. Decide how they render near the map so a bus-only square has a navigable home."
+    },
+    {
+      "title": "Playwright support for JS-rendered calendars",
+      "area": "scraper",
+      "priority": "med",
+      "status": "blocked",
+      "detail": "Midway Cafe, Deep Cuts, and Club Passim's full calendar need a headless browser — their event data is JS-injected and html_full_text gets near-empty pages. These venues are flagged expected_empty until Playwright lands."
+    },
+    {
+      "title": "Sinclair truncates at the Pass-1 token cap",
+      "area": "scraper",
+      "priority": "med",
+      "status": "open",
+      "detail": "The Sinclair's calendar (44+ events) overflowed the 6000-token Pass-1 response and lost trailing events. Default raised to 8000 with a per-venue max_output_tokens override; if the dashboard still flags it as truncated, bump max_output_tokens for sinclair or paginate the source. Watch the 'truncated' warning on app_health.html."
+    },
+    {
+      "title": "Winter EST offset in run_scraper",
+      "area": "scraper",
+      "priority": "low",
+      "status": "open",
+      "detail": "EDT/UTC-4 is hardcoded in run_scraper.py — off by one hour in winter (EST). Low priority until the app has winter users."
+    }
+  ]
+}

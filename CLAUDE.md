@@ -14,6 +14,36 @@ Output goes to `data/events.json`. Cache is `scraper_cache.json` at root (gitign
 
 **After editing venue config** (`scraper/venues.py` or `data/venues.json`), always use `--force` — otherwise the HTTP cache skips re-scraping and existing events keep stale values.
 
+Each run also writes `data/scrape_health.json` (dashboard data) and, when the events age out, `data/archive.json`. See "Data lifecycle" and "Health dashboard" below.
+
+## Data lifecycle — three tiers (events.json + archive.json)
+
+`run_scraper.py`'s `partition_events` splits every merged event by age:
+
+- **active** (`events.json` → `events`) — end/start ≥ now−36h. Tonight + future + just-ended. The only tier the front end fetches.
+- **recent past** (`events.json` → `past_events`) — 36h–7 days old. Kept only so the scraper can detect "was live yesterday, gone today"; the app ignores it.
+- **archived** (`data/archive.json`) — older than 7 days. Appended to a growing archive the app never fetches, then dropped from `events.json` so the shipped payload stays bounded (~9 days). Merged by id, never deleted.
+
+Two cutoffs, deliberately: `ARCHIVE_LOOKBACK` (36h, the active/just-ended line — do NOT make precise, see the 4am-rollover note) and `ARCHIVE_RETENTION` (7 days, the archive line).
+
+## Health dashboard — `app_health.html` + `data/scrape_health.json`
+
+`app_health.html` is an **unlisted** (noindex) static page that reads `data/scrape_health.json` and `data/todo.json`. Calm/serene when all-clear, amber for notes, loud red for errors/broken venues sorted to the top. Each scraper run rewrites `scrape_health.json` (schema `tonight.health/1`): per-venue status (ok/idle/warning/error), event count + delta vs last run, whether it still uses the LLM, plus global totals, by-square counts, no-image %, **off-map squares** (event squares with no matching metro-map station — the `Davis` vs `Davis Square` class of bug), and test status.
+
+- Per-venue signals that don't survive into `events.json` (a truncated extraction, a parse error) come from a `report` dict threaded through `scrape_venue` → `clean_json`. `clean_json` sets `report["truncated"]` **only** on genuine token-limit truncation (trailing events lost), never on routine fence stripping.
+- Venues known to yield 0 events (stale calendar or JS-only site awaiting Playwright) set `expected_empty: True` in `venues.py` so they read as calm "idle", not "error".
+- `event_count` is a venue's contribution to the live feed (computed after partitioning), so it's meaningful on cache-hits and partial runs; the breakage signal keys off this run's *yield* instead.
+- `data/todo.json` (schema `tonight.todo/1`) is the hand-maintained running to-do list surfaced on the dashboard — keep it roughly in sync with the "Pending work" sections here.
+
+## Tests
+
+```
+pip install -r requirements-dev.txt
+python3 scraper/run_tests.py     # runs pytest + writes data/test_status.json
+```
+
+`scraper/tests/` covers the fragile pure functions (date parsers incl. Dec→Jan rollover via freezegun, `clean_json` truncation vs fence stripping, private-event/address/routing rules), the structured extractors (synthetic fixtures — add a saved fixture when a live site changes format), and data contracts (`venues.py`↔`venues.json` sync, `events.json` shape, `partition_events` tiering). `run_tests.py` writes `data/test_status.json`, which feeds the dashboard. Both CI workflows (`tests.yml` on push/PR, and `scrape.yml` before the daily scrape) run it.
+
 ## Local preview
 
 ```

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Unlisted internal dashboard: keep it out of search indexes. -->
+  <meta name="robots" content="noindex, nofollow">
+  <title>Tonight — scraper health</title>
+  <style>
+    :root {
+      --bg: #0a0d1a;
+      --bg-glow: #11183a;
+      --surface: #131829;
+      --surface-2: #1c2238;
+      --border: #2a3150;
+      --text: #eef0f6;
+      --text-muted: #8b93ad;
+      --amber: #f5b942;
+      --ok: #3fb8a0;         /* calm teal — all-clear */
+      --ok-soft: #3fb8a01a;
+      --warn: #f5b942;
+      --warn-soft: #f5b9421a;
+      --err: #ff5c5c;
+      --err-soft: #ff5c5c1f;
+      --font-display: "Space Grotesk", system-ui, sans-serif;
+      --font-body: "Inter", system-ui, sans-serif;
+      --font-mono: "JetBrains Mono", ui-monospace, monospace;
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0;
+      background: radial-gradient(1200px 600px at 50% -10%, var(--bg-glow), var(--bg)) fixed;
+      color: var(--text);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 28px 18px 80px; }
+    h1 { font-family: var(--font-display); font-size: 1.5rem; margin: 0 0 2px; letter-spacing: -0.01em; }
+    .sub { color: var(--text-muted); font-size: 0.85rem; font-family: var(--font-mono); }
+    h2 {
+      font-family: var(--font-display); font-size: 1.05rem; margin: 34px 0 12px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    h2 .count { color: var(--text-muted); font-family: var(--font-mono); font-size: 0.8rem; font-weight: 400; }
+
+    /* ---- overall banner ---- */
+    .banner {
+      margin-top: 20px; padding: 18px 20px; border-radius: var(--radius);
+      display: flex; align-items: center; gap: 14px;
+      border: 1px solid var(--border);
+    }
+    .banner.calm { background: var(--ok-soft); border-color: #3fb8a044; }
+    .banner.note { background: var(--warn-soft); border-color: #f5b94255; }
+    .banner.loud {
+      background: var(--err-soft); border-color: #ff5c5c66;
+      box-shadow: 0 0 0 1px #ff5c5c33, 0 8px 30px -12px #ff5c5c55;
+    }
+    .banner .dot { width: 12px; height: 12px; border-radius: 50%; flex: none; }
+    .banner.calm .dot { background: var(--ok); box-shadow: 0 0 10px var(--ok); }
+    .banner.note .dot { background: var(--warn); box-shadow: 0 0 10px var(--warn); }
+    .banner.loud .dot { background: var(--err); box-shadow: 0 0 12px var(--err); animation: pulse 1.4s ease-in-out infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .banner .headline { font-family: var(--font-display); font-size: 1.15rem; }
+    .banner .headline small { display: block; font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); font-weight: 400; margin-top: 2px; }
+
+    /* ---- tiles ---- */
+    .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 16px; }
+    .tile { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
+    .tile .val { font-family: var(--font-display); font-size: 1.6rem; line-height: 1; }
+    .tile .lbl { color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 8px; font-family: var(--font-mono); }
+    .tile.flag .val { color: var(--warn); }
+    .tile.bad .val { color: var(--err); }
+
+    /* ---- venue table ---- */
+    table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+    thead th { text-align: left; color: var(--text-muted); font-weight: 500; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 6px 10px; border-bottom: 1px solid var(--border); }
+    tbody td { padding: 10px; border-bottom: 1px solid #1c223855; vertical-align: middle; }
+    tbody tr { background: var(--surface); }
+    tbody tr.error td:first-child { box-shadow: inset 3px 0 var(--err); }
+    tbody tr.warning td:first-child { box-shadow: inset 3px 0 var(--warn); }
+    tbody tr.idle td:first-child { box-shadow: inset 3px 0 var(--text-muted); }
+    tbody tr.ok td:first-child { box-shadow: inset 3px 0 var(--ok); }
+    .st { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; }
+    .st .d { width: 8px; height: 8px; border-radius: 50%; }
+    .st.error { color: var(--err); } .st.error .d { background: var(--err); }
+    .st.warning { color: var(--warn); } .st.warning .d { background: var(--warn); }
+    .st.idle { color: var(--text-muted); } .st.idle .d { background: var(--text-muted); }
+    .st.ok { color: var(--ok); } .st.ok .d { background: var(--ok); }
+    .vname { font-weight: 600; }
+    .vnote { color: var(--text-muted); font-size: 0.78rem; }
+    tr.error .vnote { color: #ffb3b3; }
+    .tag { font-family: var(--font-mono); font-size: 0.66rem; padding: 2px 6px; border-radius: 6px; border: 1px solid var(--border); color: var(--text-muted); }
+    .tag.llm { color: var(--amber); border-color: #f5b94244; }
+    .delta.up { color: var(--ok); } .delta.down { color: var(--err); } .delta.zero { color: var(--text-muted); }
+    .num { font-family: var(--font-mono); }
+
+    /* ---- panels ---- */
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; }
+    .row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #1c223855; }
+    .row:last-child { border-bottom: none; }
+    .row .bar { height: 8px; border-radius: 4px; background: var(--surface-2); flex: 1; overflow: hidden; }
+    .row .bar > i { display: block; height: 100%; background: var(--text-muted); }
+    .row .sqname { width: 150px; font-size: 0.85rem; }
+    .row .n { width: 44px; text-align: right; font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); }
+
+    .offmap .item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; margin-bottom: 8px; }
+    .offmap .item.loud { background: var(--err-soft); border: 1px solid #ff5c5c44; }
+    .offmap .item.calm { background: var(--surface-2); border: 1px solid var(--border); }
+    .offmap .sq { font-weight: 600; }
+    .offmap .hint { color: var(--text-muted); font-size: 0.8rem; }
+    .offmap .item.loud .hint { color: #ffb3b3; }
+
+    /* ---- todo ---- */
+    .todo-area { margin-bottom: 18px; }
+    .todo-area h3 { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin: 0 0 8px; }
+    .todo { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid #1c223855; }
+    .todo:last-child { border-bottom: none; }
+    .pri { font-family: var(--font-mono); font-size: 0.62rem; padding: 2px 6px; border-radius: 6px; height: fit-content; flex: none; text-transform: uppercase; }
+    .pri.high { color: var(--err); border: 1px solid #ff5c5c55; }
+    .pri.med { color: var(--amber); border: 1px solid #f5b94255; }
+    .pri.low { color: var(--text-muted); border: 1px solid var(--border); }
+    .todo .tt { font-weight: 600; font-size: 0.9rem; }
+    .todo .tt .status-blocked { color: var(--warn); font-family: var(--font-mono); font-size: 0.66rem; margin-left: 6px; }
+    .todo .dd { color: var(--text-muted); font-size: 0.8rem; margin-top: 3px; line-height: 1.4; }
+    .err-msg { color: var(--err); font-family: var(--font-mono); padding: 40px; text-align: center; }
+    a.back { color: var(--text-muted); font-size: 0.8rem; text-decoration: none; font-family: var(--font-mono); }
+  </style>
+</head>
+<body>
+  <div class="wrap" id="app">
+    <div class="err-msg" id="loading">Loading health report…</div>
+  </div>
+
+  <script>
+    const REL = ts => {
+      if (!ts) return "—";
+      const s = (Date.now() - new Date(ts).getTime()) / 1000;
+      if (s < 90) return "just now";
+      if (s < 5400) return Math.round(s / 60) + "m ago";
+      if (s < 129600) return Math.round(s / 3600) + "h ago";
+      return Math.round(s / 86400) + "d ago";
+    };
+    const esc = s => String(s == null ? "" : s).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+    const kb = b => b == null ? "—" : b < 1024 * 1024 ? Math.round(b / 1024) + " KB" : (b / 1048576).toFixed(2) + " MB";
+    // Raw events.json size thresholds: parse/scroll cost on a phone. gzip transfer
+    // is ~5-6x smaller, but the raw size is what the device has to hold and parse.
+    const PAYLOAD_NOTE = 2 * 1048576;   // 2 MB — start planning the future-window trim
+    const PAYLOAD_BAD  = 4 * 1048576;   // 4 MB — act now
+
+    async function load() {
+      let health, todo = null;
+      try {
+        const r = await fetch("data/scrape_health.json", { cache: "no-store" });
+        if (!r.ok) throw new Error("scrape_health.json missing (run the scraper once)");
+        health = await r.json();
+      } catch (e) {
+        document.getElementById("app").innerHTML =
+          `<div class="err-msg">Couldn't load health report.<br>${esc(e.message)}</div>`;
+        return;
+      }
+      try { const r = await fetch("data/todo.json", { cache: "no-store" }); if (r.ok) todo = await r.json(); } catch (e) {}
+      render(health, todo);
+    }
+
+    function render(h, todo) {
+      const t = h.totals;
+      const errs = t.venues_error, warns = t.venues_warning;
+      const ageH = (Date.now() - new Date(h.generated_at).getTime()) / 3600000;
+      const stale = ageH > 26;
+
+      // ---- overall banner ----
+      let cls = "calm", head = "All systems nominal", detail = `${t.venues_ok + t.venues_idle} of ${t.venues_total} venues healthy`;
+      if (errs > 0) { cls = "loud"; head = `${errs} venue${errs > 1 ? "s" : ""} need attention`; detail = `${errs} error · ${warns} warning`; }
+      else if (warns > 0 || stale) { cls = "note"; head = stale ? "Data may be stale" : `${warns} warning${warns > 1 ? "s" : ""} to review`; detail = `${warns} warning · last run ${REL(h.generated_at)}`; }
+
+      // ---- off-map partitioned: probable typos are loud, bus-only is expected ----
+      const offLoud = (h.off_map_squares || []).filter(o => o.probable_match || !o.bus_only);
+      const offCalm = (h.off_map_squares || []).filter(o => !o.probable_match && o.bus_only);
+
+      const maxSq = Math.max(1, ...Object.values(h.by_square || {}));
+      const tests = h.tests || { status: "unknown" };
+
+      document.getElementById("app").innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <div>
+            <h1>Scraper health</h1>
+            <div class="sub">generated ${REL(h.generated_at)} · ${new Date(h.generated_at).toLocaleString()}</div>
+          </div>
+          <a class="back" href="index.html">← app</a>
+        </div>
+
+        <div class="banner ${cls}">
+          <span class="dot"></span>
+          <span class="headline">${esc(head)}<small>${esc(detail)} · scrape took ${h.duration_seconds}s</small></span>
+        </div>
+
+        <div class="tiles">
+          <div class="tile ${t.payload_bytes > PAYLOAD_BAD ? "bad" : t.payload_bytes > PAYLOAD_NOTE ? "flag" : ""}">
+            <div class="val">${kb(t.payload_bytes)}</div>
+            <div class="lbl">Page download${t.payload_gzip_bytes ? ` · ${kb(t.payload_gzip_bytes)} gzip` : ""}</div></div>
+          <div class="tile"><div class="val">${t.active_events}</div><div class="lbl">Active events</div></div>
+          <div class="tile ${t.no_image_pct > 40 ? "flag" : ""}"><div class="val">${t.no_image_pct}%</div><div class="lbl">No image (${t.no_image})</div></div>
+          <div class="tile ${errs ? "bad" : warns ? "flag" : ""}"><div class="val">${t.venues_ok}/${t.venues_total}</div><div class="lbl">Venues OK</div></div>
+          <div class="tile"><div class="val">${t.archived_this_run}</div><div class="lbl">Archived this run</div></div>
+          <div class="tile ${tests.status === "fail" ? "bad" : tests.status === "unknown" ? "" : ""}">
+            <div class="val">${testLabel(tests)}</div><div class="lbl">Tests</div></div>
+        </div>
+
+        <h2>Venues <span class="count">${h.venues.length} tracked · loudest first</span></h2>
+        <div style="overflow-x:auto"><table>
+          <thead><tr><th>Status</th><th>Venue</th><th>Square</th><th>Source</th><th>Events</th><th>Last data</th><th>Note</th></tr></thead>
+          <tbody>${h.venues.map(venueRow).join("")}</tbody>
+        </table></div>
+
+        ${offLoud.length ? `
+          <h2>Off-map squares <span class="count">events that can't be reached from the metro map</span></h2>
+          <div class="offmap">${offLoud.map(offRow).join("")}</div>` : ""}
+
+        <h2>Events by square <span class="count">active feed</span></h2>
+        <div class="panel">
+          ${Object.entries(h.by_square || {}).map(([sq, n]) => `
+            <div class="row">
+              <span class="sqname">${esc(sq)}</span>
+              <span class="bar"><i style="width:${Math.round(100 * n / maxSq)}%;background:${offCalm.some(o => o.square === sq) ? "var(--text-muted)" : offLoud.some(o => o.square === sq) ? "var(--err)" : "var(--ok)"}"></i></span>
+              <span class="n">${n}</span>
+            </div>`).join("")}
+          ${offCalm.length ? `<div class="row" style="border-top:1px solid var(--border);color:var(--text-muted);font-size:0.78rem;padding-top:12px">
+            ${offCalm.map(o => esc(o.square)).join(", ")} — bus-only neighbourhoods, no map station by design.</div>` : ""}
+        </div>
+
+        ${todo ? renderTodo(todo) : ""}
+      `;
+    }
+
+    function testLabel(tests) {
+      if (tests.status === "pass") return "✓ " + (tests.passed ?? "");
+      if (tests.status === "fail") return "✗ " + (tests.failed ?? "") + " fail";
+      return "—";
+    }
+
+    function venueRow(v) {
+      const d = v.delta;
+      const dCls = d > 0 ? "up" : d < 0 ? "down" : "zero";
+      const dTxt = d > 0 ? `+${d}` : d < 0 ? `${d}` : "±0";
+      return `<tr class="${v.status}">
+        <td><span class="st ${v.status}"><span class="d"></span>${v.status}</span></td>
+        <td><span class="vname">${esc(v.name)}</span></td>
+        <td class="num" style="color:var(--text-muted)">${esc(v.square)}</td>
+        <td><span class="tag ${v.uses_llm ? "llm" : ""}">${esc(v.strategy)}${v.uses_llm ? " · LLM" : ""}</span></td>
+        <td class="num">${v.event_count} <span class="delta ${dCls}">${dTxt}</span></td>
+        <td class="num" style="color:var(--text-muted)">${REL(v.last_success)}</td>
+        <td class="vnote">${esc(v.note || "")}</td>
+      </tr>`;
+    }
+
+    function offRow(o) {
+      const hint = o.probable_match
+        ? `${o.events} events — square should probably be "<b>${esc(o.probable_match)}</b>" to match the map`
+        : `${o.events} events — no matching map station`;
+      return `<div class="item loud">
+        <span class="st error"><span class="d"></span></span>
+        <span class="sq">${esc(o.square)}</span>
+        <span class="hint">${hint}</span>
+      </div>`;
+    }
+
+    function renderTodo(todo) {
+      const order = { high: 0, med: 1, low: 2 };
+      const items = [...(todo.items || [])].sort((a, b) => (order[a.priority] ?? 9) - (order[b.priority] ?? 9));
+      const areas = {};
+      items.forEach(i => (areas[i.area] = areas[i.area] || []).push(i));
+      return `<h2>To-do <span class="count">updated ${esc(todo.updated || "")}</span></h2>
+        <div class="panel">
+          ${Object.entries(areas).map(([area, its]) => `
+            <div class="todo-area">
+              <h3>${esc(area)}</h3>
+              ${its.map(i => `<div class="todo">
+                <span class="pri ${i.priority}">${esc(i.priority)}</span>
+                <div>
+                  <div class="tt">${esc(i.title)}${i.status && i.status !== "open" ? `<span class="status-blocked">${esc(i.status)}</span>` : ""}</div>
+                  <div class="dd">${esc(i.detail)}</div>
+                </div>
+              </div>`).join("")}
+            </div>`).join("")}
+        </div>`;
+    }
+
+    load();
+  </script>
+</body>
+</html>

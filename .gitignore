@@ -2,6 +2,8 @@ scraper_cache.json
 __pycache__/
 *.pyc
 .DS_Store
+.pytest_cache/
+test-results.xml
 
 # Local-only working files (not for the public site)
 Venues Overview.csv

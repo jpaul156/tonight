@@ -306,7 +306,7 @@
   "dorchester-brewing": {
     "id": "dorchester-brewing",
     "name": "Dorchester Brewing Co.",
-    "square": "Andrew Square",
+    "square": "Andrew",
     "transit_line": "Red",
     "transit_stop": "Andrew",
     "walk_minutes": 12,
@@ -526,5 +526,37 @@
     "logo_thumb_url": null,
     "is_local": true,
     "notes": "Concert venue around the corner from the Middle East. Touring bands and dance nights."
+  },
+  "somerville-theatre": {
+    "id": "somerville-theatre",
+    "name": "Somerville Theatre",
+    "address": "55 Davis Square, Somerville, MA",
+    "neighborhood": "Davis Square",
+    "square": "Davis",
+    "transit_line": "Red",
+    "transit_stop": "Davis",
+    "walk_minutes": 2,
+    "website": "https://www.somervilletheatre.com",
+    "phone": "617-625-5700",
+    "logo_url": null,
+    "logo_thumb_url": null,
+    "is_local": true,
+    "notes": "Historic Davis Square theater: live music, comedy, theater, and lectures (film listings scraped separately)."
+  },
+  "crystal-ballroom": {
+    "id": "crystal-ballroom",
+    "name": "Crystal Ballroom",
+    "address": "55 Davis Square, Somerville, MA",
+    "neighborhood": "Davis Square",
+    "square": "Davis",
+    "transit_line": "Red",
+    "transit_stop": "Davis",
+    "walk_minutes": 2,
+    "website": "https://www.crystalballroomboston.com",
+    "phone": null,
+    "logo_url": null,
+    "logo_thumb_url": null,
+    "is_local": true,
+    "notes": "Concert hall on the top floor of the Somerville Theatre building; a separate venue with its own calendar."
   }
 }

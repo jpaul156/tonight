@@ -32,6 +32,13 @@
 #                 venue IDs, used to route events to the right
 #                 physical location when a single collection page
 #                 covers multiple venues.
+#   max_output_tokens  override for the Pass-1 LLM response budget (default
+#                 8000). Raise it for a high-volume calendar that the health
+#                 dashboard flags as "truncated" (trailing events lost).
+#   expected_empty True if this venue is known to yield 0 events right now
+#                 (a stale calendar, or a JS-only site awaiting Playwright).
+#                 The health dashboard treats 0 events as a calm "idle" state
+#                 instead of an error for these, so real breakage stands out.
 #   event_address True if this venue sometimes hosts events at a DIFFERENT
 #                 address than its own (e.g. street festivals at partner
 #                 spaces). Opt-in because it costs extra LLM extraction —
@@ -395,6 +402,7 @@ VENUES = [
         # treated as one venue per the project decision.)
         "collection_url": "https://www.bowmarketsomerville.com/upcomingevents?format=json",
         "scrape_strategy": "squarespace_events",
+        "expected_empty": True,  # collection stale since mid-June 2026 — see note above
         "detail_pages": False,
         "url_contains": None,
         "location_keywords": {},
@@ -419,6 +427,7 @@ VENUES = [
         # support is added.
         "collection_url": "https://midwaycafe.com/our/calendar",
         "scrape_strategy": "html_full_text",
+        "expected_empty": True,  # JS-rendered calendar — awaits Playwright support
         "detail_pages": False,
         "url_contains": None,
         "location_keywords": {},
@@ -432,7 +441,7 @@ VENUES = [
         "id": "dorchester-brewing",
         "name": "Dorchester Brewing Co.",
         "address": "1250 Massachusetts Ave, Dorchester, MA",
-        "square": "Andrew Square",
+        "square": "Andrew",  # must match the metro-map station name, not "Andrew Square"
         "transit_line": "Red",
         "transit_stop": "Andrew",
         "walk_minutes": 12,
@@ -558,6 +567,7 @@ VENUES = [
         # Playwright support is added; swap collection_url back to /events then.
         "collection_url": "https://www.deepcuts.rocks/events",
         "scrape_strategy": "html_full_text",
+        "expected_empty": True,  # fully JS-rendered — awaits Playwright support
         "detail_pages": False,
         "url_contains": None,
         "location_keywords": {},
@@ -597,7 +607,7 @@ VENUES = [
         "id": "somerville-theatre",
         "name": "Somerville Theatre",
         "address": "55 Davis Square, Somerville, MA",
-        "square": "Davis Square",
+        "square": "Davis",  # must match the metro-map station name, not "Davis Square"
         "transit_line": "Red",
         "transit_stop": "Davis",
         "walk_minutes": 2,
@@ -625,7 +635,7 @@ VENUES = [
         "id": "crystal-ballroom",
         "name": "Crystal Ballroom",
         "address": "55 Davis Square, Somerville, MA",
-        "square": "Davis Square",
+        "square": "Davis",  # must match the metro-map station name, not "Davis Square"
         "transit_line": "Red",
         "transit_stop": "Davis",
         "walk_minutes": 2,
