@@ -539,12 +539,23 @@ const MetroMap = (() => {
     view.y = (h - rows * CELL * s) / 2;
     draw();
   }
+  // Constrain the view so the map can never zoom out past the whole-map fit
+  // scale, nor pan so its edges pull inside the viewport (no off-screen drag).
+  function clampView() {
+    const w = stage.clientWidth, h = stage.clientHeight, pad = 36;
+    if (!w || !h || !cols || !rows) return;
+    const minScale = Math.min((w - pad) / (cols * CELL), (h - pad) / (rows * CELL));
+    view.scale = Math.max(minScale, Math.min(8, view.scale));
+    const mapW = cols * CELL * view.scale, mapH = rows * CELL * view.scale;
+    // Narrower than the viewport → center it; wider → keep both edges outside.
+    view.x = mapW <= w ? (w - mapW) / 2 : Math.min(0, Math.max(w - mapW, view.x));
+    view.y = mapH <= h ? (h - mapH) / 2 : Math.min(0, Math.max(h - mapH, view.y));
+  }
   function zoomAt(sx, sy, f) {
     const b = s2w(sx, sy);
-    const w = stage.clientWidth, h = stage.clientHeight, pad = 36;
-    const minScale = (cols && rows) ? Math.min((w - pad) / (cols * CELL), (h - pad) / (rows * CELL)) : 0.1;
-    view.scale = Math.max(minScale, Math.min(8, view.scale * f));
+    view.scale = view.scale * f;
     view.x = sx - b.x * view.scale; view.y = sy - b.y * view.scale;
+    clampView();
     draw();
   }
   // Center a node and zoom so ~radius tiles are visible to the nearest edge —
@@ -558,6 +569,7 @@ const MetroMap = (() => {
     view.scale = Math.max(0.1, Math.min(8, Math.min(w, h) / (2 * radius * CELL)));
     view.x = w / 2 - c.x * view.scale;
     view.y = h / 2 - c.y * view.scale;
+    clampView();
     draw();
   }
 
@@ -745,7 +757,7 @@ const MetroMap = (() => {
       const p = local(e), prev = pts.get(e.pointerId); if (pts.has(e.pointerId)) pts.set(e.pointerId, p);
       if (pts.size === 2) { const [a, b] = [...pts.values()]; const d = Math.hypot(a.x - b.x, a.y - b.y); const m = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 }; if (pinch) zoomAt(m.x, m.y, d / pinch); pinch = d; moved = true; return; }
       if (downPt && Math.hypot(p.x - downPt.x, p.y - downPt.y) > 4) moved = true;
-      if (dragging && prev) { view.x += p.x - prev.x; view.y += p.y - prev.y; draw(); }
+      if (dragging && prev) { view.x += p.x - prev.x; view.y += p.y - prev.y; clampView(); draw(); }
     });
     const up = e => {
       const p = local(e), wasClick = (!moved && pts.size === 1);
