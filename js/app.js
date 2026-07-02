@@ -541,7 +541,9 @@ const MetroMap = (() => {
   }
   function zoomAt(sx, sy, f) {
     const b = s2w(sx, sy);
-    view.scale = Math.max(0.1, Math.min(8, view.scale * f));
+    const w = stage.clientWidth, h = stage.clientHeight, pad = 36;
+    const minScale = (cols && rows) ? Math.min((w - pad) / (cols * CELL), (h - pad) / (rows * CELL)) : 0.1;
+    view.scale = Math.max(minScale, Math.min(8, view.scale * f));
     view.x = sx - b.x * view.scale; view.y = sy - b.y * view.scale;
     draw();
   }
