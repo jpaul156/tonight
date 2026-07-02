@@ -1,30 +1,30 @@
 {
   "schema": "tonight.health/1",
-  "generated_at": "2026-07-01T23:44:54.795013+00:00",
-  "duration_seconds": 0.4,
+  "generated_at": "2026-07-02T12:17:49.612950+00:00",
+  "duration_seconds": 257.7,
   "totals": {
-    "active_events": 1307,
-    "payload_bytes": 1841401,
-    "payload_gzip_bytes": 340640,
-    "archived_this_run": 1,
+    "active_events": 1311,
+    "payload_bytes": 1882556,
+    "payload_gzip_bytes": 347311,
+    "archived_this_run": 7,
     "venues_total": 27,
-    "venues_ok": 23,
+    "venues_ok": 22,
     "venues_idle": 3,
     "venues_warning": 1,
-    "venues_error": 0,
-    "no_image": 427,
-    "no_image_pct": 32.7
+    "venues_error": 1,
+    "no_image": 424,
+    "no_image_pct": 32.3
   },
   "by_square": {
-    "Davis": 350,
-    "Porter": 245,
-    "Union Square": 204,
-    "Harvard": 198,
-    "Inman Square": 126,
-    "Central": 71,
-    "Malden Center": 46,
-    "Maverick": 36,
-    "Medford Square": 13,
+    "Davis": 348,
+    "Porter": 243,
+    "Harvard": 210,
+    "Union Square": 203,
+    "Inman Square": 127,
+    "Central": 70,
+    "Malden Center": 45,
+    "Maverick": 35,
+    "Medford Square": 12,
     "Lechmere": 11,
     "Andrew": 6,
     "Coolidge Corner": 1
@@ -32,26 +32,38 @@
   "off_map_squares": [
     {
       "square": "Inman Square",
-      "events": 126,
+      "events": 127,
       "bus_only": true,
       "probable_match": null
     },
     {
       "square": "Medford Square",
-      "events": 13,
+      "events": 12,
       "bus_only": true,
       "probable_match": null
     }
   ],
   "tests": {
     "status": "pass",
-    "at": "2026-07-01T23:09:14.921299+00:00",
+    "at": "2026-07-02T12:13:31.213944+00:00",
     "total": 48,
     "passed": 48,
     "failed": 0,
     "skipped": 0
   },
   "venues": [
+    {
+      "id": "somerville-theatre",
+      "name": "Somerville Theatre",
+      "square": "Davis",
+      "strategy": "html_full_text",
+      "uses_llm": true,
+      "status": "error",
+      "event_count": 9,
+      "delta": 0,
+      "note": "Pass 1 JSON parse failed: Expecting value: line 1 column 1 (char 0)",
+      "last_success": "2026-07-01T23:08:15.569032+00:00"
+    },
     {
       "id": "village-social",
       "name": "Village Social Club",
@@ -61,7 +73,7 @@
       "status": "warning",
       "event_count": 0,
       "delta": 0,
-      "note": "not scraped this run (last-known state)",
+      "note": "yields 0 events and never has \u2014 check config",
       "last_success": null
     },
     {
@@ -73,7 +85,7 @@
       "status": "idle",
       "event_count": 0,
       "delta": 0,
-      "note": "not scraped this run (last-known state)",
+      "note": "0 events (known \u2014 awaiting fix, see venues.py)",
       "last_success": null
     },
     {
@@ -85,7 +97,7 @@
       "status": "idle",
       "event_count": 0,
       "delta": 0,
-      "note": "not scraped this run (last-known state)",
+      "note": "0 events (known \u2014 awaiting fix, see venues.py)",
       "last_success": null
     },
     {
@@ -97,7 +109,7 @@
       "status": "idle",
       "event_count": 0,
       "delta": 0,
-      "note": "not scraped this run (last-known state)",
+      "note": "0 events (known \u2014 awaiting fix, see venues.py)",
       "last_success": null
     },
     {
@@ -107,10 +119,10 @@
       "strategy": "squarespace_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 225,
-      "delta": 0,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-01T22:22:44.871538+00:00"
+      "event_count": 223,
+      "delta": -2,
+      "note": "",
+      "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
       "id": "aeronaut",
@@ -119,10 +131,10 @@
       "strategy": "aeronaut_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 176,
-      "delta": 0,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-01T22:22:44.871538+00:00"
+      "event_count": 174,
+      "delta": -2,
+      "note": "",
+      "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
       "id": "burren",
@@ -131,9 +143,9 @@
       "strategy": "burren_tables",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 159,
-      "delta": 0,
-      "note": "not scraped this run (last-known state)",
+      "event_count": 157,
+      "delta": -2,
+      "note": "unchanged since last run (cache hit)",
       "last_success": "2026-07-01T22:22:44.871538+00:00"
     },
     {
@@ -143,10 +155,10 @@
       "strategy": "seatengine",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 140,
-      "delta": 0,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-01T22:22:44.871538+00:00"
+      "event_count": 153,
+      "delta": 13,
+      "note": "",
+      "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
       "id": "lilypad",
@@ -155,10 +167,10 @@
       "strategy": "squarespace_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 126,
-      "delta": 0,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-01T22:22:44.871538+00:00"
+      "event_count": 127,
+      "delta": 1,
+      "note": "",
+      "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
       "id": "rockwell",
@@ -167,10 +179,10 @@
       "strategy": "jsonld_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 70,
-      "delta": 0,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-01T22:22:44.871538+00:00"
+      "event_count": 71,
+      "delta": 1,
+      "note": "",
+      "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
       "id": "arts-armory",
@@ -179,10 +191,10 @@
       "strategy": "html_full_text",
       "uses_llm": true,
       "status": "ok",
-      "event_count": 61,
-      "delta": 7,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-01T22:22:44.871538+00:00"
+      "event_count": 60,
+      "delta": -1,
+      "note": "",
+      "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
       "id": "sinclair",
@@ -191,10 +203,10 @@
       "strategy": "html_full_text",
       "uses_llm": true,
       "status": "ok",
-      "event_count": 52,
-      "delta": 1,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-01T22:22:44.871538+00:00"
+      "event_count": 51,
+      "delta": -1,
+      "note": "",
+      "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
       "id": "crystal-ballroom",
@@ -205,8 +217,8 @@
       "status": "ok",
       "event_count": 44,
       "delta": 0,
-      "note": "unchanged since last run (cache hit)",
-      "last_success": "2026-07-01T23:08:15.569032+00:00"
+      "note": "",
+      "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
       "id": "lamplighter-broadway",
@@ -217,8 +229,8 @@
       "status": "ok",
       "event_count": 41,
       "delta": 0,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-01T22:22:44.871538+00:00"
+      "note": "",
+      "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
       "id": "idle-hands",
@@ -227,10 +239,10 @@
       "strategy": "squarespace_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 41,
-      "delta": 0,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-01T22:22:44.871538+00:00"
+      "event_count": 40,
+      "delta": -1,
+      "note": "",
+      "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
       "id": "tallship",
@@ -239,10 +251,10 @@
       "strategy": "wix_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 32,
-      "delta": 0,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-01T22:22:44.871538+00:00"
+      "event_count": 31,
+      "delta": -1,
+      "note": "",
+      "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
       "id": "sally-obriens",
@@ -251,10 +263,10 @@
       "strategy": "html_full_text",
       "uses_llm": true,
       "status": "ok",
-      "event_count": 28,
-      "delta": 0,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-01T22:22:44.871538+00:00"
+      "event_count": 29,
+      "delta": 1,
+      "note": "",
+      "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
       "id": "mideast-downstairs",
@@ -263,10 +275,10 @@
       "strategy": "mideast_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 22,
-      "delta": 0,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-01T22:22:44.871538+00:00"
+      "event_count": 21,
+      "delta": -1,
+      "note": "",
+      "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
       "id": "lizard-lounge",
@@ -277,8 +289,8 @@
       "status": "ok",
       "event_count": 20,
       "delta": 0,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-01T22:22:44.871538+00:00"
+      "note": "",
+      "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
       "id": "plough-stars",
@@ -289,7 +301,7 @@
       "status": "ok",
       "event_count": 19,
       "delta": 0,
-      "note": "not scraped this run (last-known state)",
+      "note": "unchanged since last run (cache hit)",
       "last_success": "2026-07-01T22:22:44.871538+00:00"
     },
     {
@@ -299,34 +311,10 @@
       "strategy": "jsonld_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 13,
-      "delta": 0,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-01T22:22:44.871538+00:00"
-    },
-    {
-      "id": "somerville-theatre",
-      "name": "Somerville Theatre",
-      "square": "Davis",
-      "strategy": "html_full_text",
-      "uses_llm": true,
-      "status": "ok",
-      "event_count": 9,
-      "delta": 0,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-01T23:08:15.569032+00:00"
-    },
-    {
-      "id": "dorchester-brewing",
-      "name": "Dorchester Brewing Co.",
-      "square": "Andrew",
-      "strategy": "html_full_text",
-      "uses_llm": true,
-      "status": "ok",
-      "event_count": 6,
-      "delta": 0,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-01T23:08:15.569032+00:00"
+      "event_count": 12,
+      "delta": -1,
+      "note": "",
+      "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
       "id": "passim",
@@ -337,8 +325,20 @@
       "status": "ok",
       "event_count": 6,
       "delta": 0,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-01T22:22:44.871538+00:00"
+      "note": "",
+      "last_success": "2026-07-02T12:17:49.527668+00:00"
+    },
+    {
+      "id": "dorchester-brewing",
+      "name": "Dorchester Brewing Co.",
+      "square": "Andrew",
+      "strategy": "html_full_text",
+      "uses_llm": true,
+      "status": "ok",
+      "event_count": 6,
+      "delta": 0,
+      "note": "",
+      "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
       "id": "faces-brewing",
@@ -349,8 +349,8 @@
       "status": "ok",
       "event_count": 5,
       "delta": 0,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-01T22:22:44.871538+00:00"
+      "note": "",
+      "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
       "id": "vrcc",
@@ -361,8 +361,8 @@
       "status": "ok",
       "event_count": 4,
       "delta": 0,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-01T22:22:44.871538+00:00"
+      "note": "",
+      "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
       "id": "hamilton-brookline",
@@ -373,8 +373,8 @@
       "status": "ok",
       "event_count": 1,
       "delta": 0,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-01T22:22:44.871538+00:00"
+      "note": "",
+      "last_success": "2026-07-02T12:17:49.527668+00:00"
     }
   ]
 }
