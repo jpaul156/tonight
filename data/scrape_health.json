@@ -1,44 +1,44 @@
 {
   "schema": "tonight.health/1",
-  "generated_at": "2026-07-03T01:55:12.275492+00:00",
-  "duration_seconds": 1.2,
+  "generated_at": "2026-07-03T12:15:17.129581+00:00",
+  "duration_seconds": 140.3,
   "totals": {
-    "active_events": 1306,
-    "payload_bytes": 1870983,
-    "payload_gzip_bytes": 355908,
-    "archived_this_run": 0,
+    "active_events": 1317,
+    "payload_bytes": 1913938,
+    "payload_gzip_bytes": 357772,
+    "archived_this_run": 6,
     "venues_total": 28,
-    "venues_ok": 24,
+    "venues_ok": 25,
     "venues_idle": 2,
-    "venues_warning": 1,
+    "venues_warning": 0,
     "venues_error": 1,
-    "no_image": 268,
-    "no_image_pct": 20.5
+    "no_image": 264,
+    "no_image_pct": 20.0
   },
   "by_square": {
-    "Davis": 341,
-    "Porter": 243,
-    "Union Square": 201,
-    "Harvard": 167,
-    "Inman Square": 125,
-    "Central": 71,
-    "Medford Square": 60,
-    "Malden Center": 45,
-    "Maverick": 35,
-    "Lechmere": 11,
+    "Davis": 340,
+    "Porter": 239,
+    "Union Square": 195,
+    "Harvard": 180,
+    "Inman Square": 122,
+    "Central": 67,
+    "Medford Square": 61,
+    "Malden Center": 44,
+    "Maverick": 34,
+    "Lechmere": 28,
     "Andrew": 6,
     "Coolidge Corner": 1
   },
   "off_map_squares": [
     {
       "square": "Inman Square",
-      "events": 125,
+      "events": 122,
       "bus_only": true,
       "probable_match": null
     },
     {
       "square": "Medford Square",
-      "events": 60,
+      "events": 61,
       "bus_only": true,
       "probable_match": null
     }
@@ -67,41 +67,96 @@
     "overlap": []
   },
   "reconciled": {
-    "dropped": [],
+    "dropped": [
+      {
+        "venue_id": "aeronaut",
+        "id": "aeronaut-20260705-soccer--match-92---winner-matc",
+        "title": "SOCCER: Match 92 - Winner Match 79 vs Winner Match 80",
+        "start": "2026-07-05T20:00"
+      },
+      {
+        "venue_id": "aeronaut",
+        "id": "aeronaut-20260706-soccer--match-94---winner-matc",
+        "title": "SOCCER: Match 94 - Winner Match 81 vs Winner Match 82",
+        "start": "2026-07-06T20:00"
+      },
+      {
+        "venue_id": "comedy-studio",
+        "id": "comedy-studio-20260922-free-comedy-open-mic",
+        "title": "Free Comedy Open-Mic",
+        "start": "2026-09-22T19:00"
+      },
+      {
+        "venue_id": "idle-hands",
+        "id": "idle-hands-20260703-tandoor---curry-food-truck",
+        "title": "Tandoor & Curry Food Truck",
+        "start": "2026-07-03T16:00"
+      },
+      {
+        "venue_id": "lamplighter-cx",
+        "id": "lamplighter-cx-20260704-world-cup--canada-vs--tbd",
+        "title": "World Cup: Canada vs. TBD",
+        "start": "2026-07-04T13:00:00"
+      },
+      {
+        "venue_id": "rockwell",
+        "id": "rockwell-20260706-character-creation-w--deby-xia",
+        "title": "Character Creation w/ Deby Xiadani",
+        "start": "2026-07-06T18:00"
+      },
+      {
+        "venue_id": "aeronaut",
+        "id": "aeronaut-20260706-boston-queer-fiber-arts-night",
+        "title": "Boston Queer Fiber Arts Night",
+        "start": "2026-07-06T18:00"
+      },
+      {
+        "venue_id": "lamplighter-cx",
+        "id": "lamplighter-cx-20260706-jeopardy-bar-league",
+        "title": "Jeopardy Bar League",
+        "start": "2026-07-06T19:00:00"
+      },
+      {
+        "venue_id": "lamplighter-broadway",
+        "id": "lamplighter-broadway-20260718-pepita-lo-fi-saturday",
+        "title": "Pepita Lo-Fi Saturday",
+        "start": "2026-07-18T08:00:00"
+      },
+      {
+        "venue_id": "aeronaut",
+        "id": "aeronaut-20260723-drink-and-draw-monthly-meet-up",
+        "title": "Drink and Draw Monthly Meet-Up",
+        "start": "2026-07-23T19:00"
+      },
+      {
+        "venue_id": "aeronaut",
+        "id": "aeronaut-20261018-moonbelles",
+        "title": "Moonbelles",
+        "start": "2026-10-18T14:30"
+      }
+    ],
     "skipped": []
   },
   "tests": {
     "status": "pass",
-    "at": "2026-07-03T00:56:28.236775+00:00",
-    "total": 72,
-    "passed": 72,
+    "at": "2026-07-03T12:12:56.108793+00:00",
+    "total": 75,
+    "passed": 75,
     "failed": 0,
     "skipped": 0
   },
   "venues": [
     {
-      "id": "somerville-theatre",
-      "name": "Somerville Theatre",
-      "square": "Davis",
-      "strategy": "html_full_text",
-      "uses_llm": true,
+      "id": "tallship",
+      "name": "The Tall Ship Boston",
+      "square": "Maverick",
+      "strategy": "wix_events",
+      "uses_llm": false,
       "status": "error",
-      "event_count": 9,
-      "delta": 0,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-01T23:08:15.569032+00:00"
-    },
-    {
-      "id": "village-social",
-      "name": "Village Social Club",
-      "square": "Brookline Village",
-      "strategy": "html_full_text",
-      "uses_llm": true,
-      "status": "warning",
-      "event_count": 0,
-      "delta": 0,
-      "note": "not scraped this run (last-known state)",
-      "last_success": null
+      "event_count": 30,
+      "delta": -1,
+      "note": "yielded 0 events (feed had 31) \u2014 likely broken",
+      "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
       "id": "bow-market",
@@ -112,7 +167,7 @@
       "status": "idle",
       "event_count": 0,
       "delta": 0,
-      "note": "not scraped this run (last-known state)",
+      "note": "0 events (known \u2014 awaiting fix, see venues.py)",
       "last_success": null
     },
     {
@@ -124,7 +179,7 @@
       "status": "idle",
       "event_count": 0,
       "delta": 0,
-      "note": "not scraped this run (last-known state)",
+      "note": "0 events (known \u2014 awaiting fix, see venues.py)",
       "last_success": null
     },
     {
@@ -134,10 +189,10 @@
       "strategy": "squarespace_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 223,
-      "delta": -2,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-02T12:17:49.527668+00:00"
+      "event_count": 220,
+      "delta": -3,
+      "note": "",
+      "last_success": "2026-07-03T12:15:17.042590+00:00"
     },
     {
       "id": "aeronaut",
@@ -146,10 +201,22 @@
       "strategy": "aeronaut_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 174,
-      "delta": -2,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-02T12:17:49.527668+00:00"
+      "event_count": 169,
+      "delta": -5,
+      "note": "",
+      "last_success": "2026-07-03T12:15:17.042590+00:00"
+    },
+    {
+      "id": "comedy-studio",
+      "name": "The Comedy Studio",
+      "square": "Harvard",
+      "strategy": "seatengine",
+      "uses_llm": false,
+      "status": "ok",
+      "event_count": 159,
+      "delta": 6,
+      "note": "",
+      "last_success": "2026-07-03T12:15:17.042590+00:00"
     },
     {
       "id": "burren",
@@ -170,22 +237,10 @@
       "strategy": "burren_tables",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 153,
-      "delta": 0,
-      "note": "not scraped this run (last-known state)",
+      "event_count": 150,
+      "delta": -3,
+      "note": "unchanged since last run (cache hit)",
       "last_success": "2026-07-02T23:53:21.077429+00:00"
-    },
-    {
-      "id": "comedy-studio",
-      "name": "The Comedy Studio",
-      "square": "Harvard",
-      "strategy": "seatengine",
-      "uses_llm": false,
-      "status": "ok",
-      "event_count": 153,
-      "delta": 13,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
       "id": "lilypad",
@@ -194,34 +249,10 @@
       "strategy": "squarespace_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 127,
-      "delta": 1,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-02T12:17:49.527668+00:00"
-    },
-    {
-      "id": "arts-armory",
-      "name": "Arts at the Armory",
-      "square": "Davis",
-      "strategy": "em_events",
-      "uses_llm": false,
-      "status": "ok",
-      "event_count": 118,
-      "delta": 58,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-03T00:25:09.389379+00:00"
-    },
-    {
-      "id": "crystal-ballroom",
-      "name": "Crystal Ballroom",
-      "square": "Davis",
-      "strategy": "crystal_events",
-      "uses_llm": false,
-      "status": "ok",
-      "event_count": 87,
-      "delta": 43,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-03T00:38:52.200548+00:00"
+      "event_count": 122,
+      "delta": -5,
+      "note": "",
+      "last_success": "2026-07-03T12:15:17.042590+00:00"
     },
     {
       "id": "rockwell",
@@ -230,22 +261,34 @@
       "strategy": "jsonld_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 71,
-      "delta": 1,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-02T12:17:49.527668+00:00"
+      "event_count": 73,
+      "delta": 2,
+      "note": "",
+      "last_success": "2026-07-03T12:15:17.042590+00:00"
     },
     {
-      "id": "sinclair",
-      "name": "The Sinclair",
-      "square": "Harvard",
-      "strategy": "aeg_events",
+      "id": "arts-armory",
+      "name": "Arts at the Armory",
+      "square": "Davis",
+      "strategy": "em_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 66,
+      "event_count": 58,
+      "delta": -60,
+      "note": "",
+      "last_success": "2026-07-03T12:15:17.042590+00:00"
+    },
+    {
+      "id": "lamplighter-broadway",
+      "name": "Lamplighter Brewing - Broadway",
+      "square": "Central",
+      "strategy": "shopify_products",
+      "uses_llm": true,
+      "status": "ok",
+      "event_count": 56,
       "delta": 15,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-03T00:08:14.193610+00:00"
+      "note": "",
+      "last_success": "2026-07-03T12:15:17.042590+00:00"
     },
     {
       "id": "deep-cuts",
@@ -255,21 +298,21 @@
       "uses_llm": false,
       "status": "ok",
       "event_count": 48,
-      "delta": 48,
+      "delta": 0,
       "note": "",
-      "last_success": "2026-07-03T01:55:12.185981+00:00"
+      "last_success": "2026-07-03T12:15:17.042590+00:00"
     },
     {
-      "id": "lamplighter-broadway",
-      "name": "Lamplighter Brewing - Broadway",
-      "square": "Central",
-      "strategy": "shopify_products",
-      "uses_llm": true,
+      "id": "crystal-ballroom",
+      "name": "Crystal Ballroom",
+      "square": "Davis",
+      "strategy": "crystal_events",
+      "uses_llm": false,
       "status": "ok",
-      "event_count": 41,
-      "delta": 0,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-02T12:17:49.527668+00:00"
+      "event_count": 43,
+      "delta": -44,
+      "note": "",
+      "last_success": "2026-07-03T12:15:17.042590+00:00"
     },
     {
       "id": "idle-hands",
@@ -278,22 +321,10 @@
       "strategy": "squarespace_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 40,
+      "event_count": 39,
       "delta": -1,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-02T12:17:49.527668+00:00"
-    },
-    {
-      "id": "tallship",
-      "name": "The Tall Ship Boston",
-      "square": "Maverick",
-      "strategy": "wix_events",
-      "uses_llm": false,
-      "status": "ok",
-      "event_count": 31,
-      "delta": -1,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-02T12:17:49.527668+00:00"
+      "note": "",
+      "last_success": "2026-07-03T12:15:17.042590+00:00"
     },
     {
       "id": "sally-obriens",
@@ -302,9 +333,9 @@
       "strategy": "sally_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 29,
-      "delta": 0,
-      "note": "not scraped this run (last-known state)",
+      "event_count": 26,
+      "delta": -3,
+      "note": "unchanged since last run (cache hit)",
       "last_success": "2026-07-03T00:38:55.704658+00:00"
     },
     {
@@ -314,10 +345,10 @@
       "strategy": "mideast_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 25,
-      "delta": 4,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-03T00:57:01.239457+00:00"
+      "event_count": 21,
+      "delta": -4,
+      "note": "",
+      "last_success": "2026-07-03T12:15:17.042590+00:00"
     },
     {
       "id": "lizard-lounge",
@@ -326,10 +357,10 @@
       "strategy": "jsonld_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 20,
-      "delta": 0,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-02T12:17:49.527668+00:00"
+      "event_count": 19,
+      "delta": -1,
+      "note": "",
+      "last_success": "2026-07-03T12:15:17.042590+00:00"
     },
     {
       "id": "plough-stars",
@@ -338,10 +369,22 @@
       "strategy": "html_full_text",
       "uses_llm": true,
       "status": "ok",
-      "event_count": 19,
-      "delta": 0,
-      "note": "not scraped this run (last-known state)",
+      "event_count": 18,
+      "delta": -1,
+      "note": "unchanged since last run (cache hit)",
       "last_success": "2026-07-01T22:22:44.871538+00:00"
+    },
+    {
+      "id": "sinclair",
+      "name": "The Sinclair",
+      "square": "Harvard",
+      "strategy": "aeg_events",
+      "uses_llm": false,
+      "status": "ok",
+      "event_count": 15,
+      "delta": -51,
+      "note": "unchanged since last run (cache hit)",
+      "last_success": "2026-07-03T00:08:14.193610+00:00"
     },
     {
       "id": "medford-brewing",
@@ -350,10 +393,22 @@
       "strategy": "jsonld_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 12,
-      "delta": -1,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-02T12:17:49.527668+00:00"
+      "event_count": 13,
+      "delta": 1,
+      "note": "",
+      "last_success": "2026-07-03T12:15:17.042590+00:00"
+    },
+    {
+      "id": "somerville-theatre",
+      "name": "Somerville Theatre",
+      "square": "Davis",
+      "strategy": "html_full_text",
+      "uses_llm": true,
+      "status": "ok",
+      "event_count": 9,
+      "delta": 0,
+      "note": "",
+      "last_success": "2026-07-03T12:15:17.042590+00:00"
     },
     {
       "id": "passim",
@@ -364,8 +419,8 @@
       "status": "ok",
       "event_count": 6,
       "delta": 0,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-02T12:17:49.527668+00:00"
+      "note": "",
+      "last_success": "2026-07-03T12:15:17.042590+00:00"
     },
     {
       "id": "dorchester-brewing",
@@ -376,8 +431,8 @@
       "status": "ok",
       "event_count": 6,
       "delta": 0,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-02T12:17:49.527668+00:00"
+      "note": "",
+      "last_success": "2026-07-03T12:15:17.042590+00:00"
     },
     {
       "id": "faces-brewing",
@@ -388,8 +443,8 @@
       "status": "ok",
       "event_count": 5,
       "delta": 0,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-02T12:17:49.527668+00:00"
+      "note": "",
+      "last_success": "2026-07-03T12:15:17.042590+00:00"
     },
     {
       "id": "vrcc",
@@ -400,8 +455,8 @@
       "status": "ok",
       "event_count": 4,
       "delta": 0,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-02T12:17:49.527668+00:00"
+      "note": "",
+      "last_success": "2026-07-03T12:15:17.042590+00:00"
     },
     {
       "id": "hamilton-brookline",
@@ -412,8 +467,20 @@
       "status": "ok",
       "event_count": 1,
       "delta": 0,
-      "note": "not scraped this run (last-known state)",
-      "last_success": "2026-07-02T12:17:49.527668+00:00"
+      "note": "",
+      "last_success": "2026-07-03T12:15:17.042590+00:00"
+    },
+    {
+      "id": "village-social",
+      "name": "Village Social Club",
+      "square": "Brookline Village",
+      "strategy": "html_full_text",
+      "uses_llm": true,
+      "status": "ok",
+      "event_count": 0,
+      "delta": 0,
+      "note": "unchanged since last run (cache hit)",
+      "last_success": null
     }
   ]
 }

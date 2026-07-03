@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-03T01:55:12.270424+00:00",
+  "generated_at": "2026-07-03T12:15:17.125466+00:00",
   "events": [
     {
       "id": "vrcc-20260221-d\u00eda-del-amigo",
@@ -27,7 +27,7 @@
       "recurrence_note": "Annual",
       "private": false,
       "source_url": "https://veronicaroblesculturalcenter.org/events-east-boston/",
-      "last_scraped": "2026-07-02T12:15:03.991913+00:00"
+      "last_scraped": "2026-07-03T12:13:54.720301+00:00"
     },
     {
       "id": "vrcc-20260307-annual-fundraising-gala",
@@ -55,7 +55,7 @@
       "recurrence_note": null,
       "private": false,
       "source_url": "https://veronicaroblesculturalcenter.org/events-east-boston/",
-      "last_scraped": "2026-07-02T12:15:03.991942+00:00"
+      "last_scraped": "2026-07-03T12:13:54.720330+00:00"
     },
     {
       "id": "vrcc-20260426-d\u00eda-del-ni\u00f1o",
@@ -76,14 +76,14 @@
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "An afternoon filled with joy, dancing, art, and games planned for kids.",
+      "description": "An afternoon filled with joy, dancing, art, and games\u2014all lovingly planned for our kids.",
       "image_url": null,
       "ticket_url": null,
       "is_recurring": false,
       "recurrence_note": null,
       "private": false,
       "source_url": "https://veronicaroblesculturalcenter.org/events-east-boston/",
-      "last_scraped": "2026-07-02T12:15:03.991959+00:00"
+      "last_scraped": "2026-07-03T12:13:54.720349+00:00"
     },
     {
       "id": "vrcc-20260523-viva-chile-boston-2026",
@@ -104,14 +104,14 @@
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "The 13th Annual Viva Chile Boston Festival with a vibrant showcase of folk music, traditional dances, and authentic Chilean cuisine.",
+      "description": "The 13th Annual Viva Chile Boston Festival with a vibrant showcase of folk music, traditional dances, and the authentic flavors of Chilean cuisine.",
       "image_url": null,
       "ticket_url": null,
       "is_recurring": true,
       "recurrence_note": "Annual",
       "private": false,
       "source_url": "https://veronicaroblesculturalcenter.org/events-east-boston/",
-      "last_scraped": "2026-07-02T12:15:03.991975+00:00"
+      "last_scraped": "2026-07-03T12:13:54.720364+00:00"
     },
     {
       "id": "lizard-lounge-20260531-poetry-jam-mike-savadian",
@@ -1272,14 +1272,14 @@
       "performer_is_local": null,
       "sponsored": false,
       "sponsor": null,
-      "description": "The annual showcase by the Ver\u00f3nica Robles Cultural Center featuring over 110 multigenerational performers celebrating Latin American culture through dance, music, and visual arts.",
+      "description": "The annual showcase by the Ver\u00f3nica Robles Cultural Center featuring over 110 multigenerational performers celebrating the richness of Latin American culture through dance, music, and visual arts.",
       "image_url": null,
       "ticket_url": null,
       "is_recurring": true,
       "recurrence_note": "Annual",
       "private": false,
       "source_url": "https://veronicaroblesculturalcenter.org/events-east-boston/",
-      "last_scraped": "2026-07-02T12:15:03.991993+00:00"
+      "last_scraped": "2026-07-03T12:13:54.720380+00:00"
     },
     {
       "id": "burren-20260614-irish-session",
@@ -4589,7 +4589,7 @@
       "recurrence_note": null,
       "private": false,
       "source_url": "https://d3izki9aezxlkr.cloudfront.net/public_events.json",
-      "last_scraped": "2026-07-02T12:17:47.079202+00:00"
+      "last_scraped": "2026-07-03T12:15:14.507995+00:00"
     },
     {
       "id": "burren-20260625-count-off-entertainment",
