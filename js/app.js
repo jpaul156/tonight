@@ -41,17 +41,10 @@ const LINE_BASE = {
   "Blue": "Blue",
 };
 
-// Friendlier display labels for a few stops (the CSV's "Alt Square Name").
-// Cosmetic only — events still store the canonical station name in e.square.
-const STATION_ALIASES = {
-  "Broadway": "Southie",
-  "Sullivan Square": "East Somerville",
-  "Kenmore": "Fenway Park",
-  "Babcock Street": "BU",
-  "Harvard Avenue": "Allston",
-};
+// Map label = the canonical station name (Sullivan Square, not "East
+// Somerville"). Single formatting hook, kept for a future abbreviation tier.
 function stationLabel(name) {
-  return STATION_ALIASES[name] || name;
+  return name;
 }
 
 // Brand-color order, used when collapsing a stop's lines down to colored dots.
@@ -157,10 +150,14 @@ async function init() {
   // Recurring food deals live alongside one-off events in the same feed; they
   // just match "tonight" by weekday instead of a calendar date (see isTonightEvent).
   allEvents = allEvents.concat(deals);
-  // A stop is filterable only if something PUBLIC happens there — a private
-  // booking (hidden from the feed) shouldn't light up a station with nothing to
-  // show behind it.
-  eventSquares = new Set(allEvents.filter(e => !e.private).map(e => e.square).filter(Boolean));
+  // A stop is filterable only if something PUBLIC happens there TONIGHT — same
+  // predicate the feed uses (isTonightEvent), so a station can't light up /
+  // stay tappable on the strength of a future event with nothing to show today
+  // (e.g. Malden). Private bookings are hidden from the feed, so they don't
+  // count either.
+  eventSquares = new Set(
+    allEvents.filter(e => !e.private && isTonightEvent(e)).map(e => e.square).filter(Boolean)
+  );
   // Derive station → line colors from the traced map before anything renders a
   // line dot, so the pinned square indicator shows the right color(s).
   buildStationLineIndex(transit);
@@ -437,6 +434,7 @@ const MetroMap = (() => {
   let onArrive = () => {};
   let train = null;                // {x,y,angle,color} while a trip runs
   let anim = null, raf = 0, lastTs = 0;
+  let labelHits = [];              // screen-space label boxes → node, so tapping the word picks the stop
 
   const s2w = (sx, sy) => ({ x: (sx - view.x) / view.scale, y: (sy - view.y) / view.scale });
   const w2s = (wx, wy) => ({ x: wx * view.scale + view.x, y: wy * view.scale + view.y });
@@ -620,7 +618,10 @@ const MetroMap = (() => {
       ln.branches.forEach(br => { if (br.nodes.length) strokeRounded(br.nodes.map(n => cellCenter(n.c, n.r))); });
     });
 
-    // nodes — lit + labelled where events happen, dimmed connectors otherwise
+    // nodes — lit where events happen, dimmed connectors otherwise. Labels are
+    // collected here and drawn in a separate screen-space pass (below) so they
+    // can be collision-culled by priority instead of piling up when zoomed out.
+    const labels = [];
     graph.nodes.forEach((nd, k) => {
       const p = cellCenter(nd.c, nd.r);
       const lit = isFilterable(nd.name) || k === originKey;
@@ -641,17 +642,17 @@ const MetroMap = (() => {
         ctx.strokeStyle = "#f5b942"; ctx.lineWidth = 3 / view.scale;
         ctx.beginPath(); ctx.arc(p.x, p.y, CELL * 0.62, 0, 7); ctx.stroke();
       }
-      if (lit && nd.name) {                       // label only the stops you can pick
-        const label = stationLabel(nd.name), lx = p.x + CELL * 0.7;
-        ctx.font = `${600} ${11 / view.scale}px ${getComputedStyle(document.body).getPropertyValue("--font-display") || "sans-serif"}`;
-        ctx.textAlign = "left"; ctx.textBaseline = "middle";
-        // thin black outline so names stay legible over the terrain
-        ctx.lineJoin = "round";
-        ctx.strokeStyle = "rgba(0, 0, 0, 0.85)";
-        ctx.lineWidth = 2.5 / view.scale;
-        ctx.strokeText(label, lx, p.y);
-        ctx.fillStyle = k === originKey ? "#f5b942" : "#fff";
-        ctx.fillText(label, lx, p.y);
+      // Queue a label for event squares (white, always) and other major
+      // stations (grey, culled first). Minor stops are never labelled.
+      if (nd.name && (nd.station || nd.lines.size > 1)) {
+        const isMinor = nd.minor && !nd.major;
+        if (!isMinor) labels.push({
+          // priority: origin/event squares win, then interchanges, then majors
+          prio: k === originKey ? 0 : lit ? 1 : nd.lines.size > 1 ? 2 : 3,
+          label: stationLabel(nd.name),
+          wx: p.x, wy: p.y, key: k, name: nd.name,
+          event: lit, origin: k === originKey,
+        });
       }
     });
 
@@ -665,6 +666,35 @@ const MetroMap = (() => {
       ctx.restore();
     }
     ctx.restore();
+
+    // label pass — screen space, greedy collision culling. Sorted by priority
+    // (event squares → interchanges → plain stations) so the labels that matter
+    // claim space first; lower-priority names drop out instead of overlapping.
+    // Text is a fixed screen size, so this self-tunes at every zoom: zoomed out,
+    // only the event squares and a few anchors survive; zoom in and majors fill
+    // back in as room opens up.
+    // The label is centered on its stop (not offset to the side): people
+    // instinctively tap the word, so the word sits on the stop and — for event
+    // squares — becomes the tap target itself (see labelHits / hitLabel).
+    labels.sort((a, b) => a.prio - b.prio);
+    ctx.font = `600 11px ${getComputedStyle(document.body).getPropertyValue("--font-display") || "sans-serif"}`;
+    ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.lineJoin = "round";
+    const placed = [];
+    labelHits = [];
+    for (const L of labels) {
+      const s = w2s(L.wx, L.wy);
+      const w = ctx.measureText(L.label).width;
+      const box = { x0: s.x - w / 2 - 3, y0: s.y - 9, x1: s.x + w / 2 + 3, y1: s.y + 9 };
+      if (placed.some(b => box.x0 < b.x1 && box.x1 > b.x0 && box.y0 < b.y1 && box.y1 > b.y0)) continue;
+      placed.push(box);
+      if (L.event) labelHits.push({ box, key: L.key, name: L.name });
+      ctx.globalAlpha = L.event ? 1 : 0.5;          // grey out non-event majors
+      ctx.strokeStyle = "rgba(0, 0, 0, 0.85)"; ctx.lineWidth = 2.5;
+      ctx.strokeText(L.label, s.x, s.y);
+      ctx.fillStyle = L.origin ? "#f5b942" : "#fff";
+      ctx.fillText(L.label, s.x, s.y);
+    }
+    ctx.globalAlpha = 1;
   }
 
   // ---- animation helpers
@@ -738,8 +768,12 @@ const MetroMap = (() => {
     });
     return best;
   }
+  function hitLabel(sx, sy) {       // tapping the word itself picks the stop
+    const h = labelHits.find(l => sx >= l.box.x0 && sx <= l.box.x1 && sy >= l.box.y0 && sy <= l.box.y1);
+    return h ? { key: h.key, name: h.name } : null;
+  }
   function pickAt(sx, sy) {
-    const hit = nearestFilterable(sx, sy);
+    const hit = hitLabel(sx, sy) || nearestFilterable(sx, sy);
     if (!hit) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce || !originKey || originKey === hit.key) { onArrive(hit.name); return; }
