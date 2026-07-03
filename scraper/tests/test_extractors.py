@@ -203,3 +203,43 @@ def test_aeronaut_filters_and_maps_category():
 
 def test_aeronaut_bad_json_returns_empty():
     assert sc.extract_aeronaut_events("not json", "https://x") == []
+
+
+def test_dice_events_basic():
+    # Minimal DICE api/v2 shape: UTC instant + type tag + per-event permalink.
+    feed = {"data": [{
+        "name": "Wicked 80&#39;s ft. DJ Panda",
+        "date": "2026-07-02T23:00:00Z",          # -> 19:00 EDT
+        "date_end": "2026-07-03T03:00:00Z",
+        "status": "on-sale",
+        "type_tags": ["music:dj"],
+        "url": "https://link.dice.fm/abc123",
+        "raw_description": "A night of new wave.",
+        "event_images": {"landscape": "https://dice-media/land.jpg",
+                          "portrait": "https://dice-media/port.jpg"},
+    }]}
+    events = sc.extract_dice_events(json.dumps(feed), "https://dice")
+    assert len(events) == 1
+    e = events[0]
+    assert e["title"] == "Wicked 80's ft. DJ Panda"     # HTML entity unescaped
+    assert e["start"] == "2026-07-02T19:00"             # UTC Z -> naive EDT
+    assert e["end"] == "2026-07-02T23:00"
+    assert e["category"] == "music"                     # type tag prefix
+    assert e["image_url"] == "https://dice-media/land.jpg"   # landscape preferred
+    assert e["source_url"] == e["ticket_url"] == "https://link.dice.fm/abc123"
+
+
+def test_dice_drops_cancelled_and_defaults_category():
+    feed = {"data": [
+        {"name": "Cancelled Show", "date": "2026-07-10T23:00:00Z",
+         "status": "cancelled", "type_tags": ["music:live"]},   # dropped
+        {"name": "Untagged Show", "date": "2026-07-11T23:00:00Z",
+         "status": "on-sale"},                                  # default category
+    ]}
+    events = sc.extract_dice_events(json.dumps(feed), "https://dice")
+    titles = {e["title"]: e["category"] for e in events}
+    assert titles == {"Untagged Show": "music"}                 # music venue default
+
+
+def test_dice_bad_json_returns_empty():
+    assert sc.extract_dice_events("not json", "https://x") == []

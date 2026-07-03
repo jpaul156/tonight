@@ -604,13 +604,21 @@ VENUES = [
         "transit_stop": "Medford Square",
         "walk_minutes": 3,
         "is_local": True,
-        # Events page is fully JS-rendered — html_full_text gets 0 chars.
-        # No structured alternative (Bandsintown/Eventbrite are aggregators,
-        # not a direct feed). Needs Playwright. Disabled with a stub URL until
-        # Playwright support is added; swap collection_url back to /events then.
-        "collection_url": "https://www.deepcuts.rocks/events",
-        "scrape_strategy": "html_full_text",
-        "expected_empty": True,  # fully JS-rendered — awaits Playwright support
+        # The /events page is a JS-rendered DICE widget (0 chars to html_full_text).
+        # We hit DICE's partner API directly instead — the same feed the public
+        # widget on deepcuts.rocks/events reads. The x-api-key and promoter_name
+        # below are lifted from that page's DiceEventListWidget.create({...}) config;
+        # if DICE rotates the key this feed breaks (health dashboard flags it) and
+        # the fix is to re-lift both from the widget config. See extract_dice_events.
+        "collection_url": (
+            "https://partners-endpoint.dice.fm/api/v2/events"
+            "?page[size]=50&types=linkout,event&filter[promoter_name]=Deep Cuts LLC"
+        ),
+        "scrape_strategy": "dice_events",
+        "fetch_headers": {
+            "x-api-key": "M8wnIBIimy4xXxVAeQXbeajdNWxU9HI94RtDNO5P",
+            "Accept": "application/json",
+        },
         "detail_pages": False,
         "url_contains": None,
         "location_keywords": {},

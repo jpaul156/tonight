@@ -71,7 +71,7 @@
       "area": "scraper",
       "priority": "med",
       "status": "blocked",
-      "detail": "Midway Cafe, Deep Cuts, and Club Passim's full calendar need a headless browser — their event data is JS-injected and html_full_text gets near-empty pages. These venues are flagged expected_empty until Playwright lands."
+      "detail": "Midway Cafe and Club Passim's full calendar need a headless browser — their event data is JS-injected and html_full_text gets near-empty pages, flagged expected_empty until Playwright lands. (Deep Cuts is resolved: its JS widget reads DICE's partner API, now scraped directly via the dice_events strategy — no Playwright needed.)"
     },
     {
       "title": "Sinclair truncates at the Pass-1 token cap",

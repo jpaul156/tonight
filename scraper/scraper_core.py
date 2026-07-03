@@ -70,16 +70,23 @@ def content_hash(html):
 # HTTP — conditional fetching with ETag / Last-Modified / hash
 # ============================================================
 
-def fetch_page(url, cache=None, retries=2):
+def fetch_page(url, cache=None, retries=2, extra_headers=None):
     """
     Fetch a page. If cache is provided:
     - Sends If-None-Match / If-Modified-Since headers when available.
     - Returns (html, changed) where changed=False means skip LLM.
     If cache is None, behaves like the old fetch_page and returns html only.
+
+    extra_headers: per-venue static request headers (e.g. an API key). Merged
+    over the default UA; used by feed-backed venues whose collection_url is an
+    authenticated JSON endpoint (see fetch_headers in venues.py, e.g. Deep Cuts'
+    DICE partner API).
     """
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
     }
+    if extra_headers:
+        headers.update(extra_headers)
 
     cached = (cache or {}).get(url, {})
     if cached.get("etag"):
@@ -1114,6 +1121,110 @@ def extract_aeronaut_events(text, base_url):
     return events
 
 
+# DICE tags its events with a type ("music:dj", "comedy:standup"). Map the tag
+# prefix to our taxonomy so a DICE-fed venue skips the LLM classifier entirely
+# (same free-category pattern as Aeronaut). Deep Cuts is a music room, so an
+# untagged/unmapped event defaults to "music" rather than "other".
+DICE_TYPE_MAP = {
+    "music":     "music",
+    "comedy":    "comedy",
+    "film":      "film",
+    "food":      "food",
+    "sport":     "sports",
+    "sports":    "sports",
+}
+DICE_DEFAULT_CATEGORY = "music"
+
+
+def extract_dice_events(text, base_url):
+    """
+    Parse a DICE partner-API events feed (schema api/v2). Point the venue's
+    collection_url at the DICE endpoint and supply the widget's partner key via
+    `fetch_headers` (x-api-key) in venues.py — we then parse the JSON directly,
+    no LLM for extraction OR categorization (type tags map via DICE_TYPE_MAP).
+
+    The key + promoter filter are lifted from the venue's public DICE widget
+    config (DiceEventListWidget.create({...}) on its site). Because the feed IS
+    the collection_url, change-detection tracks the lineup: a new/removed show
+    changes the JSON hash, so the daily cache-based scrape refreshes without
+    --force. If DICE rotates the partner key the feed 401/404s and the venue
+    reads as broken on the health dashboard — re-lift the key from the widget.
+
+    Cancelled/postponed shows are dropped (the widget hides them too). `date`
+    is a UTC instant; we convert to naive Boston wall time with the project's
+    fixed EDT (-4) assumption, matching the other extractors.
+    """
+    try:
+        data = json.loads(text)
+    except ValueError:
+        print("  WARNING: DICE feed did not parse (is collection_url the partner API?)")
+        return []
+
+    ET = timezone(timedelta(hours=-4))
+
+    def to_local(iso):
+        # DICE emits e.g. '2026-07-02T23:00:00Z'
+        if not iso:
+            return None
+        try:
+            dt = datetime.fromisoformat(iso.replace("Z", "+00:00"))
+        except ValueError:
+            return None
+        return dt.astimezone(ET).strftime("%Y-%m-%dT%H:%M")
+
+    def category_for(ev):
+        for tag in (ev.get("type_tags") or []):
+            prefix = str(tag).split(":", 1)[0].strip().lower()
+            if prefix in DICE_TYPE_MAP:
+                return DICE_TYPE_MAP[prefix]
+        return DICE_DEFAULT_CATEGORY
+
+    DROP_STATUS = {"cancelled", "canceled", "postponed"}
+    events = []
+    for ev in data.get("data", []):
+        if (ev.get("status") or "").strip().lower() in DROP_STATUS:
+            continue
+        start = to_local(ev.get("date"))
+        if not start:
+            continue
+        title = html_unescape(ev.get("name") or "").strip() or None
+        if not title:
+            continue
+
+        # event_images.landscape is the card art; fall back to portrait.
+        imgs = ev.get("event_images") or {}
+        image_url = (imgs.get("landscape") or imgs.get("portrait")) if isinstance(imgs, dict) else None
+
+        # raw_description is plain text; description may carry HTML.
+        desc = ev.get("raw_description") or ev.get("description") or ""
+        if desc and "<" in desc:
+            desc = BeautifulSoup(desc, "html.parser").get_text(" ").strip()
+        desc = desc.strip() or None
+
+        # The per-event DICE link is a stable permalink → keys make_event_id
+        # (id survives title/time edits) and doubles as the ticket link.
+        url = (ev.get("url") or ev.get("external_url") or "").strip() or None
+
+        events.append({
+            "title":       title,
+            "start":       start,
+            "end":         to_local(ev.get("date_end")),
+            "location":    None,
+            "cost":        None,  # DICE prices are per-ticket-type; skip
+            "source_url":  url,
+            "performer":   None,
+            "description": desc,
+            "image_url":   image_url,
+            "ticket_url":  url,
+            "category":    category_for(ev),
+            "is_recurring": False,
+            "recurrence_note": None,
+        })
+
+    print(f"  Parsed {len(events)} events from DICE feed (no LLM needed)")
+    return events
+
+
 def extract_shopify_products(html, base_url):
     """
     For Shopify/Tailwind sites with no semantic class names.
@@ -1714,9 +1825,10 @@ def scrape_venue(venue_cfg, cache, verbose=True, force=False, report=None):
         print(f"  {collection_url}")
 
     # --- Fetch collection page (conditional) ---
+    fetch_headers = venue_cfg.get("fetch_headers")
     if force:
         # Bypass cache entirely — fetch fresh without conditional headers
-        html = fetch_page(collection_url, cache=None)
+        html = fetch_page(collection_url, cache=None, extra_headers=fetch_headers)
         changed = True
         # Still update the cache entry with the fresh content
         if cache is not None:
@@ -1728,7 +1840,7 @@ def scrape_venue(venue_cfg, cache, verbose=True, force=False, report=None):
                 "last_changed": datetime.now(timezone.utc).isoformat(),
             }
     else:
-        html, changed = fetch_page(collection_url, cache=cache)
+        html, changed = fetch_page(collection_url, cache=cache, extra_headers=fetch_headers)
 
     if not changed:
         print(f"  CACHE HIT — collection page unchanged, skipping LLM passes")
@@ -1791,6 +1903,12 @@ def scrape_venue(venue_cfg, cache, verbose=True, force=False, report=None):
     elif strategy == "aeronaut_events":
         # Direct parse of Aeronaut's CDN JSON feed — no LLM, native categories
         raw_events = extract_aeronaut_events(html, base_url)
+        if verbose:
+            print(f"  Pass 1: {len(raw_events)} events (parsed directly, no LLM)")
+    elif strategy == "dice_events":
+        # Direct parse of a DICE partner-API feed (Deep Cuts) — no LLM, native
+        # categories from DICE type tags.
+        raw_events = extract_dice_events(html, base_url)
         if verbose:
             print(f"  Pass 1: {len(raw_events)} events (parsed directly, no LLM)")
     elif strategy == "mideast_events":
