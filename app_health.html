@@ -179,9 +179,17 @@
       const ageH = (Date.now() - new Date(h.generated_at).getTime()) / 3600000;
       const stale = ageH > 26;
 
+      // ---- collisions: same room (venue_id) + same time = a duplicate ghost ----
+      const collide = h.collisions || { exact: [], overlap: [] };
+      const dupes = (collide.exact || []).length;
+
       // ---- overall banner ----
       let cls = "calm", head = "All systems nominal", detail = `${t.venues_ok + t.venues_idle} of ${t.venues_total} venues healthy`;
-      if (errs > 0) { cls = "loud"; head = `${errs} venue${errs > 1 ? "s" : ""} need attention`; detail = `${errs} error · ${warns} warning`; }
+      if (errs > 0 || dupes > 0) {
+        cls = "loud";
+        if (errs > 0) { head = `${errs} venue${errs > 1 ? "s" : ""} need attention`; detail = `${errs} error · ${warns} warning${dupes ? ` · ${dupes} duplicate slot${dupes > 1 ? "s" : ""}` : ""}`; }
+        else { head = `${dupes} duplicate event slot${dupes > 1 ? "s" : ""}`; detail = `two events in one room at one time — likely a rename left a ghost`; }
+      }
       else if (warns > 0 || stale) { cls = "note"; head = stale ? "Data may be stale" : `${warns} warning${warns > 1 ? "s" : ""} to review`; detail = `${warns} warning · last run ${REL(h.generated_at)}`; }
 
       // ---- off-map partitioned: probable typos are loud, bus-only is expected ----
@@ -222,6 +230,8 @@
           <thead><tr><th>Status</th><th>Venue</th><th>Square</th><th>Source</th><th>Events</th><th>Last data</th><th>Note</th></tr></thead>
           <tbody>${h.venues.map(venueRow).join("")}</tbody>
         </table></div>
+
+        ${renderCollisions(collide)}
 
         ${offLoud.length ? `
           <h2>Off-map squares <span class="count">events that can't be reached from the metro map</span></h2>
@@ -303,6 +313,38 @@
         <td class="num" style="color:var(--text-muted)">${REL(v.last_success)}</td>
         <td class="vnote">${esc(v.note || "")}</td>
       </tr>`;
+    }
+
+    // Duplicate detector: each room/stage is a distinct venue_id, so two events
+    // sharing a venue_id + start is never real simultaneous programming — it's a
+    // renamed event whose old copy was never superseded (and often shows a stale
+    // price). Exact-start collisions are loud; overlapping-but-offset ones are a
+    // softer heads-up (an early/late set is usually legitimate).
+    function renderCollisions(c) {
+      const exact = c.exact || [], overlap = c.overlap || [];
+      if (!exact.length && !overlap.length) return "";
+      const when = ts => { try { return new Date(ts).toLocaleString(); } catch (e) { return ts; } };
+      const money = v => v == null || v === "" ? "" : ` · ${esc(String(v))}`;
+      const exactRows = exact.map(x => `
+        <div class="item loud">
+          <span class="st error"><span class="d"></span></span>
+          <div>
+            <div><span class="sq">${esc(x.venue)}</span>
+              <span class="hint"> — ${x.count} events at ${esc(when(x.start))}</span></div>
+            ${x.events.map(e => `<div class="hint" style="margin-top:2px">“${esc(e.title)}”${money(e.cost)} <span style="opacity:.6">${esc(e.id)}</span></div>`).join("")}
+          </div>
+        </div>`).join("");
+      const overlapRows = overlap.map(o => `
+        <div class="item calm">
+          <span class="hint"><b>${esc(o.venue)}</b> — overlapping sets:
+            “${esc(o.a.title)}” (${esc(when(o.a.start))}) &amp; “${esc(o.b.title)}” (${esc(when(o.b.start))})</span>
+        </div>`).join("");
+      return `
+        <h2>Duplicate / overlapping events <span class="count">same room, same time — likely a rename ghost</span></h2>
+        <div class="offmap">
+          ${exactRows}
+          ${overlapRows}
+        </div>`;
     }
 
     function offRow(o) {

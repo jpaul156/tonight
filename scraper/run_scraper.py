@@ -46,6 +46,149 @@ def merge_events(existing_map, new_events):
     return list(merged.values())
 
 
+def collapse_permalink_dupes(events, shared_urls):
+    """Collapse events that are provably the same underlying listing: identical
+    venue_id + real per-event source_url (not a shared calendar page) + identical
+    start. Keeps the most-recently-scraped copy.
+
+    Two jobs: (1) absorb the one-time id-scheme migration, where a permalink
+    venue's event carries an old title-slug id in events.json and a new
+    permalink-based id from this run — same URL + same start proves they're the
+    same show, so the fresh copy wins and the stale ghost (with its stale price)
+    is dropped instead of shipping both. (2) A permanent safety net so a stray
+    title-id copy can never coexist with the permalink id for one event.
+
+    Keyed on start as well as URL so a recurring series that reuses one URL
+    across dates is never merged across days. Events without a usable permalink
+    (blank URL, or the venue's shared collection page) pass through untouched —
+    this never collapses the Burren's 157-events-one-URL case."""
+    from collections import defaultdict
+    groups = defaultdict(list)
+    out = []
+    for e in events:
+        u = (e.get("source_url") or "").strip()
+        vid = e.get("venue_id")
+        if u and vid and u not in shared_urls:
+            groups[(vid, u, e.get("start"))].append(e)
+        else:
+            out.append(e)
+    for evs in groups.values():
+        out.append(evs[0] if len(evs) == 1
+                   else max(evs, key=lambda e: e.get("last_scraped") or ""))
+    return out
+
+
+def _title_tokens(t):
+    """Significant word set of a title, for judging whether two titles are
+    re-phrasings of one event vs genuinely different acts."""
+    import re
+    return {w for w in re.sub(r"[^a-z0-9 ]", " ", (t or "").lower()).split() if w}
+
+
+def _looks_like_retitling(titles):
+    """True when a set of same-slot titles look like variants of ONE event rather
+    than distinct acts sharing a room. The rename fingerprint: some pair has one
+    title's words contained in the other's ("52 Church" ⊆ "52 Church - The
+    Glitter Boys"), or a heavy token overlap. A real multi-act bill (Grain Thief
+    / Spring Hill Stringband) shares almost no words and stays unflagged — so the
+    Burren's front/back-room and Aeronaut's parallel programming don't false-fire."""
+    toks = [_title_tokens(t) for t in titles]
+    for i in range(len(toks)):
+        for j in range(i + 1, len(toks)):
+            a, b = toks[i], toks[j]
+            if not a or not b:
+                continue
+            if a <= b or b <= a:
+                return True
+            if len(a & b) / min(len(a), len(b)) >= 0.6:
+                return True
+    return False
+
+
+def build_collisions(active_events):
+    """Duplicate events left behind when a title (hence its id) changed but the
+    old copy was never superseded — surfaced loudly for the dashboard.
+
+    Gated on BOTH same slot AND title similarity, because a shared venue_id is
+    not proof of a duplicate: rooms with their own venue_id (mideast-upstairs vs
+    mideast-downstairs) never collide, but some single-venue_id venues genuinely
+    run parallel programming (the Burren's two rooms, Aeronaut's taproom). So we
+    only flag same-slot events whose titles look like re-phrasings of each other.
+
+      exact   — same venue_id + identical start + variant titles. A rename ghost;
+                the copies often disagree on price/title, so one shows stale info.
+      overlap — same venue_id + overlapping (not identical) times + variant
+                titles. A rename that also nudged the start time. Softer.
+
+    Private events are excluded — the app hides them, and a private booking can
+    legitimately share a slot with the public listing it replaced."""
+    from collections import defaultdict
+
+    def parse(t):
+        try:
+            return datetime.fromisoformat(t) if t else None
+        except ValueError:
+            return None
+
+    byv = defaultdict(list)
+    for e in active_events:
+        if e.get("private"):
+            continue
+        vid, start = e.get("venue_id"), e.get("start")
+        if vid and start:
+            byv[vid].append(e)
+
+    def distinct_by_permalink(group):
+        # Two same-slot events are provably different (not a rename ghost) when
+        # each carries its own distinct, non-empty per-event source_url — a real
+        # permalink venue can't hand the same show two URLs. If any member shares
+        # a URL or lacks one, fall back to the title heuristic.
+        urls = [(e.get("source_url") or "").strip() for e in group]
+        return all(urls) and len(set(urls)) == len(group)
+
+    exact, overlap = [], []
+    for vid, evs in byv.items():
+        by_start = defaultdict(list)
+        for e in evs:
+            by_start[e["start"]].append(e)
+        for group in by_start.values():
+            if len(group) > 1 and not distinct_by_permalink(group) \
+                    and _looks_like_retitling([e.get("title") for e in group]):
+                exact.append({
+                    "venue_id": vid,
+                    "venue": group[0].get("venue"),
+                    "start": group[0].get("start"),
+                    "count": len(group),
+                    "events": [{"id": e.get("id"), "title": e.get("title"),
+                                "cost": e.get("cost")} for e in group],
+                })
+
+        # Overlapping (but not identical) starts — only flagged when the titles
+        # also look like a re-titling, so parallel programming stays quiet.
+        timed = sorted((e for e in evs if parse(e.get("start"))),
+                       key=lambda e: e["start"])
+        for a, b in zip(timed, timed[1:]):
+            if a["start"] == b["start"]:
+                continue
+            a_end = parse(a.get("end")) or parse(a.get("start"))
+            b_start = parse(b.get("start"))
+            if a_end and b_start and b_start < a_end \
+                    and not distinct_by_permalink([a, b]) \
+                    and _looks_like_retitling([a.get("title"), b.get("title")]):
+                overlap.append({
+                    "venue_id": vid,
+                    "venue": a.get("venue"),
+                    "a": {"id": a.get("id"), "title": a.get("title"),
+                          "start": a.get("start"), "end": a.get("end")},
+                    "b": {"id": b.get("id"), "title": b.get("title"),
+                          "start": b.get("start"), "end": b.get("end")},
+                })
+
+    exact.sort(key=lambda c: (-c["count"], c["venue_id"] or ""))
+    overlap.sort(key=lambda c: c["venue_id"] or "")
+    return {"exact": exact, "overlap": overlap}
+
+
 # How far back the "just ended" active window reaches. Deliberately loose: the
 # scraper never decides what counts as "tonight" — the front end re-filters
 # every event against its own 4am-rollover clock (getNow in js/app.js). 36h
@@ -209,6 +352,7 @@ def build_health(venue_reports, active_events, archived_now_count,
         },
         "by_square": dict(sorted(by_square.items(), key=lambda kv: -kv[1])),
         "off_map_squares": build_off_map_squares(active_events, station_names),
+        "collisions": build_collisions(active_events),
         "tests": test_status,
         "venues": venue_reports,
     }
@@ -334,6 +478,11 @@ def main():
 
     # --- Partition into active / recent-past / archived ---
     merged = merge_events(existing_map, all_new_events)
+    # Drop provable duplicates (permalink venues: old title-id copy vs new
+    # permalink-id copy for the same show). Shared calendar pages are excluded so
+    # single-URL venues (the Burren) are never collapsed.
+    shared_source_urls = {v["collection_url"] for v in VENUES}
+    merged = collapse_permalink_dupes(merged, shared_source_urls)
     active, recent_past, archived_now = partition_events(merged)
     active_sorted = sort_events(active)
     past_sorted = sort_events(recent_past)
