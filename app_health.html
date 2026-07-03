@@ -231,6 +231,8 @@
           <tbody>${h.venues.map(venueRow).join("")}</tbody>
         </table></div>
 
+        ${renderReconciled(h.reconciled)}
+
         ${renderCollisions(collide)}
 
         ${offLoud.length ? `
@@ -313,6 +315,29 @@
         <td class="num" style="color:var(--text-muted)">${REL(v.last_success)}</td>
         <td class="vnote">${esc(v.note || "")}</td>
       </tr>`;
+    }
+
+    // Reconciliation: when a venue scrapes cleanly, events it no longer lists are
+    // dropped (renamed/cancelled). Dropped is informational (calm); a guard-skip
+    // means a clean scrape wanted to drop most of a venue's future events —
+    // likely a broken parser — and is loud.
+    function renderReconciled(r) {
+      if (!r) return "";
+      const dropped = r.dropped || [], skipped = r.skipped || [];
+      if (!dropped.length && !skipped.length) return "";
+      const when = ts => { try { return new Date(ts).toLocaleDateString(); } catch (e) { return ts; } };
+      const skipRows = skipped.map(s => `
+        <div class="item loud"><span class="st error"><span class="d"></span></span>
+          <span class="hint"><b>${esc(s.venue_id)}</b>: reconciliation skipped — a clean scrape would drop
+            ${s.would_drop}/${s.future} future events. Likely the parser under-extracted; review before trusting.</span></div>`).join("");
+      const dropRows = dropped.length ? `
+        <div class="item calm"><span class="hint">
+          <b>${dropped.length}</b> event${dropped.length > 1 ? "s" : ""} dropped as renamed/cancelled (no longer listed by their venue):
+          ${dropped.slice(0, 8).map(d => `“${esc(d.title)}” <span style="opacity:.6">${esc(when(d.start))}</span>`).join(", ")}${dropped.length > 8 ? ` +${dropped.length - 8} more` : ""}
+        </span></div>` : "";
+      return `
+        <h2>Reconciliation <span class="count">renamed / cancelled events removed this run</span></h2>
+        <div class="offmap">${skipRows}${dropRows}</div>`;
     }
 
     // Duplicate detector: each room/stage is a distinct venue_id, so two events

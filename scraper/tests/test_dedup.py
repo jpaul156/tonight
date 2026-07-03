@@ -6,7 +6,11 @@
 - build_collisions — the dashboard alarm: same room (venue_id) + same start is a
   rename ghost; overlapping-but-offset sets are a softer heads-up.
 """
+from datetime import datetime, timezone
+
 import run_scraper as rs
+
+NOW = datetime(2026, 7, 1, tzinfo=timezone.utc)
 
 
 def _ev(id, vid, start, url="", end=None, cost=None, title="Show", private=False):
@@ -122,3 +126,71 @@ def test_overlapping_offset_sets_are_soft_overlap():
     c = rs.build_collisions(evs)
     assert c["exact"] == []
     assert len(c["overlap"]) == 1
+
+
+# ---- reconcile_events ----
+
+def _outcome(events, errored=False, report=None):
+    return {"events": events, "report": report or {}, "errored": errored}
+
+
+def test_reconcile_drops_unlisted_future_event():
+    # A cleanly-scraped venue's fresh set doesn't include the stored copy (renamed
+    # or cancelled) -> drop it, record it.
+    old = _ev("sinclair-old", "sinclair", "2026-07-05T20:00:00", title="Band OLD")
+    new = _ev("sinclair-new", "sinclair", "2026-07-05T20:00:00", title="Band NEW")
+    kept, dropped, skipped = rs.reconcile_events(
+        [old, new], {"sinclair": _outcome([new])}, [{"id": "sinclair"}], NOW)
+    assert {e["id"] for e in kept} == {"sinclair-new"}
+    assert [d["id"] for d in dropped] == ["sinclair-old"]
+    assert skipped == []
+
+
+def test_reconcile_leaves_past_events():
+    now = datetime(2026, 7, 10, tzinfo=timezone.utc)
+    past = _ev("sinclair-past", "sinclair", "2026-07-05T20:00:00")   # before now
+    new = _ev("sinclair-new", "sinclair", "2026-07-20T20:00:00")
+    kept, dropped, _ = rs.reconcile_events(
+        [past, new], {"sinclair": _outcome([new])}, [{"id": "sinclair"}], now)
+    assert {e["id"] for e in kept} == {"sinclair-past", "sinclair-new"}
+    assert dropped == []
+
+
+def test_reconcile_skips_partial_feed():
+    old = _ev("passim-old", "passim", "2026-07-15T20:00:00")
+    new = _ev("passim-new", "passim", "2026-07-16T20:00:00")
+    kept, dropped, _ = rs.reconcile_events(
+        [old, new], {"passim": _outcome([new])},
+        [{"id": "passim", "partial_feed": True}], NOW)
+    assert {e["id"] for e in kept} == {"passim-old", "passim-new"}
+    assert dropped == []
+
+
+def test_reconcile_ignores_venues_not_scraped_this_run():
+    other = _ev("burren-x", "burren-back-room", "2026-07-15T20:00:00")
+    new = _ev("sinclair-new", "sinclair", "2026-07-16T20:00:00")
+    kept, dropped, _ = rs.reconcile_events(
+        [other, new], {"sinclair": _outcome([new])}, [{"id": "sinclair"}], NOW)
+    assert {e["id"] for e in kept} == {"burren-x", "sinclair-new"}
+    assert dropped == []
+
+
+def test_reconcile_mass_drop_guard():
+    # 6 stored future events, a clean scrape yields only 1 -> would drop 5/6 (>70%):
+    # skip and flag rather than wipe (signature of an under-extracting parser).
+    stored = [_ev(f"vrcc-{i}", "vrcc", f"2026-07-1{i}T20:00:00") for i in range(6)]
+    new = _ev("vrcc-new", "vrcc", "2026-07-19T20:00:00")
+    kept, dropped, skipped = rs.reconcile_events(
+        stored + [new], {"vrcc": _outcome([new])}, [{"id": "vrcc"}], NOW)
+    assert dropped == []
+    assert len(skipped) == 1 and skipped[0]["venue_id"] == "vrcc"
+    assert len(kept) == 7
+
+
+def test_reconcile_gate_rejects_degraded_scrapes():
+    assert not rs._reconcile_gate({"id": "x"}, _outcome(None))                       # cache hit
+    assert not rs._reconcile_gate({"id": "x"}, _outcome([]))                         # empty yield
+    assert not rs._reconcile_gate({"id": "x"}, _outcome([1], errored=True))          # crashed
+    assert not rs._reconcile_gate({"id": "x"}, _outcome([1], report={"truncated": True}))
+    assert not rs._reconcile_gate({"id": "x", "expected_empty": True}, _outcome([1]))
+    assert rs._reconcile_gate({"id": "x"}, _outcome([1]))                            # trustworthy

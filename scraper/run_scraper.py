@@ -105,6 +105,102 @@ def _looks_like_retitling(titles):
     return False
 
 
+def _event_start(e):
+    """The event's start as an aware datetime (naive treated as UTC, matching
+    the stored floating-local convention), or None."""
+    s = e.get("start")
+    if not s:
+        return None
+    try:
+        t = datetime.fromisoformat(s)
+    except ValueError:
+        return None
+    return t.replace(tzinfo=timezone.utc) if t.tzinfo is None else t
+
+
+def _reconcile_gate(cfg, outcome):
+    """True when this run's scrape can be trusted as the complete, authoritative
+    list of the venue's current events — so anything it no longer lists was
+    renamed or cancelled and can be dropped. Deliberately strict: a partial,
+    degraded, or empty scrape must never delete real events.
+
+      partial_feed / expected_empty  — a window or known-empty source, never authoritative
+      events is None                 — cache hit or skip (no fresh list to compare)
+      errored                        — the scrape crashed
+      empty yield                    — never wipe a venue on zero events
+      report.truncated               — a token-limit cutoff lost trailing events
+    """
+    if cfg.get("partial_feed") or cfg.get("expected_empty"):
+        return False
+    events = outcome.get("events")
+    if events is None or outcome.get("errored"):
+        return False
+    if not events:
+        return False
+    if outcome.get("report", {}).get("truncated"):
+        return False
+    return True
+
+
+# Skip (and flag) reconciliation for a venue when a supposedly-clean scrape would
+# drop more than this fraction of its known future events — the signature of a
+# parser that silently under-extracted rather than a real batch of cancellations.
+RECONCILE_DROP_GUARD = 0.7
+
+
+def reconcile_events(events, outcomes, venues_to_run, now):
+    """Drop future events that a cleanly-scraped venue no longer lists (renamed
+    or cancelled). Returns (kept, dropped, skipped).
+
+    Only future events (start > now) of venues passing _reconcile_gate are
+    considered; everything else passes through unchanged, preserving the additive
+    merge for partial runs, cache hits, and past events (which age out via the
+    archive instead). A per-venue mass-drop guard skips and surfaces any venue
+    where reconciliation would remove most of its known future events."""
+    from collections import defaultdict
+
+    # authoritative venue_id -> the set of ids this run actually produced for it
+    fresh_by_vid = {}
+    for cfg in venues_to_run:
+        outcome = outcomes.get(cfg["id"])
+        if not outcome or not _reconcile_gate(cfg, outcome):
+            continue
+        fresh_ids = {e["id"] for e in outcome["events"]}
+        for vid in get_all_venue_ids(cfg):
+            fresh_by_vid[vid] = fresh_ids
+
+    def reconcilable(e):
+        vid = e.get("venue_id")
+        if vid not in fresh_by_vid:
+            return False
+        t = _event_start(e)
+        return t is not None and t > now  # only still-upcoming events
+
+    # Mass-drop guard: count known-future vs would-drop per venue.
+    fut_total, fut_drop = defaultdict(int), defaultdict(int)
+    for e in events:
+        if reconcilable(e):
+            vid = e["venue_id"]
+            fut_total[vid] += 1
+            if e["id"] not in fresh_by_vid[vid]:
+                fut_drop[vid] += 1
+    guarded = {vid for vid, tot in fut_total.items()
+               if tot >= 5 and fut_drop[vid] > RECONCILE_DROP_GUARD * tot}
+
+    kept, dropped = [], []
+    for e in events:
+        vid = e.get("venue_id")
+        if reconcilable(e) and vid not in guarded and e["id"] not in fresh_by_vid[vid]:
+            dropped.append({"venue_id": vid, "id": e["id"],
+                            "title": e.get("title"), "start": e.get("start")})
+        else:
+            kept.append(e)
+
+    skipped = [{"venue_id": vid, "future": fut_total[vid], "would_drop": fut_drop[vid]}
+               for vid in sorted(guarded)]
+    return kept, dropped, skipped
+
+
 def build_collisions(active_events):
     """Duplicate events left behind when a title (hence its id) changed but the
     old copy was never superseded — surfaced loudly for the dashboard.
@@ -323,7 +419,8 @@ def build_off_map_squares(active_events, station_names):
 
 
 def build_health(venue_reports, active_events, archived_now_count,
-                 duration_s, test_status, station_names, payload):
+                 duration_s, test_status, station_names, payload,
+                 reconciled=None, reconcile_skipped=None):
     from collections import Counter
     by_square = Counter(e.get("square") for e in active_events if e.get("square"))
     no_image = sum(1 for e in active_events if not e.get("image_url"))
@@ -353,6 +450,10 @@ def build_health(venue_reports, active_events, archived_now_count,
         "by_square": dict(sorted(by_square.items(), key=lambda kv: -kv[1])),
         "off_map_squares": build_off_map_squares(active_events, station_names),
         "collisions": build_collisions(active_events),
+        "reconciled": {
+            "dropped": reconciled or [],
+            "skipped": reconcile_skipped or [],
+        },
         "tests": test_status,
         "venues": venue_reports,
     }
@@ -483,6 +584,17 @@ def main():
     # single-URL venues (the Burren) are never collapsed.
     shared_source_urls = {v["collection_url"] for v in VENUES}
     merged = collapse_permalink_dupes(merged, shared_source_urls)
+    # Reconcile: for venues that scraped cleanly this run, drop future events the
+    # fresh scrape no longer lists (renamed or cancelled). Gated hard so a
+    # partial/degraded scrape never deletes real events.
+    merged, reconciled_dropped, reconcile_skipped = reconcile_events(
+        merged, outcomes, venues_to_run, datetime.now(timezone.utc))
+    if reconciled_dropped:
+        print(f"\nReconciled: dropped {len(reconciled_dropped)} renamed/cancelled "
+              f"event(s) no longer listed by their venue")
+    for s in reconcile_skipped:
+        print(f"  RECONCILE GUARD: {s['venue_id']} would drop "
+              f"{s['would_drop']}/{s['future']} future events — skipped, review")
     active, recent_past, archived_now = partition_events(merged)
     active_sorted = sort_events(active)
     past_sorted = sort_events(recent_past)
@@ -554,7 +666,8 @@ def main():
     station_names = map_station_names(TRANSIT_FILE)
     test_status = load_json(TEST_STATUS_FILE, {"status": "unknown"})
     health = build_health(venue_reports, active_sorted, len(archived_now),
-                          time.time() - run_start, test_status, station_names, payload)
+                          time.time() - run_start, test_status, station_names, payload,
+                          reconciled=reconciled_dropped, reconcile_skipped=reconcile_skipped)
     with open(HEALTH_FILE, "w") as f:
         json.dump(health, f, indent=2)
 

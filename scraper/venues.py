@@ -144,6 +144,10 @@ VENUES = [
         # Detail pages supply image + description keyed by source_url.
         # "See More" is JS-driven so pagination won't help; we accept
         # ~7 visible events per scrape and accumulate over time via merging.
+        # partial_feed: this scrape is a WINDOW, not the full calendar, so
+        # reconciliation must never treat it as authoritative and drop the
+        # accumulated events it didn't happen to show this run.
+        "partial_feed": True,
         "scrape_strategy": "html_full_text",
         "detail_pages": True,
         "url_contains": "/live-music/events/",
