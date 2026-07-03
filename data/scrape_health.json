@@ -1,27 +1,27 @@
 {
   "schema": "tonight.health/1",
-  "generated_at": "2026-07-02T12:17:49.612950+00:00",
-  "duration_seconds": 257.7,
+  "generated_at": "2026-07-03T00:38:55.767726+00:00",
+  "duration_seconds": 2.4,
   "totals": {
-    "active_events": 1311,
-    "payload_bytes": 1882556,
-    "payload_gzip_bytes": 347311,
-    "archived_this_run": 7,
-    "venues_total": 27,
-    "venues_ok": 22,
+    "active_events": 1300,
+    "payload_bytes": 1849303,
+    "payload_gzip_bytes": 344710,
+    "archived_this_run": 0,
+    "venues_total": 28,
+    "venues_ok": 23,
     "venues_idle": 3,
     "venues_warning": 1,
     "venues_error": 1,
-    "no_image": 424,
-    "no_image_pct": 32.3
+    "no_image": 314,
+    "no_image_pct": 24.2
   },
   "by_square": {
-    "Davis": 348,
+    "Davis": 385,
     "Porter": 243,
-    "Harvard": 210,
     "Union Square": 203,
-    "Inman Square": 127,
-    "Central": 70,
+    "Harvard": 167,
+    "Inman Square": 125,
+    "Central": 67,
     "Malden Center": 45,
     "Maverick": 35,
     "Medford Square": 12,
@@ -32,7 +32,7 @@
   "off_map_squares": [
     {
       "square": "Inman Square",
-      "events": 127,
+      "events": 125,
       "bus_only": true,
       "probable_match": null
     },
@@ -43,11 +43,34 @@
       "probable_match": null
     }
   ],
+  "collisions": {
+    "exact": [
+      {
+        "venue_id": "mideast-upstairs",
+        "venue": "The Middle East - Upstairs",
+        "start": "2026-07-02T19:00:00",
+        "count": 2,
+        "events": [
+          {
+            "id": "mideast-upstairs-20260702-bricknasty",
+            "title": "BRICKNASTY",
+            "cost": "$27.27"
+          },
+          {
+            "id": "mideast-upstairs-20260702-bricknasty---well-suited",
+            "title": "BRICKNASTY , Well Suited",
+            "cost": "$32.92"
+          }
+        ]
+      }
+    ],
+    "overlap": []
+  },
   "tests": {
     "status": "pass",
-    "at": "2026-07-02T12:13:31.213944+00:00",
-    "total": 48,
-    "passed": 48,
+    "at": "2026-07-03T00:37:41.311906+00:00",
+    "total": 66,
+    "passed": 66,
     "failed": 0,
     "skipped": 0
   },
@@ -61,7 +84,7 @@
       "status": "error",
       "event_count": 9,
       "delta": 0,
-      "note": "Pass 1 JSON parse failed: Expecting value: line 1 column 1 (char 0)",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-01T23:08:15.569032+00:00"
     },
     {
@@ -73,7 +96,7 @@
       "status": "warning",
       "event_count": 0,
       "delta": 0,
-      "note": "yields 0 events and never has \u2014 check config",
+      "note": "not scraped this run (last-known state)",
       "last_success": null
     },
     {
@@ -85,7 +108,7 @@
       "status": "idle",
       "event_count": 0,
       "delta": 0,
-      "note": "0 events (known \u2014 awaiting fix, see venues.py)",
+      "note": "not scraped this run (last-known state)",
       "last_success": null
     },
     {
@@ -97,7 +120,7 @@
       "status": "idle",
       "event_count": 0,
       "delta": 0,
-      "note": "0 events (known \u2014 awaiting fix, see venues.py)",
+      "note": "not scraped this run (last-known state)",
       "last_success": null
     },
     {
@@ -109,7 +132,7 @@
       "status": "idle",
       "event_count": 0,
       "delta": 0,
-      "note": "0 events (known \u2014 awaiting fix, see venues.py)",
+      "note": "not scraped this run (last-known state)",
       "last_success": null
     },
     {
@@ -121,7 +144,7 @@
       "status": "ok",
       "event_count": 223,
       "delta": -2,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
@@ -133,7 +156,7 @@
       "status": "ok",
       "event_count": 174,
       "delta": -2,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
@@ -145,8 +168,20 @@
       "status": "ok",
       "event_count": 157,
       "delta": -2,
-      "note": "unchanged since last run (cache hit)",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-01T22:22:44.871538+00:00"
+    },
+    {
+      "id": "burren-back-room",
+      "name": "The Burren - Back Room",
+      "square": "Davis",
+      "strategy": "burren_tables",
+      "uses_llm": false,
+      "status": "ok",
+      "event_count": 153,
+      "delta": 0,
+      "note": "not scraped this run (last-known state)",
+      "last_success": "2026-07-02T23:53:21.077429+00:00"
     },
     {
       "id": "comedy-studio",
@@ -157,7 +192,7 @@
       "status": "ok",
       "event_count": 153,
       "delta": 13,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
@@ -169,8 +204,32 @@
       "status": "ok",
       "event_count": 127,
       "delta": 1,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-02T12:17:49.527668+00:00"
+    },
+    {
+      "id": "arts-armory",
+      "name": "Arts at the Armory",
+      "square": "Davis",
+      "strategy": "em_events",
+      "uses_llm": false,
+      "status": "ok",
+      "event_count": 118,
+      "delta": 58,
+      "note": "not scraped this run (last-known state)",
+      "last_success": "2026-07-03T00:25:09.389379+00:00"
+    },
+    {
+      "id": "crystal-ballroom",
+      "name": "Crystal Ballroom",
+      "square": "Davis",
+      "strategy": "crystal_events",
+      "uses_llm": false,
+      "status": "ok",
+      "event_count": 87,
+      "delta": 43,
+      "note": "not scraped this run (last-known state)",
+      "last_success": "2026-07-03T00:38:52.200548+00:00"
     },
     {
       "id": "rockwell",
@@ -181,44 +240,20 @@
       "status": "ok",
       "event_count": 71,
       "delta": 1,
-      "note": "",
-      "last_success": "2026-07-02T12:17:49.527668+00:00"
-    },
-    {
-      "id": "arts-armory",
-      "name": "Arts at the Armory",
-      "square": "Davis",
-      "strategy": "html_full_text",
-      "uses_llm": true,
-      "status": "ok",
-      "event_count": 60,
-      "delta": -1,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
       "id": "sinclair",
       "name": "The Sinclair",
       "square": "Harvard",
-      "strategy": "html_full_text",
-      "uses_llm": true,
+      "strategy": "aeg_events",
+      "uses_llm": false,
       "status": "ok",
-      "event_count": 51,
-      "delta": -1,
-      "note": "",
-      "last_success": "2026-07-02T12:17:49.527668+00:00"
-    },
-    {
-      "id": "crystal-ballroom",
-      "name": "Crystal Ballroom",
-      "square": "Davis",
-      "strategy": "html_full_text",
-      "uses_llm": true,
-      "status": "ok",
-      "event_count": 44,
-      "delta": 0,
-      "note": "",
-      "last_success": "2026-07-02T12:17:49.527668+00:00"
+      "event_count": 66,
+      "delta": 15,
+      "note": "not scraped this run (last-known state)",
+      "last_success": "2026-07-03T00:08:14.193610+00:00"
     },
     {
       "id": "lamplighter-broadway",
@@ -229,7 +264,7 @@
       "status": "ok",
       "event_count": 41,
       "delta": 0,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
@@ -241,7 +276,7 @@
       "status": "ok",
       "event_count": 40,
       "delta": -1,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
@@ -253,20 +288,20 @@
       "status": "ok",
       "event_count": 31,
       "delta": -1,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
       "id": "sally-obriens",
       "name": "Sally O'Brien's",
       "square": "Union Square",
-      "strategy": "html_full_text",
-      "uses_llm": true,
+      "strategy": "sally_events",
+      "uses_llm": false,
       "status": "ok",
       "event_count": 29,
-      "delta": 1,
+      "delta": 0,
       "note": "",
-      "last_success": "2026-07-02T12:17:49.527668+00:00"
+      "last_success": "2026-07-03T00:38:55.704658+00:00"
     },
     {
       "id": "mideast-downstairs",
@@ -277,7 +312,7 @@
       "status": "ok",
       "event_count": 21,
       "delta": -1,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
@@ -289,7 +324,7 @@
       "status": "ok",
       "event_count": 20,
       "delta": 0,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
@@ -301,7 +336,7 @@
       "status": "ok",
       "event_count": 19,
       "delta": 0,
-      "note": "unchanged since last run (cache hit)",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-01T22:22:44.871538+00:00"
     },
     {
@@ -313,7 +348,7 @@
       "status": "ok",
       "event_count": 12,
       "delta": -1,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
@@ -325,7 +360,7 @@
       "status": "ok",
       "event_count": 6,
       "delta": 0,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
@@ -337,7 +372,7 @@
       "status": "ok",
       "event_count": 6,
       "delta": 0,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
@@ -349,7 +384,7 @@
       "status": "ok",
       "event_count": 5,
       "delta": 0,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
@@ -361,7 +396,7 @@
       "status": "ok",
       "event_count": 4,
       "delta": 0,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-02T12:17:49.527668+00:00"
     },
     {
@@ -373,7 +408,7 @@
       "status": "ok",
       "event_count": 1,
       "delta": 0,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-02T12:17:49.527668+00:00"
     }
   ]

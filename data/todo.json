@@ -1,8 +1,29 @@
 {
   "schema": "tonight.todo/1",
-  "updated": "2026-07-01",
+  "updated": "2026-07-02",
   "note": "Hand-maintained running to-do list, surfaced on app_health.html. Mirror of the 'Pending work' sections in CLAUDE.md — keep the two roughly in sync. priority: high | med | low. status: open | in_progress | blocked.",
   "items": [
+    {
+      "title": "Replace LLM extraction with static parsers on server-rendered venues (kills dupes AND unstable ids)",
+      "area": "scraper",
+      "priority": "med",
+      "status": "in_progress",
+      "detail": "Root cause of both the duplicate ghosts and unstable share links is non-deterministic LLM Pass 1: html_full_text venues re-render the title differently each run ('52 Church' vs '52 Church - The Glitter Boys'), and since the event id is title-derived AND is the share/bookmark URL (js/app.js #hash), the id churns → dupes + dead links. DONE: (a) The Sinclair → aeg_events static parser (AEG/AXS .entry.sinclair, /events/detail/<id> permalinks), 13 collisions → 0; (b) Arts at the Armory → em_events static parser (WordPress Events Manager .em-event.em-item, per-instance permalinks, start+end times), 4 collisions → 0. (c) Crystal Ballroom → crystal_events (article.event-grid-item cards, /events/ permalinks); (d) Sally O'Brien's → sally_events (prose calendar, no permalinks but deterministic titles). All four strategies reusable. Collisions across the whole feed went 20 → 1 (the lone remainder is Middle East Upstairs, an already-static venue where the TicketWeb SOURCE changed the title — only reconciliation/a stable source id fixes that, not static parsing). NOTE: did NOT flip make_event_id's fallback to venue_id+start — verified it would silently clobber 10 genuine same-slot parallel events (Aeronaut soccer+jazz, Armory multi-space, tallship music+soccer). The current title-based id errs toward a visible dupe rather than invisible data loss; static parsers fix jitter at the source instead. REMAINING LLM venues (lower priority, not currently colliding): Comedy Studio, Somerville Theatre, VRCC, Sheet2 batch — audit each for a static parser."
+    },
+    {
+      "title": "Stable event ids before user profiles / bookmarks",
+      "area": "scraper",
+      "priority": "high",
+      "status": "open",
+      "detail": "The event id IS the shareable/bookmarkable URL (location.hash = e.id; share url = #<id>; .ics UID = id). So the id must derive from stable identity, never the volatile title. Chain: (1) per-event permalink source_url [done]; (2) fallback = venue_id + start (+ stage) instead of venue_id + date + title-slug, so title jitter no longer mints a new id — safe now that rooms are split into distinct venue_ids (Middle East, Burren) giving one event per venue_id+start; (3) title only as a last-resort tiebreaker for genuine same-slot collisions (e.g. Aeronaut parallel programming). Pair with venue-authoritative reconciliation (drop a cleanly-scraped venue's future events it no longer lists) to cover renames + cancellations. Land all of this while pre-profiles so the breaking id migration is free."
+    },
+    {
+      "title": "Somerville Theatre: guard empty LLM Pass 1 + move to static parse",
+      "area": "scraper",
+      "priority": "med",
+      "status": "open",
+      "detail": "Dashboard error 'Pass 1 JSON parse failed: Expecting value: line 1 column 1 (char 0)' = the LLM returned an empty completion (json.loads('')). Page is healthy (200, 82KB, server-rendered WP Theatre Manager markup — wpt_ classes), so this is transient LLM flakiness that hard-errors the venue. Short term: treat an empty/whitespace Pass 1 response as a soft warning + retry, not a hard error. Better: build a static parser off the WP Theatre Manager markup (no per-event JSON-LD, only MovieTheater org data, so parse the HTML blocks) and drop the LLM — same deterministic-id win as Sinclair."
+    },
     {
       "title": "Trim the front-end load to a future window (60/90/180 days)",
       "area": "product",
