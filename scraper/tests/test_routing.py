@@ -69,3 +69,16 @@ def test_make_event_id_shape():
     eid = sc.make_event_id("burren", "2026-06-15T20:00:00", "The Grafton Street Ramblers!")
     assert eid.startswith("burren-20260615-")
     assert " " not in eid and "!" not in eid
+
+
+def test_make_event_id_permalink_survives_rename():
+    # When a real per-event permalink is available the id is derived from it, so
+    # a title (or start) edit keeps the SAME id — the fix overwrites in place
+    # instead of leaving a duplicate ghost.
+    url = "https://toadcambridge.com/event/12345"
+    a = sc.make_event_id("toad", "2026-06-15T20:00:00", "The Ramblers", source_url=url)
+    b = sc.make_event_id("toad", "2026-06-15T21:00:00", "The Ramblers (SOLD OUT)", source_url=url)
+    assert a == b
+    # ...but a different show (different URL) still gets a distinct id.
+    assert a != sc.make_event_id("toad", "2026-06-15T20:00:00", "The Ramblers",
+                                 source_url="https://toadcambridge.com/event/999")

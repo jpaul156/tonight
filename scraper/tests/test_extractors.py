@@ -57,6 +57,125 @@ def test_squarespace_events_basic():
     assert events[0]["source_url"] == "https://lilypadinman.com/events/jazz"
 
 
+def test_aeg_events_basic():
+    # Minimal .entry.sinclair block matching The Sinclair's AEG/AXS template.
+    html = """
+    <div class="entry sinclair clearfix">
+      <div class="thumb">
+        <a href="https://www.sinclaircambridge.com/events/detail/1317869">
+          <img src="https://images.axs.com/buck-meek.jpg"/></a>
+      </div>
+      <div class="info">
+        <div class="title">
+          <h5 class="presentedBy"></h5>
+          <h3 class="carousel_item_title_small">
+            <a href="https://www.sinclaircambridge.com/events/detail/1317869">Buck Meek</a></h3>
+          <h4 class="supporting">Kisser</h4>
+        </div>
+        <div class="date-time-container">
+          <span class="date"><span class="fa fa-calendar-o"></span>Wed, Jul 8, 2026</span>
+          <span class="time"><span class="fa fa-clock-o"></span>Doors&#9;7:00 PM</span>
+          <span class="age">All Ages</span>
+        </div>
+      </div>
+      <div class="buttons">
+        <a class="btn-tickets tickets status_1" href="https://www.axs.com/events/1317869/buck-meek">Buy Tickets</a>
+      </div>
+    </div>
+    """
+    events = sc.extract_aeg_events(html, "https://www.sinclaircambridge.com")
+    assert len(events) == 1
+    e = events[0]
+    # Deterministic headliner only — NOT merged with the support act. This is the
+    # whole point: the LLM used to jitter between "Buck Meek" and "Buck Meek -
+    # Kisser", churning the title-derived id.
+    assert e["title"] == "Buck Meek"
+    assert e["start"] == "2026-07-08T19:00:00"
+    assert e["description"] == "Kisser"
+    assert e["image_url"] == "https://images.axs.com/buck-meek.jpg"
+    assert e["ticket_url"] == "https://www.axs.com/events/1317869/buck-meek"
+    # Stable per-event permalink drives the id (survives title/time edits).
+    assert e["source_url"] == "https://www.sinclaircambridge.com/events/detail/1317869"
+
+
+def test_events_manager_basic_and_dedup():
+    # Two .em-event blocks for the SAME event (the plugin renders each event in
+    # multiple layouts) plus one distinct event. Expect 2 events, not 3.
+    block = """
+    <div class="em-event em-item" data-href="https://artsatthearmory.org/events/widowspeak/">
+      <div class="em-item-image"><div class="em-item-image-wrapper">
+        <img src="https://artsatthearmory.org/wp/widowspeak.webp"/></div></div>
+      <div class="em-item-info">
+        <h3 class="em-item-title"><a href="https://artsatthearmory.org/events/widowspeak/">Widowspeak with Neu Blume</a></h3>
+        <div class="em-event-meta em-item-meta">
+          <div class="em-item-meta-line em-event-date em-event-meta-datetime"><span class="em-icon"></span>Fri. Jul. 03, 2026</div>
+          <div class="em-item-meta-line em-event-time em-event-meta-datetime"><span class="em-icon"></span>7:00 pm - 10:00 pm</div>
+        </div>
+      </div>
+    </div>"""
+    other = block.replace("widowspeak", "swing").replace("Widowspeak with Neu Blume", "West Coast Swing").replace("Jul. 03", "Jul. 06")
+    html = f"<div class='em-list'>{block}{block}</div><div class='em-grid'>{other}</div>"
+    events = sc.extract_events_manager(html, "https://artsatthearmory.org")
+    assert len(events) == 2                       # the duplicate render collapsed
+    e = next(x for x in events if "Widowspeak" in x["title"])
+    assert e["title"] == "Widowspeak with Neu Blume"
+    assert e["start"] == "2026-07-03T19:00:00"
+    assert e["end"] == "2026-07-03T22:00:00"      # both start and end parsed
+    assert e["image_url"] == "https://artsatthearmory.org/wp/widowspeak.webp"
+    assert e["source_url"] == "https://artsatthearmory.org/events/widowspeak/"
+
+
+def test_crystal_events_basic():
+    html = """
+    <article class="grid-item event-grid-item post-3304 event">
+      <div class="event-grid-header">
+        <img class="wp-post-image" data-src="https://www.crystalballroomboston.com/wp/gash.jpg"/>
+      </div>
+      <h2 class="entry-title">GASH – Villain’s Ball</h2>
+      <div class="entry-footer">
+        <div class="event-meta">Sat, Jul 11, 2026 Show 8:00 pm Doors 7:00 pm 21+</div>
+        <a class="event-link" href="https://www.crystalballroomboston.com/events/gash-villains-ball/">Details</a>
+        <a href="https://www.ticketmaster.com/event/010064C1E0E4DF5D">Purchase Tickets</a>
+      </div>
+    </article>
+    """
+    events = sc.extract_crystal_events(html, "https://www.crystalballroomboston.com")
+    assert len(events) == 1
+    e = events[0]
+    assert e["title"] == "GASH – Villain’s Ball"
+    assert e["start"] == "2026-07-11T20:00:00"     # Show time, not Doors
+    assert e["source_url"] == "https://www.crystalballroomboston.com/events/gash-villains-ball/"
+    assert "ticketmaster" in e["ticket_url"]
+    assert e["image_url"] == "https://www.crystalballroomboston.com/wp/gash.jpg"
+
+
+def test_sally_events_multi_show_section_and_prices():
+    # A section with two shows joined by "followed by ...", plus a "* * *" one.
+    html = """
+    <section>Sunday July 5 500pm Cambridge-Somerville All-Stars Free show ! followed by ... Sunday July 5 930pm Dub Apocalypse No cover !!</section>
+    <section>Saturday July 4 730pm * * * Stan Martin Band $10</section>
+    <section>Wednesday July 1 730pm Fandango! with Chris Cote No cover !!</section>
+    <section>16</section>
+    """
+    events = sc.extract_sally_events(html, "https://www.sallyobriensbar.com")
+    by = {e["title"]: e for e in events}
+    assert len(events) == 4                                  # stray "16" skipped
+    assert by["Cambridge-Somerville All-Stars"]["start"] == "2026-07-05T17:00:00"
+    assert by["Cambridge-Somerville All-Stars"]["cost"] == "Free"
+    assert by["Dub Apocalypse"]["start"] == "2026-07-05T21:30:00"   # second show split out
+    assert by["Stan Martin Band"]["cost"] == "$10"          # "* * *" separator stripped
+    assert by["Fandango! with Chris Cote"]["cost"] == "Free"  # trailing "!" in act kept
+
+
+def test_aeg_datetime_parses_explicit_year():
+    assert sc.parse_aeg_datetime("Tue, Jul 7, 2026", "Doors 7:00 PM") == "2026-07-07T19:00:00"
+    # Full month name and no weekday still parse.
+    assert sc.parse_aeg_datetime("July 7, 2026", "8:30 PM") == "2026-07-07T20:30:00"
+    # Unparseable time falls back to midnight (event still lands on the day).
+    assert sc.parse_aeg_datetime("Tue, Jul 7, 2026", "time TBA") == "2026-07-07T00:00:00"
+    assert sc.parse_aeg_datetime("no date here", "7:00 PM") is None
+
+
 def test_squarespace_drops_placeholder_image():
     doc = {"upcoming": [{
         "title": "No Art Show", "startDate": 1781827200000,

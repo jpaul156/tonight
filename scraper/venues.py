@@ -90,9 +90,17 @@ VENUES = [
     # ----------------------------------------------------------
     # The Burren — Davis Square
     # ----------------------------------------------------------
+    # The Burren has two performance rooms — the ticketed Back Room and the
+    # free trad/acoustic Front Room — and the music table tags every event with
+    # its room ("THE BACK ROOM" / "THE FRONT ROOM" in a class="Room" cell, read
+    # by extract_burren_tables into each event's `location`). We split them into
+    # peer stages the same way as the Middle East complex: the owning entry holds
+    # the collection page + strategy and is the no-match fallback (the Back Room,
+    # the main ticketed room), and location_keywords routes each event to the
+    # right stage. Keep these fields in sync with data/venues.json.
     {
-        "id": "burren",
-        "name": "The Burren",
+        "id": "burren-back-room",
+        "name": "The Burren - Back Room",
         "address": "247 Elm St, Somerville, MA",
         "square": "Davis",
         "transit_line": "Red",
@@ -103,8 +111,22 @@ VENUES = [
         "scrape_strategy": "burren_tables",
         "detail_pages": False,
         "url_contains": None,
-        "location_keywords": {},
-        "extra_venues": [],
+        "location_keywords": {
+            "back room": "burren-back-room",
+            "front room": "burren-front-room",
+        },
+        "extra_venues": [
+            {
+                "id": "burren-front-room",
+                "name": "The Burren - Front Room",
+                "address": "247 Elm St, Somerville, MA",
+                "square": "Davis",
+                "transit_line": "Red",
+                "transit_stop": "Davis",
+                "walk_minutes": 4,
+                "is_local": True,
+            },
+        ],
     },
 
     {
@@ -218,8 +240,14 @@ VENUES = [
         "transit_stop": "Union Square",
         "walk_minutes": 3,
         "is_local": True,
+        # Hand-formatted prose calendar (one show per line inside <section>
+        # blocks, e.g. "Wednesday July 1 730pm Fandango! with Chris Cote No cover
+        # !!"). Parsed directly (sally_events), no LLM: the LLM re-rendered
+        # "Fandango!" vs "Fandango! with Chris Cote", churning the title-derived
+        # id. No permalinks here, so ids stay title-based — but a deterministic
+        # parser reads the same title every run, so they no longer churn.
         "collection_url": "https://www.sallyobriensbar.com/music/",
-        "scrape_strategy": "html_full_text",
+        "scrape_strategy": "sally_events",
         "detail_pages": False,
         "url_contains": None,
         "location_keywords": {},
@@ -235,7 +263,12 @@ VENUES = [
         "walk_minutes": 10,
         "is_local": True,
         "collection_url": "https://artsatthearmory.org/upcoming-events/",
-        "scrape_strategy": "html_full_text",
+        # WordPress Events Manager plugin — fully server-rendered .em-event.em-item
+        # blocks. Parsed directly (em_events), no LLM: the old html_full_text path
+        # re-titled shows non-deterministically, churning the title-derived id and
+        # piling up duplicate ghosts. Each block carries a per-instance permalink,
+        # so ids are stable across re-scrapes.
+        "scrape_strategy": "em_events",
         "detail_pages": False,
         "url_contains": None,
         "location_keywords": {},
@@ -267,7 +300,13 @@ VENUES = [
         "walk_minutes": 3,
         "is_local": False,
         "collection_url": "https://www.sinclaircambridge.com/events",
-        "scrape_strategy": "html_full_text",
+        # AEG Presents / AXS venue template — fully server-rendered
+        # `.entry.sinclair` blocks. Parsed directly (aeg_events), no LLM: the
+        # previous html_full_text path re-titled shows non-deterministically each
+        # run ("52 Church" vs "52 Church - The Glitter Boys"), churning the
+        # title-derived id and piling up duplicate ghosts. Each block has a
+        # /events/detail/<id> permalink, so ids are now stable across re-scrapes.
+        "scrape_strategy": "aeg_events",
         "detail_pages": False,
         "url_contains": None,
         "location_keywords": {},
@@ -641,10 +680,13 @@ VENUES = [
         "walk_minutes": 2,
         "is_local": True,
         # Separate venue from Somerville Theatre despite sharing the building.
-        # Custom WordPress theme; events are server-rendered in h2.entry-title
-        # blocks with dates/times in entry-footer — no JS needed.
+        # Custom WordPress theme — server-rendered article.event-grid-item cards
+        # (.entry-title + .event-meta + /events/ permalink). Parsed directly
+        # (crystal_events), no LLM: the old html_full_text path re-titled shows
+        # ("SOLYA" vs "SOLYA *NEW DATE*"), churning the title-derived id. Each
+        # card has a stable /events/<slug>/ permalink, so ids hold across scrapes.
         "collection_url": "https://www.crystalballroomboston.com/events/",
-        "scrape_strategy": "html_full_text",
+        "scrape_strategy": "crystal_events",
         "detail_pages": False,
         "url_contains": None,
         "location_keywords": {},

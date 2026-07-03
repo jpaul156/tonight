@@ -1,7 +1,7 @@
 {
-  "burren": {
-    "id": "burren",
-    "name": "The Burren",
+  "burren-back-room": {
+    "id": "burren-back-room",
+    "name": "The Burren - Back Room",
     "address": "247 Elm St, Somerville, MA",
     "neighborhood": "Davis Square",
     "square": "Davis",
@@ -13,7 +13,23 @@
     "logo_url": "assets/venues/orig/burren.jpeg",
     "logo_thumb_url": null,
     "is_local": true,
-    "notes": "Two rooms: Front Room (trad/acoustic) and Back Room (ticketed shows). Irish Sessions weekly."
+    "notes": "The ticketed back room — touring and local acts."
+  },
+  "burren-front-room": {
+    "id": "burren-front-room",
+    "name": "The Burren - Front Room",
+    "address": "247 Elm St, Somerville, MA",
+    "neighborhood": "Davis Square",
+    "square": "Davis",
+    "transit_line": "Red",
+    "transit_stop": "Davis",
+    "walk_minutes": 4,
+    "website": "https://www.burren.com",
+    "phone": "(617) 776-6896",
+    "logo_url": "assets/venues/orig/burren.jpeg",
+    "logo_thumb_url": null,
+    "is_local": true,
+    "notes": "Free trad/acoustic room. Weekly Irish Sessions."
   },
   "passim": {
     "id": "passim",

@@ -398,6 +398,335 @@ def parse_mideast_datetime(month_day, time_str):
     return dt.strftime("%Y-%m-%dT%H:%M:00")
 
 
+def extract_aeg_events(html, base_url):
+    """AEG Presents / AXS venue template (e.g. The Sinclair). Every show is a
+    server-rendered `.entry.sinclair` block with a dedicated class per field, so
+    we parse directly — no LLM. This matters beyond cost: the LLM Pass 1 rendered
+    the title non-deterministically ("52 Church" vs "52 Church - The Glitter
+    Boys" vs "The Glitter Boys"), and since the event id is title-derived AND is
+    the shareable URL, every re-render minted a new id → duplicate ghosts + dead
+    links. A static parser takes `.carousel_item_title_small` verbatim every run,
+    so the title — and the id — are stable.
+
+      .carousel_item_title_small a  headliner (+ href = detail permalink)
+      .presentedBy                  promoter tag ("NPR Presents"), often empty
+      .supporting                   support acts ("ft ...", "Kisser")
+      .date                         "Tue, Jul 7, 2026"
+      .time                         "Doors  7:00 PM"
+      .thumb img                    poster image (AXS CDN)
+      a.btn-tickets                 AXS ticket URL
+
+    Each block carries a stable /events/detail/<id> permalink, returned as
+    source_url so make_event_id keys off it (survives title/time edits). The page
+    shows only the next ~15-20 shows at once; the runner's merge accumulates the
+    fuller calendar across daily runs.
+    """
+    soup = BeautifulSoup(html, "html.parser")
+    entries = soup.select(".entry.sinclair")
+    if not entries:
+        print("  WARNING: no .entry.sinclair blocks found — page structure may have changed")
+        return []
+
+    events = []
+    for e in entries:
+        title_el = e.select_one(".carousel_item_title_small")
+        date_el = e.select_one(".date")
+        time_el = e.select_one(".time")
+        if not (title_el and date_el):
+            continue
+        title = title_el.get_text(" ", strip=True)
+        start = parse_aeg_datetime(
+            date_el.get_text(" ", strip=True),
+            time_el.get_text(" ", strip=True) if time_el else "",
+        )
+        if not (title and start):
+            continue
+
+        link = title_el.find("a", href=True) or e.select_one(".thumb a[href]")
+        source_url = link["href"].strip() if link else None
+
+        presented = (e.select_one(".presentedBy").get_text(" ", strip=True)
+                     if e.select_one(".presentedBy") else "")
+        support = (e.select_one(".supporting").get_text(" ", strip=True)
+                   if e.select_one(".supporting") else "")
+        description = " · ".join(p for p in [presented, support] if p) or None
+
+        img = e.select_one(".thumb img")
+        image_url = img.get("src").strip() if img and img.get("src") else None
+
+        tix = e.select_one("a.btn-tickets[href]")
+        ticket_url = tix["href"].strip() if tix else None
+
+        events.append({
+            "title":       title,
+            "start":       start,
+            "end":         None,
+            "location":    None,
+            "cost":        None,
+            "source_url":  source_url,
+            "performer":   title,   # the headliner is the act
+            "description": description,
+            "image_url":   image_url,
+            "ticket_url":  ticket_url,
+            "is_recurring": False,
+            "recurrence_note": None,
+        })
+
+    print(f"  Parsed {len(events)} events from AEG entry blocks (no LLM needed)")
+    return events
+
+
+def extract_events_manager(html, base_url):
+    """WordPress "Events Manager" plugin template (e.g. Arts at the Armory). Each
+    show is a server-rendered `.em-event.em-item` block with a dedicated class per
+    field, so we parse directly — no LLM, which keeps the title (and the
+    title-derived id) deterministic instead of jittering run to run.
+
+      .em-item-title a   title (+ href = event permalink; also on data-href)
+      .em-event-date     "Fri. Jul. 03, 2026"
+      .em-event-time     "7:00 pm - 10:00 pm"   (start - end)
+      .em-item-image img poster
+
+    Each block's permalink is a stable per-event/instance URL (recurring classes
+    get date-stamped slugs like .../west-coast-swing-training-2026-07-06/), so
+    make_event_id keys off it and ids survive title edits + shared links hold.
+    """
+    soup = BeautifulSoup(html, "html.parser")
+    items = soup.select(".em-event.em-item")
+    if not items:
+        print("  WARNING: no .em-event.em-item blocks found — page structure may have changed")
+        return []
+
+    events = []
+    seen = set()  # the plugin renders each event in several layouts (list/grid)
+    for it in items:
+        title_el = it.select_one(".em-item-title")
+        date_el = it.select_one(".em-event-date")
+        if not (title_el and date_el):
+            continue
+        title = title_el.get_text(" ", strip=True)
+        # "Fri. Jul. 03, 2026" — the abbreviations carry periods; drop them so
+        # parse_aeg_datetime's "<Mon> <day>, <year>" regex matches.
+        date_txt = date_el.get_text(" ", strip=True).replace(".", " ")
+
+        time_el = it.select_one(".em-event-time")
+        time_txt = time_el.get_text(" ", strip=True) if time_el else ""
+        parts = re.split(r"\s*[-–—]\s*", time_txt, maxsplit=1)
+        start = parse_aeg_datetime(date_txt, parts[0] if parts else "")
+        end = parse_aeg_datetime(date_txt, parts[1]) if len(parts) > 1 else None
+        if not (title and start):
+            continue
+
+        link = title_el.find("a", href=True)
+        source_url = (link["href"].strip() if link else None) or it.get("data-href")
+
+        # The same event is emitted once per layout on the page; collapse the
+        # copies. Genuinely distinct same-slot events differ in title or url, so
+        # keying on all three keeps them.
+        key = (source_url, start, title)
+        if key in seen:
+            continue
+        seen.add(key)
+
+        img = it.select_one(".em-item-image img")
+        image_url = img.get("src").strip() if img and img.get("src") else None
+
+        events.append({
+            "title":       title,
+            "start":       start,
+            "end":         end,
+            "location":    None,
+            "cost":        None,
+            "source_url":  source_url,
+            "performer":   None,
+            "description": None,
+            "image_url":   image_url,
+            "ticket_url":  None,
+            "is_recurring": False,
+            "recurrence_note": None,
+        })
+
+    print(f"  Parsed {len(events)} events from Events Manager blocks (no LLM needed)")
+    return events
+
+
+def parse_aeg_datetime(date_str, time_str):
+    """Combine an AEG listing's "Tue, Jul 7, 2026" and "Doors 7:00 PM" into a
+    naive Eastern ISO string ("2026-07-07T19:00:00"). The year is explicit here,
+    so no roll-forward inference is needed. If the time can't be parsed the show
+    still lands on the right day at midnight rather than being dropped."""
+    # Strip the leading weekday, then read "<Mon> <day>, <year>".
+    m = re.search(r"([A-Za-z]{3,9})\s+(\d{1,2}),?\s+(\d{4})", date_str or "")
+    if not m:
+        return None
+    try:
+        d = datetime.strptime(f"{m.group(1)[:3]} {int(m.group(2))} {m.group(3)}",
+                              "%b %d %Y")
+    except ValueError:
+        return None
+    hour = minute = 0
+    tm = re.search(r"(\d{1,2}):(\d{2})\s*([AaPp][Mm])", time_str or "")
+    if tm:
+        try:
+            t = datetime.strptime(
+                f"{tm.group(1)}:{tm.group(2)} {tm.group(3).upper()}", "%I:%M %p")
+            hour, minute = t.hour, t.minute
+        except ValueError:
+            pass
+    return d.replace(hour=hour, minute=minute).strftime("%Y-%m-%dT%H:%M:00")
+
+
+def extract_crystal_events(html, base_url):
+    """Crystal Ballroom — custom WordPress theme, server-rendered
+    `article.event-grid-item` cards. Parsed directly, no LLM (which used to
+    re-title shows non-deterministically, e.g. "SOLYA" vs "SOLYA *NEW DATE*",
+    churning the title-derived id).
+
+      .entry-title   title
+      .event-meta    "Sat, Jul 11, 2026 Show 8:00 pm Doors 7:00 pm 21+"
+      first /events/ link   event permalink (stable id source)
+      ticketing link        ticket url
+      img[data-src]         poster (lazy-loaded)
+    """
+    soup = BeautifulSoup(html, "html.parser")
+    cards = soup.select("article.event-grid-item")
+    if not cards:
+        print("  WARNING: no article.event-grid-item found — page structure may have changed")
+        return []
+
+    events = []
+    for c in cards:
+        title_el = c.select_one(".entry-title")
+        meta_el = c.select_one(".event-meta")
+        if not (title_el and meta_el):
+            continue
+        title = title_el.get_text(" ", strip=True)
+        meta = meta_el.get_text(" ", strip=True)
+        # parse_aeg_datetime reads the "<Mon> <day>, <year>" date and the first
+        # time in the string — which is the Show time (it precedes Doors here).
+        start = parse_aeg_datetime(meta, meta)
+        if not (title and start):
+            continue
+
+        permalink = ticket_url = None
+        for a in c.select("a[href]"):
+            href = a["href"].strip()
+            if "/events/" in href and not permalink:
+                permalink = href
+            elif re.search(r"ticketmaster|dice\.fm|etix|axs|eventbrite|seetickets|prekindle",
+                           href, re.I) and not ticket_url:
+                ticket_url = href
+
+        img = c.select_one("img")
+        image_url = (img.get("data-src") or img.get("src")).strip() if img and (img.get("data-src") or img.get("src")) else None
+
+        events.append({
+            "title":       title,
+            "start":       start,
+            "end":         None,
+            "location":    None,
+            "cost":        None,
+            "source_url":  permalink,
+            "performer":   None,
+            "description": None,
+            "image_url":   image_url,
+            "ticket_url":  ticket_url,
+            "is_recurring": False,
+            "recurrence_note": None,
+        })
+
+    print(f"  Parsed {len(events)} events from Crystal event cards (no LLM needed)")
+    return events
+
+
+# Sally O'Brien's lists shows as hand-formatted prose inside <section> blocks,
+# e.g. "Wednesday July 1 730pm Fandango! with Chris Cote No cover !!" — one line
+# per show, sometimes two shows in a section joined by "followed by ...". The
+# format is regular enough to parse deterministically, which stops the LLM from
+# re-rendering "Fandango!" vs "Fandango! with Chris Cote" and churning the id.
+_SALLY_EVENT_RE = re.compile(
+    r"(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun)[a-z]*\s+"
+    r"(?P<mon>Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+"
+    r"(?P<day>\d{1,2})\s+(?P<t>\d{3,4})\s*pm", re.I)
+_SALLY_PRICE_RE = re.compile(
+    r"(\$\d+|free\s*show|no[\s-]?cover(?:\s+residency)?)\s*!*\s*$", re.I)
+
+
+def extract_sally_events(html, base_url):
+    """Parse Sally O'Brien's prose calendar (see note above). Each <section> may
+    hold one or two shows; we anchor on the date/time pattern, take the text up
+    to the next anchor as the band + price, and strip a trailing price phrase."""
+    soup = BeautifulSoup(html, "html.parser")
+    events = []
+    for sec in soup.find_all("section"):
+        text = re.sub(r"\s+", " ", sec.get_text(" ", strip=True)).strip()
+        matches = list(_SALLY_EVENT_RE.finditer(text))
+        for i, m in enumerate(matches):
+            tail_end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+            tail = text[m.end():tail_end]
+            # drop the "followed by ..." connector that precedes a second show
+            tail = re.sub(r"(?i)\bfollowed by\b.*$", "", tail).strip()
+
+            cost = None
+            band = tail
+            pm = _SALLY_PRICE_RE.search(tail)
+            if pm:
+                raw = pm.group(1).lower()
+                cost = pm.group(1) if raw.startswith("$") else "Free"
+                band = tail[:pm.start()]
+            # Trim "* * *" separators and surrounding punctuation, but keep a
+            # trailing "!" that belongs to the act ("Fandango!", "Hayride!").
+            band = band.strip(" .*-")
+            if not band:
+                continue
+
+            start = parse_sally_datetime(m.group("mon"), int(m.group("day")), m.group("t"))
+            if not start:
+                continue
+            events.append({
+                "title":       band,
+                "start":       start,
+                "end":         None,
+                "location":    None,
+                "cost":        cost,
+                "source_url":  None,
+                "performer":   band,
+                "description": None,
+                "image_url":   None,
+                "ticket_url":  None,
+                "is_recurring": "residency" in tail.lower(),
+                "recurrence_note": None,
+            })
+
+    print(f"  Parsed {len(events)} events from Sally O'Brien's calendar (no LLM needed)")
+    return events
+
+
+def parse_sally_datetime(month_name, day, hhmm):
+    """Combine Sally's "July", 1, "730" (compact pm time, no year) into a naive
+    Eastern ISO string. Every listing is an afternoon/evening pm show, so the
+    hour is taken as pm. Year is inferred as current, rolling forward when the
+    date is well in the past (Dec->Jan wrap), matching parse_mideast_datetime."""
+    try:
+        mon = datetime.strptime(month_name[:3].title(), "%b").month
+    except ValueError:
+        return None
+    digits = re.sub(r"\D", "", hhmm or "")
+    if len(digits) < 3:
+        return None
+    hour, minute = int(digits[:-2]), int(digits[-2:])
+    if hour != 12:
+        hour += 12   # pm
+    now = datetime.now(timezone.utc)
+    try:
+        dt = datetime(now.year, mon, day, hour, minute)
+    except ValueError:
+        return None
+    if dt.replace(tzinfo=timezone.utc) < now - timedelta(days=60):
+        dt = dt.replace(year=now.year + 1)
+    return dt.strftime("%Y-%m-%dT%H:%M:00")
+
+
 def parse_wix_datetime(date_str, time_str):
     """
     Combine Wix's pre-formatted strings, e.g. "June 6, 2026" + "2:00 PM",
@@ -1226,7 +1555,17 @@ def event_specific_address(raw_event, venue_cfg):
 # Event assembly
 # ============================================================
 
-def make_event_id(vid, start, title):
+def make_event_id(vid, start, title, source_url=None):
+    """Stable per-event id. When the source gives a real per-event permalink
+    (`source_url`), derive the id from that URL so the id survives title *and*
+    time edits — a rename or reschedule overwrites in place instead of leaving a
+    duplicate ghost. Only pass source_url when it's a genuine per-event link
+    (unique in the batch, not the venue's shared calendar page); build_events
+    decides. Otherwise fall back to the title-slug key, which churns on rename
+    but is all we have for calendar-page-only venues."""
+    if source_url:
+        h = hashlib.md5(source_url.encode()).hexdigest()[:10]
+        return f"{vid}-{h}"
     slug = "".join(c if c.isalnum() else "-" for c in title.lower()).strip("-")
     date = (start or "")[:10].replace("-", "")
     return f"{vid}-{date}-{slug[:30]}"
@@ -1249,6 +1588,16 @@ def is_private_event(title, description):
 
 def build_events(raw_events, category_map, detail_map, venue_cfg):
     results = []
+    # A source_url is a usable per-event permalink only when it's unique within
+    # this venue's batch and isn't the shared collection/calendar page. Venues
+    # like the Burren stamp the same calendar URL on every event (useless as a
+    # key); Toad/McCarthy's give each show its own URL (a stable key). Count
+    # occurrences up front so make_event_id can prefer the permalink when safe.
+    from collections import Counter
+    _url_counts = Counter(
+        (e.get("source_url") or "").strip()
+        for e in raw_events if (e.get("source_url") or "").strip()
+    )
     for i, e in enumerate(raw_events):
         location_str = e.get("location") or ""
         source_url = e.get("source_url") or venue_cfg["collection_url"]
@@ -1311,8 +1660,16 @@ def build_events(raw_events, category_map, detail_map, venue_cfg):
                             resolved_image = url
                             break
 
+            # Prefer the permalink as the id basis when this event has a real,
+            # unique per-event URL; otherwise fall back to the title-slug key.
+            raw_url = (e.get("source_url") or "").strip()
+            permalink = raw_url if (
+                raw_url and raw_url != venue_cfg["collection_url"]
+                and _url_counts[raw_url] == 1
+            ) else None
             results.append({
-                "id": make_event_id(vid, e.get("start"), e.get("title", "event")),
+                "id": make_event_id(vid, e.get("start"), e.get("title", "event"),
+                                    source_url=permalink),
                 "title": e.get("title"),
                 **fields,
                 "address": addr,
@@ -1440,6 +1797,30 @@ def scrape_venue(venue_cfg, cache, verbose=True, force=False, report=None):
         # Direct parse of the Middle East's TicketWeb event cards — no LLM.
         # Room-per-card routes to sub-venues via location_keywords.
         raw_events = extract_mideast_events(html, base_url)
+        if verbose:
+            print(f"  Pass 1: {len(raw_events)} events (parsed directly, no LLM)")
+    elif strategy == "aeg_events":
+        # Direct parse of an AEG Presents / AXS venue template (The Sinclair) —
+        # no LLM, deterministic titles, stable permalink ids.
+        raw_events = extract_aeg_events(html, base_url)
+        if verbose:
+            print(f"  Pass 1: {len(raw_events)} events (parsed directly, no LLM)")
+    elif strategy == "em_events":
+        # Direct parse of a WordPress Events Manager template (Arts at the
+        # Armory) — no LLM, deterministic titles, stable permalink ids.
+        raw_events = extract_events_manager(html, base_url)
+        if verbose:
+            print(f"  Pass 1: {len(raw_events)} events (parsed directly, no LLM)")
+    elif strategy == "crystal_events":
+        # Direct parse of Crystal Ballroom's WordPress event cards — no LLM,
+        # deterministic titles, stable permalink ids.
+        raw_events = extract_crystal_events(html, base_url)
+        if verbose:
+            print(f"  Pass 1: {len(raw_events)} events (parsed directly, no LLM)")
+    elif strategy == "sally_events":
+        # Direct parse of Sally O'Brien's prose calendar — no LLM, deterministic
+        # titles (no permalinks, so ids stay title-based but stable run to run).
+        raw_events = extract_sally_events(html, base_url)
         if verbose:
             print(f"  Pass 1: {len(raw_events)} events (parsed directly, no LLM)")
     else:
