@@ -1,0 +1,44 @@
+{
+  "_schema": "tonight.handles/1",
+  "_readme": [
+    "Vanity-URL resolver: maps a public handle to the immutable uid of a venue",
+    "or artist, for URLs like tonight.quest/{handle}. Hand-maintained for now —",
+    "there is no self-serve claiming yet; a handle is assigned by editing this",
+    "file. Squares are NOT resolved here: they live under their own /sq/{name}",
+    "namespace, so square names never collide with venue/artist handles and are",
+    "not reserved below.",
+    "",
+    "IDENTITY vs HANDLE. A uid is the frozen internal key that events and every",
+    "relation join on (venue uid = the key in data/venues.json, e.g.",
+    "'lamplighter-broadway'; artist uid = the 'id' in data/artists.json). It never",
+    "changes. A handle is the mutable public slug that appears in the URL. When a",
+    "venue/artist wants a different URL, add the NEW handle as canonical and keep",
+    "the OLD one with canonical:false so existing links redirect instead of 404 —",
+    "never repoint or delete a uid, only ever add/retire handles.",
+    "",
+    "RESOLUTION. Front end lowercases the path segment, looks it up in 'handles'.",
+    "If found and canonical, render the target; if found and not canonical,",
+    "redirect to that uid's canonical handle. A handle in 'reserved' (or matching",
+    "an existing app route/page) can never be assigned."
+  ],
+  "_fields": {
+    "handles": "map of handle (lowercase) -> { type: 'venue'|'artist', uid, canonical }. Exactly one canonical handle per uid; extra entries with canonical:false are retained old handles that redirect to it.",
+    "reserved": "handles that can never be assigned — app routes, page names, and namespace prefixes. Square names are intentionally absent (they live under /sq/)."
+  },
+  "reserved": [
+    "sq", "venue", "artist", "event", "artists", "venues", "events",
+    "about", "help", "terms", "privacy", "contact", "search",
+    "api", "admin", "health", "app", "app_health", "curator",
+    "index", "map", "near", "tonight", "quest", "boston",
+    "login", "logout", "signin", "signup", "account", "profile", "settings",
+    "data", "assets", "js", "css", "static", "img", "images",
+    "boston-grid-editor", "transit-layer-editor", "transit-animation-preview"
+  ],
+  "handles": {
+    "sinclair": { "type": "venue", "uid": "sinclair", "canonical": true },
+    "toad": { "type": "venue", "uid": "toad", "canonical": true },
+    "lilypad": { "type": "venue", "uid": "lilypad", "canonical": true },
+    "aeronaut": { "type": "venue", "uid": "aeronaut", "canonical": true },
+    "rockwell": { "type": "venue", "uid": "rockwell", "canonical": true }
+  }
+}

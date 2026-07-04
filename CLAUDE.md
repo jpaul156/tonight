@@ -76,6 +76,14 @@ Two optional front-end-only files decorate events without the scraper ever touch
 - **`data/artists.json`** (schema `tonight.artists/1`) — per-performer `website` + `image_url`. The front end (`artistFor()` in `js/app.js`) matches an event to an artist and, **only when the event has no image of its own**, uses the artist's photo. `eventImage()` is the single source of truth for which image + crop an event shows. The artist website surfaces as a link in the detail overlay. Adding an artist never creates events — it only decorates existing ones.
 - **`data/image-crops.json`** — flat map of image URL → CSS `object-position` (e.g. `"50% 20%"`). Keyed by URL so a hand-picked focal point outlives the scraper's daily rewrite of `events.json`. Applied to card + detail art.
 
+## Stable identity & vanity URLs — uid vs handle
+
+Two-layer identity so a public URL can change without churning the data that points at it. The **uid** is the immutable internal join key; the **handle** is the mutable public slug in `tonight.quest/{handle}`.
+
+- **Venue uid** = its key in `data/venues.json` (e.g. `lamplighter-broadway`). Frozen — it's embedded in every event id (`make_event_id`), so it must never change or be reused.
+- **Artist uid** = the `id` field in `data/artists.json` (a frozen name-slug). Every artist carries one; renaming the act changes `name`, never `id`. The fuzzy matcher is unchanged — it just now resolves to a record with a canonical id.
+- **`data/handles.json`** (schema `tonight.handles/1`) — the vanity resolver: `handle → { type: venue|artist, uid, canonical }`, plus a `reserved` list of app routes/pages that can't be claimed. **Hand-assigned for now** (no self-serve claiming; that comes later via Firebase as a write overlay). To rename a handle, add the new one as canonical and keep the old with `canonical:false` so links redirect instead of 404 — never repoint or delete a uid. **Square names are not reserved**: squares resolve under their own `/sq/{name}` namespace, so they can't collide with venue/artist handles. Contract tests in `scraper/tests/test_data_contract.py` enforce unique artist ids, handles resolving to real uids, lowercase/non-reserved handles, and one canonical per uid. The front-end resolver (parsing `/{handle}` and `/sq/{name}`) is not built yet.
+
 **Fuzzy matching (`js/artist-match.js`, shared by app + `curator.html`):** deliberately conservative to avoid false positives. `performerFromTitle()` strips a stage prefix and prefers a quoted act / the part after "with"; `normName()` folds case, apostrophes, `&`, leading articles and a trailing "band". Match precedence, most-to-least specific:
 1. **`titles`** — exact event titles force-mapped to an entry (the way to *correct* a wrong auto-match, e.g. a quoted series name like "Banjo Mondays" outranking the real musician).
 2. **exact key** — normalized name or any `alt_names`, on the parsed performer then the de-staged title.

@@ -89,3 +89,56 @@ def test_partition_prefers_end_over_start():
          "end": _iso(now + timedelta(days=1))}
     active, recent, archived = rs.partition_events([e])
     assert {x["id"] for x in active} == {"festival"}
+
+
+# ---- stable identity: artist ids + handle resolver ----
+
+@pytest.fixture(scope="module")
+def artists_json():
+    with open(repo_path("data", "artists.json")) as f:
+        return json.load(f)
+
+
+@pytest.fixture(scope="module")
+def handles_json():
+    with open(repo_path("data", "handles.json")) as f:
+        return json.load(f)
+
+
+def test_every_artist_has_unique_id(artists_json):
+    """Each artist carries an immutable 'id' (the join key a /artist/{handle}
+    URL resolves to). Ids must be present and unique — a collision would make a
+    handle ambiguous."""
+    ids = [a.get("id") for a in artists_json["artists"]]
+    assert all(ids), "some artist entry is missing an 'id'"
+    dupes = [i for i, n in __import__("collections").Counter(ids).items() if n > 1]
+    assert not dupes, f"duplicate artist ids: {dupes}"
+
+
+def test_handles_resolve_to_real_uids(handles_json, venues_json, artists_json):
+    """Every handle must point at a uid that actually exists (a venue key or an
+    artist id), or the vanity URL would 404."""
+    artist_ids = {a["id"] for a in artists_json["artists"]}
+    bad = []
+    for handle, e in handles_json["handles"].items():
+        if e["type"] == "venue" and e["uid"] not in venues_json:
+            bad.append((handle, e["uid"], "venue"))
+        if e["type"] == "artist" and e["uid"] not in artist_ids:
+            bad.append((handle, e["uid"], "artist"))
+    assert not bad, f"handles pointing at unknown uids: {bad}"
+
+
+def test_handles_are_lowercase_and_not_reserved(handles_json):
+    reserved = set(handles_json["reserved"])
+    problems = [h for h in handles_json["handles"]
+                if h != h.lower() or h in reserved]
+    assert not problems, f"handles that are non-lowercase or reserved: {problems}"
+
+
+def test_one_canonical_handle_per_uid(handles_json):
+    """A uid may have retired (redirect) handles, but exactly one canonical."""
+    from collections import Counter
+    canon = Counter((e["type"], e["uid"]) for e in handles_json["handles"].values()
+                    if e.get("canonical"))
+    dupes = [k for k, n in canon.items() if n > 1]
+    assert not dupes, f"more than one canonical handle for: {dupes}"
