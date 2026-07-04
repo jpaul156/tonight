@@ -129,11 +129,23 @@ let venueData = {};
 // Keyed by URL so a hand-picked crop outlives the scraper's daily rewrite.
 let cropOverrides = {};
 let activeSquare = "all";
+// True once the user explicitly picks a square this session (a station tap or
+// "Near me"). Gates the Home-Square default: we only auto-apply the profile's
+// Home Square as the opening filter while the user hasn't chosen for themselves,
+// so a profile load never yanks them off a square they navigated to.
+let userSelectedSquare = false;
 let activeCategory = "all";
 // Your "home" square — where the metro map centers and the train departs when
 // no square is selected ("Near me"). Hardcoded for now; will come from a user
 // profile once profiles land, letting each user pick their own Home Square.
 const HOME_SQUARE = "Davis";
+
+// The effective Home Square: the signed-in (or anonymous) user's saved choice
+// when profiles are active, otherwise the hardcoded default. Read at call time
+// so it updates live when the profile loads / changes.
+function currentHomeSquare() {
+  return window.TonightProfile?.homeSquare?.() || HOME_SQUARE;
+}
 
 init();
 
@@ -170,6 +182,27 @@ async function init() {
   wireCollapsingHeader();
   window.addEventListener("hashchange", handleHash);
   handleHash();
+
+  // Profiles (Phase 1): when the user's profile loads or changes (Home Square,
+  // favorites, sign-in), re-rank the feed and refresh the pinned indicator.
+  // Fires harmlessly once in DISABLED mode, then never again.
+  window.addEventListener("tonight-profile-changed", () => {
+    applyHomeSquareDefault();
+    renderSquareIndicator();
+    render();
+  });
+}
+
+// Open the feed on the user's saved Home Square instead of "Near me" — but only
+// while they haven't picked a square themselves this session, and only when that
+// square actually has events tonight (else a quiet home square would land them on
+// an empty feed, so we leave them on "all"). Uses the raw saved value, not the
+// hardcoded Davis fallback, so a new/anonymous user with no Home Square set keeps
+// today's "Near me" default.
+function applyHomeSquareDefault() {
+  if (userSelectedSquare || activeSquare !== "all") return;
+  const saved = window.TonightProfile?.homeSquare?.();
+  if (saved && eventSquares.has(saved)) activeSquare = saved;
 }
 
 async function loadVenues() {
@@ -385,7 +418,7 @@ function openMetro() {
   // Origin is your current square, or your Home Square when nothing's selected
   // ("Near me") — so the map always opens zoomed in around a real place. The
   // canvas can't measure itself until the panel is on screen, so wait a frame.
-  const origin = activeSquare === "all" ? HOME_SQUARE : activeSquare;
+  const origin = activeSquare === "all" ? currentHomeSquare() : activeSquare;
   requestAnimationFrame(() => MetroMap.show(origin));
 }
 
@@ -835,6 +868,7 @@ const MetroMap = (() => {
 
 function selectSquare(value) {
   activeSquare = value;
+  userSelectedSquare = true;
   renderSquareIndicator();
   render();
   closeMetro();
@@ -997,10 +1031,14 @@ function render() {
   // Inman) to the top. Until we have a real location, randomize instead. The
   // random key is stable per event id so the order doesn't reshuffle on every
   // re-render.
-  const sortFn = (a, b) =>
+  const baseSort = (a, b) =>
     activeSquare === "all"
       ? randKey(a) - randKey(b)
       : startMs(a) - startMs(b);
+  // Favorited venues/artists float to the top of the active list (Phase 1).
+  // No-op when profiles are disabled (isFavoriteEvent returns false for all).
+  const favOf = e => (window.TonightProfile?.isFavoriteEvent?.(e) ? 0 : 1);
+  const sortFn = (a, b) => (favOf(a) - favOf(b)) || baseSort(a, b);
 
   const active = filtered.filter(e => !hasEnded(e)).sort(sortFn);
   const ended  = filtered.filter(e =>  hasEnded(e)).sort((a, b) => startMs(a) - startMs(b));
@@ -1241,6 +1279,10 @@ function openDetail(e) {
     e.performer
       ? allEvents.filter(o => o.performer === e.performer && o.id !== e.id && eventEndTime(o) > REAL_NOW)
       : []);
+
+  // Profiles (Phase 1): inject the favorite-venue star into the venue row.
+  // No-op when profiles are disabled.
+  window.TonightProfile?.decorateDetail?.(e);
 
   overlay.hidden = false;
   document.body.style.overflow = "hidden";
