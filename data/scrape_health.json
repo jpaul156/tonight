@@ -1,31 +1,31 @@
 {
   "schema": "tonight.health/1",
-  "generated_at": "2026-07-03T12:15:17.129581+00:00",
-  "duration_seconds": 140.3,
+  "generated_at": "2026-07-04T11:41:46.169995+00:00",
+  "duration_seconds": 162.6,
   "totals": {
-    "active_events": 1317,
-    "payload_bytes": 1913938,
-    "payload_gzip_bytes": 357772,
-    "archived_this_run": 6,
+    "active_events": 1293,
+    "payload_bytes": 1908703,
+    "payload_gzip_bytes": 360416,
+    "archived_this_run": 16,
     "venues_total": 28,
-    "venues_ok": 25,
+    "venues_ok": 26,
     "venues_idle": 2,
     "venues_warning": 0,
-    "venues_error": 1,
-    "no_image": 264,
-    "no_image_pct": 20.0
+    "venues_error": 0,
+    "no_image": 262,
+    "no_image_pct": 20.3
   },
   "by_square": {
-    "Davis": 340,
-    "Porter": 239,
-    "Union Square": 195,
-    "Harvard": 180,
+    "Davis": 338,
+    "Porter": 237,
+    "Union Square": 192,
+    "Harvard": 181,
     "Inman Square": 122,
-    "Central": 67,
+    "Central": 65,
     "Medford Square": 61,
     "Malden Center": 44,
-    "Maverick": 34,
-    "Lechmere": 28,
+    "Maverick": 31,
+    "Lechmere": 15,
     "Andrew": 6,
     "Coolidge Corner": 1
   },
@@ -46,20 +46,20 @@
   "collisions": {
     "exact": [
       {
-        "venue_id": "mideast-upstairs",
-        "venue": "The Middle East - Upstairs",
-        "start": "2026-07-02T19:00:00",
+        "venue_id": "mideast-downstairs",
+        "venue": "The Middle East - Downstairs",
+        "start": "2026-07-03T20:00:00",
         "count": 2,
         "events": [
           {
-            "id": "mideast-upstairs-20260702-bricknasty",
-            "title": "BRICKNASTY",
-            "cost": "$27.27"
+            "id": "mideast-downstairs-20260703-rio-da-yung-og",
+            "title": "Rio Da Yung Og",
+            "cost": "$43.22 - $161.67"
           },
           {
-            "id": "mideast-upstairs-20260702-bricknasty---well-suited",
-            "title": "BRICKNASTY , Well Suited",
-            "cost": "$32.92"
+            "id": "mideast-downstairs-20260703-rio-da-yung-og---cancelled---r",
+            "title": "Rio Da Yung Og \u2013 CANCELLED \u2013 REFUNDS AT POINT OF PURCHASE",
+            "cost": "$43.22 - $161.67"
           }
         ]
       }
@@ -69,95 +69,263 @@
   "reconciled": {
     "dropped": [
       {
-        "venue_id": "aeronaut",
-        "id": "aeronaut-20260705-soccer--match-92---winner-matc",
-        "title": "SOCCER: Match 92 - Winner Match 79 vs Winner Match 80",
-        "start": "2026-07-05T20:00"
+        "venue_id": "sally-obriens",
+        "id": "sally-obriens-20260725-peter-hoffman-s-better-late-th",
+        "title": "Peter Hoffman's Better Late Than Never",
+        "start": "2026-07-25T15:00:00"
       },
       {
-        "venue_id": "aeronaut",
-        "id": "aeronaut-20260706-soccer--match-94---winner-matc",
-        "title": "SOCCER: Match 94 - Winner Match 81 vs Winner Match 82",
-        "start": "2026-07-06T20:00"
-      },
-      {
-        "venue_id": "comedy-studio",
-        "id": "comedy-studio-20260922-free-comedy-open-mic",
-        "title": "Free Comedy Open-Mic",
-        "start": "2026-09-22T19:00"
-      },
-      {
-        "venue_id": "idle-hands",
-        "id": "idle-hands-20260703-tandoor---curry-food-truck",
-        "title": "Tandoor & Curry Food Truck",
-        "start": "2026-07-03T16:00"
-      },
-      {
-        "venue_id": "lamplighter-cx",
-        "id": "lamplighter-cx-20260704-world-cup--canada-vs--tbd",
-        "title": "World Cup: Canada vs. TBD",
-        "start": "2026-07-04T13:00:00"
-      },
-      {
-        "venue_id": "rockwell",
-        "id": "rockwell-20260706-character-creation-w--deby-xia",
-        "title": "Character Creation w/ Deby Xiadani",
-        "start": "2026-07-06T18:00"
-      },
-      {
-        "venue_id": "aeronaut",
-        "id": "aeronaut-20260706-boston-queer-fiber-arts-night",
-        "title": "Boston Queer Fiber Arts Night",
-        "start": "2026-07-06T18:00"
-      },
-      {
-        "venue_id": "lamplighter-cx",
-        "id": "lamplighter-cx-20260706-jeopardy-bar-league",
-        "title": "Jeopardy Bar League",
-        "start": "2026-07-06T19:00:00"
+        "venue_id": "tallship",
+        "id": "tallship-20260704-live-music--dj-frank-white",
+        "title": "Live Music: DJ Frank White",
+        "start": "2026-07-04T14:00:00"
       },
       {
         "venue_id": "lamplighter-broadway",
-        "id": "lamplighter-broadway-20260718-pepita-lo-fi-saturday",
+        "id": "lamplighter-broadway-20260705-pepita-lo-fi-sunday",
+        "title": "Pepita Lo-Fi Sunday",
+        "start": "2026-07-05T08:00:00"
+      },
+      {
+        "venue_id": "lamplighter-cx",
+        "id": "lamplighter-cx-20260705-pepita-lo-fi-sunday",
+        "title": "Pepita Lo-Fi Sunday",
+        "start": "2026-07-05T08:00:00"
+      },
+      {
+        "venue_id": "lamplighter-broadway",
+        "id": "lamplighter-broadway-20260707-broadway-trivia",
+        "title": "Broadway Trivia",
+        "start": "2026-07-07T19:00:00"
+      },
+      {
+        "venue_id": "lamplighter-cx",
+        "id": "lamplighter-cx-20260707-broadway-trivia",
+        "title": "Broadway Trivia",
+        "start": "2026-07-07T19:00:00"
+      },
+      {
+        "venue_id": "tallship",
+        "id": "tallship-20260709-live-music--scully-from-dalton",
+        "title": "Live Music: Scully from Dalton & the Sheriffs",
+        "start": "2026-07-09T18:00:00"
+      },
+      {
+        "venue_id": "lamplighter-broadway",
+        "id": "lamplighter-broadway-20260710-pepita-lo-fi-friday",
+        "title": "Pepita Lo-Fi Friday",
+        "start": "2026-07-10T08:00:00"
+      },
+      {
+        "venue_id": "lamplighter-cx",
+        "id": "lamplighter-cx-20260710-pepita-lo-fi-friday",
+        "title": "Pepita Lo-Fi Friday",
+        "start": "2026-07-10T08:00:00"
+      },
+      {
+        "venue_id": "arts-armory",
+        "id": "arts-armory-52a52d0a0b",
+        "title": "The Nova Comedy Collective Presents: Nebula Night",
+        "start": "2026-07-10T20:00:00"
+      },
+      {
+        "venue_id": "lamplighter-broadway",
+        "id": "lamplighter-broadway-20260711-pepita-lo-fi-saturday",
         "title": "Pepita Lo-Fi Saturday",
-        "start": "2026-07-18T08:00:00"
+        "start": "2026-07-11T08:00:00"
       },
       {
-        "venue_id": "aeronaut",
-        "id": "aeronaut-20260723-drink-and-draw-monthly-meet-up",
-        "title": "Drink and Draw Monthly Meet-Up",
-        "start": "2026-07-23T19:00"
+        "venue_id": "lamplighter-cx",
+        "id": "lamplighter-cx-20260711-pepita-lo-fi-saturday",
+        "title": "Pepita Lo-Fi Saturday",
+        "start": "2026-07-11T08:00:00"
       },
       {
-        "venue_id": "aeronaut",
-        "id": "aeronaut-20261018-moonbelles",
-        "title": "Moonbelles",
-        "start": "2026-10-18T14:30"
+        "venue_id": "lamplighter-broadway",
+        "id": "lamplighter-broadway-20260711-brewery-tour---tasting",
+        "title": "Brewery Tour & Tasting",
+        "start": "2026-07-11T16:00:00"
+      },
+      {
+        "venue_id": "lamplighter-cx",
+        "id": "lamplighter-cx-20260711-brewery-tour---tasting",
+        "title": "Brewery Tour & Tasting",
+        "start": "2026-07-11T16:00:00"
+      },
+      {
+        "venue_id": "lamplighter-broadway",
+        "id": "lamplighter-broadway-20260712-pepita-lo-fi-sunday",
+        "title": "Pepita Lo-Fi Sunday",
+        "start": "2026-07-12T08:00:00"
+      },
+      {
+        "venue_id": "lamplighter-cx",
+        "id": "lamplighter-cx-20260712-pepita-lo-fi-sunday",
+        "title": "Pepita Lo-Fi Sunday",
+        "start": "2026-07-12T08:00:00"
+      },
+      {
+        "venue_id": "tallship",
+        "id": "tallship-20260712-the-collective-studios--tone-a",
+        "title": "The Collective Studios: TONE at The Tall Ship!",
+        "start": "2026-07-12T10:30:00"
+      },
+      {
+        "venue_id": "lamplighter-cx",
+        "id": "lamplighter-cx-20260712-brewery-yoga",
+        "title": "Brewery Yoga",
+        "start": "2026-07-12T12:30:00"
+      },
+      {
+        "venue_id": "lamplighter-broadway",
+        "id": "lamplighter-broadway-20260712-brewery-yoga",
+        "title": "Brewery Yoga",
+        "start": "2026-07-12T12:30:00"
+      },
+      {
+        "venue_id": "lamplighter-cx",
+        "id": "lamplighter-cx-20260713-jeopardy-bar-league",
+        "title": "Jeopardy Bar League",
+        "start": "2026-07-13T19:00:00"
+      },
+      {
+        "venue_id": "arts-armory",
+        "id": "arts-armory-41cfe18daa",
+        "title": "West Coast Swing Training",
+        "start": "2026-07-13T19:00:00"
+      },
+      {
+        "venue_id": "lamplighter-broadway",
+        "id": "lamplighter-broadway-20260713-jeopardy-bar-league",
+        "title": "Jeopardy Bar League",
+        "start": "2026-07-13T19:00:00"
+      },
+      {
+        "venue_id": "lamplighter-broadway",
+        "id": "lamplighter-broadway-20260714-broadway-trivia",
+        "title": "Broadway Trivia",
+        "start": "2026-07-14T19:00:00"
+      },
+      {
+        "venue_id": "lamplighter-cx",
+        "id": "lamplighter-cx-20260714-broadway-trivia",
+        "title": "Broadway Trivia",
+        "start": "2026-07-14T19:00:00"
+      },
+      {
+        "venue_id": "arts-armory",
+        "id": "arts-armory-b0899c0025",
+        "title": "Atomic Comedy Indie Improv Night",
+        "start": "2026-07-16T19:30:00"
+      },
+      {
+        "venue_id": "lamplighter-broadway",
+        "id": "lamplighter-broadway-20260719-pepita-lo-fi-sunday",
+        "title": "Pepita Lo-Fi Sunday",
+        "start": "2026-07-19T08:00:00"
+      },
+      {
+        "venue_id": "lamplighter-cx",
+        "id": "lamplighter-cx-20260719-pepita-lo-fi-sunday",
+        "title": "Pepita Lo-Fi Sunday",
+        "start": "2026-07-19T08:00:00"
+      },
+      {
+        "venue_id": "arts-armory",
+        "id": "arts-armory-a259f60fdd",
+        "title": "West Coast Swing Training",
+        "start": "2026-07-20T19:00:00"
+      },
+      {
+        "venue_id": "lamplighter-broadway",
+        "id": "lamplighter-broadway-20260721-broadway-trivia",
+        "title": "Broadway Trivia",
+        "start": "2026-07-21T19:00:00"
+      },
+      {
+        "venue_id": "lamplighter-cx",
+        "id": "lamplighter-cx-20260721-broadway-trivia",
+        "title": "Broadway Trivia",
+        "start": "2026-07-21T19:00:00"
+      },
+      {
+        "venue_id": "lamplighter-broadway",
+        "id": "lamplighter-broadway-20260725-pepita-lo-fi-saturday",
+        "title": "Pepita Lo-Fi Saturday",
+        "start": "2026-07-25T08:00:00"
+      },
+      {
+        "venue_id": "lamplighter-cx",
+        "id": "lamplighter-cx-20260725-pepita-lo-fi-saturday",
+        "title": "Pepita Lo-Fi Saturday",
+        "start": "2026-07-25T08:00:00"
+      },
+      {
+        "venue_id": "arts-armory",
+        "id": "arts-armory-8a61622bc8",
+        "title": "West Coast Swing Training",
+        "start": "2026-07-27T19:00:00"
+      },
+      {
+        "venue_id": "lamplighter-broadway",
+        "id": "lamplighter-broadway-20260801-brewery-tour---tasting",
+        "title": "Brewery Tour & Tasting",
+        "start": "2026-08-01T16:00:00"
+      },
+      {
+        "venue_id": "lamplighter-cx",
+        "id": "lamplighter-cx-20260801-brewery-tour---tasting",
+        "title": "Brewery Tour & Tasting",
+        "start": "2026-08-01T16:00:00"
+      },
+      {
+        "venue_id": "arts-armory",
+        "id": "arts-armory-09674dda3e",
+        "title": "The Nova Comedy Collective Presents: Nebula Night",
+        "start": "2026-08-14T20:00:00"
+      },
+      {
+        "venue_id": "arts-armory",
+        "id": "arts-armory-0d53d3741b",
+        "title": "The Nova Comedy Collective Presents: Nebula Night",
+        "start": "2026-09-11T20:00:00"
+      },
+      {
+        "venue_id": "arts-armory",
+        "id": "arts-armory-69b1a32502",
+        "title": "The Moth: Boston StorySLAM",
+        "start": "2026-12-22T18:30:00"
+      },
+      {
+        "venue_id": "arts-armory",
+        "id": "arts-armory-e540646178",
+        "title": "The Moth: Boston StorySLAM",
+        "start": "2027-01-26T18:30:00"
+      },
+      {
+        "venue_id": "arts-armory",
+        "id": "arts-armory-5c00b3ca11",
+        "title": "The Moth: Boston StorySLAM",
+        "start": "2027-02-23T18:30:00"
+      },
+      {
+        "venue_id": "arts-armory",
+        "id": "arts-armory-364041e5a2",
+        "title": "The Moth: Boston StorySLAM",
+        "start": "2027-03-23T18:30:00"
       }
     ],
     "skipped": []
   },
   "tests": {
     "status": "pass",
-    "at": "2026-07-03T12:12:56.108793+00:00",
+    "at": "2026-07-04T11:39:03.029081+00:00",
     "total": 75,
     "passed": 75,
     "failed": 0,
     "skipped": 0
   },
   "venues": [
-    {
-      "id": "tallship",
-      "name": "The Tall Ship Boston",
-      "square": "Maverick",
-      "strategy": "wix_events",
-      "uses_llm": false,
-      "status": "error",
-      "event_count": 30,
-      "delta": -1,
-      "note": "yielded 0 events (feed had 31) \u2014 likely broken",
-      "last_success": "2026-07-02T12:17:49.527668+00:00"
-    },
     {
       "id": "bow-market",
       "name": "Bow Market",
@@ -189,10 +357,10 @@
       "strategy": "squarespace_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 220,
-      "delta": -3,
+      "event_count": 219,
+      "delta": -1,
       "note": "",
-      "last_success": "2026-07-03T12:15:17.042590+00:00"
+      "last_success": "2026-07-04T11:41:46.089093+00:00"
     },
     {
       "id": "aeronaut",
@@ -201,10 +369,10 @@
       "strategy": "aeronaut_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 169,
-      "delta": -5,
+      "event_count": 166,
+      "delta": -3,
       "note": "",
-      "last_success": "2026-07-03T12:15:17.042590+00:00"
+      "last_success": "2026-07-04T11:41:46.089093+00:00"
     },
     {
       "id": "comedy-studio",
@@ -213,10 +381,10 @@
       "strategy": "seatengine",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 159,
-      "delta": 6,
+      "event_count": 158,
+      "delta": -1,
       "note": "",
-      "last_success": "2026-07-03T12:15:17.042590+00:00"
+      "last_success": "2026-07-04T11:41:46.089093+00:00"
     },
     {
       "id": "burren",
@@ -237,7 +405,7 @@
       "strategy": "burren_tables",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 150,
+      "event_count": 147,
       "delta": -3,
       "note": "unchanged since last run (cache hit)",
       "last_success": "2026-07-02T23:53:21.077429+00:00"
@@ -250,9 +418,9 @@
       "uses_llm": false,
       "status": "ok",
       "event_count": 122,
-      "delta": -5,
+      "delta": 0,
       "note": "",
-      "last_success": "2026-07-03T12:15:17.042590+00:00"
+      "last_success": "2026-07-04T11:41:46.089093+00:00"
     },
     {
       "id": "rockwell",
@@ -261,10 +429,10 @@
       "strategy": "jsonld_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 73,
-      "delta": 2,
+      "event_count": 72,
+      "delta": -1,
       "note": "",
-      "last_success": "2026-07-03T12:15:17.042590+00:00"
+      "last_success": "2026-07-04T11:41:46.089093+00:00"
     },
     {
       "id": "arts-armory",
@@ -273,22 +441,10 @@
       "strategy": "em_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 58,
-      "delta": -60,
+      "event_count": 60,
+      "delta": 2,
       "note": "",
-      "last_success": "2026-07-03T12:15:17.042590+00:00"
-    },
-    {
-      "id": "lamplighter-broadway",
-      "name": "Lamplighter Brewing - Broadway",
-      "square": "Central",
-      "strategy": "shopify_products",
-      "uses_llm": true,
-      "status": "ok",
-      "event_count": 56,
-      "delta": 15,
-      "note": "",
-      "last_success": "2026-07-03T12:15:17.042590+00:00"
+      "last_success": "2026-07-04T11:41:46.089093+00:00"
     },
     {
       "id": "deep-cuts",
@@ -300,7 +456,7 @@
       "event_count": 48,
       "delta": 0,
       "note": "",
-      "last_success": "2026-07-03T12:15:17.042590+00:00"
+      "last_success": "2026-07-04T11:41:46.089093+00:00"
     },
     {
       "id": "crystal-ballroom",
@@ -309,10 +465,22 @@
       "strategy": "crystal_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 43,
-      "delta": -44,
+      "event_count": 44,
+      "delta": 1,
       "note": "",
-      "last_success": "2026-07-03T12:15:17.042590+00:00"
+      "last_success": "2026-07-04T11:41:46.089093+00:00"
+    },
+    {
+      "id": "lamplighter-broadway",
+      "name": "Lamplighter Brewing - Broadway",
+      "square": "Central",
+      "strategy": "shopify_products",
+      "uses_llm": true,
+      "status": "ok",
+      "event_count": 42,
+      "delta": -14,
+      "note": "",
+      "last_success": "2026-07-04T11:41:46.089093+00:00"
     },
     {
       "id": "idle-hands",
@@ -322,9 +490,21 @@
       "uses_llm": false,
       "status": "ok",
       "event_count": 39,
-      "delta": -1,
+      "delta": 0,
       "note": "",
-      "last_success": "2026-07-03T12:15:17.042590+00:00"
+      "last_success": "2026-07-04T11:41:46.089093+00:00"
+    },
+    {
+      "id": "tallship",
+      "name": "The Tall Ship Boston",
+      "square": "Maverick",
+      "strategy": "wix_events",
+      "uses_llm": false,
+      "status": "ok",
+      "event_count": 27,
+      "delta": -3,
+      "note": "",
+      "last_success": "2026-07-04T11:41:46.089093+00:00"
     },
     {
       "id": "sally-obriens",
@@ -334,9 +514,9 @@
       "uses_llm": false,
       "status": "ok",
       "event_count": 26,
-      "delta": -3,
-      "note": "unchanged since last run (cache hit)",
-      "last_success": "2026-07-03T00:38:55.704658+00:00"
+      "delta": 0,
+      "note": "",
+      "last_success": "2026-07-04T11:41:46.089093+00:00"
     },
     {
       "id": "mideast-downstairs",
@@ -346,9 +526,9 @@
       "uses_llm": false,
       "status": "ok",
       "event_count": 21,
-      "delta": -4,
+      "delta": 0,
       "note": "",
-      "last_success": "2026-07-03T12:15:17.042590+00:00"
+      "last_success": "2026-07-04T11:41:46.089093+00:00"
     },
     {
       "id": "lizard-lounge",
@@ -357,10 +537,10 @@
       "strategy": "jsonld_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 19,
+      "event_count": 18,
       "delta": -1,
       "note": "",
-      "last_success": "2026-07-03T12:15:17.042590+00:00"
+      "last_success": "2026-07-04T11:41:46.089093+00:00"
     },
     {
       "id": "plough-stars",
@@ -369,7 +549,7 @@
       "strategy": "html_full_text",
       "uses_llm": true,
       "status": "ok",
-      "event_count": 18,
+      "event_count": 17,
       "delta": -1,
       "note": "unchanged since last run (cache hit)",
       "last_success": "2026-07-01T22:22:44.871538+00:00"
@@ -381,10 +561,10 @@
       "strategy": "aeg_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 15,
-      "delta": -51,
-      "note": "unchanged since last run (cache hit)",
-      "last_success": "2026-07-03T00:08:14.193610+00:00"
+      "event_count": 16,
+      "delta": 1,
+      "note": "",
+      "last_success": "2026-07-04T11:41:46.089093+00:00"
     },
     {
       "id": "medford-brewing",
@@ -394,9 +574,9 @@
       "uses_llm": false,
       "status": "ok",
       "event_count": 13,
-      "delta": 1,
+      "delta": 0,
       "note": "",
-      "last_success": "2026-07-03T12:15:17.042590+00:00"
+      "last_success": "2026-07-04T11:41:46.089093+00:00"
     },
     {
       "id": "somerville-theatre",
@@ -408,7 +588,7 @@
       "event_count": 9,
       "delta": 0,
       "note": "",
-      "last_success": "2026-07-03T12:15:17.042590+00:00"
+      "last_success": "2026-07-04T11:41:46.089093+00:00"
     },
     {
       "id": "passim",
@@ -417,10 +597,10 @@
       "strategy": "html_full_text",
       "uses_llm": true,
       "status": "ok",
-      "event_count": 6,
-      "delta": 0,
+      "event_count": 7,
+      "delta": 1,
       "note": "",
-      "last_success": "2026-07-03T12:15:17.042590+00:00"
+      "last_success": "2026-07-04T11:41:46.089093+00:00"
     },
     {
       "id": "dorchester-brewing",
@@ -432,7 +612,7 @@
       "event_count": 6,
       "delta": 0,
       "note": "",
-      "last_success": "2026-07-03T12:15:17.042590+00:00"
+      "last_success": "2026-07-04T11:41:46.089093+00:00"
     },
     {
       "id": "faces-brewing",
@@ -443,7 +623,7 @@
       "status": "ok",
       "event_count": 5,
       "delta": 0,
-      "note": "",
+      "note": "unchanged since last run (cache hit)",
       "last_success": "2026-07-03T12:15:17.042590+00:00"
     },
     {
@@ -456,7 +636,7 @@
       "event_count": 4,
       "delta": 0,
       "note": "",
-      "last_success": "2026-07-03T12:15:17.042590+00:00"
+      "last_success": "2026-07-04T11:41:46.089093+00:00"
     },
     {
       "id": "hamilton-brookline",
@@ -468,7 +648,7 @@
       "event_count": 1,
       "delta": 0,
       "note": "",
-      "last_success": "2026-07-03T12:15:17.042590+00:00"
+      "last_success": "2026-07-04T11:41:46.089093+00:00"
     },
     {
       "id": "village-social",
