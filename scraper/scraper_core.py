@@ -1666,20 +1666,56 @@ def event_specific_address(raw_event, venue_cfg):
 # Event assembly
 # ============================================================
 
-def make_event_id(vid, start, title, source_url=None):
-    """Stable per-event id. When the source gives a real per-event permalink
-    (`source_url`), derive the id from that URL so the id survives title *and*
-    time edits — a rename or reschedule overwrites in place instead of leaving a
-    duplicate ghost. Only pass source_url when it's a genuine per-event link
-    (unique in the batch, not the venue's shared calendar page); build_events
-    decides. Otherwise fall back to the title-slug key, which churns on rename
-    but is all we have for calendar-page-only venues."""
+def _title_slug(title):
+    return "".join(c if c.isalnum() else "-" for c in (title or "").lower()).strip("-")
+
+
+def _start_token(start):
+    """Compact, stable token derived from an event's start datetime — the basis
+    for a title-free event id. `YYYYMMDD`, plus `THHMM` when the start carries a
+    time (ISO `YYYY-MM-DDTHH:MM...`). Empty string when start is missing, so
+    make_event_id knows there's no stable slot to key on."""
+    s = (start or "").strip()
+    if not s:
+        return ""
+    token = s[:10].replace("-", "")
+    if "T" in s and len(s) >= 16:
+        token += "T" + s[11:16].replace(":", "")
+    return token
+
+
+def make_event_id(vid, start, title=None, source_url=None, disambiguate=False):
+    """Stable per-event id. This id IS the event's shareable identity — the
+    front end uses it as `location.hash`, the share URL and the .ics `UID` — so
+    it must derive from stable identity, never the volatile title (a title edit
+    would otherwise mint a new id == a broken bookmark). Precedence:
+
+      1. a genuine per-event permalink (`source_url`), hashed — survives title
+         AND time edits. build_events passes it only when the URL is unique in
+         the batch and isn't the shared calendar page.
+      2. otherwise `venue_id + start`. Splitting rooms into distinct venue_ids
+         (Middle East, Burren) yields one event per (venue_id, start), so this is
+         unique WITHOUT the title — a rename no longer changes the id/URL.
+      3. the title only as a last-resort tiebreaker (`disambiguate=True`), for
+         genuine same-slot collisions like Aeronaut's parallel programming.
+         build_events sets this only for the (venue_id, start) slots that
+         actually collide, so unrelated title jitter never triggers it.
+
+    Degrades to the title slug when start is missing — with no stable slot to
+    key on, that's all we have, and it keeps distinct start-less events apart."""
     if source_url:
         h = hashlib.md5(source_url.encode()).hexdigest()[:10]
         return f"{vid}-{h}"
-    slug = "".join(c if c.isalnum() else "-" for c in title.lower()).strip("-")
-    date = (start or "")[:10].replace("-", "")
-    return f"{vid}-{date}-{slug[:30]}"
+    token = _start_token(start)
+    if not token:
+        slug = _title_slug(title)[:30]
+        return f"{vid}-{slug}" if slug else vid
+    base = f"{vid}-{token}"
+    if disambiguate:
+        slug = _title_slug(title)[:20]
+        if slug:
+            base = f"{base}-{slug}"
+    return base
 
 
 def is_private_event(title, description):
@@ -1779,8 +1815,8 @@ def build_events(raw_events, category_map, detail_map, venue_cfg):
                 and _url_counts[raw_url] == 1
             ) else None
             results.append({
-                "id": make_event_id(vid, e.get("start"), e.get("title", "event"),
-                                    source_url=permalink),
+                "id": None,        # assigned in the collision pass below
+                "_permalink": permalink,   # scratch, popped before return
                 "title": e.get("title"),
                 **fields,
                 "address": addr,
@@ -1802,6 +1838,21 @@ def build_events(raw_events, category_map, detail_map, venue_cfg):
                 "source_url": source_url,
                 "last_scraped": datetime.now(timezone.utc).isoformat(),
             })
+
+    # Assign ids after all rows exist, so we can spot genuine (venue_id, start)
+    # collisions among the permalink-less events and append a title tiebreaker
+    # to ONLY those. Everyone else keeps a clean title-free id, so a title edit
+    # never changes the id (== the event's shareable URL / .ics UID).
+    slot_counts = Counter(
+        (r["venue_id"], _start_token(r["start"]))
+        for r in results if not r["_permalink"]
+    )
+    for r in results:
+        permalink = r.pop("_permalink")
+        disambiguate = (not permalink
+                        and slot_counts[(r["venue_id"], _start_token(r["start"]))] > 1)
+        r["id"] = make_event_id(r["venue_id"], r["start"], r["title"],
+                                source_url=permalink, disambiguate=disambiguate)
     return results
 
 

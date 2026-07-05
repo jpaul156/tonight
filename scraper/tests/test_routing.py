@@ -66,9 +66,59 @@ def test_no_keywords_returns_primary():
 # ---- make_event_id: stable, slugified ----
 
 def test_make_event_id_shape():
+    # No permalink -> id is venue_id + start token, TITLE-FREE, so a title edit
+    # doesn't mint a new id (== the event's shareable URL / .ics UID).
     eid = sc.make_event_id("burren", "2026-06-15T20:00:00", "The Grafton Street Ramblers!")
-    assert eid.startswith("burren-20260615-")
+    assert eid == "burren-20260615T2000"
     assert " " not in eid and "!" not in eid
+
+
+def test_make_event_id_title_edit_is_stable():
+    """The core fix: same venue + same start, different title -> SAME id."""
+    a = sc.make_event_id("burren", "2026-06-15T20:00:00", "Grafton Street Ramblers")
+    b = sc.make_event_id("burren", "2026-06-15T20:00:00", "Grafton St. Ramblers (SOLD OUT)")
+    assert a == b
+
+
+def test_make_event_id_disambiguates_only_when_asked():
+    """Genuine same-slot collisions (Aeronaut parallel programming) fall back to
+    a title tiebreaker, but only when build_events flags it."""
+    a = sc.make_event_id("aeronaut", "2026-06-15T20:00:00", "Trivia", disambiguate=True)
+    b = sc.make_event_id("aeronaut", "2026-06-15T20:00:00", "Live Jazz", disambiguate=True)
+    assert a != b
+    assert a.startswith("aeronaut-20260615T2000-")
+
+
+def test_make_event_id_falls_back_to_title_without_start():
+    """No start = no stable slot to key on, so distinct start-less events must
+    still stay apart via the title."""
+    a = sc.make_event_id("burren", None, "Open Mic")
+    b = sc.make_event_id("burren", None, "Quiz Night")
+    assert a != b and a.startswith("burren-")
+
+
+def _mini_venue_cfg():
+    return {
+        "id": "aeronaut", "name": "Aeronaut", "collection_url": "https://aero/cal",
+        "is_local": True, "square": "Union", "transit_line": "Green",
+        "transit_stop": "Union Square", "walk_minutes": 5,
+    }
+
+
+def test_build_events_disambiguates_only_the_colliding_slot():
+    """End-to-end: two permalink-less events sharing (venue_id, start) get a
+    title tiebreaker each; an event alone in its slot stays clean + title-free."""
+    raw = [
+        {"title": "Trivia", "start": "2026-06-15T20:00:00"},
+        {"title": "Live Jazz", "start": "2026-06-15T20:00:00"},  # same slot -> collide
+        {"title": "Open Mic", "start": "2026-06-15T22:00:00"},   # alone in its slot
+    ]
+    out = sc.build_events(raw, {}, {}, _mini_venue_cfg())
+    ids = [e["id"] for e in out]
+    assert len(set(ids)) == 3
+    collided = [i for i in ids if i.startswith("aeronaut-20260615T2000")]
+    assert len(collided) == 2 and all("-" in i[len("aeronaut-20260615T2000"):] for i in collided)
+    assert "aeronaut-20260615T2200" in ids  # the lone event: no title suffix
 
 
 def test_make_event_id_permalink_survives_rename():
