@@ -1,44 +1,44 @@
 {
   "schema": "tonight.health/1",
-  "generated_at": "2026-07-04T11:41:46.169995+00:00",
-  "duration_seconds": 162.6,
+  "generated_at": "2026-07-06T13:56:20.089501+00:00",
+  "duration_seconds": 201.9,
   "totals": {
-    "active_events": 1293,
-    "payload_bytes": 1908703,
-    "payload_gzip_bytes": 360416,
-    "archived_this_run": 16,
+    "active_events": 1273,
+    "payload_bytes": 1940491,
+    "payload_gzip_bytes": 359992,
+    "archived_this_run": 32,
     "venues_total": 28,
-    "venues_ok": 26,
+    "venues_ok": 25,
     "venues_idle": 2,
-    "venues_warning": 0,
+    "venues_warning": 1,
     "venues_error": 0,
-    "no_image": 262,
-    "no_image_pct": 20.3
+    "no_image": 257,
+    "no_image_pct": 20.2
   },
   "by_square": {
-    "Davis": 338,
-    "Porter": 237,
-    "Union Square": 192,
+    "Davis": 349,
+    "Porter": 231,
+    "Union Square": 189,
     "Harvard": 181,
-    "Inman Square": 122,
-    "Central": 65,
-    "Medford Square": 61,
+    "Inman Square": 118,
+    "Medford Square": 62,
+    "Central": 60,
     "Malden Center": 44,
-    "Maverick": 31,
-    "Lechmere": 15,
+    "Maverick": 27,
     "Andrew": 6,
+    "Lechmere": 5,
     "Coolidge Corner": 1
   },
   "off_map_squares": [
     {
       "square": "Inman Square",
-      "events": 122,
+      "events": 118,
       "bus_only": true,
       "probable_match": null
     },
     {
       "square": "Medford Square",
-      "events": 61,
+      "events": 62,
       "bus_only": true,
       "probable_match": null
     }
@@ -46,20 +46,228 @@
   "collisions": {
     "exact": [
       {
-        "venue_id": "mideast-downstairs",
-        "venue": "The Middle East - Downstairs",
-        "start": "2026-07-03T20:00:00",
+        "venue_id": "mideast-zuzu",
+        "venue": "ZuZu",
+        "start": "2026-07-05T17:00:00",
+        "count": 4,
+        "events": [
+          {
+            "id": "mideast-zuzu-20260705-adderall-xr",
+            "title": "Adderall XR",
+            "cost": ""
+          },
+          {
+            "id": "mideast-zuzu-20260705-jane-kristiansen",
+            "title": "Jane Kristiansen",
+            "cost": ""
+          },
+          {
+            "id": "mideast-zuzu-20260705T1700-adderall-xr",
+            "title": "Adderall XR",
+            "cost": ""
+          },
+          {
+            "id": "mideast-zuzu-20260705T1700-jane-kristiansen",
+            "title": "Jane Kristiansen",
+            "cost": ""
+          }
+        ]
+      },
+      {
+        "venue_id": "aeronaut",
+        "venue": "Aeronaut Brewing Company",
+        "start": "2026-07-05T16:00",
         "count": 2,
         "events": [
           {
-            "id": "mideast-downstairs-20260703-rio-da-yung-og",
-            "title": "Rio Da Yung Og",
-            "cost": "$43.22 - $161.67"
+            "id": "aeronaut-20260705-soccer--brazil-vs-norway",
+            "title": "SOCCER: Brazil vs Norway",
+            "cost": null
           },
           {
-            "id": "mideast-downstairs-20260703-rio-da-yung-og---cancelled---r",
-            "title": "Rio Da Yung Og \u2013 CANCELLED \u2013 REFUNDS AT POINT OF PURCHASE",
-            "cost": "$43.22 - $161.67"
+            "id": "aeronaut-20260705T1600",
+            "title": "SOCCER: Brazil vs Norway",
+            "cost": null
+          }
+        ]
+      },
+      {
+        "venue_id": "aeronaut",
+        "venue": "Aeronaut Brewing Company",
+        "start": "2026-07-05T20:00",
+        "count": 2,
+        "events": [
+          {
+            "id": "aeronaut-20260705-soccer--mexico-vs-england",
+            "title": "SOCCER: Mexico vs England",
+            "cost": null
+          },
+          {
+            "id": "aeronaut-20260705T2000",
+            "title": "SOCCER: Mexico vs England",
+            "cost": null
+          }
+        ]
+      },
+      {
+        "venue_id": "burren-back-room",
+        "venue": "The Burren - Back Room",
+        "start": "2026-07-05T19:30:00",
+        "count": 2,
+        "events": [
+          {
+            "id": "burren-back-room-20260705-tiger-moan-first-sunday-blues",
+            "title": "TIGER MOAN First Sunday Blues",
+            "cost": null
+          },
+          {
+            "id": "burren-back-room-20260705T1930",
+            "title": "TIGER MOAN First Sunday Blues",
+            "cost": null
+          }
+        ]
+      },
+      {
+        "venue_id": "burren-front-room",
+        "venue": "The Burren - Front Room",
+        "start": "2026-07-05T15:00:00",
+        "count": 2,
+        "events": [
+          {
+            "id": "burren-front-room-20260705-irish-session",
+            "title": "IRISH SESSION",
+            "cost": null
+          },
+          {
+            "id": "burren-front-room-20260705T1500",
+            "title": "IRISH SESSION",
+            "cost": null
+          }
+        ]
+      },
+      {
+        "venue_id": "burren-front-room",
+        "venue": "The Burren - Front Room",
+        "start": "2026-07-05T18:00:00",
+        "count": 2,
+        "events": [
+          {
+            "id": "burren-front-room-20260705-old-timey-session",
+            "title": "OLD TIMEY SESSION",
+            "cost": null
+          },
+          {
+            "id": "burren-front-room-20260705T1800",
+            "title": "OLD TIMEY SESSION",
+            "cost": null
+          }
+        ]
+      },
+      {
+        "venue_id": "mideast-corner",
+        "venue": "The Middle East - Corner",
+        "start": "2026-07-05T21:00:00",
+        "count": 2,
+        "events": [
+          {
+            "id": "mideast-corner-20260705-glass-harbor",
+            "title": "Glass Harbor",
+            "cost": ""
+          },
+          {
+            "id": "mideast-corner-20260705T2100",
+            "title": "Glass Harbor",
+            "cost": ""
+          }
+        ]
+      },
+      {
+        "venue_id": "mideast-upstairs",
+        "venue": "The Middle East - Upstairs",
+        "start": "2026-07-05T19:00:00",
+        "count": 2,
+        "events": [
+          {
+            "id": "mideast-upstairs-20260705-qntm--d\u00f8shi--dimod---red-tail-",
+            "title": "QNTM, D\u00d8SHI, DIMOD , Red Tail Hawk",
+            "cost": "$22.12"
+          },
+          {
+            "id": "mideast-upstairs-20260705T1900",
+            "title": "QNTM, D\u00d8SHI, DIMOD , Red Tail Hawk",
+            "cost": "$27.27"
+          }
+        ]
+      },
+      {
+        "venue_id": "mideast-zuzu",
+        "venue": "ZuZu",
+        "start": "2026-07-05T21:00:00",
+        "count": 2,
+        "events": [
+          {
+            "id": "mideast-zuzu-20260705-mr--eyeslee-s-playground-prese",
+            "title": "Mr. EyesLee's Playground Presents: FIELD TRIP ft. Danny Torrance, Synesthesia, Miss Haze",
+            "cost": ""
+          },
+          {
+            "id": "mideast-zuzu-20260705T2100",
+            "title": "Mr. EyesLee's Playground Presents: FIELD TRIP ft. Danny Torrance, Synesthesia, Miss Haze",
+            "cost": ""
+          }
+        ]
+      },
+      {
+        "venue_id": "plough-stars",
+        "venue": "The Plough and Stars",
+        "start": "2026-07-05T18:00:00",
+        "count": 2,
+        "events": [
+          {
+            "id": "plough-stars-20260705-sarah-levecque-band",
+            "title": "Sarah Levecque Band",
+            "cost": null
+          },
+          {
+            "id": "plough-stars-20260705T1800",
+            "title": "Sarah Levecque Band",
+            "cost": null
+          }
+        ]
+      },
+      {
+        "venue_id": "sally-obriens",
+        "venue": "Sally O'Brien's",
+        "start": "2026-07-05T17:00:00",
+        "count": 2,
+        "events": [
+          {
+            "id": "sally-obriens-20260705-cambridge-somerville-all-stars",
+            "title": "Cambridge-Somerville All-Stars",
+            "cost": "Free"
+          },
+          {
+            "id": "sally-obriens-20260705T1700",
+            "title": "Cambridge-Somerville All-Stars",
+            "cost": "Free"
+          }
+        ]
+      },
+      {
+        "venue_id": "sally-obriens",
+        "venue": "Sally O'Brien's",
+        "start": "2026-07-05T21:30:00",
+        "count": 2,
+        "events": [
+          {
+            "id": "sally-obriens-20260705-dub-apocalypse",
+            "title": "Dub Apocalypse",
+            "cost": "Free"
+          },
+          {
+            "id": "sally-obriens-20260705T2130",
+            "title": "Dub Apocalypse",
+            "cost": "Free"
           }
         ]
       }
@@ -69,263 +277,1523 @@
   "reconciled": {
     "dropped": [
       {
+        "venue_id": "mideast-upstairs",
+        "id": "mideast-upstairs-20260706-middle-east-open-mon-july-6---",
+        "title": "MIDDLE EAST OPEN MON JULY 6 \u2013 2 GAMES",
+        "start": "2026-07-06T14:00:00"
+      },
+      {
+        "venue_id": "mideast-downstairs",
+        "id": "mideast-downstairs-20260706-middle-east-open-mon-july-6---",
+        "title": "MIDDLE EAST OPEN MON JULY 6 \u2013 2 GAMES",
+        "start": "2026-07-06T14:00:00"
+      },
+      {
+        "venue_id": "plough-stars",
+        "id": "plough-stars-20260706-trivia-night",
+        "title": "Trivia Night",
+        "start": "2026-07-06T19:00:00"
+      },
+      {
         "venue_id": "sally-obriens",
-        "id": "sally-obriens-20260725-peter-hoffman-s-better-late-th",
-        "title": "Peter Hoffman's Better Late Than Never",
-        "start": "2026-07-25T15:00:00"
+        "id": "sally-obriens-20260706-the-white-owls",
+        "title": "The White Owls",
+        "start": "2026-07-06T19:30:00"
       },
       {
-        "venue_id": "tallship",
-        "id": "tallship-20260704-live-music--dj-frank-white",
-        "title": "Live Music: DJ Frank White",
-        "start": "2026-07-04T14:00:00"
+        "venue_id": "hamilton-brookline",
+        "id": "hamilton-brookline-20260706-geeks-who-drink-trivia",
+        "title": "Geeks Who Drink Trivia",
+        "start": "2026-07-06T19:30:00"
       },
       {
-        "venue_id": "lamplighter-broadway",
-        "id": "lamplighter-broadway-20260705-pepita-lo-fi-sunday",
-        "title": "Pepita Lo-Fi Sunday",
-        "start": "2026-07-05T08:00:00"
+        "venue_id": "aeronaut",
+        "id": "aeronaut-20260706-soccer--usa-vs-belgium",
+        "title": "SOCCER: USA vs Belgium",
+        "start": "2026-07-06T20:00"
       },
       {
-        "venue_id": "lamplighter-cx",
-        "id": "lamplighter-cx-20260705-pepita-lo-fi-sunday",
-        "title": "Pepita Lo-Fi Sunday",
-        "start": "2026-07-05T08:00:00"
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260706-trivia-night",
+        "title": "TRIVIA NIGHT",
+        "start": "2026-07-06T20:00:00"
       },
       {
-        "venue_id": "lamplighter-broadway",
-        "id": "lamplighter-broadway-20260707-broadway-trivia",
-        "title": "Broadway Trivia",
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260706-irish-session",
+        "title": "IRISH SESSION",
+        "start": "2026-07-06T20:30:00"
+      },
+      {
+        "venue_id": "comedy-studio",
+        "id": "comedy-studio-20260707-free-comedy-open-mic",
+        "title": "Free Comedy Open-Mic",
+        "start": "2026-07-07T19:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260707-the-django-cadre",
+        "title": "THE DJANGO CADRE",
         "start": "2026-07-07T19:00:00"
       },
       {
-        "venue_id": "lamplighter-cx",
-        "id": "lamplighter-cx-20260707-broadway-trivia",
-        "title": "Broadway Trivia",
-        "start": "2026-07-07T19:00:00"
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260707-honky-tonk-tuesday-with-the-ta",
+        "title": "HONKY TONK TUESDAY with THE TALKING HEARTS",
+        "start": "2026-07-07T19:30:00"
       },
       {
-        "venue_id": "tallship",
-        "id": "tallship-20260709-live-music--scully-from-dalton",
-        "title": "Live Music: Scully from Dalton & the Sheriffs",
-        "start": "2026-07-09T18:00:00"
+        "venue_id": "plough-stars",
+        "id": "plough-stars-20260707-johnny-trama-and-the-b3-kings",
+        "title": "Johnny Trama and The B3 Kings",
+        "start": "2026-07-07T22:00:00"
       },
       {
-        "venue_id": "lamplighter-broadway",
-        "id": "lamplighter-broadway-20260710-pepita-lo-fi-friday",
-        "title": "Pepita Lo-Fi Friday",
-        "start": "2026-07-10T08:00:00"
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260708-grain-thief",
+        "title": "GRAIN THIEF",
+        "start": "2026-07-08T19:00:00"
       },
       {
-        "venue_id": "lamplighter-cx",
-        "id": "lamplighter-cx-20260710-pepita-lo-fi-friday",
-        "title": "Pepita Lo-Fi Friday",
-        "start": "2026-07-10T08:00:00"
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260708-the-ruckus--autumn-drive",
+        "title": "THE RUCKUS, AUTUMN DRIVE",
+        "start": "2026-07-08T19:00:00"
       },
       {
-        "venue_id": "arts-armory",
-        "id": "arts-armory-52a52d0a0b",
-        "title": "The Nova Comedy Collective Presents: Nebula Night",
-        "start": "2026-07-10T20:00:00"
+        "venue_id": "sally-obriens",
+        "id": "sally-obriens-20260708-fandango",
+        "title": "Fandango!",
+        "start": "2026-07-08T19:30:00"
       },
       {
-        "venue_id": "lamplighter-broadway",
-        "id": "lamplighter-broadway-20260711-pepita-lo-fi-saturday",
-        "title": "Pepita Lo-Fi Saturday",
-        "start": "2026-07-11T08:00:00"
+        "venue_id": "faces-brewing",
+        "id": "faces-brewing-20260708-elway--tired-radio--little-low",
+        "title": "Elway, Tired Radio, Little Low",
+        "start": "2026-07-08T20:00:00"
       },
       {
-        "venue_id": "lamplighter-cx",
-        "id": "lamplighter-cx-20260711-pepita-lo-fi-saturday",
-        "title": "Pepita Lo-Fi Saturday",
-        "start": "2026-07-11T08:00:00"
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260708-comedy-night",
+        "title": "COMEDY NIGHT",
+        "start": "2026-07-08T22:00:00"
       },
       {
-        "venue_id": "lamplighter-broadway",
-        "id": "lamplighter-broadway-20260711-brewery-tour---tasting",
-        "title": "Brewery Tour & Tasting",
-        "start": "2026-07-11T16:00:00"
+        "venue_id": "aeronaut",
+        "id": "aeronaut-20260709-soccer--match-97---winner-matc",
+        "title": "SOCCER: Match 97 - Winner Match 89 vs Winner Match 90",
+        "start": "2026-07-09T16:00"
       },
       {
-        "venue_id": "lamplighter-cx",
-        "id": "lamplighter-cx-20260711-brewery-tour---tasting",
-        "title": "Brewery Tour & Tasting",
-        "start": "2026-07-11T16:00:00"
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260709-janet-feld--erin-ash-sullivan-",
+        "title": "JANET FELD, ERIN ASH SULLIVAN, GRACE MORRISON",
+        "start": "2026-07-09T19:00:00"
       },
       {
-        "venue_id": "lamplighter-broadway",
-        "id": "lamplighter-broadway-20260712-pepita-lo-fi-sunday",
-        "title": "Pepita Lo-Fi Sunday",
-        "start": "2026-07-12T08:00:00"
+        "venue_id": "sally-obriens",
+        "id": "sally-obriens-20260709-adam-sherman-band--greatest-so",
+        "title": "Adam Sherman Band, Greatest Songs Ever Written",
+        "start": "2026-07-09T19:30:00"
       },
       {
-        "venue_id": "lamplighter-cx",
-        "id": "lamplighter-cx-20260712-pepita-lo-fi-sunday",
-        "title": "Pepita Lo-Fi Sunday",
-        "start": "2026-07-12T08:00:00"
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260709-torn-and-frayed",
+        "title": "TORN AND FRAYED",
+        "start": "2026-07-09T19:30:00"
       },
       {
-        "venue_id": "tallship",
-        "id": "tallship-20260712-the-collective-studios--tone-a",
-        "title": "The Collective Studios: TONE at The Tall Ship!",
-        "start": "2026-07-12T10:30:00"
+        "venue_id": "plough-stars",
+        "id": "plough-stars-20260709-nature-machine",
+        "title": "Nature Machine",
+        "start": "2026-07-09T22:00:00"
       },
       {
-        "venue_id": "lamplighter-cx",
-        "id": "lamplighter-cx-20260712-brewery-yoga",
-        "title": "Brewery Yoga",
-        "start": "2026-07-12T12:30:00"
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260709-count-off-entertainment",
+        "title": "COUNT-OFF ENTERTAINMENT",
+        "start": "2026-07-09T22:00:00"
       },
       {
-        "venue_id": "lamplighter-broadway",
-        "id": "lamplighter-broadway-20260712-brewery-yoga",
-        "title": "Brewery Yoga",
-        "start": "2026-07-12T12:30:00"
+        "venue_id": "aeronaut",
+        "id": "aeronaut-20260710-soccer--match-98---winner-matc",
+        "title": "SOCCER: Match 98 - Winner Match 93 vs Winner Match 94",
+        "start": "2026-07-10T15:00"
       },
       {
-        "venue_id": "lamplighter-cx",
-        "id": "lamplighter-cx-20260713-jeopardy-bar-league",
-        "title": "Jeopardy Bar League",
-        "start": "2026-07-13T19:00:00"
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260710-other-brother-darryl-with-spec",
+        "title": "OTHER BROTHER DARRYL with Special Guest HEY I'M OUTSIDE",
+        "start": "2026-07-10T19:00:00"
       },
       {
-        "venue_id": "arts-armory",
-        "id": "arts-armory-41cfe18daa",
-        "title": "West Coast Swing Training",
-        "start": "2026-07-13T19:00:00"
+        "venue_id": "sally-obriens",
+        "id": "sally-obriens-20260710-the-n\u00f3gs",
+        "title": "The n\u00d3gs",
+        "start": "2026-07-10T19:30:00"
       },
       {
-        "venue_id": "lamplighter-broadway",
-        "id": "lamplighter-broadway-20260713-jeopardy-bar-league",
-        "title": "Jeopardy Bar League",
-        "start": "2026-07-13T19:00:00"
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260710-irish-session",
+        "title": "IRISH SESSION",
+        "start": "2026-07-10T21:30:00"
       },
       {
-        "venue_id": "lamplighter-broadway",
-        "id": "lamplighter-broadway-20260714-broadway-trivia",
-        "title": "Broadway Trivia",
+        "venue_id": "plough-stars",
+        "id": "plough-stars-20260710-emily-grogan-band",
+        "title": "Emily Grogan Band",
+        "start": "2026-07-10T22:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260710-brick-park",
+        "title": "BRICK PARK",
+        "start": "2026-07-10T22:00:00"
+      },
+      {
+        "venue_id": "aeronaut",
+        "id": "aeronaut-20260711-soccer--match-99---winner-matc",
+        "title": "SOCCER: Match 99 - Winner Match 91 vs Winner Match 92",
+        "start": "2026-07-11T17:00"
+      },
+      {
+        "venue_id": "dorchester-brewing",
+        "id": "dorchester-brewing-20260711-femme-frequency-presented-by-b",
+        "title": "Femme Frequency Presented by Boston EDM Discord",
+        "start": "2026-07-11T18:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260711-summer07--gov-t-disco",
+        "title": "SUMMER07, GOV'T DISCO",
+        "start": "2026-07-11T19:00:00"
+      },
+      {
+        "venue_id": "sally-obriens",
+        "id": "sally-obriens-20260711-jimmy-ryan---friends",
+        "title": "Jimmy Ryan & friends",
+        "start": "2026-07-11T19:30:00"
+      },
+      {
+        "venue_id": "faces-brewing",
+        "id": "faces-brewing-20260711-new-idea-society--sad13--real-",
+        "title": "New Idea Society, Sad13, Real Beaut",
+        "start": "2026-07-11T20:00:00"
+      },
+      {
+        "venue_id": "aeronaut",
+        "id": "aeronaut-20260711-soccer--match-100---winner-mat",
+        "title": "SOCCER: Match 100 - Winner Match 95 vs Winner Match 96",
+        "start": "2026-07-11T21:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260711-irish-session",
+        "title": "IRISH SESSION",
+        "start": "2026-07-11T21:30:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260711-b-a-m",
+        "title": "B.A.M.",
+        "start": "2026-07-11T22:00:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260712-irish-session",
+        "title": "IRISH SESSION",
+        "start": "2026-07-12T15:00:00"
+      },
+      {
+        "venue_id": "dorchester-brewing",
+        "id": "dorchester-brewing-20260712-lesbian-nightlife-tea-dance",
+        "title": "Lesbian Nightlife Tea Dance",
+        "start": "2026-07-12T16:00:00"
+      },
+      {
+        "venue_id": "plough-stars",
+        "id": "plough-stars-20260712-tom-hagerty-band",
+        "title": "Tom Hagerty Band",
+        "start": "2026-07-12T16:00:00"
+      },
+      {
+        "venue_id": "sally-obriens",
+        "id": "sally-obriens-20260712-the-natural-wonders",
+        "title": "The Natural Wonders",
+        "start": "2026-07-12T17:00:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260712-old-timey-session",
+        "title": "OLD TIMEY SESSION",
+        "start": "2026-07-12T18:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260712-jgb-tribute--the-diamond-blues",
+        "title": "JGB Tribute, THE DIAMOND BLUES",
+        "start": "2026-07-12T20:00:00"
+      },
+      {
+        "venue_id": "sally-obriens",
+        "id": "sally-obriens-20260712-dub-apocalypse",
+        "title": "Dub Apocalypse",
+        "start": "2026-07-12T21:30:00"
+      },
+      {
+        "venue_id": "sally-obriens",
+        "id": "sally-obriens-20260713-the-white-owls",
+        "title": "The White Owls",
+        "start": "2026-07-13T19:30:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260713-trivia-night",
+        "title": "TRIVIA NIGHT",
+        "start": "2026-07-13T20:00:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260713-irish-session",
+        "title": "IRISH SESSION",
+        "start": "2026-07-13T20:30:00"
+      },
+      {
+        "venue_id": "comedy-studio",
+        "id": "comedy-studio-20260714-free-comedy-open-mic",
+        "title": "Free Comedy Open-Mic",
+        "start": "2026-07-14T19:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260714-the-django-cadre",
+        "title": "THE DJANGO CADRE",
         "start": "2026-07-14T19:00:00"
       },
       {
-        "venue_id": "lamplighter-cx",
-        "id": "lamplighter-cx-20260714-broadway-trivia",
-        "title": "Broadway Trivia",
-        "start": "2026-07-14T19:00:00"
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260714-silver-arrow-band",
+        "title": "SILVER ARROW BAND",
+        "start": "2026-07-14T20:00:00"
       },
       {
-        "venue_id": "arts-armory",
-        "id": "arts-armory-b0899c0025",
-        "title": "Atomic Comedy Indie Improv Night",
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260715-grain-thief",
+        "title": "GRAIN THIEF",
+        "start": "2026-07-15T19:00:00"
+      },
+      {
+        "venue_id": "sally-obriens",
+        "id": "sally-obriens-20260715-ethan-rossiter-band",
+        "title": "Ethan Rossiter Band",
+        "start": "2026-07-15T19:30:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260715-comedy-night",
+        "title": "COMEDY NIGHT",
+        "start": "2026-07-15T22:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260716-falcon-ridge-most-wanted-tour-",
+        "title": "Falcon Ridge Most Wanted Tour ft. TWANGTOWN PARAMOUR, HIGH TEA and BRYAN TITUS",
+        "start": "2026-07-16T19:00:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260716-torn-and-frayed",
+        "title": "TORN AND FRAYED",
         "start": "2026-07-16T19:30:00"
       },
       {
-        "venue_id": "lamplighter-broadway",
-        "id": "lamplighter-broadway-20260719-pepita-lo-fi-sunday",
-        "title": "Pepita Lo-Fi Sunday",
-        "start": "2026-07-19T08:00:00"
+        "venue_id": "plough-stars",
+        "id": "plough-stars-20260716-fat-n-gristle-blues-band",
+        "title": "Fat n Gristle Blues Band",
+        "start": "2026-07-16T22:00:00"
       },
       {
-        "venue_id": "lamplighter-cx",
-        "id": "lamplighter-cx-20260719-pepita-lo-fi-sunday",
-        "title": "Pepita Lo-Fi Sunday",
-        "start": "2026-07-19T08:00:00"
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260716-tbd",
+        "title": "TBD",
+        "start": "2026-07-16T22:00:00"
       },
       {
-        "venue_id": "arts-armory",
-        "id": "arts-armory-a259f60fdd",
-        "title": "West Coast Swing Training",
-        "start": "2026-07-20T19:00:00"
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260717-interzone--lost-my-balance",
+        "title": "INTERZONE, LOST MY BALANCE",
+        "start": "2026-07-17T19:00:00"
       },
       {
-        "venue_id": "lamplighter-broadway",
-        "id": "lamplighter-broadway-20260721-broadway-trivia",
-        "title": "Broadway Trivia",
+        "venue_id": "sally-obriens",
+        "id": "sally-obriens-20260717-dennis-brennan-band",
+        "title": "Dennis Brennan Band",
+        "start": "2026-07-17T19:30:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260717-irish-session",
+        "title": "IRISH SESSION",
+        "start": "2026-07-17T21:30:00"
+      },
+      {
+        "venue_id": "plough-stars",
+        "id": "plough-stars-20260717-the-handymen",
+        "title": "The Handymen",
+        "start": "2026-07-17T22:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260717-closing-time",
+        "title": "CLOSING TIME",
+        "start": "2026-07-17T22:00:00"
+      },
+      {
+        "venue_id": "aeronaut",
+        "id": "aeronaut-20260718-soccer--match-103---runner-up-",
+        "title": "SOCCER: Match 103 - Runner Up Match 101 vs Runner Up Match 102",
+        "start": "2026-07-18T17:00"
+      },
+      {
+        "venue_id": "sally-obriens",
+        "id": "sally-obriens-20260718-tim-gearan-band",
+        "title": "Tim Gearan Band",
+        "start": "2026-07-18T19:30:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260718-irish-session",
+        "title": "IRISH SESSION",
+        "start": "2026-07-18T21:30:00"
+      },
+      {
+        "venue_id": "plough-stars",
+        "id": "plough-stars-20260718-kabeatles",
+        "title": "KaBeatles",
+        "start": "2026-07-18T22:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260718-jimmy-s-down",
+        "title": "JIMMY'S DOWN",
+        "start": "2026-07-18T22:00:00"
+      },
+      {
+        "venue_id": "aeronaut",
+        "id": "aeronaut-20260719-soccer--match-104---winner-mat",
+        "title": "SOCCER: Match 104 - Winner Match 101 vs Winner Match 102",
+        "start": "2026-07-19T15:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260719-irish-session",
+        "title": "IRISH SESSION",
+        "start": "2026-07-19T15:00:00"
+      },
+      {
+        "venue_id": "sally-obriens",
+        "id": "sally-obriens-20260719-the-natural-wonders",
+        "title": "The Natural Wonders",
+        "start": "2026-07-19T17:00:00"
+      },
+      {
+        "venue_id": "plough-stars",
+        "id": "plough-stars-20260719-adam-sherman",
+        "title": "Adam Sherman",
+        "start": "2026-07-19T18:00:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260719-old-timey-session",
+        "title": "OLD TIMEY SESSION",
+        "start": "2026-07-19T18:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260719-daydream--muddy-river-junction",
+        "title": "DAYDREAM, MUDDY RIVER JUNCTION",
+        "start": "2026-07-19T19:30:00"
+      },
+      {
+        "venue_id": "sally-obriens",
+        "id": "sally-obriens-20260719-dub-apocalypse",
+        "title": "Dub Apocalypse",
+        "start": "2026-07-19T21:30:00"
+      },
+      {
+        "venue_id": "sally-obriens",
+        "id": "sally-obriens-20260720-the-white-owls",
+        "title": "The White Owls",
+        "start": "2026-07-20T19:30:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260720-trivia-night",
+        "title": "TRIVIA NIGHT",
+        "start": "2026-07-20T20:00:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260720-irish-session",
+        "title": "IRISH SESSION",
+        "start": "2026-07-20T20:30:00"
+      },
+      {
+        "venue_id": "comedy-studio",
+        "id": "comedy-studio-20260721-free-comedy-open-mic",
+        "title": "Free Comedy Open-Mic",
+        "start": "2026-07-21T19:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260721-the-django-cadre",
+        "title": "THE DJANGO CADRE",
         "start": "2026-07-21T19:00:00"
       },
       {
-        "venue_id": "lamplighter-cx",
-        "id": "lamplighter-cx-20260721-broadway-trivia",
-        "title": "Broadway Trivia",
-        "start": "2026-07-21T19:00:00"
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260722-grain-thief",
+        "title": "GRAIN THIEF",
+        "start": "2026-07-22T19:00:00"
       },
       {
-        "venue_id": "lamplighter-broadway",
-        "id": "lamplighter-broadway-20260725-pepita-lo-fi-saturday",
-        "title": "Pepita Lo-Fi Saturday",
-        "start": "2026-07-25T08:00:00"
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260722-jonah-birtwell--mariam-kubursi",
+        "title": "JONAH BIRTWELL, MARIAM KUBURSI, TOM HUANGPU",
+        "start": "2026-07-22T19:00:00"
       },
       {
-        "venue_id": "lamplighter-cx",
-        "id": "lamplighter-cx-20260725-pepita-lo-fi-saturday",
-        "title": "Pepita Lo-Fi Saturday",
-        "start": "2026-07-25T08:00:00"
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260722-comedy-night",
+        "title": "COMEDY NIGHT",
+        "start": "2026-07-22T22:00:00"
       },
       {
-        "venue_id": "arts-armory",
-        "id": "arts-armory-8a61622bc8",
-        "title": "West Coast Swing Training",
-        "start": "2026-07-27T19:00:00"
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260723-torn-and-frayed",
+        "title": "TORN AND FRAYED",
+        "start": "2026-07-23T19:30:00"
       },
       {
-        "venue_id": "lamplighter-broadway",
-        "id": "lamplighter-broadway-20260801-brewery-tour---tasting",
-        "title": "Brewery Tour & Tasting",
-        "start": "2026-08-01T16:00:00"
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260723-tbd",
+        "title": "TBD",
+        "start": "2026-07-23T22:00:00"
       },
       {
-        "venue_id": "lamplighter-cx",
-        "id": "lamplighter-cx-20260801-brewery-tour---tasting",
-        "title": "Brewery Tour & Tasting",
-        "start": "2026-08-01T16:00:00"
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260724-maya-salafia--hadley-johnson",
+        "title": "MAYA SALAFIA, HADLEY JOHNSON",
+        "start": "2026-07-24T19:00:00"
       },
       {
-        "venue_id": "arts-armory",
-        "id": "arts-armory-09674dda3e",
-        "title": "The Nova Comedy Collective Presents: Nebula Night",
-        "start": "2026-08-14T20:00:00"
+        "venue_id": "sally-obriens",
+        "id": "sally-obriens-20260724-one-thin-dime",
+        "title": "One Thin Dime",
+        "start": "2026-07-24T19:30:00"
       },
       {
-        "venue_id": "arts-armory",
-        "id": "arts-armory-0d53d3741b",
-        "title": "The Nova Comedy Collective Presents: Nebula Night",
+        "venue_id": "faces-brewing",
+        "id": "faces-brewing-20260724-sinnet--true-jackie--pat-fant",
+        "title": "Sinnet, True Jackie, Pat Fant",
+        "start": "2026-07-24T20:00:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260724-irish-session",
+        "title": "IRISH SESSION",
+        "start": "2026-07-24T21:30:00"
+      },
+      {
+        "venue_id": "plough-stars",
+        "id": "plough-stars-20260724-scott-damgaard",
+        "title": "Scott Damgaard",
+        "start": "2026-07-24T22:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260724-the-mockingbirds",
+        "title": "THE MOCKINGBIRDS",
+        "start": "2026-07-24T22:00:00"
+      },
+      {
+        "venue_id": "dorchester-brewing",
+        "id": "dorchester-brewing-20260725-dorchester-brewing-s-10-year-a",
+        "title": "Dorchester Brewing's 10 Year Anniversary Party",
+        "start": "2026-07-25T11:30:00"
+      },
+      {
+        "venue_id": "sally-obriens",
+        "id": "sally-obriens-20260725-peter-hoffman-s-better-great-t",
+        "title": "Peter Hoffman's Better Great Than Never",
+        "start": "2026-07-25T15:00:00"
+      },
+      {
+        "venue_id": "plough-stars",
+        "id": "plough-stars-20260725-tom-hagerty-band",
+        "title": "Tom Hagerty Band",
+        "start": "2026-07-25T16:00:00"
+      },
+      {
+        "venue_id": "dorchester-brewing",
+        "id": "dorchester-brewing-20260725-bark--a-pup-and-handler-party",
+        "title": "Bark! A Pup and Handler Party",
+        "start": "2026-07-25T18:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260725-the-american-blues",
+        "title": "THE AMERICAN BLUES",
+        "start": "2026-07-25T19:00:00"
+      },
+      {
+        "venue_id": "sally-obriens",
+        "id": "sally-obriens-20260725-le-prestige",
+        "title": "Le Prestige",
+        "start": "2026-07-25T19:30:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260725-irish-session",
+        "title": "IRISH SESSION",
+        "start": "2026-07-25T21:30:00"
+      },
+      {
+        "venue_id": "plough-stars",
+        "id": "plough-stars-20260725-bad-art-ensemble",
+        "title": "Bad Art Ensemble",
+        "start": "2026-07-25T22:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260725-elephant-in-the-room",
+        "title": "ELEPHANT IN THE ROOM",
+        "start": "2026-07-25T22:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260726-kids-open-mic",
+        "title": "KIDS OPEN MIC",
+        "start": "2026-07-26T11:30:00"
+      },
+      {
+        "venue_id": "faces-brewing",
+        "id": "faces-brewing-20260726-the-old-edison--trophy-lungs--",
+        "title": "The Old Edison, Trophy Lungs, Lenny Lashley's Gang of One",
+        "start": "2026-07-26T15:00:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260726-irish-session",
+        "title": "IRISH SESSION",
+        "start": "2026-07-26T15:00:00"
+      },
+      {
+        "venue_id": "dorchester-brewing",
+        "id": "dorchester-brewing-20260726-bears--brews---boys",
+        "title": "Bears, Brews & Boys",
+        "start": "2026-07-26T16:00:00"
+      },
+      {
+        "venue_id": "plough-stars",
+        "id": "plough-stars-20260726-dub-apocalypse",
+        "title": "Dub Apocalypse",
+        "start": "2026-07-26T16:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260726-brian-o-donovan-legacy-series-",
+        "title": "Brian O'Donovan Legacy Series: THE BOW TIDES",
+        "start": "2026-07-26T16:00:00"
+      },
+      {
+        "venue_id": "sally-obriens",
+        "id": "sally-obriens-20260726-hayride",
+        "title": "Hayride!",
+        "start": "2026-07-26T17:00:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260726-old-timey-session",
+        "title": "OLD TIMEY SESSION",
+        "start": "2026-07-26T18:00:00"
+      },
+      {
+        "venue_id": "sally-obriens",
+        "id": "sally-obriens-20260726-dub-apocalypse",
+        "title": "Dub Apocalypse",
+        "start": "2026-07-26T21:30:00"
+      },
+      {
+        "venue_id": "sally-obriens",
+        "id": "sally-obriens-20260727-the-white-owls",
+        "title": "The White Owls",
+        "start": "2026-07-27T19:30:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260727-trivia-night",
+        "title": "TRIVIA NIGHT",
+        "start": "2026-07-27T20:00:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260727-irish-session",
+        "title": "IRISH SESSION",
+        "start": "2026-07-27T20:30:00"
+      },
+      {
+        "venue_id": "comedy-studio",
+        "id": "comedy-studio-20260728-free-comedy-open-mic",
+        "title": "Free Comedy Open-Mic",
+        "start": "2026-07-28T19:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260728-the-django-cadre",
+        "title": "THE DJANGO CADRE",
+        "start": "2026-07-28T19:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260728-wagner---vino",
+        "title": "WAGNER & VINO",
+        "start": "2026-07-28T19:00:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260729-grain-thief",
+        "title": "GRAIN THIEF",
+        "start": "2026-07-29T19:00:00"
+      },
+      {
+        "venue_id": "sally-obriens",
+        "id": "sally-obriens-20260729-fandango",
+        "title": "Fandango!",
+        "start": "2026-07-29T19:30:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260729-comedy-night",
+        "title": "COMEDY NIGHT",
+        "start": "2026-07-29T22:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260730-crooked-diehl-ft--unmuted",
+        "title": "CROOKED DIEHL ft. UNMUTED",
+        "start": "2026-07-30T19:00:00"
+      },
+      {
+        "venue_id": "aeronaut",
+        "id": "aeronaut-20260730-jazz-night--adventure-time-tri",
+        "title": "JAZZ NIGHT: Adventure Time Trio",
+        "start": "2026-07-30T19:30"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260730-torn-and-frayed",
+        "title": "TORN AND FRAYED",
+        "start": "2026-07-30T19:30:00"
+      },
+      {
+        "venue_id": "plough-stars",
+        "id": "plough-stars-20260730-samantha-farrell",
+        "title": "Samantha Farrell",
+        "start": "2026-07-30T22:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260730-tbd",
+        "title": "TBD",
+        "start": "2026-07-30T22:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260731-zafar\u00e1n---a-voice-without-bord",
+        "title": "ZAFAR\u00c1N - A Voice Without Borders (Rescheduled from May)",
+        "start": "2026-07-31T19:00:00"
+      },
+      {
+        "venue_id": "sally-obriens",
+        "id": "sally-obriens-20260731-tom-hagerty-band",
+        "title": "Tom Hagerty Band",
+        "start": "2026-07-31T19:30:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260731-irish-session",
+        "title": "IRISH SESSION",
+        "start": "2026-07-31T21:30:00"
+      },
+      {
+        "venue_id": "plough-stars",
+        "id": "plough-stars-20260731-the-attractors",
+        "title": "The Attractors",
+        "start": "2026-07-31T22:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260731-charing-cross",
+        "title": "CHARING CROSS",
+        "start": "2026-07-31T22:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260801-travis-larson-with-special-gue",
+        "title": "TRAVIS LARSON with special guest PATRICK DECOSTE",
+        "start": "2026-08-01T19:00:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260801-irish-session",
+        "title": "IRISH SESSION",
+        "start": "2026-08-01T21:30:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260801-b-a-m",
+        "title": "B.A.M.",
+        "start": "2026-08-01T22:00:00"
+      },
+      {
+        "venue_id": "comedy-studio",
+        "id": "comedy-studio-20260804-free-comedy-open-mic",
+        "title": "Free Comedy Open-Mic",
+        "start": "2026-08-04T19:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260807-max-wareham---the-national-blu",
+        "title": "MAX WAREHAM & THE NATIONAL BLUEGRASS TEAM",
+        "start": "2026-08-07T19:00:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260807-irish-session",
+        "title": "IRISH SESSION",
+        "start": "2026-08-07T21:30:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260807-broken-heels",
+        "title": "BROKEN HEELS",
+        "start": "2026-08-07T22:00:00"
+      },
+      {
+        "venue_id": "vrcc",
+        "id": "vrcc-20260808-viva-colombia-boston-festival",
+        "title": "Viva Colombia Boston Festival",
+        "start": "2026-08-08T13:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260808-em-wise-farewell-show-w-cyan-s",
+        "title": "EM WISE Farewell Show w/CYAN SUE\u00d1O & NALA ON THE MOON",
+        "start": "2026-08-08T18:00:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260808-irish-session",
+        "title": "IRISH SESSION",
+        "start": "2026-08-08T21:30:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260808-charing-cross",
+        "title": "CHARING CROSS",
+        "start": "2026-08-08T22:00:00"
+      },
+      {
+        "venue_id": "comedy-studio",
+        "id": "comedy-studio-20260811-free-comedy-open-mic",
+        "title": "Free Comedy Open-Mic",
+        "start": "2026-08-11T19:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20260811-matteo-mancuso",
+        "title": "Matteo Mancuso",
+        "start": "2026-08-11T20:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260813-rebecca-scout-nelson",
+        "title": "REBECCA SCOUT NELSON",
+        "start": "2026-08-13T19:00:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260813-torn-and-frayed",
+        "title": "TORN AND FRAYED",
+        "start": "2026-08-13T19:30:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260813-count-off-entertainment",
+        "title": "COUNT-OFF ENTERTAINMENT",
+        "start": "2026-08-13T22:00:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20260816-trigger---talangor",
+        "title": "Trigger / Talangor",
+        "start": "2026-08-16T20:00:00"
+      },
+      {
+        "venue_id": "comedy-studio",
+        "id": "comedy-studio-20260818-free-comedy-open-mic",
+        "title": "Free Comedy Open-Mic",
+        "start": "2026-08-18T19:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260819-grain-thief",
+        "title": "GRAIN THIEF",
+        "start": "2026-08-19T19:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260819-alex-amber-with-special-guests",
+        "title": "ALEX AMBER with special guests EJ CAREY and MEHLANI",
+        "start": "2026-08-19T19:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260819-comedy-night",
+        "title": "COMEDY NIGHT",
+        "start": "2026-08-19T22:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260821-antje-duvekot",
+        "title": "ANTJE DUVEKOT",
+        "start": "2026-08-21T19:00:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260821-irish-session",
+        "title": "IRISH SESSION",
+        "start": "2026-08-21T21:30:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260821-the-mockingbirds",
+        "title": "THE MOCKINGBIRDS",
+        "start": "2026-08-21T22:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260822-noah-guthrie--ella-mcdonald",
+        "title": "NOAH GUTHRIE, ELLA MCDONALD",
+        "start": "2026-08-22T18:30:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260822-irish-session",
+        "title": "IRISH SESSION",
+        "start": "2026-08-22T21:30:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260822-join---look",
+        "title": "JOIN & LOOK",
+        "start": "2026-08-22T22:00:00"
+      },
+      {
+        "venue_id": "aeronaut",
+        "id": "aeronaut-20260823-john-wayne-s-dream",
+        "title": "John Wayne's Dream",
+        "start": "2026-08-23T14:30"
+      },
+      {
+        "venue_id": "aeronaut",
+        "id": "aeronaut-20260824-true-crime-trivia-with-the-bos",
+        "title": "True Crime Trivia with The Boston Globe's Emily Sweeney",
+        "start": "2026-08-24T20:00"
+      },
+      {
+        "venue_id": "comedy-studio",
+        "id": "comedy-studio-20260825-free-comedy-open-mic",
+        "title": "Free Comedy Open-Mic",
+        "start": "2026-08-25T19:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260825-the-django-cadre",
+        "title": "THE DJANGO CADRE",
+        "start": "2026-08-25T19:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260825-electric-hora",
+        "title": "ELECTRIC HORA",
+        "start": "2026-08-25T19:00:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260830-irish-session",
+        "title": "IRISH SESSION",
+        "start": "2026-08-30T15:00:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260830-old-timey-session",
+        "title": "OLD TIMEY SESSION",
+        "start": "2026-08-30T18:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260830-5th-sunday-honky-tonk-dance-pa",
+        "title": "5th Sunday Honky Tonk Dance Party with THE BEANTOWN BUCKAROOS",
+        "start": "2026-08-30T19:00:00"
+      },
+      {
+        "venue_id": "comedy-studio",
+        "id": "comedy-studio-20260901-free-comedy-open-mic",
+        "title": "Free Comedy Open-Mic",
+        "start": "2026-09-01T19:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20260902-the-fixx--colin-blunstone--the",
+        "title": "The FIXX, Colin Blunstone (The voice of the Zombies), and Peter Asher",
+        "start": "2026-09-02T19:00:00"
+      },
+      {
+        "venue_id": "aeronaut",
+        "id": "aeronaut-20260903-jazz-night--adventure-time-tri",
+        "title": "JAZZ NIGHT: Adventure Time Trio",
+        "start": "2026-09-03T19:30"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260904-the-kennedys",
+        "title": "THE KENNEDYS",
+        "start": "2026-09-04T19:00:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260904-irish-session",
+        "title": "IRISH SESSION",
+        "start": "2026-09-04T21:30:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260904-broken-heels",
+        "title": "BROKEN HEELS",
+        "start": "2026-09-04T22:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260905-jim-larkin---cd-debut-and-birt",
+        "title": "JIM LARKIN - CD Debut and Birthday Bash with Special Guest JESSE DEE",
+        "start": "2026-09-05T19:00:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260905-irish-session",
+        "title": "IRISH SESSION",
+        "start": "2026-09-05T21:30:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260905-jimmy-s-down",
+        "title": "JIMMY'S DOWN",
+        "start": "2026-09-05T22:00:00"
+      },
+      {
+        "venue_id": "comedy-studio",
+        "id": "comedy-studio-20260908-free-comedy-open-mic",
+        "title": "Free Comedy Open-Mic",
+        "start": "2026-09-08T19:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260909-grain-thief",
+        "title": "GRAIN THIEF",
+        "start": "2026-09-09T19:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260909-scuffletown-with-matty-metcalf",
+        "title": "SCUFFLETOWN with MATTY METCALFE",
+        "start": "2026-09-09T19:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260909-comedy-night",
+        "title": "COMEDY NIGHT",
+        "start": "2026-09-09T22:00:00"
+      },
+      {
+        "venue_id": "aeronaut",
+        "id": "aeronaut-20260911-vinyl-takeover--music-and-pop-",
+        "title": "Vinyl Takeover: Music and Pop-up Records Market",
+        "start": "2026-09-11T19:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260911-the-mammals",
+        "title": "THE MAMMALS",
+        "start": "2026-09-11T19:00:00"
+      },
+      {
+        "venue_id": "faces-brewing",
+        "id": "faces-brewing-20260911-drag-the-river",
+        "title": "Drag the River",
         "start": "2026-09-11T20:00:00"
       },
       {
-        "venue_id": "arts-armory",
-        "id": "arts-armory-69b1a32502",
-        "title": "The Moth: Boston StorySLAM",
-        "start": "2026-12-22T18:30:00"
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260911-irish-session",
+        "title": "IRISH SESSION",
+        "start": "2026-09-11T21:30:00"
       },
       {
-        "venue_id": "arts-armory",
-        "id": "arts-armory-e540646178",
-        "title": "The Moth: Boston StorySLAM",
-        "start": "2027-01-26T18:30:00"
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260911-inside-out",
+        "title": "INSIDE OUT",
+        "start": "2026-09-11T22:00:00"
       },
       {
-        "venue_id": "arts-armory",
-        "id": "arts-armory-5c00b3ca11",
-        "title": "The Moth: Boston StorySLAM",
-        "start": "2027-02-23T18:30:00"
+        "venue_id": "comedy-studio",
+        "id": "comedy-studio-20260915-free-comedy-open-mic",
+        "title": "Free Comedy Open-Mic",
+        "start": "2026-09-15T19:00"
       },
       {
-        "venue_id": "arts-armory",
-        "id": "arts-armory-364041e5a2",
-        "title": "The Moth: Boston StorySLAM",
-        "start": "2027-03-23T18:30:00"
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260916-grain-thief",
+        "title": "GRAIN THIEF",
+        "start": "2026-09-16T19:00:00"
+      },
+      {
+        "venue_id": "comedy-studio",
+        "id": "comedy-studio-20260916-tcs---cambridge-nites-present-",
+        "title": "TCS & Cambridge Nites present: Black Girl Magic",
+        "start": "2026-09-16T19:30"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260916-brian-o-donovan-legacy-series-",
+        "title": "Brian O'Donovan Legacy Series: THE GOTHARD SISTERS",
+        "start": "2026-09-16T19:30:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260916-comedy-night",
+        "title": "COMEDY NIGHT",
+        "start": "2026-09-16T22:00:00"
+      },
+      {
+        "venue_id": "vrcc",
+        "id": "vrcc-20260919-viva-m\u00e9xico-boston-festival",
+        "title": "Viva M\u00e9xico Boston Festival",
+        "start": "2026-09-19T13:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260919-tanya-donelly-this-hungry-life",
+        "title": "TANYA DONELLY:THIS HUNGRY LIFE20th Anniversary",
+        "start": "2026-09-19T19:00:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260919-irish-session",
+        "title": "IRISH SESSION",
+        "start": "2026-09-19T21:30:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260919-elephant-in-the-room",
+        "title": "ELEPHANT IN THE ROOM",
+        "start": "2026-09-19T22:00:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260922-the-django-cadre",
+        "title": "THE DJANGO CADRE",
+        "start": "2026-09-22T19:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260922-electric-hora",
+        "title": "ELECTRIC HORA",
+        "start": "2026-09-22T19:00:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260923-grain-thief",
+        "title": "GRAIN THIEF",
+        "start": "2026-09-23T19:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260923-david-wilcox",
+        "title": "DAVID WILCOX",
+        "start": "2026-09-23T19:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260923-comedy-night",
+        "title": "COMEDY NIGHT",
+        "start": "2026-09-23T22:00:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20260924-global-arts-live-presents-sash",
+        "title": "Global Arts Live Presents SASHA VELOUR",
+        "start": "2026-09-24T19:30:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260926-an-evening-with-ellis-paul",
+        "title": "An Evening With ELLIS PAUL",
+        "start": "2026-09-26T19:00:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20260926-irish-session",
+        "title": "IRISH SESSION",
+        "start": "2026-09-26T21:30:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20260926-b-a-m",
+        "title": "B.A.M.",
+        "start": "2026-09-26T22:00:00"
+      },
+      {
+        "venue_id": "comedy-studio",
+        "id": "comedy-studio-20260929-free-comedy-open-mic",
+        "title": "Free Comedy Open-Mic",
+        "start": "2026-09-29T19:00"
+      },
+      {
+        "venue_id": "aeronaut",
+        "id": "aeronaut-20261001-jazz-night--adventure-time-tri",
+        "title": "JAZZ NIGHT: Adventure Time Trio",
+        "start": "2026-10-01T19:30"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20261002-michelle-malone",
+        "title": "MICHELLE MALONE",
+        "start": "2026-10-02T19:00:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20261002-irish-session",
+        "title": "IRISH SESSION",
+        "start": "2026-10-02T21:30:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20261002-broken-heels",
+        "title": "BROKEN HEELS",
+        "start": "2026-10-02T22:00:00"
+      },
+      {
+        "venue_id": "comedy-studio",
+        "id": "comedy-studio-20261006-free-comedy-open-mic",
+        "title": "Free Comedy Open-Mic",
+        "start": "2026-10-06T19:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20261007-grain-thief",
+        "title": "GRAIN THIEF",
+        "start": "2026-10-07T19:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20261007-brian-o-donovan-legacy-series-",
+        "title": "Brian O'Donovan Legacy Series: REVERIE ROAD",
+        "start": "2026-10-07T19:30:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20261007-comedy-night",
+        "title": "COMEDY NIGHT",
+        "start": "2026-10-07T22:00:00"
+      },
+      {
+        "venue_id": "aeronaut",
+        "id": "aeronaut-20261009-honk--at-aeronaut",
+        "title": "HONK! at Aeronaut",
+        "start": "2026-10-09T18:00"
+      },
+      {
+        "venue_id": "comedy-studio",
+        "id": "comedy-studio-20261013-free-comedy-open-mic",
+        "title": "Free Comedy Open-Mic",
+        "start": "2026-10-13T19:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20261014-grain-thief",
+        "title": "GRAIN THIEF",
+        "start": "2026-10-14T19:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20261014-brian-o-donovan-legacy-series-",
+        "title": "Brian O'Donovan Legacy Series: ALASDAIR FRASER",
+        "start": "2026-10-14T19:30:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20261014-comedy-night",
+        "title": "COMEDY NIGHT",
+        "start": "2026-10-14T22:00:00"
+      },
+      {
+        "venue_id": "vrcc",
+        "id": "vrcc-20261017-catrinas-gala",
+        "title": "Catrinas Gala",
+        "start": "2026-10-17T17:30:00"
+      },
+      {
+        "venue_id": "comedy-studio",
+        "id": "comedy-studio-20261020-free-comedy-open-mic",
+        "title": "Free Comedy Open-Mic",
+        "start": "2026-10-20T19:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261026-watsky-x-infinity",
+        "title": "Watsky x Infinity",
+        "start": "2026-10-26T19:00:00"
+      },
+      {
+        "venue_id": "comedy-studio",
+        "id": "comedy-studio-20261027-free-comedy-open-mic",
+        "title": "Free Comedy Open-Mic",
+        "start": "2026-10-27T19:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20261027-the-django-cadre",
+        "title": "THE DJANGO CADRE",
+        "start": "2026-10-27T19:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20261027-electric-hora",
+        "title": "ELECTRIC HORA",
+        "start": "2026-10-27T19:00:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20261028-grain-thief",
+        "title": "GRAIN THIEF",
+        "start": "2026-10-28T19:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20261028-brian-o-donovan-legacy-series-",
+        "title": "Brian O'Donovan Legacy Series: THE STRAYAWAYS - KEVIN BURKE, DYLAN FOLEY, EAMON O'LEARY",
+        "start": "2026-10-28T19:30:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20261028-comedy-night",
+        "title": "COMEDY NIGHT",
+        "start": "2026-10-28T22:00:00"
+      },
+      {
+        "venue_id": "aeronaut",
+        "id": "aeronaut-20261031-halloween-bonanza",
+        "title": "Halloween Bonanza",
+        "start": "2026-10-31T16:00"
+      },
+      {
+        "venue_id": "vrcc",
+        "id": "vrcc-20261101-d\u00eda-de-muertos-festival",
+        "title": "D\u00eda de Muertos Festival",
+        "start": "2026-11-01T13:00:00"
+      },
+      {
+        "venue_id": "comedy-studio",
+        "id": "comedy-studio-20261103-free-comedy-open-mic",
+        "title": "Free Comedy Open-Mic",
+        "start": "2026-11-03T19:00"
+      },
+      {
+        "venue_id": "aeronaut",
+        "id": "aeronaut-20261105-jazz-night--adventure-time-tri",
+        "title": "JAZZ NIGHT: Adventure Time Trio",
+        "start": "2026-11-05T19:30"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261107-global-arts-live-presents--le-",
+        "title": "Global Arts Live presents: LE VENT DU NORD",
+        "start": "2026-11-07T20:00:00"
+      },
+      {
+        "venue_id": "comedy-studio",
+        "id": "comedy-studio-20261110-free-comedy-open-mic",
+        "title": "Free Comedy Open-Mic",
+        "start": "2026-11-10T19:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261116-daily-stoic-live",
+        "title": "DAILY STOIC LIVE",
+        "start": "2026-11-16T19:00:00"
+      },
+      {
+        "venue_id": "comedy-studio",
+        "id": "comedy-studio-20261117-free-comedy-open-mic",
+        "title": "Free Comedy Open-Mic",
+        "start": "2026-11-17T19:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261119-global-arts-live-presents--joh",
+        "title": "Global Arts Live Presents: JOHN SCOFIELD'S \"ELECTROSPECTIVE\"",
+        "start": "2026-11-19T19:30:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261121-the-pineapple-thief",
+        "title": "The Pineapple Thief",
+        "start": "2026-11-21T20:00:00"
+      },
+      {
+        "venue_id": "comedy-studio",
+        "id": "comedy-studio-20261124-free-comedy-open-mic",
+        "title": "Free Comedy Open-Mic",
+        "start": "2026-11-24T19:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20261124-the-django-cadre",
+        "title": "THE DJANGO CADRE",
+        "start": "2026-11-24T19:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20261124-electric-hora",
+        "title": "ELECTRIC HORA",
+        "start": "2026-11-24T19:00:00"
+      },
+      {
+        "venue_id": "comedy-studio",
+        "id": "comedy-studio-20261201-free-comedy-open-mic",
+        "title": "Free Comedy Open-Mic",
+        "start": "2026-12-01T19:00"
+      },
+      {
+        "venue_id": "comedy-studio",
+        "id": "comedy-studio-20261208-free-comedy-open-mic",
+        "title": "Free Comedy Open-Mic",
+        "start": "2026-12-08T19:00"
+      },
+      {
+        "venue_id": "comedy-studio",
+        "id": "comedy-studio-20261215-free-comedy-open-mic",
+        "title": "Free Comedy Open-Mic",
+        "start": "2026-12-15T19:00"
+      },
+      {
+        "venue_id": "comedy-studio",
+        "id": "comedy-studio-20261222-free-comedy-open-mic",
+        "title": "Free Comedy Open-Mic",
+        "start": "2026-12-22T19:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20261222-the-django-cadre",
+        "title": "THE DJANGO CADRE",
+        "start": "2026-12-22T19:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20261222-electric-hora",
+        "title": "ELECTRIC HORA",
+        "start": "2026-12-22T19:00:00"
+      },
+      {
+        "venue_id": "comedy-studio",
+        "id": "comedy-studio-20261229-free-comedy-open-mic",
+        "title": "Free Comedy Open-Mic",
+        "start": "2026-12-29T19:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20270629-trivia-night",
+        "title": "TRIVIA NIGHT",
+        "start": "2027-06-29T20:00:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20270629-irish-session",
+        "title": "IRISH SESSION",
+        "start": "2027-06-29T20:30:00"
+      },
+      {
+        "venue_id": "burren-front-room",
+        "id": "burren-front-room-20270630-the-django-cadre",
+        "title": "THE DJANGO CADRE",
+        "start": "2027-06-30T19:00:00"
+      },
+      {
+        "venue_id": "burren-back-room",
+        "id": "burren-back-room-20270630-exile-on-elm-street-revival-ni",
+        "title": "EXILE ON ELM STREET Revival Night",
+        "start": "2027-06-30T19:00:00"
+      },
+      {
+        "venue_id": "lamplighter-cx",
+        "id": "lamplighter-cx-20260706-world-cup--portugal-vs--spain",
+        "title": "World Cup: Portugal vs. Spain",
+        "start": "2026-07-06T15:00:00"
+      },
+      {
+        "venue_id": "lamplighter-broadway",
+        "id": "lamplighter-broadway-20260706-world-cup-pre-game-trivia",
+        "title": "World Cup Pre-Game Trivia!!",
+        "start": "2026-07-06T18:30:00"
+      },
+      {
+        "venue_id": "lamplighter-cx",
+        "id": "lamplighter-cx-20260706-world-cup--usa-vs--belgium",
+        "title": "World Cup: USA vs. Belgium",
+        "start": "2026-07-06T20:00:00"
+      },
+      {
+        "venue_id": "lamplighter-broadway",
+        "id": "lamplighter-broadway-455b41062f",
+        "title": "Pepita Lo-Fi Sunday",
+        "start": "2026-07-19T08:00:00"
       }
     ],
     "skipped": []
   },
   "tests": {
     "status": "pass",
-    "at": "2026-07-04T11:39:03.029081+00:00",
-    "total": 75,
-    "passed": 75,
+    "at": "2026-07-06T13:52:57.465214+00:00",
+    "total": 83,
+    "passed": 83,
     "failed": 0,
     "skipped": 0
   },
   "venues": [
+    {
+      "id": "village-social",
+      "name": "Village Social Club",
+      "square": "Brookline Village",
+      "strategy": "html_full_text",
+      "uses_llm": true,
+      "status": "warning",
+      "event_count": 0,
+      "delta": 0,
+      "note": "yields 0 events and never has \u2014 check config",
+      "last_success": null
+    },
     {
       "id": "bow-market",
       "name": "Bow Market",
@@ -357,10 +1825,10 @@
       "strategy": "squarespace_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 219,
-      "delta": -1,
+      "event_count": 214,
+      "delta": -5,
       "note": "",
-      "last_success": "2026-07-04T11:41:46.089093+00:00"
+      "last_success": "2026-07-06T13:56:19.999434+00:00"
     },
     {
       "id": "aeronaut",
@@ -369,22 +1837,22 @@
       "strategy": "aeronaut_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 166,
+      "event_count": 163,
       "delta": -3,
       "note": "",
-      "last_success": "2026-07-04T11:41:46.089093+00:00"
+      "last_success": "2026-07-06T13:56:19.999434+00:00"
     },
     {
-      "id": "comedy-studio",
-      "name": "The Comedy Studio",
-      "square": "Harvard",
-      "strategy": "seatengine",
+      "id": "burren-back-room",
+      "name": "The Burren - Back Room",
+      "square": "Davis",
+      "strategy": "burren_tables",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 158,
-      "delta": -1,
+      "event_count": 160,
+      "delta": 13,
       "note": "",
-      "last_success": "2026-07-04T11:41:46.089093+00:00"
+      "last_success": "2026-07-06T13:56:19.999434+00:00"
     },
     {
       "id": "burren",
@@ -399,16 +1867,16 @@
       "last_success": "2026-07-01T22:22:44.871538+00:00"
     },
     {
-      "id": "burren-back-room",
-      "name": "The Burren - Back Room",
-      "square": "Davis",
-      "strategy": "burren_tables",
+      "id": "comedy-studio",
+      "name": "The Comedy Studio",
+      "square": "Harvard",
+      "strategy": "seatengine",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 147,
-      "delta": -3,
-      "note": "unchanged since last run (cache hit)",
-      "last_success": "2026-07-02T23:53:21.077429+00:00"
+      "event_count": 156,
+      "delta": -2,
+      "note": "",
+      "last_success": "2026-07-06T13:56:19.999434+00:00"
     },
     {
       "id": "lilypad",
@@ -417,10 +1885,10 @@
       "strategy": "squarespace_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 122,
-      "delta": 0,
+      "event_count": 118,
+      "delta": -4,
       "note": "",
-      "last_success": "2026-07-04T11:41:46.089093+00:00"
+      "last_success": "2026-07-06T13:56:19.999434+00:00"
     },
     {
       "id": "rockwell",
@@ -430,9 +1898,9 @@
       "uses_llm": false,
       "status": "ok",
       "event_count": 72,
-      "delta": -1,
+      "delta": 0,
       "note": "",
-      "last_success": "2026-07-04T11:41:46.089093+00:00"
+      "last_success": "2026-07-06T13:56:19.999434+00:00"
     },
     {
       "id": "arts-armory",
@@ -441,10 +1909,10 @@
       "strategy": "em_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 60,
-      "delta": 2,
+      "event_count": 59,
+      "delta": -1,
       "note": "",
-      "last_success": "2026-07-04T11:41:46.089093+00:00"
+      "last_success": "2026-07-06T13:56:19.999434+00:00"
     },
     {
       "id": "deep-cuts",
@@ -453,10 +1921,10 @@
       "strategy": "dice_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 48,
-      "delta": 0,
+      "event_count": 49,
+      "delta": 1,
       "note": "",
-      "last_success": "2026-07-04T11:41:46.089093+00:00"
+      "last_success": "2026-07-06T13:56:19.999434+00:00"
     },
     {
       "id": "crystal-ballroom",
@@ -466,21 +1934,9 @@
       "uses_llm": false,
       "status": "ok",
       "event_count": 44,
-      "delta": 1,
+      "delta": 0,
       "note": "",
-      "last_success": "2026-07-04T11:41:46.089093+00:00"
-    },
-    {
-      "id": "lamplighter-broadway",
-      "name": "Lamplighter Brewing - Broadway",
-      "square": "Central",
-      "strategy": "shopify_products",
-      "uses_llm": true,
-      "status": "ok",
-      "event_count": 42,
-      "delta": -14,
-      "note": "",
-      "last_success": "2026-07-04T11:41:46.089093+00:00"
+      "last_success": "2026-07-06T13:56:19.999434+00:00"
     },
     {
       "id": "idle-hands",
@@ -492,19 +1948,7 @@
       "event_count": 39,
       "delta": 0,
       "note": "",
-      "last_success": "2026-07-04T11:41:46.089093+00:00"
-    },
-    {
-      "id": "tallship",
-      "name": "The Tall Ship Boston",
-      "square": "Maverick",
-      "strategy": "wix_events",
-      "uses_llm": false,
-      "status": "ok",
-      "event_count": 27,
-      "delta": -3,
-      "note": "",
-      "last_success": "2026-07-04T11:41:46.089093+00:00"
+      "last_success": "2026-07-06T13:56:19.999434+00:00"
     },
     {
       "id": "sally-obriens",
@@ -516,7 +1960,7 @@
       "event_count": 26,
       "delta": 0,
       "note": "",
-      "last_success": "2026-07-04T11:41:46.089093+00:00"
+      "last_success": "2026-07-06T13:56:19.999434+00:00"
     },
     {
       "id": "mideast-downstairs",
@@ -525,22 +1969,34 @@
       "strategy": "mideast_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 21,
-      "delta": 0,
+      "event_count": 25,
+      "delta": 4,
       "note": "",
-      "last_success": "2026-07-04T11:41:46.089093+00:00"
+      "last_success": "2026-07-06T13:56:19.999434+00:00"
     },
     {
-      "id": "lizard-lounge",
-      "name": "The Lizard Lounge",
-      "square": "Porter",
-      "strategy": "jsonld_events",
+      "id": "tallship",
+      "name": "The Tall Ship Boston",
+      "square": "Maverick",
+      "strategy": "wix_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 18,
-      "delta": -1,
+      "event_count": 23,
+      "delta": -4,
       "note": "",
-      "last_success": "2026-07-04T11:41:46.089093+00:00"
+      "last_success": "2026-07-06T13:56:19.999434+00:00"
+    },
+    {
+      "id": "lamplighter-broadway",
+      "name": "Lamplighter Brewing - Broadway",
+      "square": "Central",
+      "strategy": "shopify_products",
+      "uses_llm": true,
+      "status": "ok",
+      "event_count": 22,
+      "delta": -20,
+      "note": "",
+      "last_success": "2026-07-06T13:56:19.999434+00:00"
     },
     {
       "id": "plough-stars",
@@ -549,10 +2005,22 @@
       "strategy": "html_full_text",
       "uses_llm": true,
       "status": "ok",
+      "event_count": 18,
+      "delta": 1,
+      "note": "",
+      "last_success": "2026-07-06T13:56:19.999434+00:00"
+    },
+    {
+      "id": "lizard-lounge",
+      "name": "The Lizard Lounge",
+      "square": "Porter",
+      "strategy": "jsonld_events",
+      "uses_llm": false,
+      "status": "ok",
       "event_count": 17,
       "delta": -1,
-      "note": "unchanged since last run (cache hit)",
-      "last_success": "2026-07-01T22:22:44.871538+00:00"
+      "note": "",
+      "last_success": "2026-07-06T13:56:19.999434+00:00"
     },
     {
       "id": "sinclair",
@@ -562,8 +2030,8 @@
       "uses_llm": false,
       "status": "ok",
       "event_count": 16,
-      "delta": 1,
-      "note": "",
+      "delta": 0,
+      "note": "unchanged since last run (cache hit)",
       "last_success": "2026-07-04T11:41:46.089093+00:00"
     },
     {
@@ -576,7 +2044,19 @@
       "event_count": 13,
       "delta": 0,
       "note": "",
-      "last_success": "2026-07-04T11:41:46.089093+00:00"
+      "last_success": "2026-07-06T13:56:19.999434+00:00"
+    },
+    {
+      "id": "passim",
+      "name": "Club Passim",
+      "square": "Harvard",
+      "strategy": "html_full_text",
+      "uses_llm": true,
+      "status": "ok",
+      "event_count": 9,
+      "delta": 2,
+      "note": "",
+      "last_success": "2026-07-06T13:56:19.999434+00:00"
     },
     {
       "id": "somerville-theatre",
@@ -588,19 +2068,7 @@
       "event_count": 9,
       "delta": 0,
       "note": "",
-      "last_success": "2026-07-04T11:41:46.089093+00:00"
-    },
-    {
-      "id": "passim",
-      "name": "Club Passim",
-      "square": "Harvard",
-      "strategy": "html_full_text",
-      "uses_llm": true,
-      "status": "ok",
-      "event_count": 7,
-      "delta": 1,
-      "note": "",
-      "last_success": "2026-07-04T11:41:46.089093+00:00"
+      "last_success": "2026-07-06T13:56:19.999434+00:00"
     },
     {
       "id": "dorchester-brewing",
@@ -612,7 +2080,7 @@
       "event_count": 6,
       "delta": 0,
       "note": "",
-      "last_success": "2026-07-04T11:41:46.089093+00:00"
+      "last_success": "2026-07-06T13:56:19.999434+00:00"
     },
     {
       "id": "faces-brewing",
@@ -623,8 +2091,8 @@
       "status": "ok",
       "event_count": 5,
       "delta": 0,
-      "note": "unchanged since last run (cache hit)",
-      "last_success": "2026-07-03T12:15:17.042590+00:00"
+      "note": "",
+      "last_success": "2026-07-06T13:56:19.999434+00:00"
     },
     {
       "id": "vrcc",
@@ -636,7 +2104,7 @@
       "event_count": 4,
       "delta": 0,
       "note": "",
-      "last_success": "2026-07-04T11:41:46.089093+00:00"
+      "last_success": "2026-07-06T13:56:19.999434+00:00"
     },
     {
       "id": "hamilton-brookline",
@@ -648,19 +2116,7 @@
       "event_count": 1,
       "delta": 0,
       "note": "",
-      "last_success": "2026-07-04T11:41:46.089093+00:00"
-    },
-    {
-      "id": "village-social",
-      "name": "Village Social Club",
-      "square": "Brookline Village",
-      "strategy": "html_full_text",
-      "uses_llm": true,
-      "status": "ok",
-      "event_count": 0,
-      "delta": 0,
-      "note": "unchanged since last run (cache hit)",
-      "last_success": null
+      "last_success": "2026-07-06T13:56:19.999434+00:00"
     }
   ]
 }
