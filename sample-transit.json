@@ -1,0 +1,95 @@
+{
+ "schema": "tonight.transit/1",
+ "grid": { "cols": 70, "rows": 70 },
+ "lines": [
+  {
+   "name": "Red", "line": "Red",
+   "branches": [
+    { "name": "trunk", "nodes": [
+      {"c":6,"r":8,"station":true,"name":"Alewife"},
+      {"c":10,"r":12,"station":true,"name":"Davis"},
+      {"c":14,"r":16,"station":true,"name":"Porter"},
+      {"c":18,"r":20,"station":true,"name":"Harvard"},
+      {"c":22,"r":24,"station":true,"name":"Central"},
+      {"c":26,"r":28,"station":true,"name":"Kendall"},
+      {"c":29,"r":31,"station":true,"name":"Charles/MGH"},
+      {"c":32,"r":34,"station":true,"name":"Park Street"},
+      {"c":36,"r":37,"station":true,"name":"Downtown Crossing"},
+      {"c":39,"r":41,"station":true,"name":"South Station"},
+      {"c":43,"r":46,"station":true,"name":"JFK/UMass"}
+    ]},
+    { "name": "Ashmont", "nodes": [
+      {"c":43,"r":46,"station":true,"name":"JFK/UMass"},
+      {"c":43,"r":52,"station":false,"name":""},
+      {"c":40,"r":57,"station":true,"name":"Ashmont"}
+    ]},
+    { "name": "Braintree", "nodes": [
+      {"c":43,"r":46,"station":true,"name":"JFK/UMass"},
+      {"c":49,"r":52,"station":false,"name":""},
+      {"c":52,"r":58,"station":true,"name":"Braintree"}
+    ]}
+   ]
+  },
+  {
+   "name": "Orange", "line": "Orange",
+   "branches": [
+    { "name": "main", "nodes": [
+      {"c":28,"r":5,"station":true,"name":"Oak Grove"},
+      {"c":30,"r":15,"station":true,"name":"Sullivan"},
+      {"c":33,"r":26,"station":true,"name":"North Station"},
+      {"c":40,"r":33,"station":true,"name":"State"},
+      {"c":36,"r":37,"station":true,"name":"Downtown Crossing"},
+      {"c":31,"r":43,"station":true,"name":"Back Bay"},
+      {"c":26,"r":53,"station":true,"name":"Forest Hills"}
+    ]}
+   ]
+  },
+  {
+   "name": "Green", "line": "Green",
+   "branches": [
+    { "name": "trunk", "nodes": [
+      {"c":35,"r":22,"station":true,"name":"Lechmere"},
+      {"c":33,"r":26,"station":true,"name":"North Station"},
+      {"c":37,"r":31,"station":true,"name":"Government Center"},
+      {"c":32,"r":34,"station":true,"name":"Park Street"},
+      {"c":31,"r":36,"station":true,"name":"Boylston"},
+      {"c":28,"r":37,"station":true,"name":"Copley"},
+      {"c":20,"r":40,"station":true,"name":"Kenmore"}
+    ]},
+    { "name": "B", "nodes": [
+      {"c":20,"r":40,"station":true,"name":"Kenmore"},
+      {"c":16,"r":41,"station":false,"name":""},
+      {"c":12,"r":42,"station":true,"name":"Boston College"}
+    ]},
+    { "name": "C", "nodes": [
+      {"c":20,"r":40,"station":true,"name":"Kenmore"},
+      {"c":18,"r":44,"station":false,"name":""},
+      {"c":15,"r":46,"station":true,"name":"Cleveland Circle"}
+    ]},
+    { "name": "D", "nodes": [
+      {"c":20,"r":40,"station":true,"name":"Kenmore"},
+      {"c":17,"r":43,"station":false,"name":""},
+      {"c":13,"r":48,"station":true,"name":"Riverside"}
+    ]},
+    { "name": "E", "nodes": [
+      {"c":28,"r":37,"station":true,"name":"Copley"},
+      {"c":25,"r":41,"station":false,"name":""},
+      {"c":22,"r":46,"station":true,"name":"Heath Street"}
+    ]}
+   ]
+  },
+  {
+   "name": "Blue", "line": "Blue",
+   "branches": [
+    { "name": "main", "nodes": [
+      {"c":52,"r":8,"station":true,"name":"Wonderland"},
+      {"c":48,"r":20,"station":true,"name":"Airport"},
+      {"c":43,"r":30,"station":true,"name":"Aquarium"},
+      {"c":40,"r":33,"station":true,"name":"State"},
+      {"c":37,"r":31,"station":true,"name":"Government Center"},
+      {"c":34,"r":30,"station":true,"name":"Bowdoin"}
+    ]}
+   ]
+  }
+ ]
+}

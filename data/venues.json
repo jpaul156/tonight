@@ -122,7 +122,7 @@
     "walk_minutes": 1,
     "website": "https://www.mission-beachhouse.com",
     "phone": "(781) 629-7242",
-    "logo_url": null,
+    "logo_url": "assets/venues/orig/mission-beachhouse.jpeg",
     "logo_thumb_url": null,
     "is_local": true,
     "notes": "Beachfront bar and restaurant at Revere Beach. Rotating weekday food deals: $1 oysters (Mon), half-price fried (Tue), 1/2-off sandwiches (Wed), $1 wings (Thu)."
@@ -141,7 +141,7 @@
     "notes": "Long-running Union Square live music bar; free shows most nights.",
     "is_local": true,
     "logo_url": null,
-    "logo_thumb_url": null
+    "logo_thumb_url": "assets/venues/thumbs/sally-obriens.png"
   },
   "arts-armory": {
     "id": "arts-armory",
@@ -156,7 +156,7 @@
     "website": "https://artsatthearmory.org",
     "notes": "Community arts hall: music, markets, talks, performances.",
     "is_local": true,
-    "logo_url": null,
+    "logo_url": "assets/venues/orig/arts-armory.png",
     "logo_thumb_url": null
   },
   "plough-stars": {
@@ -172,7 +172,7 @@
     "website": "https://www.ploughandstars.com",
     "notes": "Irish pub with nightly live music.",
     "is_local": true,
-    "logo_url": null,
+    "logo_url": "assets/venues/orig/plough-stars.webp",
     "logo_thumb_url": null
   },
   "sinclair": {
@@ -188,7 +188,7 @@
     "website": "https://www.sinclaircambridge.com",
     "notes": "AEG live music venue and restaurant in Harvard Square.",
     "is_local": false,
-    "logo_url": null,
+    "logo_url": "assets/venues/orig/sinclair.png",
     "logo_thumb_url": null
   },
   "comedy-studio": {
@@ -204,7 +204,7 @@
     "website": "https://www.thecomedystudio.com",
     "notes": "Stand-up showcase in Harvard Square; SeatEngine box office.",
     "is_local": true,
-    "logo_url": null,
+    "logo_url": "assets/venues/orig/comedy-studio.png",
     "logo_thumb_url": null
   },
   "mccarthys": {
@@ -220,7 +220,7 @@
     "website": "https://www.mccarthystoad.com",
     "notes": "Traditional Irish sessions nightly with rotating local musicians.",
     "is_local": true,
-    "logo_url": null,
+    "logo_url": "assets/venues/orig/mccarthys.png",
     "logo_thumb_url": null
   },
   "toad": {

@@ -154,6 +154,8 @@ The transit navigation layer lives in three standalone HTML files at the repo ro
 
 ## Pending product work
 
+- **"Third place" category (name TBD):** For cafes, plazas, and hidden nooks people go to sit/chill/read/study/work — not live events. Like film listings, these should not show up on the main events page by default; needs an opt-in filter similar to the planned cinema `event_type`. Pepita Lo-Fi at Lamplighter belongs here but stays on the main list for now — reclassify when this is addressed.
+
 - **Weekly event verification:** Some recurring events (trivia nights, sessions) get cancelled week-to-week without the calendar being updated (e.g. Grainne O'Malley's was skipped). We need a mechanism for venues to confirm their recurring events are still on — e.g. a venue-facing view where they click a button to verify for the current day/week. Until this exists, treat weekly-only calendars cautiously (Grainne O'Malley's is on hold for this reason).
 
 - **Movies / cinema listings:** Add Apple Cinemas, Coolidge Corner Theatre, and similar to the venue list. Movie showtimes should be hidden from the main event feed by default (since the app prioritizes live events) — likely a separate category or `event_type: "film"` filter that must be opted into. Design the opt-in UX before adding cinema venues.

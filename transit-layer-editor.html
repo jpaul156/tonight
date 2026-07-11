@@ -1,0 +1,909 @@
+<!-- Tonight — Transit Layer Editor
+     Standalone, single-file, no build step. Draw MBTA-style lines + stations on a
+     col/row grid that matches the Tiled terrain map (same tile count = same coords).
+     Trace over an imported reference image (e.g. the MBTA system diagram). -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Transit Layer Editor</title>
+<style>
+  :root{
+    --bg:#10131a; --panel:#171b24; --panel2:#1e2430; --line:#2b3340;
+    --ink:#e6ebf2; --dim:#8b97a8; --accent:#ffd23f; --accent2:#3aa0ff; --danger:#e0544e;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;overflow:hidden}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:ui-monospace,Menlo,Consolas,"DejaVu Sans Mono",monospace;
+    font-size:13px; display:flex; flex-direction:column; height:100vh;
+  }
+  header{
+    display:flex; align-items:center; gap:10px; padding:8px 12px; flex-wrap:wrap;
+    border-bottom:1px solid var(--line); background:var(--panel);
+  }
+  header h1{font-size:14px;margin:0;letter-spacing:.5px;text-transform:uppercase;color:var(--accent)}
+  header .sub{color:var(--dim);font-size:11px}
+  .spacer{flex:1}
+  button,select,input[type=text],input[type=number]{
+    font-family:inherit;font-size:12px;color:var(--ink);
+    background:var(--panel2);border:1px solid var(--line);border-radius:4px;padding:6px 9px;
+  }
+  button{cursor:pointer}
+  button:hover{border-color:var(--accent2)}
+  button.on{background:var(--accent2);border-color:var(--accent2);color:#06101c;font-weight:700}
+  button.danger:hover{border-color:var(--danger)}
+  input[type=number]{width:58px}
+  label.fld{display:flex;align-items:center;gap:5px;color:var(--dim);font-size:11px}
+  .wrap{flex:1;display:flex;min-height:0}
+  .stage{flex:1;position:relative;min-width:0;background:
+    repeating-linear-gradient(45deg,#0d1016 0 10px,#0f131a 10px 20px);overflow:hidden;touch-action:none}
+  canvas{display:block;width:100%;height:100%;cursor:crosshair}
+  .hud{position:absolute;left:12px;bottom:12px;font-size:11px;color:var(--dim);
+    background:rgba(10,13,18,.82);padding:6px 9px;border:1px solid var(--line);border-radius:5px;line-height:1.5}
+  .hud b{color:var(--ink)}
+  .mode{position:absolute;left:12px;top:12px;font-size:11px;
+    background:rgba(10,13,18,.82);padding:6px 9px;border:1px solid var(--line);border-radius:5px}
+  .mode .pill{display:inline-block;padding:1px 7px;border-radius:10px;font-weight:700}
+  .pill.way{background:#2b3340;color:#cdd6e2}
+  .pill.sta{background:#fff;color:#10131a}
+  .pill.minor{background:#7c8698;color:#10131a}
+  aside{width:300px;flex:none;border-left:1px solid var(--line);background:var(--panel);
+    overflow-y:auto;padding:10px 12px 40px}
+  .group{border-top:1px solid var(--line);padding:11px 2px}
+  .group:first-child{border-top:none}
+  .group h2{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--dim);margin:0 0 8px}
+  .tools{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+  .lines{display:flex;flex-direction:column;gap:5px}
+  .lrow{display:flex;align-items:center;gap:7px;padding:6px 7px;border-radius:5px;
+    background:var(--panel2);border:1px solid var(--line);cursor:pointer}
+  .lrow.sel{border-color:var(--accent)}
+  .lrow .dot{width:14px;height:14px;border-radius:50%;flex:none;border:2px solid #0007}
+  .lrow .nm{flex:1;font-size:12px;background:transparent;border:none;color:var(--ink);padding:0;width:100%}
+  .lrow .x{font-size:11px;padding:2px 6px;background:#321;border-color:#633}
+  .brow{display:flex;align-items:center;gap:7px;padding:5px 7px;border-radius:5px;margin-left:10px;
+    background:#0f131b;border:1px solid var(--line);cursor:pointer}
+  .brow.sel{border-color:var(--accent2)}
+  .brow .nm{flex:1;font-size:11px;background:transparent;border:none;color:var(--ink);padding:0}
+  .brow .ct{font-size:10px;color:var(--dim)}
+  .brow .x{font-size:10px;padding:1px 5px;background:#321;border-color:#633}
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .full{width:100%}
+  .row{display:flex;gap:6px;align-items:center;margin:6px 0}
+  input[type=range]{width:100%}
+  .hint{font-size:10px;color:var(--dim);margin-top:6px;line-height:1.55}
+  kbd{background:#0b0e14;border:1px solid var(--line);border-bottom-width:2px;border-radius:3px;
+    padding:0 4px;font-size:10px;color:var(--ink)}
+  textarea{width:100%;height:80px;font-family:inherit;font-size:10px;background:#0b0e14;color:var(--ink);
+    border:1px solid var(--line);border-radius:5px;padding:7px;resize:vertical}
+  .ac-wrap{position:relative}
+  .ac-drop{position:absolute;left:0;right:0;top:100%;z-index:99;background:#1e2430;border:1px solid var(--accent2);
+    border-top:none;border-radius:0 0 5px 5px;max-height:180px;overflow-y:auto;display:none}
+  .ac-item{padding:5px 9px;cursor:pointer;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ac-item:hover,.ac-item.active{background:#2a3447;color:var(--accent)}
+</style>
+
+<header>
+  <h1>Transit Layer</h1>
+  <label class="fld">cols<input type="number" id="cols" value="70" min="2" max="400"></label>
+  <label class="fld">rows<input type="number" id="rows" value="70" min="2" max="400"></label>
+  <button id="applyGrid">Apply grid</button>
+  <span class="spacer"></span>
+  <button id="loadImgBtn">Load reference image…</button>
+  <input type="file" id="imgIn" accept="image/*" hidden>
+  <label class="fld">img<input type="range" id="imgAlpha" min="0" max="100" value="55" style="width:80px"></label>
+  <button id="btnGrid" class="on">Grid</button>
+  <button id="btnAngle" class="on" title="lock placement to 45°/90° turns">45° lock</button>
+  <button id="fit">Fit</button>
+</header>
+
+<div class="wrap">
+  <div class="stage" id="stage">
+    <canvas id="cv"></canvas>
+    <div class="mode" id="modeBox">placing <span class="pill way" id="placePill">waypoint</span></div>
+    <div class="hud" id="hud">(–, –)</div>
+  </div>
+
+  <aside>
+    <div class="group">
+      <h2>Tool</h2>
+      <div class="tools">
+        <button class="tool on" data-tool="draw">Draw</button>
+        <button class="tool" data-tool="move">Move</button>
+        <button class="tool" data-tool="pan">Pan</button>
+        <button class="tool" data-tool="label">Label</button>
+      </div>
+      <div class="hint">
+        <b>Draw:</b> click to drop a node onto the selected branch.<br>
+        <kbd>S</kbd> cycle waypoint → station → minor stop · <kbd>Z</kbd> undo node · <kbd>B</kbd> new branch<br>
+        <b>Move:</b> drag a node. <kbd>Del</kbd> removes selected node, <kbd>S</kbd> cycles its type (waypoint / station / minor).<br>
+        <b>Pan/zoom:</b> scroll or pinch to zoom, drag (or hold <kbd>Space</kbd>) to pan.
+      </div>
+    </div>
+
+    <div class="group">
+      <h2>Lines</h2>
+      <div class="lines" id="lineList"></div>
+      <div class="twocol" style="margin-top:8px">
+        <button id="addLine">+ Line</button>
+        <select id="lineType" title="line (sets color)"></select>
+      </div>
+      <div class="hint">Color comes from the line name (same palette as the app). Pick a type, then <b>+ Line</b>. Changing the dropdown recolors the selected line.</div>
+    </div>
+
+    <div class="group">
+      <h2>Branches <span class="sub" id="branchOf"></span></h2>
+      <div class="lines" id="branchList"></div>
+      <div class="twocol" style="margin-top:8px">
+        <button id="addBranch">+ Branch</button>
+        <button id="forkBranch" title="New branch starting from the selected node (junction)">Fork from node</button>
+      </div>
+      <div class="hint">A line can hold several branches (e.g. Green B/C/D/E, Red Ashmont/Braintree). Fork seeds a new branch at the selected node so the trunk is shared.</div>
+    </div>
+
+    <div class="group" id="labelGroup" style="display:none">
+      <h2>Label stations</h2>
+      <button id="csvBtn" class="full">Load stations.csv</button>
+      <input type="file" id="csvIn" accept=".csv" hidden>
+      <div class="hint" id="csvStatus">Click a station to name it, or load the CSV to bulk-fill.</div>
+      <div class="row"><label>name</label><div class="ac-wrap" style="flex:1"><input type="text" id="nodeName" placeholder="(select a station)" style="width:100%"><div id="acDrop" class="ac-drop"></div></div></div>
+      <div class="row"><label>sq</label><input type="text" id="nodeSquare" placeholder="optional square name"></div>
+      <div class="twocol">
+        <button id="prevNode">← Prev</button>
+        <button id="nextNode">Next →</button>
+      </div>
+      <button id="nextUnnamed" class="full" style="margin-top:6px">Jump to next unnamed</button>
+      <div class="hint" id="nameProgress"></div>
+
+      <h2 style="margin-top:14px">Bulk fill (selected branch)</h2>
+      <select id="csvGroup" class="full" style="margin-bottom:6px"></select>
+      <label class="fld"><input type="checkbox" id="csvIncludeOnly"> use Include=TRUE only</label>
+      <label class="fld" style="margin-top:4px"><input type="checkbox" id="csvReverse"> reverse order</label>
+      <button id="csvApply" class="full" style="margin-top:6px">Fill branch from group →</button>
+      <div class="hint" id="bulkStatus"></div>
+      <button id="showLabels" class="full on" style="margin-top:10px">Labels: on</button>
+    </div>
+
+    <div class="group">
+      <h2>Save / Load</h2>
+      <div class="twocol">
+        <button id="export">Download JSON</button>
+        <button id="png">Download PNG</button>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <input type="file" id="fileIn" accept="application/json" class="full" style="font-size:10px">
+      </div>
+      <div class="hint">Or paste a saved file and load it:</div>
+      <textarea id="pasteBox" placeholder="paste JSON here…"></textarea>
+      <button id="loadPaste" class="full" style="margin-top:6px">Load pasted JSON</button>
+    </div>
+  </aside>
+</div>
+
+<script>
+"use strict";
+//==================================================================
+//  MODEL
+//==================================================================
+const CELL = 16;               // world px per cell (zoom scales this on screen)
+let cols = 70, rows = 70;
+let showGrid = true;
+let showLabels = true;         // station name labels (Label tool)
+let tool = "draw";             // draw | move | pan | label
+let csvGroups = null;          // Map<groupName, [{name,include,square}]> from stations.csv
+let placeMode = "way";         // S cycles: "way" → "sta" (station) → "minor" → "way"
+const MODE_NEXT = { way:"sta", sta:"minor", minor:"way" };
+const modeFlags = m => ({ station: m !== "way", minor: m === "minor" });
+const nodeMode = n => (!n.station ? "way" : (n.minor ? "minor" : "sta"));
+
+// Named line palette — kept identical to LINE_COLORS in js/app.js so color is
+// derived from the line name, never stored separately (a known line can't render wrong).
+const LINE_COLORS = {
+  Red:"#DA291C", Orange:"#ED8B00", Green:"#00843D", Blue:"#003DA5",
+  Silver:"#7C878E", Bus:"#FFC72C", "Commuter Rail":"#80276C", Ferry:"#008EAA",
+};
+const LINE_NAMES = Object.keys(LINE_COLORS);
+const DEFAULT_LINE_COLOR = "#9aa7b4";
+function colorFor(line){ return LINE_COLORS[line] || DEFAULT_LINE_COLOR; }
+let angleLock = true;            // lock placement to 45°/90° headings
+
+// line = { name, line, branches:[ branch ] }   color derived via colorFor(line)
+// branch = { name, nodes:[ {c,r,station,name} ] }
+let lines = [];
+let sel = { line: -1, branch: -1, node: -1 };
+let preview = null;             // {c,r} ghost target for the next node (draw tool)
+
+let refImg = null, imgAlpha = 0.55;
+
+//==================================================================
+//  VIEW (pan / zoom)
+//==================================================================
+const stage = document.getElementById("stage");
+const cv = document.getElementById("cv");
+const ctx = cv.getContext("2d");
+let view = { scale: 1, x: 0, y: 0 };   // screen = world*scale + (x,y)
+
+function worldW(){ return cols * CELL; }
+function worldH(){ return rows * CELL; }
+function s2w(sx, sy){ return { x:(sx-view.x)/view.scale, y:(sy-view.y)/view.scale }; }
+function w2s(wx, wy){ return { x: wx*view.scale + view.x, y: wy*view.scale + view.y }; }
+function cellCenterWorld(c, r){ return { x:(c+0.5)*CELL, y:(r+0.5)*CELL }; }
+function cellFromWorld(wx, wy){ return { c: Math.floor(wx/CELL), r: Math.floor(wy/CELL) }; }
+function clampCell(c, r){ return { c: Math.max(0,Math.min(cols-1,c)), r: Math.max(0,Math.min(rows-1,r)) }; }
+
+// Snap a target cell so the heading from (pc,pr) is one of 8 dirs (0/45/90°).
+function snapDir(pc, pr, c, r){
+  let dc = c-pc, dr = r-pr;
+  if(dc===0 && dr===0) return { c, r };
+  const k   = Math.round(Math.atan2(dr, dc) / (Math.PI/4));   // nearest 45°
+  const udc = Math.round(Math.cos(k*Math.PI/4));              // -1 | 0 | 1
+  const udr = Math.round(Math.sin(k*Math.PI/4));
+  const denom = udc*udc + udr*udr;                            // 1 axis, 2 diagonal
+  let steps = Math.round((dc*udc + dr*udr) / denom);
+  if(steps < 1) steps = 1;
+  return clampCell(pc + udc*steps, pr + udr*steps);
+}
+
+// Stroke a polyline (cell-center points) with rounded corners — tube-map arcs.
+// Hold the *pullback* along each segment roughly constant so a gentle 45° turn
+// curves as visibly as a 90°: derive each corner's radius from its angle.
+function strokeRounded(nodes){
+  const p = nodes.map(n => cellCenterWorld(n.c, n.r));
+  ctx.beginPath();
+  if(p.length === 1){ ctx.moveTo(p[0].x, p[0].y); ctx.lineTo(p[0].x, p[0].y); ctx.stroke(); return; }
+  ctx.moveTo(p[0].x, p[0].y);
+  const baseT = CELL * 0.85;                       // desired pullback from each corner
+  for(let i=1;i<p.length-1;i++){
+    const a=p[i-1], b=p[i], c2=p[i+1];
+    const v1x=a.x-b.x, v1y=a.y-b.y, v2x=c2.x-b.x, v2y=c2.y-b.y;
+    const L1=Math.hypot(v1x,v1y), L2=Math.hypot(v2x,v2y);
+    let cosA = (v1x*v2x + v1y*v2y)/((L1*L2)||1);
+    cosA = Math.max(-1, Math.min(1, cosA));
+    const alpha = Math.acos(cosA);                 // interior angle at the corner
+    if(alpha > Math.PI - 0.05){ ctx.lineTo(b.x, b.y); continue; }   // ~straight
+    const t = Math.min(baseT, L1/2, L2/2);         // pullback, clamped to short segments
+    const r = t * Math.tan(alpha/2);               // radius giving that pullback
+    ctx.arcTo(b.x, b.y, c2.x, c2.y, r);
+  }
+  ctx.lineTo(p[p.length-1].x, p[p.length-1].y);
+  ctx.stroke();
+}
+
+function resize(){
+  const dpr = window.devicePixelRatio || 1;
+  const w = stage.clientWidth, h = stage.clientHeight;
+  cv.width = w*dpr; cv.height = h*dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  draw();
+}
+function fit(){
+  const w = stage.clientWidth, h = stage.clientHeight, pad = 40;
+  const s = Math.min((w-pad)/worldW(), (h-pad)/worldH());
+  view.scale = s;
+  view.x = (w - worldW()*s)/2;
+  view.y = (h - worldH()*s)/2;
+  draw();
+}
+function zoomAt(sx, sy, factor){
+  const before = s2w(sx, sy);
+  view.scale = Math.max(0.05, Math.min(12, view.scale*factor));
+  view.x = sx - before.x*view.scale;
+  view.y = sy - before.y*view.scale;
+  draw();
+}
+
+//==================================================================
+//  RENDER
+//==================================================================
+function draw(){
+  const w = cv.clientWidth, h = cv.clientHeight;
+  ctx.clearRect(0,0,w,h);
+  ctx.save();
+  ctx.translate(view.x, view.y);
+  ctx.scale(view.scale, view.scale);
+
+  // reference image stretched to the grid extent (tile count is the contract, not pixels)
+  if(refImg){
+    ctx.globalAlpha = imgAlpha;
+    ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(refImg, 0, 0, worldW(), worldH());
+    ctx.globalAlpha = 1;
+  } else {
+    ctx.fillStyle = "#0a0d12";
+    ctx.fillRect(0,0,worldW(),worldH());
+  }
+
+  // grid
+  if(showGrid){
+    ctx.lineWidth = 1/view.scale;
+    ctx.strokeStyle = "rgba(120,140,170,.18)";
+    ctx.beginPath();
+    for(let c=0;c<=cols;c++){ ctx.moveTo(c*CELL,0); ctx.lineTo(c*CELL,worldH()); }
+    for(let r=0;r<=rows;r++){ ctx.moveTo(0,r*CELL); ctx.lineTo(worldW(),r*CELL); }
+    ctx.stroke();
+    ctx.strokeStyle = "rgba(120,140,170,.34)";
+    ctx.beginPath();
+    for(let c=0;c<=cols;c+=10){ ctx.moveTo(c*CELL,0); ctx.lineTo(c*CELL,worldH()); }
+    for(let r=0;r<=rows;r+=10){ ctx.moveTo(0,r*CELL); ctx.lineTo(worldW(),r*CELL); }
+    ctx.stroke();
+  }
+  // grid bounds
+  ctx.lineWidth = 2/view.scale;
+  ctx.strokeStyle = "rgba(120,140,170,.5)";
+  ctx.strokeRect(0,0,worldW(),worldH());
+
+  // lines + branches
+  ctx.lineJoin = "round"; ctx.lineCap = "round";
+  lines.forEach((ln, li)=>{
+    const col = colorFor(ln.line);
+    ln.branches.forEach((br, bi)=>{
+      if(!br.nodes.length) return;
+      const isSel = (li===sel.line && bi===sel.branch);
+      ctx.strokeStyle = col;
+      ctx.lineWidth = (isSel ? 5 : 4)/view.scale;
+      ctx.globalAlpha = isSel ? 1 : 0.85;
+      strokeRounded(br.nodes);
+      ctx.globalAlpha = 1;
+
+      // nodes
+      br.nodes.forEach((n,i)=>{
+        const p = cellCenterWorld(n.c, n.r);
+        const selNode = isSel && i===sel.node;
+        if(n.station){
+          ctx.fillStyle = "#fff"; ctx.strokeStyle = col;
+          ctx.lineWidth = (n.minor?1.6:2.5)/view.scale;
+          ctx.beginPath(); ctx.arc(p.x,p.y, CELL*(n.minor?0.2:0.34), 0, 7); ctx.fill(); ctx.stroke();
+        } else if(isSel){
+          ctx.fillStyle = "#fff";
+          ctx.beginPath(); ctx.arc(p.x,p.y, CELL*0.16, 0, 7); ctx.fill();
+        }
+        if(selNode){
+          ctx.strokeStyle = "#ffd23f";
+          ctx.lineWidth = 2/view.scale;
+          ctx.beginPath(); ctx.arc(p.x,p.y, CELL*0.5, 0, 7); ctx.stroke();
+        }
+      });
+    });
+  });
+
+  // station name labels
+  if(showLabels){
+    ctx.save();
+    ctx.textAlign = "center"; ctx.textBaseline = "bottom";
+    const fs = 11/view.scale;
+    ctx.font = `bold ${fs}px ui-monospace,monospace`;
+    ctx.lineWidth = 3/view.scale; ctx.lineJoin = "round";
+    lines.forEach(ln => ln.branches.forEach(br => br.nodes.forEach(n => {
+      if(n.station && n.name){
+        const p = cellCenterWorld(n.c, n.r), y = p.y - CELL*0.55;
+        ctx.strokeStyle = "rgba(8,11,16,.92)"; ctx.fillStyle = "#e6ebf2";
+        ctx.strokeText(n.name, p.x, y); ctx.fillText(n.name, p.x, y);
+      }
+    })));
+    ctx.restore();
+  }
+
+  // placement preview — ghost segment from the last node to the (snapped) cursor cell
+  if(tool==="draw" && preview && sel.line>=0 && sel.branch>=0){
+    const br = lines[sel.line].branches[sel.branch];
+    if(br.nodes.length){
+      const a = cellCenterWorld(br.nodes[br.nodes.length-1].c, br.nodes[br.nodes.length-1].r);
+      const b = cellCenterWorld(preview.c, preview.r);
+      ctx.save();
+      ctx.setLineDash([CELL*0.45, CELL*0.3]);
+      ctx.strokeStyle = colorFor(lines[sel.line].line);
+      ctx.globalAlpha = 0.55; ctx.lineWidth = 3/view.scale;
+      ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+      ctx.restore();
+    }
+  }
+
+  ctx.restore();
+}
+
+//==================================================================
+//  HIT TESTING
+//==================================================================
+function nodeAtScreen(sx, sy){
+  // returns {line,branch,node} of nearest node within grab radius, or null
+  let best = null, bestD = (CELL*0.55*view.scale)**2;
+  lines.forEach((ln,li)=> ln.branches.forEach((br,bi)=> br.nodes.forEach((n,i)=>{
+    const cw = cellCenterWorld(n.c,n.r); const p = w2s(cw.x, cw.y);
+    const d = (p.x-sx)**2 + (p.y-sy)**2;
+    if(d < bestD){ bestD = d; best = {line:li, branch:bi, node:i}; }
+  })));
+  return best;
+}
+
+//==================================================================
+//  POINTER: pan / zoom / draw / move
+//==================================================================
+const pointers = new Map();
+let dragging = null;      // 'pan' | 'node' | null
+let spaceDown = false;
+let pinchDist = 0;
+
+function localXY(e){
+  const r = cv.getBoundingClientRect();
+  return { x: e.clientX - r.left, y: e.clientY - r.top };
+}
+
+cv.addEventListener("pointerdown", e=>{
+  cv.setPointerCapture(e.pointerId);
+  const p = localXY(e);
+  pointers.set(e.pointerId, p);
+
+  if(pointers.size === 2){ // start pinch
+    const [a,b] = [...pointers.values()];
+    pinchDist = Math.hypot(a.x-b.x, a.y-b.y);
+    dragging = "pan";
+    return;
+  }
+
+  const panMode = tool==="pan" || spaceDown || e.button===1;
+  if(panMode){ dragging = "pan"; return; }
+
+  if(tool==="draw"){
+    if(sel.line<0 || sel.branch<0){ flashHud("select or add a line/branch first"); return; }
+    const w = s2w(p.x, p.y);
+    const cell = cellFromWorld(w.x, w.y);
+    if(cell.c<0||cell.c>=cols||cell.r<0||cell.r>=rows) return;
+    const br = lines[sel.line].branches[sel.branch];
+    let t = { c:cell.c, r:cell.r };
+    if(angleLock && br.nodes.length){
+      const last = br.nodes[br.nodes.length-1];
+      t = snapDir(last.c, last.r, cell.c, cell.r);
+    }
+    br.nodes.push({ c:t.c, r:t.r, ...modeFlags(placeMode), name:"" });
+    sel.node = br.nodes.length-1;
+    refreshBranches(); draw();
+  } else if(tool==="move"){
+    const hit = nodeAtScreen(p.x, p.y);
+    if(hit){ sel = {...hit}; dragging = "node"; refreshLines(); refreshBranches(); draw(); }
+  } else if(tool==="label"){
+    const hit = nodeAtScreen(p.x, p.y);
+    if(hit && lines[hit.line].branches[hit.branch].nodes[hit.node].station){
+      selectStationForLabel(hit);
+    }
+  }
+});
+
+cv.addEventListener("pointermove", e=>{
+  const p = localXY(e);
+  const prev = pointers.get(e.pointerId);
+  if(pointers.has(e.pointerId)) pointers.set(e.pointerId, p);
+
+  // hud readout
+  const w = s2w(p.x, p.y); const cell = cellFromWorld(w.x, w.y);
+  const inside = cell.c>=0&&cell.c<cols&&cell.r>=0&&cell.r<rows;
+  document.getElementById("hud").innerHTML = inside
+    ? `cell <b>(${cell.c}, ${cell.r})</b> · zoom ${view.scale.toFixed(2)}×`
+    : `(–, –) · zoom ${view.scale.toFixed(2)}×`;
+
+  // live placement preview (draw tool, not mid-drag)
+  if(tool==="draw" && !dragging && inside && sel.line>=0 && sel.branch>=0){
+    const br = lines[sel.line].branches[sel.branch];
+    if(br.nodes.length && angleLock){
+      const last = br.nodes[br.nodes.length-1];
+      preview = snapDir(last.c, last.r, cell.c, cell.r);
+    } else { preview = { c:cell.c, r:cell.r }; }
+    draw();
+  } else if(preview){ preview = null; draw(); }
+
+  if(pointers.size === 2 && dragging==="pan"){ // pinch zoom + pan
+    const [a,b] = [...pointers.values()];
+    const d = Math.hypot(a.x-b.x, a.y-b.y);
+    const mid = { x:(a.x+b.x)/2, y:(a.y+b.y)/2 };
+    if(pinchDist) zoomAt(mid.x, mid.y, d/pinchDist);
+    pinchDist = d;
+    return;
+  }
+  if(!prev) return;
+  const dx = p.x - prev.x, dy = p.y - prev.y;
+
+  if(dragging==="pan"){ view.x += dx; view.y += dy; draw(); }
+  else if(dragging==="node" && sel.node>=0){
+    const wp = s2w(p.x, p.y); const c = cellFromWorld(wp.x, wp.y);
+    if(c.c>=0&&c.c<cols&&c.r>=0&&c.r<rows){
+      const n = lines[sel.line].branches[sel.branch].nodes[sel.node];
+      n.c = c.c; n.r = c.r; draw();
+    }
+  }
+});
+
+function endPointer(e){
+  pointers.delete(e.pointerId);
+  if(pointers.size < 2) pinchDist = 0;
+  if(pointers.size === 0) dragging = null;
+}
+cv.addEventListener("pointerup", endPointer);
+cv.addEventListener("pointercancel", endPointer);
+
+stage.addEventListener("wheel", e=>{
+  e.preventDefault();
+  const p = localXY(e);
+  zoomAt(p.x, p.y, e.deltaY < 0 ? 1.12 : 1/1.12);
+}, {passive:false});
+
+//==================================================================
+//  KEYBOARD
+//==================================================================
+window.addEventListener("keydown", e=>{
+  if(e.target.matches("input,textarea")) return;
+  if(e.code==="Space"){ spaceDown=true; cv.style.cursor="grab"; e.preventDefault(); }
+  else if(e.key==="s"||e.key==="S"){
+    if(tool==="move" && sel.node>=0){
+      const n = lines[sel.line].branches[sel.branch].nodes[sel.node];
+      const f = modeFlags(MODE_NEXT[nodeMode(n)]);
+      n.station = f.station; n.minor = f.minor; refreshBranches(); draw();
+    } else { placeMode = MODE_NEXT[placeMode]; updatePlacePill(); }
+  }
+  else if(e.key==="z"||e.key==="Z"){ undoNode(); }
+  else if(e.key==="b"||e.key==="B"){ addBranch(); }
+  else if(e.key==="Delete"||e.key==="Backspace"){ deleteSelectedNode(); }
+});
+window.addEventListener("keyup", e=>{ if(e.code==="Space"){ spaceDown=false; cv.style.cursor=""; } });
+
+function undoNode(){
+  if(sel.line<0||sel.branch<0) return;
+  const br = lines[sel.line].branches[sel.branch];
+  if(br.nodes.length){ br.nodes.pop(); sel.node = br.nodes.length-1; refreshBranches(); draw(); }
+}
+function deleteSelectedNode(){
+  if(sel.line<0||sel.branch<0||sel.node<0) return;
+  lines[sel.line].branches[sel.branch].nodes.splice(sel.node,1);
+  sel.node = -1; refreshBranches(); draw();
+}
+
+//==================================================================
+//  PANEL: lines + branches
+//==================================================================
+function ensureSelection(){
+  if(sel.line>=lines.length) sel.line = lines.length-1;
+  if(sel.line<0 && lines.length){ sel.line=0; }
+  const ln = lines[sel.line];
+  if(ln){
+    if(sel.branch>=ln.branches.length) sel.branch = ln.branches.length-1;
+    if(sel.branch<0 && ln.branches.length) sel.branch=0;
+  } else { sel.branch=-1; sel.node=-1; }
+}
+
+function refreshLines(){
+  const wrap = document.getElementById("lineList"); wrap.innerHTML="";
+  lines.forEach((ln,i)=>{
+    const row = document.createElement("div");
+    row.className = "lrow"+(i===sel.line?" sel":"");
+    row.innerHTML = `<span class="dot" style="background:${colorFor(ln.line)}"></span>
+      <input class="nm" value="${ln.name}"><span class="x">✕</span>`;
+    row.querySelector(".dot").onclick = ()=>{ selectLine(i); };
+    row.querySelector(".nm").onclick = e=>e.stopPropagation();
+    row.querySelector(".nm").onchange = e=>{ ln.name = e.target.value; };
+    row.onclick = ()=>{ selectLine(i); };
+    row.querySelector(".x").onclick = e=>{ e.stopPropagation();
+      lines.splice(i,1); sel={line:-1,branch:-1,node:-1}; ensureSelection(); refreshLines(); refreshBranches(); draw(); };
+    wrap.appendChild(row);
+  });
+}
+
+function refreshBranches(){
+  const wrap = document.getElementById("branchList"); wrap.innerHTML="";
+  const ln = lines[sel.line];
+  document.getElementById("branchOf").textContent = ln ? "· "+ln.name : "";
+  if(!ln) return;
+  ln.branches.forEach((br,i)=>{
+    const row = document.createElement("div");
+    row.className = "brow"+(i===sel.branch?" sel":"");
+    const staCount = br.nodes.filter(n=>n.station).length;
+    row.innerHTML = `<input class="nm" value="${br.name}">
+      <span class="ct">${br.nodes.length}n · ${staCount}◉</span><span class="x">✕</span>`;
+    row.querySelector(".nm").onclick = e=>e.stopPropagation();
+    row.querySelector(".nm").onchange = e=>{ br.name = e.target.value; };
+    row.onclick = ()=>{ sel.branch=i; sel.node=-1; refreshBranches(); draw(); };
+    row.querySelector(".x").onclick = e=>{ e.stopPropagation();
+      ln.branches.splice(i,1); sel.branch=Math.min(sel.branch,ln.branches.length-1); sel.node=-1;
+      refreshBranches(); draw(); };
+    wrap.appendChild(row);
+  });
+}
+
+// populate the line-type dropdown from the named palette
+const lineType = document.getElementById("lineType");
+LINE_NAMES.forEach(n=>{ const o=document.createElement("option"); o.value=n; o.textContent=n; lineType.appendChild(o); });
+
+function selectLine(i){
+  sel.line=i; sel.branch=0; sel.node=-1; ensureSelection();
+  const ln=lines[sel.line]; if(ln) lineType.value = LINE_NAMES.includes(ln.line)?ln.line:LINE_NAMES[0];
+  refreshLines(); refreshBranches(); draw();
+}
+document.getElementById("addLine").onclick = ()=>{
+  const t = lineType.value;
+  lines.push({ name:t, line:t, branches:[{name:"main", nodes:[]}] });
+  sel = { line:lines.length-1, branch:0, node:-1 };
+  refreshLines(); refreshBranches(); draw();
+};
+lineType.onchange = e=>{
+  if(sel.line<0) return;
+  const ln = lines[sel.line];
+  if(ln.name === ln.line) ln.name = e.target.value;  // keep name synced if it was untouched
+  ln.line = e.target.value;
+  refreshLines(); draw();
+};
+function addBranch(){
+  if(sel.line<0) return;
+  lines[sel.line].branches.push({ name:"branch "+(lines[sel.line].branches.length+1), nodes:[] });
+  sel.branch = lines[sel.line].branches.length-1; sel.node=-1;
+  refreshBranches(); draw();
+}
+document.getElementById("addBranch").onclick = addBranch;
+document.getElementById("forkBranch").onclick = ()=>{
+  if(sel.line<0||sel.branch<0||sel.node<0){ flashHud("select a node to fork from (Move tool)"); return; }
+  const seed = lines[sel.line].branches[sel.branch].nodes[sel.node];
+  lines[sel.line].branches.push({ name:"branch "+(lines[sel.line].branches.length+1),
+    nodes:[{ c:seed.c, r:seed.r, station:seed.station, minor:!!seed.minor, name:seed.name }] });
+  sel.branch = lines[sel.line].branches.length-1; sel.node=0;
+  refreshBranches(); draw();
+};
+
+//==================================================================
+//  TOOLBAR / TOGGLES
+//==================================================================
+function updatePlacePill(){
+  const pill = document.getElementById("placePill");
+  pill.textContent = { way:"waypoint", sta:"station", minor:"minor stop" }[placeMode];
+  pill.className = "pill " + placeMode;
+}
+document.querySelectorAll(".tool").forEach(b=>{
+  b.onclick = ()=>{ tool=b.dataset.tool;
+    document.querySelectorAll(".tool").forEach(x=>x.classList.toggle("on",x===b));
+    document.getElementById("labelGroup").style.display = (tool==="label") ? "" : "none";
+    if(tool==="label") syncNameInputs();
+  };
+});
+document.getElementById("btnGrid").onclick = e=>{ showGrid=!showGrid; e.target.classList.toggle("on",showGrid); draw(); };
+document.getElementById("btnAngle").onclick = e=>{ angleLock=!angleLock; e.target.classList.toggle("on",angleLock); };
+document.getElementById("fit").onclick = fit;
+document.getElementById("imgAlpha").oninput = e=>{ imgAlpha=e.target.value/100; draw(); };
+
+document.getElementById("applyGrid").onclick = ()=>{
+  const nc = +document.getElementById("cols").value, nr = +document.getElementById("rows").value;
+  if(nc<2||nr<2) return;
+  // warn if any node falls outside the new grid
+  const oob = lines.some(l=>l.branches.some(b=>b.nodes.some(n=>n.c>=nc||n.r>=nr)));
+  if(oob && !confirm("Some nodes fall outside the new grid and will be clamped. Continue?")) return;
+  cols=nc; rows=nr;
+  lines.forEach(l=>l.branches.forEach(b=>b.nodes.forEach(n=>{ n.c=Math.min(n.c,nc-1); n.r=Math.min(n.r,nr-1); })));
+  fit();
+};
+
+//==================================================================
+//  REFERENCE IMAGE
+//==================================================================
+document.getElementById("loadImgBtn").onclick = ()=>document.getElementById("imgIn").click();
+document.getElementById("imgIn").onchange = e=>loadImageFile(e.target.files[0]);
+function loadImageFile(f){
+  if(!f) return;
+  const img = new Image();
+  img.onload = ()=>{ refImg=img; URL.revokeObjectURL(img.src); fit(); };
+  img.src = URL.createObjectURL(f);
+}
+// drag-drop an image onto the canvas
+stage.addEventListener("dragover", e=>e.preventDefault());
+stage.addEventListener("drop", e=>{ e.preventDefault();
+  const f=[...e.dataTransfer.files].find(f=>f.type.startsWith("image/")); if(f) loadImageFile(f); });
+
+//==================================================================
+//  LABEL STATIONS
+//==================================================================
+function centerOn(c, r){
+  const wpt = cellCenterWorld(c, r);
+  view.x = stage.clientWidth/2 - wpt.x*view.scale;
+  view.y = stage.clientHeight/2 - wpt.y*view.scale;
+}
+function stationFlatList(){
+  const out = [];
+  lines.forEach((ln,li)=>ln.branches.forEach((br,bi)=>br.nodes.forEach((n,ni)=>{ if(n.station) out.push({line:li,branch:bi,node:ni}); })));
+  return out;
+}
+function curNode(){
+  if(sel.line<0||sel.branch<0||sel.node<0) return null;
+  return lines[sel.line]?.branches[sel.branch]?.nodes[sel.node] || null;
+}
+function selectStationForLabel(ref){
+  sel = { ...ref };
+  const n = lines[sel.line].branches[sel.branch].nodes[sel.node];
+  centerOn(n.c, n.r);
+  refreshLines(); refreshBranches(); syncNameInputs(); draw();
+  const nm = document.getElementById("nodeName"); nm.focus(); nm.select();
+}
+function syncNameInputs(){
+  const n = curNode();
+  const nm = document.getElementById("nodeName"), sq = document.getElementById("nodeSquare");
+  const ok = !!(n && n.station);
+  nm.disabled = sq.disabled = !ok;
+  nm.value = ok ? (n.name||"") : "";
+  sq.value = ok ? (n.square||"") : "";
+  updateNameProgress();
+}
+function updateNameProgress(){
+  const list = stationFlatList();
+  const named = list.filter(r=>lines[r.line].branches[r.branch].nodes[r.node].name).length;
+  document.getElementById("nameProgress").textContent = `${named} / ${list.length} stations named`;
+}
+function gotoStation(delta){
+  const list = stationFlatList(); if(!list.length) return;
+  let i = list.findIndex(r=>r.line===sel.line&&r.branch===sel.branch&&r.node===sel.node);
+  if(i<0) i = (delta>0 ? -1 : 0);
+  i = (i + delta + list.length) % list.length;
+  selectStationForLabel(list[i]);
+}
+function gotoNextUnnamed(){
+  const list = stationFlatList(); if(!list.length) return;
+  const start = list.findIndex(r=>r.line===sel.line&&r.branch===sel.branch&&r.node===sel.node);
+  for(let k=1;k<=list.length;k++){
+    const r = list[(Math.max(start,0)+k) % list.length];
+    if(!lines[r.line].branches[r.branch].nodes[r.node].name){ selectStationForLabel(r); return; }
+  }
+  flashHud("all stations are named 🎉");
+}
+// Autocomplete dropdown for station name input
+const acDrop = document.getElementById("acDrop");
+let acActive = -1;
+function allCsvNames(){
+  if(!csvGroups) return [];
+  const seen = new Set(), out = [];
+  for(const arr of csvGroups.values()) for(const s of arr){ if(!seen.has(s.name)){ seen.add(s.name); out.push(s); } }
+  return out;
+}
+function acShow(matches){
+  acDrop.innerHTML = "";
+  acActive = -1;
+  if(!matches.length){ acDrop.style.display="none"; return; }
+  matches.forEach((s,i)=>{
+    const d = document.createElement("div");
+    d.className = "ac-item";
+    d.textContent = s.name + (s.square ? ` — ${s.square}` : "");
+    d.addEventListener("mousedown", ev=>{ ev.preventDefault(); acPick(s); });
+    acDrop.appendChild(d);
+  });
+  acDrop.style.display = "";
+}
+function acPick(s){
+  const inp = document.getElementById("nodeName");
+  inp.value = s.name;
+  const n = curNode(); if(n){ n.name = s.name; if(s.square && !n.square) n.square = s.square; document.getElementById("nodeSquare").value = n.square||""; updateNameProgress(); draw(); }
+  acDrop.style.display = "none";
+  gotoNextUnnamed();
+}
+function acHide(){ acDrop.style.display="none"; acActive=-1; }
+document.getElementById("nodeName").addEventListener("input", e=>{
+  const n = curNode(); if(n){ n.name = e.target.value; updateNameProgress(); draw(); }
+  const q = e.target.value.trim().toLowerCase();
+  if(!q || !csvGroups){ acHide(); return; }
+  const matches = allCsvNames().filter(s => s.name.toLowerCase().includes(q)).slice(0,12);
+  acShow(matches);
+});
+document.getElementById("nodeName").addEventListener("keydown", e=>{
+  const items = acDrop.querySelectorAll(".ac-item");
+  if(acDrop.style.display !== "none" && items.length){
+    if(e.key==="ArrowDown"){ e.preventDefault(); acActive=Math.min(acActive+1,items.length-1); items.forEach((el,i)=>el.classList.toggle("active",i===acActive)); return; }
+    if(e.key==="ArrowUp"){ e.preventDefault(); acActive=Math.max(acActive-1,0); items.forEach((el,i)=>el.classList.toggle("active",i===acActive)); return; }
+    if(e.key==="Enter" && acActive>=0){ e.preventDefault(); const s=allCsvNames().filter(s=>s.name.toLowerCase().includes(document.getElementById("nodeName").value.trim().toLowerCase()))[acActive]; if(s) acPick(s); return; }
+    if(e.key==="Escape"){ acHide(); return; }
+  }
+  if(e.key==="Enter"){ e.preventDefault(); acHide(); gotoNextUnnamed(); }
+});
+document.getElementById("nodeName").addEventListener("blur", ()=>{ setTimeout(acHide,120); });
+document.getElementById("nodeSquare").addEventListener("input", e=>{ const n=curNode(); if(n){ n.square=e.target.value; } });
+document.getElementById("prevNode").onclick = ()=>gotoStation(-1);
+document.getElementById("nextNode").onclick = ()=>gotoStation(1);
+document.getElementById("nextUnnamed").onclick = gotoNextUnnamed;
+document.getElementById("showLabels").onclick = e=>{ showLabels=!showLabels;
+  e.target.classList.toggle("on",showLabels); e.target.textContent = "Labels: "+(showLabels?"on":"off"); draw(); };
+
+function parseStationsCSV(text){
+  const rows = text.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+  rows.shift();   // header: Line/Branch,Station Name,Include,Alt Square Name
+  const groups = new Map();
+  rows.forEach(line=>{
+    const c = line.split(",");
+    const g = (c[0]||"").trim(), name = (c[1]||"").trim();
+    if(!g || !name) return;
+    if(!groups.has(g)) groups.set(g, []);
+    groups.get(g).push({ name, include:(c[2]||"").trim().toUpperCase()==="TRUE", square:(c[3]||"").trim() });
+  });
+  return groups;
+}
+document.getElementById("csvBtn").onclick = ()=>document.getElementById("csvIn").click();
+document.getElementById("csvIn").onchange = e=>{
+  const f = e.target.files[0]; if(!f) return;
+  const rd = new FileReader();
+  rd.onload = ()=>{
+    csvGroups = parseStationsCSV(rd.result);
+    const gsel = document.getElementById("csvGroup"); gsel.innerHTML = "";
+    [...csvGroups.keys()].forEach(g=>{ const o=document.createElement("option"); o.value=g;
+      o.textContent = `${g} (${csvGroups.get(g).length})`; gsel.appendChild(o); });
+    const total = [...csvGroups.values()].reduce((a,b)=>a+b.length,0);
+    document.getElementById("csvStatus").textContent = `Loaded ${csvGroups.size} groups, ${total} stations.`;
+  };
+  rd.readAsText(f);
+};
+document.getElementById("csvApply").onclick = ()=>{
+  if(!csvGroups){ flashHud("load stations.csv first"); return; }
+  if(sel.line<0 || sel.branch<0){ flashHud("select a branch first"); return; }
+  const g = document.getElementById("csvGroup").value;
+  let arr = (csvGroups.get(g)||[]).slice();
+  if(document.getElementById("csvIncludeOnly").checked) arr = arr.filter(s=>s.include);
+  if(document.getElementById("csvReverse").checked) arr.reverse();
+  const stNodes = lines[sel.line].branches[sel.branch].nodes.filter(n=>n.station);
+  // Skip nodes whose (c,r) is already a named station on another branch of the same line.
+  // These are shared junction points — separate objects but same coordinate.
+  const namedElsewhere = new Set();
+  lines[sel.line].branches.forEach((br,bi)=>{ if(bi===sel.branch) return;
+    br.nodes.forEach(n=>{ if(n.station && n.name) namedElsewhere.add(`${n.c},${n.r}`); }); });
+  const toFill = stNodes.filter(n=>!namedElsewhere.has(`${n.c},${n.r}`));
+  const m = Math.min(arr.length, toFill.length);
+  for(let i=0;i<m;i++){ toFill[i].name = arr[i].name; if(arr[i].square) toFill[i].square = arr[i].square; }
+  const skipped = stNodes.length - toFill.length;
+  document.getElementById("bulkStatus").innerHTML =
+    `Filled <b>${m}</b> of ${toFill.length} unnamed stations` +
+    (skipped ? ` (${skipped} shared junction${skipped>1?"s":""} skipped)` : "") + `.` +
+    (arr.length!==toFill.length ? ` <span style="color:#ffd23f">Count mismatch — verify with Prev/Next.</span>` : "");
+  refreshBranches(); syncNameInputs(); draw();
+};
+
+//==================================================================
+//  SAVE / LOAD
+//==================================================================
+function serialize(){
+  return JSON.stringify({
+    schema:"tonight.transit/1",
+    grid:{ cols, rows },
+    lines: lines.map(l=>({ name:l.name, line:l.line,
+      branches: l.branches.map(b=>({ name:b.name,
+        nodes: b.nodes.map(n=>({ c:n.c, r:n.r, station:!!n.station, ...(n.minor?{minor:true}:{}), name:n.name||"", ...(n.square?{square:n.square}:{}) })) })) })),
+    meta:{ note:"col 0=W…cols-1=E, row 0=N…rows-1=S; nodes at cell centers; paths are invisible train rails (tracks baked into the tile map); color derived from line name; align to same tile grid as the Tiled terrain map" }
+  }, null, 1);
+}
+function loadFromObj(o){
+  if(o.grid){ cols=o.grid.cols||cols; rows=o.grid.rows||rows;
+    document.getElementById("cols").value=cols; document.getElementById("rows").value=rows; }
+  if(Array.isArray(o.lines)){
+    lines = o.lines.map(l=>({ name:l.name||l.line||"Line", line:l.line||l.name||"",
+      branches:(l.branches||[]).map(b=>({ name:b.name||"main",
+        nodes:(b.nodes||[]).map(n=>({ c:n.c, r:n.r, station:!!n.station, minor:!!n.minor, name:n.name||"", square:n.square||"" })) })) }));
+  }
+  sel={line:-1,branch:-1,node:-1}; ensureSelection(); refreshLines(); refreshBranches(); fit();
+}
+function download(name, text, type){
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([text],{type})); a.download=name; a.click();
+  URL.revokeObjectURL(a.href);
+}
+document.getElementById("export").onclick = ()=>download("transit-layer.json", serialize(), "application/json");
+document.getElementById("png").onclick = ()=>cv.toBlob(b=>download("transit-layer.png", b, "image/png"));
+document.getElementById("fileIn").onchange = e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const rd=new FileReader(); rd.onload=()=>{ try{ loadFromObj(JSON.parse(rd.result)); }
+    catch(err){ alert("Couldn't read that file: "+err.message); } }; rd.readAsText(f);
+};
+document.getElementById("loadPaste").onclick = ()=>{
+  const v=document.getElementById("pasteBox").value.trim(); if(!v) return;
+  try{ loadFromObj(JSON.parse(v)); } catch(err){ alert("That isn't valid JSON: "+err.message); }
+};
+
+//==================================================================
+//  MISC
+//==================================================================
+let hudTimer=null;
+function flashHud(msg){
+  const hud=document.getElementById("hud"); hud.innerHTML=`<b style="color:#ffd23f">${msg}</b>`;
+  clearTimeout(hudTimer); hudTimer=setTimeout(()=>hud.textContent="(–, –)",1600);
+}
+
+//==================================================================
+//  BOOT
+//==================================================================
+window.addEventListener("resize", resize);
+updatePlacePill();
+refreshLines(); refreshBranches();
+resize(); fit();
+</script>

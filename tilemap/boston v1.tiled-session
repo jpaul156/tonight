@@ -1,0 +1,47 @@
+{
+    "activeFile": "",
+    "expandedProjectPaths": [
+    ],
+    "fileStates": {
+        "boston slates 3200.tmx": {
+            "scale": 0.1301,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 2797.847809377402,
+                "y": 2901.6141429669487
+            }
+        },
+        "boston v1.tmx": {
+            "scale": 0.5349,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 549.635445877734,
+                "y": 606.6554496167508
+            }
+        },
+        "boston v2.tmx": {
+            "scale": 0.3093,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 1306.1752344002587,
+                "y": 1285.1600387972842
+            }
+        }
+    },
+    "last.imagePath": "/Users/joel/Documents/tonight/tilemap",
+    "map.height": 200,
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "map.width": 200,
+    "openFiles": [
+    ],
+    "project": "boston v1.tiled-project",
+    "recentFiles": [
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 32,
+        "width": 32
+    }
+}

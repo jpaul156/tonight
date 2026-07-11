@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c ' *)",
+      "Bash(node --check js/app.js)",
+      "Bash(python3 -c \"import subprocess,sys\")",
+      "Bash(python3 -c \"import json; d=json.load\\(open\\('data/events.json'\\)\\); print\\(json.dumps\\(d['events'][0], indent=2\\)[:1200]\\)\")",
+      "Bash(python3 -c \"import json; d=json.load\\(open\\('data/venues.json'\\)\\); v=d['venues'] if isinstance\\(d,dict\\) else d; print\\(json.dumps\\(v[0], indent=2\\)\\)\")",
+      "Bash(python3 -c \"import json; d=json.load\\(open\\('data/venues.json'\\)\\); print\\(type\\(d\\)\\); print\\(list\\(d.keys\\(\\)\\) if isinstance\\(d,dict\\) else 'list len '+str\\(len\\(d\\)\\)\\)\")",
+      "Bash(python3 -c \"import json; d=json.load\\(open\\('data/venues.json'\\)\\); v=d if isinstance\\(d,list\\) else d.get\\('venues'\\) or list\\(d.values\\(\\)\\)[0]; import sys; print\\(json.dumps\\(v[0], indent=2\\)\\)\")",
+      "Bash(python3 -c \"import json; d=json.load\\(open\\('data/venues.json'\\)\\); k=list\\(d.keys\\(\\)\\)[0]; print\\('KEY:',k\\); print\\(json.dumps\\(d[k], indent=2\\)\\)\")",
+      "Bash(python3 -c \"import json; d=json.load\\(open\\('data/artists.json'\\)\\); print\\('OK, artists:',len\\(d['artists']\\)\\); print\\(json.dumps\\(d['artists'][0], ensure_ascii=False\\)\\); print\\(json.dumps\\(d['artists'][18], ensure_ascii=False\\)\\)\")",
+      "Bash(python3 -m pytest tests/test_data_contract.py -q)",
+      "Bash(python3 -m pytest tests/ -q)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(git --no-pager diff --stat scraper/scraper_core.py scraper/tests/test_routing.py CLAUDE.md data/todo.json data/test_status.json)",
+      "Bash(git --no-pager diff data/test_status.json)"
+    ]
+  }
+}

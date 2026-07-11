@@ -1,6 +1,6 @@
 {
   "schema": "tonight.todo/1",
-  "updated": "2026-07-04",
+  "updated": "2026-07-10",
   "note": "Hand-maintained running to-do list, surfaced on app_health.html. Mirror of the 'Pending work' sections in CLAUDE.md — keep the two roughly in sync. priority: high | med | low. status: open | in_progress | blocked.",
   "items": [
     {
@@ -30,6 +30,13 @@
       "priority": "med",
       "status": "open",
       "detail": "Recurring events (trivia, sessions) get cancelled week-to-week without the calendar updating (e.g. Grainne O'Malley's). Build a venue-facing view to confirm a recurring event is still on for the day/week. Until then treat weekly-only calendars cautiously."
+    },
+    {
+      "title": "\"Third place\" category for cafes/plazas/quiet nooks",
+      "area": "product",
+      "priority": "low",
+      "status": "open",
+      "detail": "Add a category (name TBD, e.g. 'third place') for coffee shops, plazas, and hidden nooks people go to sit/chill/read/study/work — not live events. Like film listings, these should be hidden from the main events page by default (opt-in filter). Pepita Lo-Fi at Lamplighter belongs in this category but stays on the main list for now; reclassify it when this is addressed."
     },
     {
       "title": "Movies / cinema listings with opt-in filter",
