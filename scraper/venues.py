@@ -180,6 +180,14 @@ VENUES = [
         # JSON so ~30 extra fetches/run would only gain cost data. Enable later
         # if cost matters or richer descriptions are wanted.
         "scrape_strategy": "wix_events",
+        # Wix's CDN serves a JS-only shell (no appsWarmupData event JSON) when the
+        # request advertises gzip/deflate — the default requests Accept-Encoding.
+        # Forcing `identity` returns the full SSR page with the event blob. Without
+        # this the extractor finds no JSON and the venue silently yields 0. (Wix
+        # changed this behavior server-side; it worked without the header before.)
+        "fetch_headers": {
+            "Accept-Encoding": "identity",
+        },
         "detail_pages": False,
         "url_contains": None,
         "location_keywords": {},
@@ -637,16 +645,22 @@ VENUES = [
         "transit_stop": "Brookline Village",
         "walk_minutes": 3,
         "is_local": True,
-        # BentoBox CMS — calendar page at /event-calendar/. May be JS-rendered;
-        # if html_full_text yields nothing, Playwright will be needed.
-        "collection_url": "https://www.villagesocialclub.com/event-calendar/",
-        "scrape_strategy": "html_full_text",
+        # The /event-calendar/ page is a JS-only BentoBox widget with no event
+        # data in its HTML, but it embeds a PUBLIC Google Calendar iframe. We
+        # skip the page entirely and read that calendar's ICS feed directly
+        # (gcal_ics strategy) — no LLM, no Playwright. The calendar id is the
+        # base64 `src=` param on the iframe embed URL; if the venue swaps its
+        # calendar, re-derive this .ics URL from the new embed. Timed events are
+        # the shows; all-day entries ("no live music", "Private Event") are
+        # annotations the extractor skips. Titled "Private Event" bookings that
+        # slip through are still hidden by is_private_event downstream.
+        "collection_url": (
+            "https://calendar.google.com/calendar/ical/"
+            "va8lree72bp7a14v0ftkfic0os%40group.calendar.google.com/public/basic.ics"
+        ),
+        "scrape_strategy": "gcal_ics",
         "detail_pages": False,
         "url_contains": None,
-        "prompt_notes": (
-            "- Skip any listing whose title is 'Private Event' or 'Private Party' "
-            "or contains the word 'Private'."
-        ),
         "location_keywords": {},
         "extra_venues": [],
     },

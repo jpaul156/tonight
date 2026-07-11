@@ -71,7 +71,7 @@
       "area": "scraper",
       "priority": "med",
       "status": "blocked",
-      "detail": "Midway Cafe and Club Passim's full calendar need a headless browser — their event data is JS-injected and html_full_text gets near-empty pages, flagged expected_empty until Playwright lands. (Deep Cuts is resolved: its JS widget reads DICE's partner API, now scraped directly via the dice_events strategy — no Playwright needed.)"
+      "detail": "Midway Cafe and Club Passim's full calendar need a headless browser — their event data is JS-injected and html_full_text gets near-empty pages, flagged expected_empty until Playwright lands. (Deep Cuts is resolved: its JS widget reads DICE's partner API, now scraped directly via the dice_events strategy — no Playwright needed. Village Social is resolved the same way: its JS-only BentoBox calendar embeds a public Google Calendar iframe, now scraped directly via the gcal_ics strategy off the calendar's .ics feed.)"
     },
     {
       "title": "Sinclair truncates at the Pass-1 token cap",

@@ -810,6 +810,94 @@ def extract_wix_events(html, base_url):
     return events
 
 
+def _ics_to_eastern(val):
+    """Convert an ICS DTSTART/DTEND value to a naive America/New_York ISO
+    string. Handles UTC (trailing Z) and floating/TZID-qualified local times.
+    Google Calendar emits timed values in UTC (trailing Z); we convert to
+    Eastern wall-clock to match every other venue's naive local times. Uses
+    zoneinfo so DST is handled correctly (EDT in summer, EST in winter) —
+    unlike the run_scraper hardcoded −4 offset."""
+    from zoneinfo import ZoneInfo
+    val = val.strip()
+    try:
+        if val.endswith("Z"):
+            dt = datetime.strptime(val, "%Y%m%dT%H%M%SZ").replace(tzinfo=timezone.utc)
+            return dt.astimezone(ZoneInfo("America/New_York")).strftime("%Y-%m-%dT%H:%M:00")
+        return datetime.strptime(val, "%Y%m%dT%H%M%S").strftime("%Y-%m-%dT%H:%M:00")
+    except ValueError:
+        return None
+
+
+def extract_gcal_ics(ics_text, base_url):
+    """Parse a public Google Calendar ICS feed.
+
+    Village Social Club's on-site calendar is a JS-only BentoBox widget (the
+    static page carries no event data), but the widget embeds a *public* Google
+    Calendar iframe. We point collection_url straight at that calendar's
+    /ical/.../basic.ics feed and parse it directly — no LLM, no Playwright.
+
+    Only timed events are real shows. All-day (VALUE=DATE) entries on this
+    calendar are annotations ("no live music", holiday "Private Event"
+    markers), so we skip them — leaving the actual booked acts."""
+    # RFC 5545 line unfolding: a CRLF followed by a space/tab continues the
+    # prior line. Normalize then join folded continuations.
+    text = re.sub(r"\r?\n[ \t]", "", ics_text.replace("\r\n", "\n"))
+
+    def ics_unescape(v):
+        return (v.replace("\\n", "\n").replace("\\,", ",")
+                 .replace("\\;", ";").replace("\\\\", "\\")).strip()
+
+    events = []
+    for block in re.findall(r"BEGIN:VEVENT\n(.*?)\nEND:VEVENT", text, re.S):
+        fields = {}
+        for line in block.split("\n"):
+            if ":" not in line:
+                continue
+            key, val = line.split(":", 1)
+            fields.setdefault(key.split(";", 1)[0], (key, val))
+
+        if "DTSTART" not in fields:
+            continue
+        dt_key, dt_val = fields["DTSTART"]
+        # All-day markers (VALUE=DATE, no time component) are annotations, skip.
+        if "VALUE=DATE" in dt_key or "T" not in dt_val:
+            continue
+        start = _ics_to_eastern(dt_val)
+        if not start:
+            continue
+        end = _ics_to_eastern(fields["DTEND"][1]) if "DTEND" in fields else None
+
+        title = ics_unescape(fields.get("SUMMARY", ("", ""))[1])
+        if not title:
+            continue
+        raw_desc = ics_unescape(fields.get("DESCRIPTION", ("", ""))[1])
+        # Descriptions sometimes carry HTML — strip to plain text, but only run
+        # the parser when there's actually a tag (a bare URL/plain text trips
+        # BeautifulSoup's MarkupResemblesLocator warning).
+        description = raw_desc or None
+        if raw_desc and "<" in raw_desc:
+            description = BeautifulSoup(raw_desc, "html.parser").get_text(" ", strip=True) or None
+        source_url = (fields.get("URL", ("", ""))[1] or "").strip() or None
+
+        events.append({
+            "title":       title,
+            "start":       start,
+            "end":         end,
+            "location":    None,
+            "cost":        None,
+            "source_url":  source_url,
+            "performer":   None,
+            "description": description,
+            "image_url":   None,
+            "ticket_url":  None,
+            "is_recurring": False,
+            "recurrence_note": None,
+        })
+
+    print(f"  Parsed {len(events)} timed events from Google Calendar ICS (no LLM needed)")
+    return events
+
+
 def _seatengine_cost(offers):
     """First offer's price → display string ('$20', 'Free', or None)."""
     if not offers:
@@ -1934,6 +2022,12 @@ def scrape_venue(venue_cfg, cache, verbose=True, force=False, report=None):
     elif strategy == "wix_events":
         # Direct JSON parse from Wix appsWarmupData — no LLM needed
         raw_events = extract_wix_events(html, base_url)
+        if verbose:
+            print(f"  Pass 1: {len(raw_events)} events (parsed directly, no LLM)")
+    elif strategy == "gcal_ics":
+        # Direct parse of a public Google Calendar ICS feed (Village Social) —
+        # no LLM, no Playwright. collection_url is the .../basic.ics feed.
+        raw_events = extract_gcal_ics(html, base_url)
         if verbose:
             print(f"  Pass 1: {len(raw_events)} events (parsed directly, no LLM)")
     elif strategy == "seatengine":

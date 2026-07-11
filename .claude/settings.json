@@ -14,7 +14,15 @@
       "Bash(python3 -m pytest tests/ -q)",
       "Bash(echo \"exit: $?\")",
       "Bash(git --no-pager diff --stat scraper/scraper_core.py scraper/tests/test_routing.py CLAUDE.md data/todo.json data/test_status.json)",
-      "Bash(git --no-pager diff data/test_status.json)"
+      "Bash(git --no-pager diff data/test_status.json)",
+      "Bash(python3 scraper/run_scraper.py tallship --force)",
+      "Bash(curl -s -A \"Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537.36\" \"https://www.tallshipboston.com/events\")",
+      "Bash(curl -sL -A \"Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537.36\" \"https://www.tallshipboston.com/events\")",
+      "Bash(python3 -c \"import base64; print\\(base64.b64decode\\('dmE4bHJlZTcyYnA3YTE0djBmdGtmaWMwb3NAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ'\\).decode\\(\\)\\)\")",
+      "Bash(python3 -c 'import urllib.parse;print\\(urllib.parse.quote\\('\\\\''__TRACKED_VAR__'\\\\''\\)\\)')",
+      "Bash(curl -sL https://calendar.google.com/calendar/ical/__TRACKED_VAR__/public/basic.ics -o vsc.ics)",
+      "Bash(python3 scraper/run_scraper.py village-social --force)",
+      "Bash(python3 scraper/run_scraper.py --force)"
     ]
   }
 }

@@ -243,3 +243,51 @@ def test_dice_drops_cancelled_and_defaults_category():
 
 def test_dice_bad_json_returns_empty():
     assert sc.extract_dice_events("not json", "https://x") == []
+
+
+# --- Google Calendar ICS (Village Social) ------------------------------------
+
+# CRLF line endings + a folded DESCRIPTION line (leading space continues it),
+# a timed UTC show, an all-day annotation, and a plain-text description.
+_ICS = (
+    "BEGIN:VCALENDAR\r\n"
+    "VERSION:2.0\r\n"
+    "BEGIN:VEVENT\r\n"
+    "DTSTART:20260719T000000Z\r\n"          # midnight UTC Jul 19 = 8pm EDT Jul 18
+    "DTEND:20260719T020000Z\r\n"
+    "SUMMARY:Peter Janson\r\n"
+    "DESCRIPTION:<div dir=\"auto\">Solo jazz\r\n"
+    "  guitarist</div>\r\n"                  # folded continuation + HTML
+    "URL:https://example.com/janson\r\n"
+    "END:VEVENT\r\n"
+    "BEGIN:VEVENT\r\n"
+    "DTSTART;VALUE=DATE:20260717\r\n"        # all-day annotation — skipped
+    "DTEND;VALUE=DATE:20260718\r\n"
+    "SUMMARY:Private Event\r\n"
+    "END:VEVENT\r\n"
+    "BEGIN:VEVENT\r\n"
+    "DTSTART:20261114T010000Z\r\n"           # Nov = EST (-5): 1am UTC = 8pm EST Nov 13
+    "SUMMARY:Eva James\r\n"
+    "DESCRIPTION:no html here\r\n"           # bare text, no BeautifulSoup needed
+    "END:VEVENT\r\n"
+    "END:VCALENDAR\r\n"
+)
+
+
+def test_gcal_ics_converts_utc_skips_allday_and_unfolds():
+    events = sc.extract_gcal_ics(_ICS, "https://x")
+    by = {e["title"]: e for e in events}
+    assert set(by) == {"Peter Janson", "Eva James"}      # all-day marker skipped
+    # UTC → Eastern (EDT in July), and folded/HTML description flattened.
+    j = by["Peter Janson"]
+    assert j["start"] == "2026-07-18T20:00:00"
+    assert j["end"] == "2026-07-18T22:00:00"
+    assert j["description"] == "Solo jazz guitarist"
+    assert j["source_url"] == "https://example.com/janson"
+    # DST handled by zoneinfo: November is EST (-5), not the summer -4.
+    assert by["Eva James"]["start"] == "2026-11-13T20:00:00"
+    assert by["Eva James"]["description"] == "no html here"
+
+
+def test_gcal_ics_empty_feed_returns_empty():
+    assert sc.extract_gcal_ics("BEGIN:VCALENDAR\r\nEND:VCALENDAR\r\n", "https://x") == []
