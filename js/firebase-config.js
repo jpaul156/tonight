@@ -19,12 +19,12 @@
 (function () {
   const CONFIGS = {
     dev: {
-      apiKey: "REPLACE_ME",
-      authDomain: "tonight-dev.firebaseapp.com",
-      projectId: "tonight-dev",
-      storageBucket: "tonight-dev.appspot.com",
-      messagingSenderId: "REPLACE_ME",
-      appId: "REPLACE_ME",
+      apiKey: "AIzaSyAGocitQKPLmsFsC5sbmEHgq1jYM8NVXMs",
+      authDomain: "tonight-dev-db064.firebaseapp.com",
+      projectId: "tonight-dev-db064",
+      storageBucket: "tonight-dev-db064.firebasestorage.app",
+      messagingSenderId: "855560050469",
+      appId: "1:855560050469:web:de67067d8d806e254faccc",
     },
     prod: {
       apiKey: "REPLACE_ME",
