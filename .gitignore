@@ -8,3 +8,6 @@ test-results.xml
 # Local-only working files (not for the public site)
 Venues Overview.csv
 prototype/
+
+# Claude Code — permission grants accrete per-machine; keep out of the repo
+.claude/settings.json
