@@ -341,7 +341,11 @@
   }
 
   // ---- favorite toggles in the detail overlay ------------------------------
+  // Remember the event currently shown in the overlay so an auth/profile change
+  // (e.g. signing in from the star's own prompt) can repaint its star in place.
+  let decoratedEvent = null;
   function decorateDetail(e) {
+    decoratedEvent = e;
     const A = window.TonightAuth;
     if (!A || !A.enabled) return;
     const row = document.querySelector("#detail-overlay .venue-row");
@@ -390,6 +394,10 @@
     refreshAccountButton();
     const panel = document.getElementById("account-panel");
     if (panel && !panel.hidden) renderPanel();
+    // Repaint the detail overlay's favorite star if it's open — signing in from
+    // its own prompt shouldn't leave a stale ☆ until the overlay is reopened.
+    const detail = document.getElementById("detail-overlay");
+    if (decoratedEvent && detail && !detail.hidden) decorateDetail(decoratedEvent);
     // Let app.js re-rank the feed + re-home the map (it listens separately).
   });
 
