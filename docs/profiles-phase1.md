@@ -44,6 +44,12 @@ service cloud.firestore {
         && request.auth.token.firebase.sign_in_provider != 'anonymous'
         && request.auth.token.email_verified == true;
     }
+    // You. Sign in to the app (or dashboard) with your Google account, then
+    // copy your uid from Firebase console → Authentication → Users. Set it
+    // separately in each project (dev uid ≠ prod uid).
+    function isAdmin() {
+      return request.auth != null && request.auth.uid == 'PASTE_YOUR_ADMIN_UID';
+    }
     // Which top-level fields changed in this write.
     function changed() {
       return request.resource.data.diff(resource.data).affectedKeys();
@@ -58,6 +64,39 @@ service cloud.firestore {
       allow update: if isOwner(uid)
         && (!changed().hasAny(['favorites']) || isVerified());
       allow delete: if isOwner(uid);
+
+      // Messages to this user ("your venue was added", personal thank-yous).
+      // Admin writes them (dashboard "Send note"); the owner reads them and
+      // may only flip read/readAt (dismissal) — never edit the text.
+      match /notifications/{nid} {
+        allow read: if isOwner(uid);
+        allow create: if isAdmin();
+        allow update: if isOwner(uid)
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read', 'readAt']);
+        allow delete: if isOwner(uid) || isAdmin();
+      }
+    }
+
+    // "Suggest a venue" intake. Create-only from the client — no reads,
+    // edits, or deletes (review happens in the console / app-health later).
+    // Any session may submit (anonymous included; the uid ties it to their
+    // profile), but the doc shape is locked down hard since this is the one
+    // place anyone can write: exact keys, capped string sizes, http(s) only,
+    // status pinned to 'new'. To require sign-in later, swap the first line
+    // for: request.auth.token.firebase.sign_in_provider != 'anonymous'.
+    match /venue_suggestions/{id} {
+      allow create: if request.auth != null
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.keys().hasOnly(['uid', 'url', 'name', 'status', 'createdAt'])
+        && request.resource.data.url is string
+        && request.resource.data.url.matches('https?://.+')
+        && request.resource.data.url.size() <= 500
+        && request.resource.data.name is string
+        && request.resource.data.name.size() <= 120
+        && request.resource.data.status == 'new';
+      // Admin (the app_health.html review section): read the queue, set
+      // status/reviewedAt/reviewedBy on approve/deny, delete spam.
+      allow read, update, delete: if isAdmin();
     }
   }
 }
@@ -68,12 +107,21 @@ service cloud.firestore {
 `python3 -m http.server 8000` → `http://localhost:8000`.
 
 - **Disabled (before keys):** no account button; site unchanged.
-- **After dev keys:** ☆ button appears top-right → anonymous session starts silently →
-  pick a **Home Square** (works anonymous) → the metro map opens centered there **and the
-  feed opens filtered to that square** on load (falls back to "Near me" if the square has no
-  events tonight, or once you tap another square / "Near me").
+- **After dev keys:** a **Sign in** pill appears top-right → anonymous session starts
+  silently → pick a **Home Square** (works anonymous; options = every named station on
+  the traced map) → the metro map opens centered there and, on "Near me", events in that
+  square **rank first**. The Home Square is never a filter — the feed still shows
+  everything (first step toward multi-factor ranking: distance, favorites, sponsored).
 - **Sign in with Google:** star in an event's detail overlay favorites the venue; it jumps
   to the top of the feed. Try favoriting while anonymous → it opens the sign-in menu instead.
+- **Suggest a venue:** in the account panel, "Suggest a venue…" expands to a URL (+ optional
+  name) form; submitting writes a `/venue_suggestions` doc stamped with your uid (check the
+  Firestore console). Works anonymous. Requires the rules above to be deployed first.
+- **Review suggestions:** open `app_health.html` → "Venue suggestions" → Sign in with Google
+  (must be the account whose uid is in `isAdmin()`). Approve/Deny sets status; "Send note"
+  writes a notification to the suggester.
+- **Notifications:** after sending a note, the suggester's account button grows an amber dot;
+  opening the panel shows the message with a "Got it" dismiss (marks it read, dot clears).
 
 ## Phase 2+ (not built)
 
@@ -81,4 +129,5 @@ service cloud.firestore {
   nav-layer heatmap; selecting a hot area prioritizes the Lit event.
 - **Venue/artist accounts** — custom claims (`venue`/`artist`/`admin`), claim/verify flow,
   Firestore→`events.json` materialization Action, day-of event verification for a placement boost.
-- **Venue requests** — URL intake → auto-first-pass scraper → app-health approval.
+- **Venue requests** — ~~URL intake~~ (built: the "Suggest a venue" form above) → auto-first-pass
+  scraper reading `/venue_suggestions` → app-health review/approval view.

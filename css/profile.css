@@ -4,16 +4,19 @@
    injects, so it's inert when Firebase is in DISABLED mode.
    ============================================================ */
 
+/* Lives inside the sticky #header (not fixed) so it scrolls/collapses with
+   the logo instead of floating over the date strip and filter chips. */
 .account-btn {
-  position: fixed;
-  top: 12px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   right: 14px;
   width: 34px;
   height: 34px;
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.25);
   background: rgba(255, 255, 255, 0.06);
-  color: var(--fg, #e8e8ef);
+  color: #9a9ab0; /* grayscale silhouette pre-auth */
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -21,6 +24,24 @@
   place-items: center;
   line-height: 1;
   z-index: 30;
+}
+.account-btn svg { width: 19px; height: 19px; display: block; }
+/* Unread notifications */
+.account-btn.has-dot::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--amber, #f2b705);
+  border: 2px solid #0a0d1a;
+}
+/* Only when the account button exists does the logo need clearance for it —
+   a wide logo can still meet the button on narrow phones. */
+.header.has-account #logo-img {
+  max-width: calc(100% - 104px);
 }
 .account-btn.is-verified {
   background: var(--amber, #f2b705);
@@ -43,13 +64,79 @@
   flex-direction: column;
   gap: 10px;
 }
+/* Author display:flex above would otherwise beat the UA's [hidden] rule —
+   same pattern as .detail-overlay[hidden] in style.css. Without this the
+   panel is visible (empty) on load and can never be closed. */
+.account-panel[hidden] { display: none; }
+.ap-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
 .ap-head {
   font-family: var(--font-mono, monospace);
   font-size: 0.72rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--muted, #9a9ab0);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
+.ap-close {
+  border: none;
+  background: transparent;
+  color: var(--muted, #9a9ab0);
+  font-size: 0.95rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 6px;
+}
+.ap-close:hover { color: var(--fg, #e8e8ef); }
+/* Divided sections, so the panel can grow toward a fuller menu. */
+.ap-section {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+/* Messages from Tonight (unread notifications) */
+.ap-msg {
+  background: rgba(242, 183, 5, 0.08);
+  border: 1px solid rgba(242, 183, 5, 0.25);
+  border-radius: 10px;
+  padding: 9px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.ap-msg-text { margin: 0; font-size: 0.82rem; line-height: 1.4; }
+.ap-msg-dismiss {
+  align-self: flex-end;
+  border: none;
+  background: transparent;
+  padding: 0;
+  color: var(--amber, #f2b705);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Quiet text link, not a button — end-of-menu convention. */
+.ap-signout {
+  align-self: flex-start;
+  border: none;
+  background: transparent;
+  padding: 0;
+  color: var(--muted, #9a9ab0);
+  font-size: 0.78rem;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.ap-signout:hover { color: var(--fg, #e8e8ef); }
 .ap-note {
   font-size: 0.8rem;
   color: var(--muted, #9a9ab0);
@@ -86,6 +173,12 @@
   text-transform: uppercase;
   color: var(--muted, #9a9ab0);
 }
+.ap-saved {
+  color: var(--amber, #f2b705);
+  text-transform: none;
+  letter-spacing: 0;
+  transition: opacity 0.4s;
+}
 .ap-select {
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.18);
@@ -94,6 +187,9 @@
   padding: 9px 10px;
   font-size: 0.9rem;
 }
+
+.ap-suggest { display: flex; flex-direction: column; }
+.ap-suggest-form { display: flex; flex-direction: column; gap: 6px; }
 
 /* Favorite star in the detail overlay's venue row */
 .fav-btn {

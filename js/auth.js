@@ -25,6 +25,7 @@ const state = {
   profile: null,              // /users/{uid} doc data
   favVenues: new Set(),
   favArtists: new Set(),
+  notifications: [],          // unread /users/{uid}/notifications docs, newest first
 };
 
 function emitChanged() {
@@ -50,6 +51,10 @@ function installDisabled() {
     isFavoriteArtist: () => false,
     toggleFavoriteVenue: async () => ({ ok: false, reason: "disabled" }),
     toggleFavoriteArtist: async () => ({ ok: false, reason: "disabled" }),
+    submitVenueSuggestion: async () => ({ ok: false, reason: "disabled" }),
+    notifications: () => [],
+    unreadCount: () => 0,
+    markNotificationRead: async () => {},
   };
   function warnDisabled() {
     console.info("[Tonight] Firebase not configured — sign-in disabled. Fill js/firebase-config.js.");
@@ -81,6 +86,7 @@ async function boot() {
   // Keep a live reference to profile + favorites doc unsubscribers so we can
   // swap them when the signed-in user changes.
   let unsubProfile = null;
+  let unsubNotifs = null;
 
   const api = {
     enabled: true,
@@ -114,11 +120,22 @@ async function boot() {
           await authMod.linkWithPopup(state.user, provider);
           return;
         } catch (e) {
+          if (e.code === "auth/popup-blocked") {
+            // Safari & strict settings block the popup — full-page redirect
+            // instead. getRedirectResult() in boot() finishes it on return.
+            await authMod.linkWithRedirect(state.user, provider);
+            return;
+          }
           if (e.code !== "auth/credential-already-in-use") throw e;
           // That Google account already exists — fall through to a plain sign-in.
         }
       }
-      await authMod.signInWithPopup(auth, provider);
+      try {
+        await authMod.signInWithPopup(auth, provider);
+      } catch (e) {
+        if (e.code !== "auth/popup-blocked") throw e;
+        await authMod.signInWithRedirect(auth, provider);
+      }
     },
 
     // Passwordless email link. Sends the link; completeEmailLinkIfPresent()
@@ -175,6 +192,39 @@ async function boot() {
 
     async toggleFavoriteVenue(key) { return toggleFav("favVenues", "venues", key); },
     async toggleFavoriteArtist(key) { return toggleFav("favArtists", "artists", key); },
+
+    // "Suggest a venue" intake (Phase 2's venue-requests pipeline starts here).
+    // One doc per suggestion in /venue_suggestions, stamped with the sender's
+    // uid — that's the profile link; works for anonymous sessions too, and the
+    // uid survives if they later sign in (anonymous accounts are linked, not
+    // replaced). Write-only from the client: review happens in the console /
+    // a future app-health view.
+    async submitVenueSuggestion({ url, name }) {
+      if (!state.user) return { ok: false, reason: "no-session" };
+      await fsMod.addDoc(fsMod.collection(db, "venue_suggestions"), {
+        uid: state.user.uid,
+        url: String(url || "").trim(),
+        name: String(name || "").trim(),
+        status: "new",
+        createdAt: fsMod.serverTimestamp(),
+      });
+      return { ok: true };
+    },
+
+    // Per-user messages (/users/{uid}/notifications) — written by the admin
+    // (dashboard "send note", venue-added announcements), read/dismissed by
+    // the owner. Only unread ones are held in memory; dismissing marks
+    // read:true rather than deleting so there's a record.
+    notifications() { return state.notifications.slice(); },
+    unreadCount() { return state.notifications.length; },
+    async markNotificationRead(id) {
+      if (!state.user || !id) return;
+      await fsMod.setDoc(
+        fsMod.doc(db, "users", state.user.uid, "notifications", id),
+        { read: true, readAt: fsMod.serverTimestamp() },
+        { merge: true }
+      );
+    },
   };
 
   // ---- profile doc I/O -----------------------------------------------------
@@ -206,16 +256,30 @@ async function boot() {
   }
 
   // ---- auth lifecycle ------------------------------------------------------
+  // Finish a redirect sign-in if we're returning from one (the popup-blocked
+  // fallback). Resolves null on a normal page load. A linkWithRedirect against
+  // an already-existing Google account rejects like linkWithPopup does — fall
+  // back to signing in as that account, same as the popup path.
+  authMod.getRedirectResult(auth).catch(async (e) => {
+    if (e.code === "auth/credential-already-in-use") {
+      const cred = authMod.GoogleAuthProvider.credentialFromError(e);
+      if (cred) { await authMod.signInWithCredential(auth, cred); return; }
+    }
+    console.error("[Tonight] redirect sign-in failed:", e);
+  });
+
   api.ready = new Promise((resolve) => {
     authMod.onAuthStateChanged(auth, async (user) => {
-      // Detach previous profile listener.
+      // Detach previous listeners.
       if (unsubProfile) { unsubProfile(); unsubProfile = null; }
+      if (unsubNotifs) { unsubNotifs(); unsubNotifs = null; }
 
       if (!user) {
         // No session yet — start an anonymous one so Home Square works with
         // zero friction. onAuthStateChanged fires again with the anon user.
         state.user = null; state.profile = null;
         state.favVenues = new Set(); state.favArtists = new Set();
+        state.notifications = [];
         try { await authMod.signInAnonymously(auth); } catch (e) { console.error(e); }
         emitChanged();
         return;
@@ -226,6 +290,21 @@ async function boot() {
       unsubProfile = fsMod.onSnapshot(userRef(), (snap) => {
         applyProfileSnapshot(snap.exists() ? snap.data() : {});
       });
+      // ...and to their unread notifications (sorted client-side so no
+      // composite index is needed).
+      unsubNotifs = fsMod.onSnapshot(
+        fsMod.query(
+          fsMod.collection(db, "users", user.uid, "notifications"),
+          fsMod.where("read", "==", false)
+        ),
+        (snap) => {
+          state.notifications = snap.docs
+            .map((d) => ({ id: d.id, ...d.data() }))
+            .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+          emitChanged();
+        },
+        (err) => console.warn("[Tonight] notifications listener:", err.code || err)
+      );
 
       // Finish a pending email-link sign-in if we arrived via one.
       try { await api.completeEmailLinkIfPresent(); } catch (e) { console.error(e); }

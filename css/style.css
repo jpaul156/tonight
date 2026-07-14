@@ -71,12 +71,13 @@ body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  padding: 10px 0; /* breathing room — logo shouldn't touch the header edges */
 }
 
 #logo-img {
   display: block;
-  width: 420px;
-  max-width: 92%;
+  width: 357px; /* 85% of the original 420 — keep in sync with HERO_WIDTH in js/app.js */
+  max-width: 85%;
   height: auto;
   position: relative;
   z-index: 1;

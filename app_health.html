@@ -133,12 +133,47 @@
     .todo .dd { color: var(--text-muted); font-size: 0.8rem; margin-top: 3px; line-height: 1.4; }
     .err-msg { color: var(--err); font-family: var(--font-mono); padding: 40px; text-align: center; }
     a.back { color: var(--text-muted); font-size: 0.8rem; text-decoration: none; font-family: var(--font-mono); }
+
+    /* ---- venue suggestions (Firestore, admin) ---- */
+    .sg-login { display: flex; align-items: center; gap: 12px; }
+    .sg-btn {
+      border: 1px solid var(--border); background: var(--surface-2); color: var(--text);
+      border-radius: 8px; padding: 7px 12px; font-size: 0.8rem; cursor: pointer; font-family: var(--font-body);
+    }
+    .sg-btn:hover { border-color: var(--text-muted); }
+    .sg-btn.ok { border-color: #3fb8a066; color: var(--ok); }
+    .sg-btn.bad { border-color: #ff5c5c66; color: var(--err); }
+    .sg-item { padding: 12px 0; border-bottom: 1px solid #1c223855; }
+    .sg-item:last-child { border-bottom: none; }
+    .sg-top { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+    .sg-name { font-weight: 600; }
+    .sg-url { font-size: 0.8rem; color: var(--text-muted); word-break: break-all; }
+    .sg-url a { color: inherit; }
+    .sg-meta { font-family: var(--font-mono); font-size: 0.68rem; color: var(--text-muted); }
+    .sg-status { font-family: var(--font-mono); font-size: 0.66rem; text-transform: uppercase; padding: 2px 7px; border-radius: 6px; border: 1px solid var(--border); }
+    .sg-status.new { color: var(--amber); border-color: #f5b94255; }
+    .sg-status.approved { color: var(--ok); border-color: #3fb8a055; }
+    .sg-status.rejected { color: var(--text-muted); }
+    .sg-actions { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; align-items: center; }
+    .sg-note-input {
+      flex: 1; min-width: 220px; border: 1px solid var(--border); background: var(--bg);
+      color: var(--text); border-radius: 8px; padding: 7px 10px; font-size: 0.8rem; font-family: var(--font-body);
+    }
+    .sg-hint { color: var(--text-muted); font-size: 0.78rem; }
   </style>
 </head>
 <body>
   <div class="wrap" id="app">
     <div class="err-msg" id="loading">Loading health report…</div>
   </div>
+
+  <!-- Venue suggestions live in Firestore, not a scraped JSON file, so this
+       section manages its own auth + data. Access is enforced by the Firestore
+       rules (admin uid) — signing in with any other account just gets a
+       permission error. Rendered as a sibling of #app because render() rewrites
+       #app's innerHTML wholesale on every load. -->
+  <div class="wrap" id="suggestions" style="padding-top:0"></div>
+  <script src="js/firebase-config.js"></script>
 
   <script>
     const REL = ts => {
@@ -225,6 +260,8 @@
             <div class="val">${testLabel(tests)}</div><div class="lbl">Tests</div></div>
         </div>
 
+        <div id="suggestions-slot"></div>
+
         <h2>Venues <span class="count">${h.venues.length} tracked · loudest first</span></h2>
         <div style="overflow-x:auto"><table>
           <thead><tr><th>Status</th><th>Venue</th><th>Square</th><th>Source</th><th>Events</th><th>Last data</th><th>Note</th></tr></thead>
@@ -255,6 +292,17 @@
 
         ${todo ? renderTodo(todo) : ""}
       `;
+
+      // The venue-suggestions box manages its own Firebase auth/content, so it
+      // lives outside #app (this innerHTML rewrite would destroy it). Adopt it
+      // into position — below the status tiles, above Venues — after each render.
+      const sgBox = document.getElementById("suggestions");
+      const slot = document.getElementById("suggestions-slot");
+      if (sgBox && slot) {
+        sgBox.classList.remove("wrap");
+        sgBox.removeAttribute("style");
+        slot.appendChild(sgBox);
+      }
     }
 
     // MBTA Frequent Bus Network — refreshed weekly from the V3 API. Loudly
@@ -405,6 +453,160 @@
     }
 
     load();
+  </script>
+
+  <script type="module">
+    // ---- Venue suggestions admin (Firestore) --------------------------------
+    // Review "Suggest a venue" submissions: approve / deny, and send the
+    // suggester a note (lands as a notification dot in their account menu).
+    const box = document.getElementById("suggestions");
+    const SGESC = s => String(s == null ? "" : s).replace(/[&<>"']/g, c =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+    if (!window.TONIGHT_FIREBASE_ENABLED) {
+      box.innerHTML = `<h2>Venue suggestions</h2>
+        <div class="panel sg-hint">Firebase isn't configured for this environment (js/firebase-config.js), so suggestions can't be loaded here.</div>`;
+    } else {
+      // Shell immediately — the Firebase SDK import + auth init take a moment,
+      // and an empty section reads as broken.
+      box.innerHTML = `<h2>Venue suggestions</h2><div class="panel sg-hint">Connecting…</div>`;
+      const V = "11.0.2";
+      let authMod, fsMod, auth, db;
+      try {
+        let initializeApp;
+        [{ initializeApp }, authMod, fsMod] = await Promise.all([
+          import(`https://www.gstatic.com/firebasejs/${V}/firebase-app.js`),
+          import(`https://www.gstatic.com/firebasejs/${V}/firebase-auth.js`),
+          import(`https://www.gstatic.com/firebasejs/${V}/firebase-firestore.js`),
+        ]);
+        const app = initializeApp(window.TONIGHT_FIREBASE);
+        auth = authMod.getAuth(app);
+        db = fsMod.getFirestore(app);
+      } catch (e) {
+        box.innerHTML = `<h2>Venue suggestions</h2>
+          <div class="panel sg-hint">Couldn't reach Firebase: ${SGESC(e.message)}</div>`;
+        throw e;
+      }
+
+      authMod.onAuthStateChanged(auth, (user) => {
+        // Ignore anonymous sessions left over from testing the app locally.
+        if (user && !user.isAnonymous) loadSuggestions(user);
+        else renderLogin();
+      });
+
+      function renderLogin() {
+        box.innerHTML = `<h2>Venue suggestions</h2>
+          <div class="panel sg-login">
+            <button class="sg-btn" id="sg-signin">Sign in with Google</button>
+            <span class="sg-hint">Admin only — enforced by Firestore rules, not this page.</span>
+          </div>`;
+        document.getElementById("sg-signin").addEventListener("click", () =>
+          authMod.signInWithPopup(auth, new authMod.GoogleAuthProvider()).catch(e => alert(e.message)));
+      }
+
+      async function loadSuggestions(user) {
+        box.innerHTML = `<h2>Venue suggestions</h2><div class="panel sg-hint">Loading…</div>`;
+        let snap;
+        try {
+          snap = await fsMod.getDocs(fsMod.query(
+            fsMod.collection(db, "venue_suggestions"),
+            fsMod.orderBy("createdAt", "desc"),
+            fsMod.limit(100)
+          ));
+        } catch (e) {
+          box.innerHTML = `<h2>Venue suggestions</h2>
+            <div class="panel sg-hint">Signed in as ${SGESC(user.email)} — ${e.code === "permission-denied"
+              ? "this account isn't the admin (set your uid in the Firestore rules)."
+              : "couldn't load: " + SGESC(e.message)}
+              <button class="sg-btn" id="sg-out" style="margin-left:10px">Sign out</button></div>`;
+          document.getElementById("sg-out").addEventListener("click", () => authMod.signOut(auth));
+          return;
+        }
+
+        const docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        const fresh = docs.filter(s => s.status === "new").length;
+        box.innerHTML = `
+          <h2>Venue suggestions <span class="count">${docs.length} total · ${fresh} awaiting review · signed in as ${SGESC(user.email)}
+            <button class="sg-btn" id="sg-out" style="margin-left:8px;padding:2px 8px;font-size:0.7rem">Sign out</button></span></h2>
+          <div class="panel">${docs.length ? docs.map(row).join("") : `<span class="sg-hint">No suggestions yet.</span>`}</div>`;
+        document.getElementById("sg-out").addEventListener("click", () => authMod.signOut(auth));
+
+        box.querySelectorAll("[data-act]").forEach(btn => btn.addEventListener("click", () => act(btn, user)));
+      }
+
+      // Cheap static red-flag heuristics for submitted URLs — not a security
+      // scanner, just "look twice before clicking" signals. Rules already cap
+      // length/scheme; this catches the social-engineering shapes.
+      function linkFlags(raw) {
+        const flags = [];
+        let u;
+        try { u = new URL(raw); } catch { return ["unparseable URL"]; }
+        if (u.protocol !== "https:") flags.push("not HTTPS");
+        if (u.username || u.password) flags.push("credentials embedded in URL");
+        if (/^\d{1,3}(\.\d{1,3}){3}$/.test(u.hostname) || u.hostname.includes(":")) flags.push("raw IP address host");
+        if (u.hostname.split(".").some(p => p.startsWith("xn--"))) flags.push("punycode domain (possible lookalike)");
+        if (["bit.ly", "tinyurl.com", "t.co", "goo.gl", "is.gd", "ow.ly", "rb.gy", "shorturl.at"].includes(u.hostname.replace(/^www\./, ""))) flags.push("URL shortener (destination hidden)");
+        if (u.port && !["80", "443", ""].includes(u.port)) flags.push(`unusual port ${u.port}`);
+        return flags;
+      }
+
+      function row(s) {
+        const when = s.createdAt?.toDate ? s.createdAt.toDate().toLocaleString() : "—";
+        const isNew = s.status === "new";
+        const flags = linkFlags(s.url);
+        return `<div class="sg-item" data-id="${SGESC(s.id)}" data-uid="${SGESC(s.uid)}">
+          <div class="sg-top">
+            <span class="sg-status ${SGESC(s.status)}">${SGESC(s.status)}</span>
+            <span class="sg-name">${SGESC(s.name || "(no name given)")}</span>
+            <span class="sg-meta">${SGESC(when)} · uid ${SGESC((s.uid || "").slice(0, 8))}…</span>
+            ${flags.length ? `<span class="sg-status new" title="${SGESC(flags.join("; "))}">⚠ ${SGESC(flags.join(" · "))}</span>` : ""}
+          </div>
+          <div class="sg-url"><a href="${SGESC(s.url)}" target="_blank" rel="noopener noreferrer">${SGESC(s.url)}</a></div>
+          <div class="sg-actions">
+            ${isNew ? `<button class="sg-btn ok" data-act="approve">Approve</button>
+                       <button class="sg-btn bad" data-act="reject">Deny</button>` : ""}
+            <input class="sg-note-input" placeholder="Note to the suggester (optional)…">
+            <button class="sg-btn" data-act="note">Send note</button>
+          </div>
+        </div>`;
+      }
+
+      async function act(btn, user) {
+        const item = btn.closest(".sg-item");
+        const id = item.dataset.id, uid = item.dataset.uid;
+        const input = item.querySelector(".sg-note-input");
+        btn.disabled = true;
+        try {
+          if (btn.dataset.act === "note") {
+            const text = input.value.trim();
+            if (!text) { btn.disabled = false; input.focus(); return; }
+            await fsMod.addDoc(fsMod.collection(db, "users", uid, "notifications"), {
+              text, type: "message", suggestion_id: id, read: false,
+              createdAt: fsMod.serverTimestamp(),
+            });
+            input.value = "";
+            btn.textContent = "Sent ✓";
+            setTimeout(() => { btn.textContent = "Send note"; btn.disabled = false; }, 1500);
+            return;
+          }
+          const status = btn.dataset.act === "approve" ? "approved" : "rejected";
+          await fsMod.updateDoc(fsMod.doc(db, "venue_suggestions", id), {
+            status, reviewedAt: fsMod.serverTimestamp(), reviewedBy: user.uid,
+          });
+          // Prefill a thank-you the admin can edit + send with one click.
+          if (status === "approved" && !input.value) {
+            const name = item.querySelector(".sg-name").textContent;
+            input.value = `Thanks for the suggestion — ${name === "(no name given)" ? "that venue" : name} is being added to Tonight!`;
+          }
+          item.querySelector(".sg-status").textContent = status;
+          item.querySelector(".sg-status").className = "sg-status " + status;
+          item.querySelectorAll("[data-act='approve'],[data-act='reject']").forEach(b => b.remove());
+        } catch (e) {
+          alert(e.message);
+          btn.disabled = false;
+        }
+      }
+    }
   </script>
 </body>
 </html>

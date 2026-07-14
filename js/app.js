@@ -129,11 +129,6 @@ let venueData = {};
 // Keyed by URL so a hand-picked crop outlives the scraper's daily rewrite.
 let cropOverrides = {};
 let activeSquare = "all";
-// True once the user explicitly picks a square this session (a station tap or
-// "Near me"). Gates the Home-Square default: we only auto-apply the profile's
-// Home Square as the opening filter while the user hasn't chosen for themselves,
-// so a profile load never yanks them off a square they navigated to.
-let userSelectedSquare = false;
 let activeCategory = "all";
 // Your "home" square — where the metro map centers and the train departs when
 // no square is selected ("Near me"). Hardcoded for now; will come from a user
@@ -187,22 +182,9 @@ async function init() {
   // favorites, sign-in), re-rank the feed and refresh the pinned indicator.
   // Fires harmlessly once in DISABLED mode, then never again.
   window.addEventListener("tonight-profile-changed", () => {
-    applyHomeSquareDefault();
     renderSquareIndicator();
     render();
   });
-}
-
-// Open the feed on the user's saved Home Square instead of "Near me" — but only
-// while they haven't picked a square themselves this session, and only when that
-// square actually has events tonight (else a quiet home square would land them on
-// an empty feed, so we leave them on "all"). Uses the raw saved value, not the
-// hardcoded Davis fallback, so a new/anonymous user with no Home Square set keeps
-// today's "Near me" default.
-function applyHomeSquareDefault() {
-  if (userSelectedSquare || activeSquare !== "all") return;
-  const saved = window.TonightProfile?.homeSquare?.();
-  if (saved && eventSquares.has(saved)) activeSquare = saved;
 }
 
 async function loadVenues() {
@@ -275,7 +257,7 @@ async function loadTransit() {
 // ============================================================
 
 const LOGO_RATIO = 1000 / 529; // intrinsic width / height of logo-wide-transparent.png
-const HERO_WIDTH = 420;
+const HERO_WIDTH = 357; // 85% of the original 420 (80% read too small)
 const COMPACT_WIDTH = 130;
 const SHRINK_DISTANCE = 180; // px scrolled to go from hero to compact
 
@@ -868,7 +850,6 @@ const MetroMap = (() => {
 
 function selectSquare(value) {
   activeSquare = value;
-  userSelectedSquare = true;
   renderSquareIndicator();
   render();
   closeMetro();
@@ -1035,10 +1016,16 @@ function render() {
     activeSquare === "all"
       ? randKey(a) - randKey(b)
       : startMs(a) - startMs(b);
-  // Favorited venues/artists float to the top of the active list (Phase 1).
-  // No-op when profiles are disabled (isFavoriteEvent returns false for all).
+  // Personalization (Phase 1): the Home Square is never a filter — the "Near
+  // me" feed shows everything, ranked. Favorites float first, then (on "Near
+  // me" only) events in the user's saved Home Square, then the base order.
+  // First step toward multi-factor ranking (distance, favorites, sponsored);
+  // both keys are no-ops when profiles are disabled. Uses the raw saved value,
+  // not the hardcoded Davis fallback, so profile-less users see today's order.
   const favOf = e => (window.TonightProfile?.isFavoriteEvent?.(e) ? 0 : 1);
-  const sortFn = (a, b) => (favOf(a) - favOf(b)) || baseSort(a, b);
+  const homeSq = activeSquare === "all" ? window.TonightProfile?.homeSquare?.() : null;
+  const homeOf = e => (homeSq && e.square === homeSq ? 0 : 1);
+  const sortFn = (a, b) => (favOf(a) - favOf(b)) || (homeOf(a) - homeOf(b)) || baseSort(a, b);
 
   const active = filtered.filter(e => !hasEnded(e)).sort(sortFn);
   const ended  = filtered.filter(e =>  hasEnded(e)).sort((a, b) => startMs(a) - startMs(b));
