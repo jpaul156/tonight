@@ -114,6 +114,12 @@ async function boot() {
 
     async signInGoogle() {
       const provider = new authMod.GoogleAuthProvider();
+      // Always show Google's account chooser. Without this, a lone
+      // already-granted Google session is reused silently — so sign-out →
+      // sign-in bounces back into the same account with no way to switch.
+      // Cheap here because this only runs on an explicit "Continue with
+      // Google" tap; returning users ride Firebase's persisted session.
+      provider.setCustomParameters({ prompt: "select_account" });
       // If currently anonymous, link so the uid (and their Home Square) carries over.
       if (state.user && state.user.isAnonymous) {
         try {
