@@ -195,12 +195,14 @@ async function boot() {
 
     // "Suggest a venue" intake (Phase 2's venue-requests pipeline starts here).
     // One doc per suggestion in /venue_suggestions, stamped with the sender's
-    // uid — that's the profile link; works for anonymous sessions too, and the
-    // uid survives if they later sign in (anonymous accounts are linked, not
-    // replaced). Write-only from the client: review happens in the console /
-    // a future app-health view.
+    // uid. VERIFIED accounts only (enforced for real by the Firestore rules):
+    // a suggestion that becomes a venue earns the account points (future swag
+    // redemption), and an anonymous uid dies with cleared storage or a new
+    // phone — the credit has to outlive both. Write-only from the client:
+    // review happens in app_health.html.
     async submitVenueSuggestion({ url, name }) {
       if (!state.user) return { ok: false, reason: "no-session" };
+      if (!api.isVerified()) return { ok: false, reason: "needs-verified" };
       await fsMod.addDoc(fsMod.collection(db, "venue_suggestions"), {
         uid: state.user.uid,
         url: String(url || "").trim(),

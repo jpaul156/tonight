@@ -73,7 +73,10 @@
       setPanelOpen(opening);
     });
     document.addEventListener("click", (ev) => {
-      if (panel.hidden || ev.target === btn) return;
+      // btn.contains, not ===: a click on the icon inside the button targets
+      // the <svg>/<path>, and treating that as "outside" instantly re-closed
+      // the panel the button click had just opened (the center dead-zone bug).
+      if (panel.hidden || btn.contains(ev.target)) return;
       // A click inside the panel can remove its own target before this
       // bubbles up (e.g. "Suggest a venue…" swapping itself for the form) —
       // a detached target isn't "outside", so don't treat it as a close.
@@ -179,24 +182,13 @@
       const signin = section();
       const note = document.createElement("p");
       note.className = "ap-note";
-      note.textContent = "Sign in to favorite venues & artists and mark events Lit.";
+      note.textContent = "Sign in to favorite venues & artists and suggest new venues.";
       signin.appendChild(note);
 
+      // Google-only for now. The email-link plumbing still exists in auth.js
+      // but is parked: the default Firebase sender lands in spam, so don't
+      // re-add the UI until sending is moved to a custom tonight.quest domain.
       signin.appendChild(mkBtn("Continue with Google", () => A.signInGoogle().catch(showErr)));
-
-      const emailWrap = document.createElement("div");
-      emailWrap.className = "ap-email";
-      const input = document.createElement("input");
-      input.type = "email";
-      input.placeholder = "you@email.com";
-      input.className = "ap-input";
-      const send = mkBtn("Email me a link", async () => {
-        if (!input.value) return;
-        try { await A.startEmailLink(input.value); send.textContent = "Check your inbox ✓"; }
-        catch (e) { showErr(e); }
-      });
-      emailWrap.append(input, send);
-      signin.appendChild(emailWrap);
     }
 
     // Home Square — allowed for everyone, even anonymous.
@@ -214,13 +206,24 @@
   }
 
   // "Suggest a venue" — collapsed to one button; expands into a small form.
-  // Anyone with a session (anonymous included) can submit; the suggestion is
-  // stamped with their uid in Firestore so it's tied to their profile.
+  // Verified accounts only: the suggestion is stamped with the sender's uid,
+  // and a suggestion that becomes a venue earns the account points (future
+  // swag redemption) — an anonymous uid would vanish with cleared cookies or
+  // a new phone, losing that credit. The button stays visible to everyone so
+  // the feature is discoverable; unverified taps get the why-sign-in note.
   function buildVenueSuggest() {
     const wrap = document.createElement("div");
     wrap.className = "ap-suggest";
 
     const open = mkBtn("Suggest a venue…", () => {
+      if (!window.TonightAuth?.isVerified?.()) {
+        const hint = document.createElement("p");
+        hint.className = "ap-note";
+        hint.textContent =
+          "Sign in above to suggest a venue — suggestions are tied to your account so you get credit if it's added.";
+        open.replaceWith(hint);
+        return;
+      }
       open.remove();
       wrap.appendChild(form);
       urlInput.focus();

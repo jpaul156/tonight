@@ -154,6 +154,8 @@ The transit navigation layer lives in three standalone HTML files at the repo ro
 
 ## Pending product work
 
+- **Suggestion points + swag:** venue suggestions (`/venue_suggestions`) are **verified-account-only** so credit sticks to a durable uid — the plan is points for suggestions that become venues, redeemable for merch (200 glow-in-the-dark Tonight wristbands on hand from the ~2016 attempt at this app; t-shirts TBD). Award on approve in the app-health review flow; needs a points ledger on `users/{uid}` and a tally in the account panel.
+
 - **"Third place" category (name TBD):** For cafes, plazas, and hidden nooks people go to sit/chill/read/study/work — not live events. Like film listings, these should not show up on the main events page by default; needs an opt-in filter similar to the planned cinema `event_type`. Pepita Lo-Fi at Lamplighter belongs here but stays on the main list for now — reclassify when this is addressed.
 
 - **Weekly event verification:** Some recurring events (trivia nights, sessions) get cancelled week-to-week without the calendar being updated (e.g. Grainne O'Malley's was skipped). We need a mechanism for venues to confirm their recurring events are still on — e.g. a venue-facing view where they click a button to verify for the current day/week. Until this exists, treat weekly-only calendars cautiously (Grainne O'Malley's is on hold for this reason).

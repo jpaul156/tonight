@@ -1,6 +1,6 @@
 {
   "schema": "tonight.todo/1",
-  "updated": "2026-07-12",
+  "updated": "2026-07-14",
   "note": "Hand-maintained running to-do list, surfaced on app_health.html. Mirror of the 'Pending work' sections in CLAUDE.md — keep the two roughly in sync. priority: high | med | low. status: open | in_progress | blocked.",
   "items": [
     {
@@ -50,7 +50,14 @@
       "area": "product",
       "priority": "med",
       "status": "in_progress",
-      "detail": "Intake built ('Suggest a venue' → /venue_suggestions, shape-locked rules). Review surface built: app_health.html 'Venue suggestions' section — admin Google sign-in (uid gated in rules), approve/deny sets status/reviewedAt, 'Send note' writes a users/{uid}/notifications doc that lights the suggester's account-button dot. Remaining: the auto-first-pass scrape as an ASSIST (after approval, a manually-dispatched Action tries the suggested URL with the LLM strategy and reports yield to the dashboard — never auto-publishes; risks: LLM spend on junk/hostile URLs, prompt injection via page content, garbage events committed unreviewed), and notifying the suggester automatically when their venue's first real scrape lands."
+      "detail": "Intake built ('Suggest a venue' → /venue_suggestions, shape-locked rules, verified accounts only so suggestion credit sticks to a durable uid). Review surface built: app_health.html 'Venue suggestions' section — admin Google sign-in (uid gated in rules), approve/deny sets status/reviewedAt, 'Send note' writes a users/{uid}/notifications doc that lights the suggester's account-button dot. Remaining: the auto-first-pass scrape as an ASSIST (after approval, a manually-dispatched Action tries the suggested URL with the LLM strategy and reports yield to the dashboard — never auto-publishes; risks: LLM spend on junk/hostile URLs, prompt injection via page content, garbage events committed unreviewed), and notifying the suggester automatically when their venue's first real scrape lands."
+    },
+    {
+      "title": "Suggestion points + swag redemption",
+      "area": "product",
+      "priority": "low",
+      "status": "open",
+      "detail": "Award points to the account whose venue suggestion gets added — this is why /venue_suggestions is verified-only (an anonymous uid dies with cleared cookies or a replaced phone; the credit must outlive both). Redeemable for merch: 200 glow-in-the-dark Tonight wristbands already exist (carried over from the first attempt at this app ~2016), t-shirts / other swag TBD. Needs: a points ledger on users/{uid} (award on approve in the app_health review flow, admin-written like notifications), a running tally in the account panel, and a redemption flow (v1 can be a 'Send note' + mailing address exchange)."
     },
     {
       "title": "Weekly event verification for recurring shows",

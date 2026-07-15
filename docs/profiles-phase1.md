@@ -20,8 +20,11 @@ changes until this branch is merged.
 ## Firebase console steps
 
 1. Create two projects: **tonight-dev** and **tonight-prod**.
-2. In each: Build → **Authentication** → enable **Anonymous**, **Google**, and **Email link (passwordless)**.
-3. Authorized domains: add `localhost` (dev) and your Pages/custom domain (prod).
+2. In each: Build → **Authentication** → enable **Anonymous** and **Google**. (Email link
+   is parked — the plumbing exists in `js/auth.js` but the UI is removed until sending
+   moves to a custom tonight.quest domain; the default Firebase sender lands in spam.)
+3. Authorized domains: add `localhost` (dev — projects created after Apr 2025 don't
+   include it by default) and your Pages/custom domain (prod).
 4. Build → **Firestore Database** → create in production mode, then paste the rules below.
 5. Project settings → Your apps → Web app → copy the config into the matching block of
    `js/firebase-config.js`. Set `PROD_HOSTS` to your live domain.
@@ -78,14 +81,14 @@ service cloud.firestore {
     }
 
     // "Suggest a venue" intake. Create-only from the client — no reads,
-    // edits, or deletes (review happens in the console / app-health later).
-    // Any session may submit (anonymous included; the uid ties it to their
-    // profile), but the doc shape is locked down hard since this is the one
-    // place anyone can write: exact keys, capped string sizes, http(s) only,
-    // status pinned to 'new'. To require sign-in later, swap the first line
-    // for: request.auth.token.firebase.sign_in_provider != 'anonymous'.
+    // edits, or deletes (review happens in app_health.html). VERIFIED
+    // accounts only: a suggestion that becomes a venue earns the account
+    // points (future swag redemption), and an anonymous uid dies with
+    // cleared storage or a new phone — the credit must outlive both. Doc
+    // shape locked down hard: exact keys, capped string sizes, http(s)
+    // only, status pinned to 'new'.
     match /venue_suggestions/{id} {
-      allow create: if request.auth != null
+      allow create: if isVerified()
         && request.resource.data.uid == request.auth.uid
         && request.resource.data.keys().hasOnly(['uid', 'url', 'name', 'status', 'createdAt'])
         && request.resource.data.url is string
@@ -116,7 +119,9 @@ service cloud.firestore {
   to the top of the feed. Try favoriting while anonymous → it opens the sign-in menu instead.
 - **Suggest a venue:** in the account panel, "Suggest a venue…" expands to a URL (+ optional
   name) form; submitting writes a `/venue_suggestions` doc stamped with your uid (check the
-  Firestore console). Works anonymous. Requires the rules above to be deployed first.
+  Firestore console). **Signed-in accounts only** (tapping it anonymous explains why) — the
+  uid is how suggestion credit/points survive cleared cookies or a new phone. Requires the
+  rules above to be deployed first.
 - **Review suggestions:** open `app_health.html` → "Venue suggestions" → Sign in with Google
   (must be the account whose uid is in `isAdmin()`). Approve/Deny sets status; "Send note"
   writes a notification to the suggester.

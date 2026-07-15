@@ -27,18 +27,18 @@
       appId: "1:855560050469:web:de67067d8d806e254faccc",
     },
     prod: {
-      apiKey: "REPLACE_ME",
-      authDomain: "tonight-prod.firebaseapp.com",
-      projectId: "tonight-prod",
-      storageBucket: "tonight-prod.appspot.com",
-      messagingSenderId: "REPLACE_ME",
-      appId: "REPLACE_ME",
+      apiKey: "AIzaSyB0xJmJ0RPH3BLgptN1nhyAGE-oPBE6SW8",
+      authDomain: "tonight-prod-75027.firebaseapp.com",
+      projectId: "tonight-prod-75027",
+      storageBucket: "tonight-prod-75027.firebasestorage.app",
+      messagingSenderId: "765226707600",
+      appId: "1:765226707600:web:fee06893982181c6300615",
     },
   };
 
   // Live prod domain(s). Everything else (localhost, *.pages.dev branch
   // previews, netlify previews) is treated as dev.
-  const PROD_HOSTS = ["tonight.example.com"]; // TODO: set your GitHub Pages / custom domain
+  const PROD_HOSTS = ["tonight.quest", "www.tonight.quest"];
   const env = PROD_HOSTS.includes(location.hostname) ? "prod" : "dev";
 
   const cfg = CONFIGS[env];
