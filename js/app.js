@@ -32,6 +32,13 @@ const ICONS = {
 // keep in sync. Built by buildStationLineIndex() after loadTransit().
 let stationLineIndex = {};       // station name → ["Green", ...] (BASE_LINE_ORDER order)
 let minorStations = new Set();   // names that are minor-only everywhere (a major copy anywhere excludes them)
+const MAJOR_TIER = 4;            // tier ≥ this = full station (labelled, tappable, home-square-eligible); below = minor
+// Prominence tier of a raw transit-layer node. Explicit `tier` (1–5) wins;
+// legacy files carry only the `minor` boolean, so map minor→3 and plain→5.
+function stationTier(n) {
+  if (typeof n.tier === "number") return n.tier;
+  return n.minor ? 3 : 5;
+}
 
 // Branch route id → trunk color name, so lineColor() can still resolve a
 // branch label like "Green (D)" (from older data) back to its trunk hue.
@@ -58,7 +65,7 @@ const BASE_LINE_ORDER = ["Red", "Orange", "Green", "Blue"];
 // joins to an event's e.square exactly like the old hand-maintained table.
 function buildStationLineIndex(transit) {
   const acc = {}; // name → Set of trunk colors
-  const major = new Set(); // names seen at least once as a non-minor station
+  const major = new Set(); // names seen at least once at major tier (≥ MAJOR_TIER)
   if (!transit || !Array.isArray(transit.lines)) return;
   for (const ln of transit.lines) {
     const base = LINE_BASE[ln.line] || ln.line;
@@ -66,7 +73,7 @@ function buildStationLineIndex(transit) {
       for (const n of br.nodes || []) {
         if (!n.station || !n.name) continue;
         (acc[n.name] || (acc[n.name] = new Set())).add(base);
-        if (!n.minor) major.add(n.name);
+        if (stationTier(n) >= MAJOR_TIER) major.add(n.name);
       }
     }
   }
@@ -74,7 +81,7 @@ function buildStationLineIndex(transit) {
   minorStations = new Set();
   for (const [name, set] of Object.entries(acc)) {
     stationLineIndex[name] = BASE_LINE_ORDER.filter(b => set.has(b));
-    if (!major.has(name)) minorStations.add(name); // minor everywhere it appears
+    if (!major.has(name)) minorStations.add(name); // below MAJOR_TIER everywhere it appears
   }
 }
 
@@ -469,11 +476,10 @@ const MetroMap = (() => {
       if (!nd) { nd = { c: n.c, r: n.r, name: n.name || "", station: !!n.station, lines: new Set() }; nodes.set(k, nd); adj.set(k, []); }
       if (n.name) nd.name = n.name;   // never let "" overwrite a real name (branch-start convention)
       if (n.station) nd.station = true;
-      // minor = a low-priority infill stop (SL terminal stops, residential Green
-      // Line surface stops). A full-size copy anywhere wins, so a station shared
-      // with a major branch never renders minor regardless of node order.
-      if (n.station && !n.minor) nd.major = true;
-      if (n.minor) nd.minor = true;
+      // Effective tier is the max across shared copies, so a station that's major
+      // on one branch and minor-tier on another (branch-start convention) renders
+      // major regardless of node order. Render/label/home-square key off MAJOR_TIER.
+      if (n.station) nd.tier = Math.max(nd.tier || 0, stationTier(n));
       nd.lines.add(line);
       return k;
     };
@@ -651,7 +657,7 @@ const MetroMap = (() => {
         ctx.fillStyle = "#fff"; ctx.strokeStyle = "#10131a"; ctx.lineWidth = 2 / view.scale;
         const s = CELL * 0.42; ctx.fillRect(-s, -s, 2 * s, 2 * s); ctx.strokeRect(-s, -s, 2 * s, 2 * s); ctx.restore();
       } else if (nd.station) {                  // plain station — ring (minor = smaller/thinner)
-        const isMinor = nd.minor && !nd.major;
+        const isMinor = nd.tier < MAJOR_TIER;
         ctx.fillStyle = "#fff"; ctx.strokeStyle = lineColor([...nd.lines][0]);
         ctx.lineWidth = (isMinor ? 1.6 : 2.5) / view.scale;
         ctx.beginPath(); ctx.arc(p.x, p.y, CELL * (isMinor ? 0.2 : 0.3), 0, 7); ctx.fill(); ctx.stroke();
@@ -665,7 +671,7 @@ const MetroMap = (() => {
       // Queue a label for event squares (white, always) and other major
       // stations (grey, culled first). Minor stops are never labelled.
       if (nd.name && (nd.station || nd.lines.size > 1)) {
-        const isMinor = nd.minor && !nd.major;
+        const isMinor = nd.station && nd.tier < MAJOR_TIER;
         if (!isMinor) labels.push({
           // priority: origin/event squares win, then interchanges, then majors
           prio: k === originKey ? 0 : lit ? 1 : nd.lines.size > 1 ? 2 : 3,

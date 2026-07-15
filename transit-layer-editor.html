@@ -114,8 +114,8 @@
       </div>
       <div class="hint">
         <b>Draw:</b> click to drop a node onto the selected branch.<br>
-        <kbd>S</kbd> cycle waypoint → station → minor stop · <kbd>Z</kbd> undo node · <kbd>B</kbd> new branch<br>
-        <b>Move:</b> drag a node. <kbd>Del</kbd> removes selected node, <kbd>S</kbd> cycles its type (waypoint / station / minor).<br>
+        <kbd>0</kbd>–<kbd>5</kbd> set node tier (0 waypoint · 1 bus · 3 minor · 5 major) · <kbd>Z</kbd> undo node · <kbd>B</kbd> new branch<br>
+        <b>Move:</b> drag a node. <kbd>Del</kbd> removes selected node, <kbd>0</kbd>–<kbd>5</kbd> set its tier.<br>
         <b>Pan/zoom:</b> scroll or pinch to zoom, drag (or hold <kbd>Space</kbd>) to pan.
       </div>
     </div>
@@ -190,10 +190,14 @@ let showGrid = true;
 let showLabels = true;         // station name labels (Label tool)
 let tool = "draw";             // draw | move | pan | label
 let csvGroups = null;          // Map<groupName, [{name,include,square}]> from stations.csv
-let placeMode = "way";         // S cycles: "way" → "sta" (station) → "minor" → "way"
-const MODE_NEXT = { way:"sta", sta:"minor", minor:"way" };
-const modeFlags = m => ({ station: m !== "way", minor: m === "minor" });
-const nodeMode = n => (!n.station ? "way" : (n.minor ? "minor" : "sta"));
+let placeTier = 5;             // number keys set placement: 0 = waypoint, 1..5 = station tier
+// A node's prominence tier: 0 for a waypoint, else explicit tier (legacy files
+// carry only `minor`, so map minor→3, plain station→5). MAJOR_TIER (=4) in the
+// app is the labelled/tappable cutoff; here tier < 4 draws as a minor ring.
+const nodeTier = n => (!n.station ? 0 : (typeof n.tier === "number" ? n.tier : (n.minor ? 3 : 5)));
+// Apply a tier in place. 0 demotes to a waypoint; any station clears legacy `minor`.
+const setTier = (n, t) => { n.station = t > 0; if (t > 0) n.tier = t; else delete n.tier; delete n.minor; };
+const TIER_LABEL = { 0:"waypoint", 1:"bus stop (1)", 2:"tier 2", 3:"minor stop (3)", 4:"tier 4", 5:"major station (5)" };
 
 // Named line palette — kept identical to LINE_COLORS in js/app.js so color is
 // derived from the line name, never stored separately (a known line can't render wrong).
@@ -349,9 +353,10 @@ function draw(){
         const p = cellCenterWorld(n.c, n.r);
         const selNode = isSel && i===sel.node;
         if(n.station){
+          const minor = nodeTier(n) < 4;
           ctx.fillStyle = "#fff"; ctx.strokeStyle = col;
-          ctx.lineWidth = (n.minor?1.6:2.5)/view.scale;
-          ctx.beginPath(); ctx.arc(p.x,p.y, CELL*(n.minor?0.2:0.34), 0, 7); ctx.fill(); ctx.stroke();
+          ctx.lineWidth = (minor?1.6:2.5)/view.scale;
+          ctx.beginPath(); ctx.arc(p.x,p.y, CELL*(minor?0.2:0.34), 0, 7); ctx.fill(); ctx.stroke();
         } else if(isSel){
           ctx.fillStyle = "#fff";
           ctx.beginPath(); ctx.arc(p.x,p.y, CELL*0.16, 0, 7); ctx.fill();
@@ -453,7 +458,7 @@ cv.addEventListener("pointerdown", e=>{
       const last = br.nodes[br.nodes.length-1];
       t = snapDir(last.c, last.r, cell.c, cell.r);
     }
-    br.nodes.push({ c:t.c, r:t.r, ...modeFlags(placeMode), name:"" });
+    { const nn = { c:t.c, r:t.r, name:"" }; setTier(nn, placeTier); br.nodes.push(nn); }
     sel.node = br.nodes.length-1;
     refreshBranches(); draw();
   } else if(tool==="move"){
@@ -530,12 +535,11 @@ stage.addEventListener("wheel", e=>{
 window.addEventListener("keydown", e=>{
   if(e.target.matches("input,textarea")) return;
   if(e.code==="Space"){ spaceDown=true; cv.style.cursor="grab"; e.preventDefault(); }
-  else if(e.key==="s"||e.key==="S"){
+  else if(e.key>="0" && e.key<="5"){
+    const t = +e.key;
     if(tool==="move" && sel.node>=0){
-      const n = lines[sel.line].branches[sel.branch].nodes[sel.node];
-      const f = modeFlags(MODE_NEXT[nodeMode(n)]);
-      n.station = f.station; n.minor = f.minor; refreshBranches(); draw();
-    } else { placeMode = MODE_NEXT[placeMode]; updatePlacePill(); }
+      setTier(lines[sel.line].branches[sel.branch].nodes[sel.node], t); refreshBranches(); draw();
+    } else { placeTier = t; updatePlacePill(); }
   }
   else if(e.key==="z"||e.key==="Z"){ undoNode(); }
   else if(e.key==="b"||e.key==="B"){ addBranch(); }
@@ -638,7 +642,7 @@ document.getElementById("forkBranch").onclick = ()=>{
   if(sel.line<0||sel.branch<0||sel.node<0){ flashHud("select a node to fork from (Move tool)"); return; }
   const seed = lines[sel.line].branches[sel.branch].nodes[sel.node];
   lines[sel.line].branches.push({ name:"branch "+(lines[sel.line].branches.length+1),
-    nodes:[{ c:seed.c, r:seed.r, station:seed.station, minor:!!seed.minor, name:seed.name }] });
+    nodes:[{ c:seed.c, r:seed.r, station:seed.station, ...(seed.station?{tier:nodeTier(seed)}:{}), name:seed.name }] });
   sel.branch = lines[sel.line].branches.length-1; sel.node=0;
   refreshBranches(); draw();
 };
@@ -648,8 +652,8 @@ document.getElementById("forkBranch").onclick = ()=>{
 //==================================================================
 function updatePlacePill(){
   const pill = document.getElementById("placePill");
-  pill.textContent = { way:"waypoint", sta:"station", minor:"minor stop" }[placeMode];
-  pill.className = "pill " + placeMode;
+  pill.textContent = TIER_LABEL[placeTier];
+  pill.className = "pill " + (placeTier===0 ? "way" : placeTier>=4 ? "sta" : "minor");
 }
 document.querySelectorAll(".tool").forEach(b=>{
   b.onclick = ()=>{ tool=b.dataset.tool;
@@ -859,7 +863,7 @@ function serialize(){
     grid:{ cols, rows },
     lines: lines.map(l=>({ name:l.name, line:l.line,
       branches: l.branches.map(b=>({ name:b.name,
-        nodes: b.nodes.map(n=>({ c:n.c, r:n.r, station:!!n.station, ...(n.minor?{minor:true}:{}), name:n.name||"", ...(n.square?{square:n.square}:{}) })) })) })),
+        nodes: b.nodes.map(n=>({ c:n.c, r:n.r, station:!!n.station, ...(n.station && nodeTier(n)!==5 ? {tier:nodeTier(n)} : {}), name:n.name||"", ...(n.square?{square:n.square}:{}) })) })) })),
     meta:{ note:"col 0=W…cols-1=E, row 0=N…rows-1=S; nodes at cell centers; paths are invisible train rails (tracks baked into the tile map); color derived from line name; align to same tile grid as the Tiled terrain map" }
   }, null, 1);
 }
@@ -869,7 +873,7 @@ function loadFromObj(o){
   if(Array.isArray(o.lines)){
     lines = o.lines.map(l=>({ name:l.name||l.line||"Line", line:l.line||l.name||"",
       branches:(l.branches||[]).map(b=>({ name:b.name||"main",
-        nodes:(b.nodes||[]).map(n=>({ c:n.c, r:n.r, station:!!n.station, minor:!!n.minor, name:n.name||"", square:n.square||"" })) })) }));
+        nodes:(b.nodes||[]).map(n=>({ c:n.c, r:n.r, station:!!n.station, ...(n.station?{tier:(typeof n.tier==="number"?n.tier:(n.minor?3:5))}:{}), name:n.name||"", square:n.square||"" })) })) }));
   }
   sel={line:-1,branch:-1,node:-1}; ensureSelection(); refreshLines(); refreshBranches(); fit();
 }
