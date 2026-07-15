@@ -31,6 +31,7 @@ const ICONS = {
 // square lights up here automatically, no hand-maintained station list to
 // keep in sync. Built by buildStationLineIndex() after loadTransit().
 let stationLineIndex = {};       // station name → ["Green", ...] (BASE_LINE_ORDER order)
+let minorStations = new Set();   // names that are minor-only everywhere (a major copy anywhere excludes them)
 
 // Branch route id → trunk color name, so lineColor() can still resolve a
 // branch label like "Green (D)" (from older data) back to its trunk hue.
@@ -57,6 +58,7 @@ const BASE_LINE_ORDER = ["Red", "Orange", "Green", "Blue"];
 // joins to an event's e.square exactly like the old hand-maintained table.
 function buildStationLineIndex(transit) {
   const acc = {}; // name → Set of trunk colors
+  const major = new Set(); // names seen at least once as a non-minor station
   if (!transit || !Array.isArray(transit.lines)) return;
   for (const ln of transit.lines) {
     const base = LINE_BASE[ln.line] || ln.line;
@@ -64,12 +66,15 @@ function buildStationLineIndex(transit) {
       for (const n of br.nodes || []) {
         if (!n.station || !n.name) continue;
         (acc[n.name] || (acc[n.name] = new Set())).add(base);
+        if (!n.minor) major.add(n.name);
       }
     }
   }
   stationLineIndex = {};
+  minorStations = new Set();
   for (const [name, set] of Object.entries(acc)) {
     stationLineIndex[name] = BASE_LINE_ORDER.filter(b => set.has(b));
+    if (!major.has(name)) minorStations.add(name); // minor everywhere it appears
   }
 }
 

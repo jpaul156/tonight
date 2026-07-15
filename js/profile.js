@@ -309,6 +309,11 @@
         : (typeof eventSquares !== "undefined" ? Array.from(eventSquares) : [])
     );
     squares.delete("");
+    // Drop minor-only stops (neighborhood/infill) — a home square should be a
+    // real square, not a residential Green Line surface stop or SL terminal.
+    if (typeof minorStations !== "undefined") {
+      for (const m of minorStations) squares.delete(m);
+    }
     const current = window.TonightAuth?.homeSquare?.();
     if (current) squares.add(current);
 
