@@ -133,7 +133,13 @@ async function boot() {
             return;
           }
           if (e.code !== "auth/credential-already-in-use") throw e;
-          // That Google account already exists — fall through to a plain sign-in.
+          // That Google account already exists as a user, so it can't be
+          // linked — but the error carries the credential the user just
+          // picked in the chooser. Sign in with it directly rather than
+          // opening a second popup (which re-showed the account chooser).
+          const cred = authMod.GoogleAuthProvider.credentialFromError(e);
+          if (cred) { await authMod.signInWithCredential(auth, cred); return; }
+          // No recoverable credential (shouldn't happen) — plain sign-in.
         }
       }
       try {
