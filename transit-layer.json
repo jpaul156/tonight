@@ -1,1 +1,1127 @@
-{"schema": "tonight.transit/1", "grid": {"cols": 140, "rows": 140}, "lines": [{"name": "Red", "line": "Red", "branches": [{"name": "main", "nodes": [{"c": 50, "r": 16, "station": true, "name": "Alewife"}, {"c": 55, "r": 21, "station": true, "name": "Davis"}, {"c": 60, "r": 26, "station": true, "name": "Porter"}, {"c": 64, "r": 30, "station": true, "name": "Harvard"}, {"c": 69, "r": 35, "station": true, "name": "Central"}, {"c": 73, "r": 39, "station": true, "name": "Kendall/MIT"}, {"c": 80, "r": 46, "station": true, "name": "Charles/MGH"}, {"c": 84, "r": 50, "station": true, "name": "Park Street"}, {"c": 90, "r": 56, "station": true, "name": "Downtown Crossing", "minor": true}, {"c": 95, "r": 61, "station": true, "name": "South Station", "minor": true}, {"c": 100, "r": 66, "station": false, "name": ""}, {"c": 100, "r": 73, "station": true, "name": "Broadway", "square": "Southie"}, {"c": 100, "r": 79, "station": true, "name": "Andrew", "minor": true}, {"c": 100, "r": 84, "station": true, "name": "JFK/UMass"}]}, {"name": "Braintree", "nodes": [{"c": 100, "r": 84, "station": true, "name": ""}, {"c": 100, "r": 92, "station": false, "name": ""}, {"c": 108, "r": 100, "station": true, "name": "North Quincy", "minor": true}, {"c": 112, "r": 104, "station": true, "name": "Wollaston"}, {"c": 116, "r": 108, "station": true, "name": "Quincy Center"}, {"c": 119, "r": 111, "station": false, "name": ""}, {"c": 119, "r": 112, "station": true, "name": "Quincy Adams", "minor": true}, {"c": 119, "r": 118, "station": true, "name": "Braintree"}]}, {"name": "Ashmont", "nodes": [{"c": 100, "r": 84, "station": true, "name": ""}, {"c": 100, "r": 92, "station": false, "name": ""}, {"c": 94, "r": 98, "station": false, "name": ""}, {"c": 94, "r": 99, "station": true, "name": "Savin Hill", "minor": true}, {"c": 94, "r": 102, "station": true, "name": "Fields Corner"}, {"c": 94, "r": 105, "station": true, "name": "Shawmut", "minor": true}, {"c": 94, "r": 108, "station": true, "name": "Ashmont"}]}, {"name": "Mattapan", "nodes": [{"c": 94, "r": 108, "station": true, "name": ""}, {"c": 94, "r": 111, "station": true, "name": "Cedar Grove", "minor": true}, {"c": 94, "r": 114, "station": true, "name": "Butler", "minor": true}, {"c": 91, "r": 114, "station": true, "name": "Milton", "minor": true}, {"c": 88, "r": 114, "station": true, "name": "Central Ave", "minor": true}, {"c": 85, "r": 114, "station": true, "name": "Valley Rd", "minor": true}, {"c": 82, "r": 114, "station": true, "name": "Capen St", "minor": true}, {"c": 79, "r": 114, "station": true, "name": "Mattapan", "minor": true}]}]}, {"name": "Orange", "line": "Orange", "branches": [{"name": "main", "nodes": [{"c": 46, "r": 100, "station": true, "name": "Forest Hills"}, {"c": 51, "r": 95, "station": true, "name": "Green Street", "minor": true}, {"c": 55, "r": 91, "station": true, "name": "Stony Brook", "minor": true}, {"c": 60, "r": 86, "station": true, "name": "Jackson Square", "minor": true}, {"c": 64, "r": 82, "station": true, "name": "Roxbury Crossing", "minor": true}, {"c": 68, "r": 78, "station": true, "name": "Ruggles", "minor": true}, {"c": 71, "r": 75, "station": true, "name": "Massachusetts Avenue", "minor": true}, {"c": 75, "r": 71, "station": true, "name": "Back Bay"}, {"c": 79, "r": 67, "station": true, "name": "Tufts Medical Center", "minor": true}, {"c": 85, "r": 61, "station": true, "name": "Chinatown", "minor": true}, {"c": 90, "r": 56, "station": true, "name": "Downtown Crossing", "minor": true}, {"c": 94, "r": 52, "station": false, "name": ""}, {"c": 94, "r": 50, "station": true, "name": "State"}, {"c": 94, "r": 40, "station": true, "name": "Haymarket"}, {"c": 94, "r": 35, "station": true, "name": "North Station"}, {"c": 94, "r": 25, "station": true, "name": "Community College", "minor": true}, {"c": 94, "r": 21, "station": true, "name": "Sullivan Square", "square": "East Somerville"}, {"c": 94, "r": 17, "station": true, "name": "Assembly"}, {"c": 94, "r": 13, "station": true, "name": "Wellington", "minor": true}, {"c": 94, "r": 10, "station": true, "name": "Malden Center"}, {"c": 94, "r": 6, "station": true, "name": "Oak Grove"}]}]}, {"name": "Blue", "line": "Blue", "branches": [{"name": "main", "nodes": [{"c": 85, "r": 41, "station": true, "name": "Bowdoin", "minor": true}, {"c": 89, "r": 45, "station": true, "name": "Government Center"}, {"c": 94, "r": 50, "station": true, "name": "State"}, {"c": 99, "r": 45, "station": true, "name": "Aquarium"}, {"c": 106, "r": 38, "station": true, "name": "Maverick"}, {"c": 110, "r": 34, "station": true, "name": "Airport", "minor": true}, {"c": 114, "r": 30, "station": true, "name": "Wood Island", "minor": true}, {"c": 117, "r": 27, "station": true, "name": "Orient Heights", "minor": true}, {"c": 121, "r": 23, "station": true, "name": "Suffolk Downs", "minor": true}, {"c": 125, "r": 19, "station": true, "name": "Beachmont", "minor": true}, {"c": 128, "r": 16, "station": true, "name": "Revere Beach", "minor": true}, {"c": 132, "r": 12, "station": true, "name": "Wonderland"}]}]}, {"name": "Green", "line": "Green", "branches": [{"name": "main", "nodes": [{"c": 88, "r": 29, "station": true, "name": "Lechmere"}, {"c": 92, "r": 33, "station": true, "name": "Science Park/West End", "minor": true}, {"c": 94, "r": 35, "station": true, "name": "North Station"}, {"c": 94, "r": 40, "station": true, "name": "Haymarket"}, {"c": 89, "r": 45, "station": true, "name": ""}, {"c": 84, "r": 50, "station": true, "name": ""}, {"c": 79, "r": 55, "station": true, "name": "Boylston", "minor": true}, {"c": 78, "r": 56, "station": false, "name": ""}, {"c": 72, "r": 56, "station": true, "name": "Arlington", "minor": true}, {"c": 67, "r": 56, "station": true, "name": "Copley"}, {"c": 61, "r": 56, "station": true, "name": "Hynes Convention Center", "minor": true}, {"c": 55, "r": 56, "station": true, "name": "Kenmore"}]}, {"name": "Union Square", "nodes": [{"c": 88, "r": 29, "station": true, "name": ""}, {"c": 86, "r": 27, "station": false, "name": ""}, {"c": 78, "r": 27, "station": true, "name": "Union Square"}]}, {"name": "Medford", "nodes": [{"c": 88, "r": 29, "station": true, "name": ""}, {"c": 81, "r": 22, "station": true, "name": "East Somerville", "minor": true}, {"c": 78, "r": 19, "station": true, "name": "Gilman Square", "minor": true}, {"c": 75, "r": 16, "station": true, "name": "Magoun Square"}, {"c": 72, "r": 13, "station": true, "name": "Ball Square", "minor": true}, {"c": 69, "r": 10, "station": true, "name": "Medford/Tufts", "minor": true}]}, {"name": "Heath Street", "nodes": [{"c": 67, "r": 56, "station": true, "name": ""}, {"c": 63, "r": 56, "station": false, "name": ""}, {"c": 63, "r": 61, "station": true, "name": "Prudential", "minor": true}, {"c": 63, "r": 65, "station": true, "name": "Symphony"}, {"c": 61, "r": 67, "station": true, "name": "Northeastern", "minor": true}, {"c": 59, "r": 69, "station": true, "name": "Museum of Fine Arts", "minor": true}, {"c": 57, "r": 71, "station": true, "name": "Longwood Medical Area", "minor": true}, {"c": 55, "r": 73, "station": true, "name": "Brigham Circle"}, {"c": 53, "r": 75, "station": true, "name": "Fenwood Rd", "minor": true}, {"c": 51, "r": 77, "station": true, "name": "Mission Park", "minor": true}, {"c": 49, "r": 79, "station": true, "name": "Riverway", "minor": true}, {"c": 47, "r": 81, "station": true, "name": "Back of the Hill", "minor": true}, {"c": 45, "r": 83, "station": true, "name": "Heath St ", "minor": true}]}, {"name": "Riverside", "nodes": [{"c": 55, "r": 56, "station": true, "name": ""}, {"c": 53, "r": 56, "station": false, "name": ""}, {"c": 50, "r": 59, "station": true, "name": "Fenway"}, {"c": 48, "r": 61, "station": true, "name": "Longwood", "minor": true}, {"c": 46, "r": 63, "station": true, "name": "Brookline Village"}, {"c": 44, "r": 65, "station": true, "name": "Brookline Hills", "minor": true}, {"c": 42, "r": 67, "station": true, "name": "Beaconsfield", "minor": true}, {"c": 40, "r": 69, "station": true, "name": "Reservior"}, {"c": 38, "r": 71, "station": true, "name": "Chestnut Hill", "minor": true}, {"c": 36, "r": 73, "station": true, "name": "Newton Centre"}, {"c": 34, "r": 75, "station": true, "name": "Newton Highlands", "minor": true}, {"c": 32, "r": 77, "station": true, "name": "Eliot", "minor": true}, {"c": 30, "r": 79, "station": true, "name": "Waban", "minor": true}, {"c": 28, "r": 81, "station": true, "name": "Woodland", "minor": true}, {"c": 26, "r": 83, "station": true, "name": "Riverside", "minor": true}]}, {"name": "Cleveland Circle", "nodes": [{"c": 55, "r": 56, "station": true, "name": ""}, {"c": 48, "r": 56, "station": false, "name": ""}, {"c": 45, "r": 53, "station": true, "name": "Saint Mary's Street", "minor": true}, {"c": 43, "r": 51, "station": true, "name": "Hawes Street", "minor": true}, {"c": 41, "r": 49, "station": false, "name": ""}, {"c": 40, "r": 49, "station": true, "name": "Kent Street", "minor": true}, {"c": 39, "r": 49, "station": false, "name": ""}, {"c": 37, "r": 51, "station": true, "name": "Saint Paul Street", "minor": true}, {"c": 35, "r": 53, "station": true, "name": "Coolidge Corner"}, {"c": 33, "r": 55, "station": true, "name": "Summit Avenue", "minor": true}, {"c": 31, "r": 57, "station": true, "name": "Brandon Hall", "minor": true}, {"c": 29, "r": 59, "station": true, "name": "Fairbanks Street", "minor": true}, {"c": 27, "r": 61, "station": true, "name": "Washington Square"}, {"c": 25, "r": 63, "station": true, "name": "Tappan Street", "minor": true}, {"c": 23, "r": 65, "station": true, "name": "Dean Road", "minor": true}, {"c": 21, "r": 67, "station": true, "name": "Englewood Avenue", "minor": true}, {"c": 19, "r": 69, "station": true, "name": "Cleveland Circle"}]}, {"name": "Boston College", "nodes": [{"c": 55, "r": 56, "station": true, "name": ""}, {"c": 53, "r": 56, "station": false, "name": ""}, {"c": 48, "r": 51, "station": true, "name": "Blandford Street"}, {"c": 46, "r": 49, "station": true, "name": "Boston University East", "minor": true}, {"c": 44, "r": 47, "station": true, "name": "Boston University Central", "minor": true}, {"c": 42, "r": 45, "station": true, "name": "Armory Street", "minor": true}, {"c": 40, "r": 43, "station": true, "name": "Babcock Street", "square": "BU"}, {"c": 38, "r": 41, "station": true, "name": "Packard's Corner", "minor": true}, {"c": 35, "r": 38, "station": false, "name": ""}, {"c": 34, "r": 38, "station": true, "name": "Harvard Avenue", "square": "Allston"}, {"c": 32, "r": 38, "station": false, "name": ""}, {"c": 30, "r": 40, "station": true, "name": "Griggs Street", "minor": true}, {"c": 28, "r": 42, "station": true, "name": "Allston Street", "minor": true}, {"c": 26, "r": 44, "station": true, "name": "Warren Street", "minor": true}, {"c": 24, "r": 46, "station": true, "name": "Washington Street", "minor": true}, {"c": 22, "r": 48, "station": true, "name": "Sutherland Road", "minor": true}, {"c": 20, "r": 50, "station": true, "name": "Chiswick Road", "minor": true}, {"c": 18, "r": 52, "station": true, "name": "Chestnut Hill Avenue", "minor": true}, {"c": 16, "r": 54, "station": true, "name": "South Street", "minor": true}, {"c": 14, "r": 56, "station": true, "name": "Boston College"}]}]}], "meta": {"note": "col 0=W\u2026cols-1=E, row 0=N\u2026rows-1=S; nodes at cell centers; paths are invisible train rails (tracks baked into the tile map); color derived from line name; align to same tile grid as the Tiled terrain map"}}
+{
+ "schema": "tonight.transit/1",
+ "grid": {
+  "cols": 140,
+  "rows": 140
+ },
+ "lines": [
+  {
+   "name": "Red",
+   "line": "Red",
+   "branches": [
+    {
+     "name": "main",
+     "nodes": [
+      {
+       "c": 50,
+       "r": 16,
+       "station": true,
+       "name": "Alewife"
+      },
+      {
+       "c": 55,
+       "r": 21,
+       "station": true,
+       "name": "Davis"
+      },
+      {
+       "c": 60,
+       "r": 26,
+       "station": true,
+       "name": "Porter"
+      },
+      {
+       "c": 64,
+       "r": 30,
+       "station": true,
+       "name": "Harvard"
+      },
+      {
+       "c": 69,
+       "r": 35,
+       "station": true,
+       "name": "Central"
+      },
+      {
+       "c": 73,
+       "r": 39,
+       "station": true,
+       "name": "Kendall/MIT"
+      },
+      {
+       "c": 80,
+       "r": 46,
+       "station": true,
+       "name": "Charles/MGH"
+      },
+      {
+       "c": 84,
+       "r": 50,
+       "station": true,
+       "name": "Park Street"
+      },
+      {
+       "c": 90,
+       "r": 56,
+       "station": true,
+       "tier": 3,
+       "name": "Downtown Crossing"
+      },
+      {
+       "c": 95,
+       "r": 61,
+       "station": true,
+       "tier": 3,
+       "name": "South Station"
+      },
+      {
+       "c": 100,
+       "r": 66,
+       "station": false,
+       "name": ""
+      },
+      {
+       "c": 100,
+       "r": 73,
+       "station": true,
+       "name": "Broadway",
+       "square": "Southie"
+      },
+      {
+       "c": 100,
+       "r": 79,
+       "station": true,
+       "tier": 3,
+       "name": "Andrew"
+      },
+      {
+       "c": 100,
+       "r": 84,
+       "station": true,
+       "name": "JFK/UMass"
+      }
+     ]
+    },
+    {
+     "name": "Braintree",
+     "nodes": [
+      {
+       "c": 100,
+       "r": 84,
+       "station": true,
+       "name": ""
+      },
+      {
+       "c": 100,
+       "r": 92,
+       "station": false,
+       "name": ""
+      },
+      {
+       "c": 108,
+       "r": 100,
+       "station": true,
+       "tier": 3,
+       "name": "North Quincy"
+      },
+      {
+       "c": 112,
+       "r": 104,
+       "station": true,
+       "name": "Wollaston"
+      },
+      {
+       "c": 116,
+       "r": 108,
+       "station": true,
+       "name": "Quincy Center"
+      },
+      {
+       "c": 119,
+       "r": 111,
+       "station": false,
+       "name": ""
+      },
+      {
+       "c": 119,
+       "r": 112,
+       "station": true,
+       "tier": 3,
+       "name": "Quincy Adams"
+      },
+      {
+       "c": 119,
+       "r": 118,
+       "station": true,
+       "name": "Braintree"
+      }
+     ]
+    },
+    {
+     "name": "Ashmont",
+     "nodes": [
+      {
+       "c": 100,
+       "r": 84,
+       "station": true,
+       "name": ""
+      },
+      {
+       "c": 100,
+       "r": 92,
+       "station": false,
+       "name": ""
+      },
+      {
+       "c": 94,
+       "r": 98,
+       "station": false,
+       "name": ""
+      },
+      {
+       "c": 94,
+       "r": 99,
+       "station": true,
+       "tier": 3,
+       "name": "Savin Hill"
+      },
+      {
+       "c": 94,
+       "r": 102,
+       "station": true,
+       "name": "Fields Corner"
+      },
+      {
+       "c": 94,
+       "r": 105,
+       "station": true,
+       "tier": 3,
+       "name": "Shawmut"
+      },
+      {
+       "c": 94,
+       "r": 108,
+       "station": true,
+       "name": "Ashmont"
+      }
+     ]
+    },
+    {
+     "name": "Mattapan",
+     "nodes": [
+      {
+       "c": 94,
+       "r": 108,
+       "station": true,
+       "name": ""
+      },
+      {
+       "c": 94,
+       "r": 111,
+       "station": true,
+       "tier": 3,
+       "name": "Cedar Grove"
+      },
+      {
+       "c": 94,
+       "r": 114,
+       "station": true,
+       "tier": 3,
+       "name": "Butler"
+      },
+      {
+       "c": 91,
+       "r": 114,
+       "station": true,
+       "tier": 3,
+       "name": "Milton"
+      },
+      {
+       "c": 88,
+       "r": 114,
+       "station": true,
+       "tier": 3,
+       "name": "Central Ave"
+      },
+      {
+       "c": 85,
+       "r": 114,
+       "station": true,
+       "tier": 3,
+       "name": "Valley Rd"
+      },
+      {
+       "c": 82,
+       "r": 114,
+       "station": true,
+       "tier": 3,
+       "name": "Capen St"
+      },
+      {
+       "c": 79,
+       "r": 114,
+       "station": true,
+       "tier": 3,
+       "name": "Mattapan"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Orange",
+   "line": "Orange",
+   "branches": [
+    {
+     "name": "main",
+     "nodes": [
+      {
+       "c": 46,
+       "r": 100,
+       "station": true,
+       "name": "Forest Hills"
+      },
+      {
+       "c": 51,
+       "r": 95,
+       "station": true,
+       "tier": 3,
+       "name": "Green Street"
+      },
+      {
+       "c": 55,
+       "r": 91,
+       "station": true,
+       "tier": 3,
+       "name": "Stony Brook"
+      },
+      {
+       "c": 60,
+       "r": 86,
+       "station": true,
+       "tier": 3,
+       "name": "Jackson Square"
+      },
+      {
+       "c": 64,
+       "r": 82,
+       "station": true,
+       "tier": 3,
+       "name": "Roxbury Crossing"
+      },
+      {
+       "c": 68,
+       "r": 78,
+       "station": true,
+       "tier": 3,
+       "name": "Ruggles"
+      },
+      {
+       "c": 71,
+       "r": 75,
+       "station": true,
+       "tier": 3,
+       "name": "Massachusetts Avenue"
+      },
+      {
+       "c": 75,
+       "r": 71,
+       "station": true,
+       "name": "Back Bay"
+      },
+      {
+       "c": 79,
+       "r": 67,
+       "station": true,
+       "tier": 3,
+       "name": "Tufts Medical Center"
+      },
+      {
+       "c": 85,
+       "r": 61,
+       "station": true,
+       "tier": 3,
+       "name": "Chinatown"
+      },
+      {
+       "c": 90,
+       "r": 56,
+       "station": true,
+       "tier": 3,
+       "name": "Downtown Crossing"
+      },
+      {
+       "c": 94,
+       "r": 52,
+       "station": false,
+       "name": ""
+      },
+      {
+       "c": 94,
+       "r": 50,
+       "station": true,
+       "name": "State"
+      },
+      {
+       "c": 94,
+       "r": 40,
+       "station": true,
+       "name": "Haymarket"
+      },
+      {
+       "c": 94,
+       "r": 35,
+       "station": true,
+       "name": "North Station"
+      },
+      {
+       "c": 94,
+       "r": 25,
+       "station": true,
+       "tier": 3,
+       "name": "Community College"
+      },
+      {
+       "c": 94,
+       "r": 21,
+       "station": true,
+       "name": "Sullivan Square",
+       "square": "East Somerville"
+      },
+      {
+       "c": 94,
+       "r": 17,
+       "station": true,
+       "name": "Assembly"
+      },
+      {
+       "c": 94,
+       "r": 13,
+       "station": true,
+       "tier": 3,
+       "name": "Wellington"
+      },
+      {
+       "c": 94,
+       "r": 10,
+       "station": true,
+       "name": "Malden Center"
+      },
+      {
+       "c": 94,
+       "r": 6,
+       "station": true,
+       "name": "Oak Grove"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Blue",
+   "line": "Blue",
+   "branches": [
+    {
+     "name": "main",
+     "nodes": [
+      {
+       "c": 85,
+       "r": 41,
+       "station": true,
+       "tier": 3,
+       "name": "Bowdoin"
+      },
+      {
+       "c": 89,
+       "r": 45,
+       "station": true,
+       "name": "Government Center"
+      },
+      {
+       "c": 94,
+       "r": 50,
+       "station": true,
+       "name": "State"
+      },
+      {
+       "c": 99,
+       "r": 45,
+       "station": true,
+       "name": "Aquarium"
+      },
+      {
+       "c": 106,
+       "r": 38,
+       "station": true,
+       "name": "Maverick"
+      },
+      {
+       "c": 110,
+       "r": 34,
+       "station": true,
+       "tier": 3,
+       "name": "Airport"
+      },
+      {
+       "c": 114,
+       "r": 30,
+       "station": true,
+       "tier": 3,
+       "name": "Wood Island"
+      },
+      {
+       "c": 117,
+       "r": 27,
+       "station": true,
+       "tier": 3,
+       "name": "Orient Heights"
+      },
+      {
+       "c": 121,
+       "r": 23,
+       "station": true,
+       "tier": 3,
+       "name": "Suffolk Downs"
+      },
+      {
+       "c": 125,
+       "r": 19,
+       "station": true,
+       "tier": 3,
+       "name": "Beachmont"
+      },
+      {
+       "c": 128,
+       "r": 16,
+       "station": true,
+       "tier": 3,
+       "name": "Revere Beach"
+      },
+      {
+       "c": 132,
+       "r": 12,
+       "station": true,
+       "name": "Wonderland"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Green",
+   "line": "Green",
+   "branches": [
+    {
+     "name": "main",
+     "nodes": [
+      {
+       "c": 88,
+       "r": 29,
+       "station": true,
+       "name": "Lechmere"
+      },
+      {
+       "c": 92,
+       "r": 33,
+       "station": true,
+       "tier": 3,
+       "name": "Science Park/West End"
+      },
+      {
+       "c": 94,
+       "r": 35,
+       "station": true,
+       "name": "North Station"
+      },
+      {
+       "c": 94,
+       "r": 40,
+       "station": true,
+       "name": "Haymarket"
+      },
+      {
+       "c": 89,
+       "r": 45,
+       "station": true,
+       "name": ""
+      },
+      {
+       "c": 84,
+       "r": 50,
+       "station": true,
+       "name": ""
+      },
+      {
+       "c": 79,
+       "r": 55,
+       "station": true,
+       "tier": 3,
+       "name": "Boylston"
+      },
+      {
+       "c": 78,
+       "r": 56,
+       "station": false,
+       "name": ""
+      },
+      {
+       "c": 72,
+       "r": 56,
+       "station": true,
+       "tier": 3,
+       "name": "Arlington"
+      },
+      {
+       "c": 67,
+       "r": 56,
+       "station": true,
+       "name": "Copley"
+      },
+      {
+       "c": 61,
+       "r": 56,
+       "station": true,
+       "tier": 3,
+       "name": "Hynes Convention Center"
+      },
+      {
+       "c": 55,
+       "r": 56,
+       "station": true,
+       "name": "Kenmore"
+      }
+     ]
+    },
+    {
+     "name": "Union Square",
+     "nodes": [
+      {
+       "c": 88,
+       "r": 29,
+       "station": true,
+       "name": ""
+      },
+      {
+       "c": 86,
+       "r": 27,
+       "station": false,
+       "name": ""
+      },
+      {
+       "c": 78,
+       "r": 27,
+       "station": true,
+       "name": "Union Square"
+      }
+     ]
+    },
+    {
+     "name": "Medford",
+     "nodes": [
+      {
+       "c": 88,
+       "r": 29,
+       "station": true,
+       "name": ""
+      },
+      {
+       "c": 81,
+       "r": 22,
+       "station": true,
+       "tier": 3,
+       "name": "East Somerville"
+      },
+      {
+       "c": 78,
+       "r": 19,
+       "station": true,
+       "tier": 3,
+       "name": "Gilman Square"
+      },
+      {
+       "c": 75,
+       "r": 16,
+       "station": true,
+       "name": "Magoun Square"
+      },
+      {
+       "c": 72,
+       "r": 13,
+       "station": true,
+       "tier": 3,
+       "name": "Ball Square"
+      },
+      {
+       "c": 69,
+       "r": 10,
+       "station": true,
+       "tier": 3,
+       "name": "Medford/Tufts"
+      }
+     ]
+    },
+    {
+     "name": "Heath Street",
+     "nodes": [
+      {
+       "c": 67,
+       "r": 56,
+       "station": true,
+       "name": ""
+      },
+      {
+       "c": 63,
+       "r": 56,
+       "station": false,
+       "name": ""
+      },
+      {
+       "c": 63,
+       "r": 61,
+       "station": true,
+       "tier": 3,
+       "name": "Prudential"
+      },
+      {
+       "c": 63,
+       "r": 65,
+       "station": false,
+       "name": ""
+      },
+      {
+       "c": 62,
+       "r": 66,
+       "station": true,
+       "name": "Symphony"
+      },
+      {
+       "c": 60,
+       "r": 68,
+       "station": true,
+       "tier": 3,
+       "name": "Northeastern"
+      },
+      {
+       "c": 58,
+       "r": 70,
+       "station": true,
+       "tier": 3,
+       "name": "Museum of Fine Arts"
+      },
+      {
+       "c": 56,
+       "r": 72,
+       "station": true,
+       "tier": 3,
+       "name": "Longwood Medical Area"
+      },
+      {
+       "c": 54,
+       "r": 74,
+       "station": true,
+       "name": "Brigham Circle"
+      },
+      {
+       "c": 52,
+       "r": 76,
+       "station": true,
+       "tier": 3,
+       "name": "Fenwood Rd"
+      },
+      {
+       "c": 50,
+       "r": 78,
+       "station": true,
+       "tier": 3,
+       "name": "Mission Park"
+      },
+      {
+       "c": 48,
+       "r": 80,
+       "station": true,
+       "tier": 3,
+       "name": "Riverway"
+      },
+      {
+       "c": 46,
+       "r": 82,
+       "station": true,
+       "tier": 3,
+       "name": "Back of the Hill"
+      },
+      {
+       "c": 44,
+       "r": 84,
+       "station": true,
+       "tier": 3,
+       "name": "Heath St "
+      }
+     ]
+    },
+    {
+     "name": "Riverside",
+     "nodes": [
+      {
+       "c": 55,
+       "r": 56,
+       "station": true,
+       "name": ""
+      },
+      {
+       "c": 53,
+       "r": 56,
+       "station": false,
+       "name": ""
+      },
+      {
+       "c": 50,
+       "r": 59,
+       "station": true,
+       "name": "Fenway"
+      },
+      {
+       "c": 48,
+       "r": 61,
+       "station": true,
+       "tier": 3,
+       "name": "Longwood"
+      },
+      {
+       "c": 46,
+       "r": 63,
+       "station": true,
+       "name": "Brookline Village"
+      },
+      {
+       "c": 44,
+       "r": 65,
+       "station": true,
+       "tier": 3,
+       "name": "Brookline Hills"
+      },
+      {
+       "c": 42,
+       "r": 67,
+       "station": true,
+       "tier": 3,
+       "name": "Beaconsfield"
+      },
+      {
+       "c": 40,
+       "r": 69,
+       "station": true,
+       "name": "Reservior"
+      },
+      {
+       "c": 38,
+       "r": 71,
+       "station": true,
+       "tier": 3,
+       "name": "Chestnut Hill"
+      },
+      {
+       "c": 36,
+       "r": 73,
+       "station": true,
+       "name": "Newton Centre"
+      },
+      {
+       "c": 34,
+       "r": 75,
+       "station": true,
+       "tier": 3,
+       "name": "Newton Highlands"
+      },
+      {
+       "c": 32,
+       "r": 77,
+       "station": true,
+       "tier": 3,
+       "name": "Eliot"
+      },
+      {
+       "c": 30,
+       "r": 79,
+       "station": true,
+       "tier": 3,
+       "name": "Waban"
+      },
+      {
+       "c": 28,
+       "r": 81,
+       "station": true,
+       "tier": 3,
+       "name": "Woodland"
+      },
+      {
+       "c": 26,
+       "r": 83,
+       "station": true,
+       "tier": 3,
+       "name": "Riverside"
+      }
+     ]
+    },
+    {
+     "name": "Cleveland Circle",
+     "nodes": [
+      {
+       "c": 55,
+       "r": 56,
+       "station": true,
+       "name": ""
+      },
+      {
+       "c": 48,
+       "r": 56,
+       "station": false,
+       "name": ""
+      },
+      {
+       "c": 45,
+       "r": 53,
+       "station": true,
+       "tier": 3,
+       "name": "Saint Mary's Street"
+      },
+      {
+       "c": 43,
+       "r": 51,
+       "station": true,
+       "tier": 3,
+       "name": "Hawes Street"
+      },
+      {
+       "c": 41,
+       "r": 49,
+       "station": false,
+       "name": ""
+      },
+      {
+       "c": 40,
+       "r": 49,
+       "station": true,
+       "tier": 3,
+       "name": "Kent Street"
+      },
+      {
+       "c": 39,
+       "r": 49,
+       "station": false,
+       "name": ""
+      },
+      {
+       "c": 37,
+       "r": 51,
+       "station": true,
+       "tier": 3,
+       "name": "Saint Paul Street"
+      },
+      {
+       "c": 35,
+       "r": 53,
+       "station": true,
+       "name": "Coolidge Corner"
+      },
+      {
+       "c": 33,
+       "r": 55,
+       "station": true,
+       "tier": 3,
+       "name": "Summit Avenue"
+      },
+      {
+       "c": 31,
+       "r": 57,
+       "station": true,
+       "tier": 3,
+       "name": "Brandon Hall"
+      },
+      {
+       "c": 29,
+       "r": 59,
+       "station": true,
+       "tier": 3,
+       "name": "Fairbanks Street"
+      },
+      {
+       "c": 27,
+       "r": 61,
+       "station": true,
+       "name": "Washington Square"
+      },
+      {
+       "c": 25,
+       "r": 63,
+       "station": true,
+       "tier": 3,
+       "name": "Tappan Street"
+      },
+      {
+       "c": 23,
+       "r": 65,
+       "station": true,
+       "tier": 3,
+       "name": "Dean Road"
+      },
+      {
+       "c": 21,
+       "r": 67,
+       "station": true,
+       "tier": 3,
+       "name": "Englewood Avenue"
+      },
+      {
+       "c": 19,
+       "r": 69,
+       "station": true,
+       "name": "Cleveland Circle"
+      }
+     ]
+    },
+    {
+     "name": "Boston College",
+     "nodes": [
+      {
+       "c": 55,
+       "r": 56,
+       "station": true,
+       "name": ""
+      },
+      {
+       "c": 53,
+       "r": 56,
+       "station": false,
+       "name": ""
+      },
+      {
+       "c": 48,
+       "r": 51,
+       "station": true,
+       "name": "Blandford Street"
+      },
+      {
+       "c": 46,
+       "r": 49,
+       "station": true,
+       "tier": 3,
+       "name": "Boston University East"
+      },
+      {
+       "c": 44,
+       "r": 47,
+       "station": true,
+       "tier": 3,
+       "name": "Boston University Central"
+      },
+      {
+       "c": 42,
+       "r": 45,
+       "station": true,
+       "tier": 3,
+       "name": "Armory Street"
+      },
+      {
+       "c": 40,
+       "r": 43,
+       "station": true,
+       "name": "Babcock Street",
+       "square": "BU"
+      },
+      {
+       "c": 38,
+       "r": 41,
+       "station": true,
+       "tier": 3,
+       "name": "Packard's Corner"
+      },
+      {
+       "c": 35,
+       "r": 38,
+       "station": false,
+       "name": ""
+      },
+      {
+       "c": 34,
+       "r": 38,
+       "station": true,
+       "name": "Harvard Avenue",
+       "square": "Allston"
+      },
+      {
+       "c": 32,
+       "r": 38,
+       "station": false,
+       "name": ""
+      },
+      {
+       "c": 30,
+       "r": 40,
+       "station": true,
+       "tier": 3,
+       "name": "Griggs Street"
+      },
+      {
+       "c": 28,
+       "r": 42,
+       "station": true,
+       "tier": 3,
+       "name": "Allston Street"
+      },
+      {
+       "c": 26,
+       "r": 44,
+       "station": true,
+       "tier": 3,
+       "name": "Warren Street"
+      },
+      {
+       "c": 24,
+       "r": 46,
+       "station": true,
+       "tier": 3,
+       "name": "Washington Street"
+      },
+      {
+       "c": 22,
+       "r": 48,
+       "station": true,
+       "tier": 3,
+       "name": "Sutherland Road"
+      },
+      {
+       "c": 20,
+       "r": 50,
+       "station": true,
+       "tier": 3,
+       "name": "Chiswick Road"
+      },
+      {
+       "c": 18,
+       "r": 52,
+       "station": true,
+       "tier": 3,
+       "name": "Chestnut Hill Avenue"
+      },
+      {
+       "c": 16,
+       "r": 54,
+       "station": true,
+       "tier": 3,
+       "name": "South Street"
+      },
+      {
+       "c": 14,
+       "r": 56,
+       "station": true,
+       "name": "Boston College"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "meta": {
+  "note": "col 0=W…cols-1=E, row 0=N…rows-1=S; nodes at cell centers; paths are invisible train rails (tracks baked into the tile map); color derived from line name; align to same tile grid as the Tiled terrain map"
+ }
+}
