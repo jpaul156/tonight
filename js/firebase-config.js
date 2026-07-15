@@ -28,7 +28,12 @@
     },
     prod: {
       apiKey: "AIzaSyB0xJmJ0RPH3BLgptN1nhyAGE-oPBE6SW8",
-      authDomain: "tonight-prod-75027.firebaseapp.com",
+      // Custom auth domain (Firebase Hosting subdomain) so the Google
+      // account-chooser shows our domain, not <project>.firebaseapp.com.
+      // Requires: Hosting custom domain connected + auth.tonight.quest in
+      // Authorized domains + the redirect URI on the auto-created OAuth
+      // web client in Google Cloud console.
+      authDomain: "auth.tonight.quest",
       projectId: "tonight-prod-75027",
       storageBucket: "tonight-prod-75027.firebasestorage.app",
       messagingSenderId: "765226707600",

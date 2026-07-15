@@ -53,6 +53,13 @@
       "detail": "Intake built ('Suggest a venue' → /venue_suggestions, shape-locked rules, verified accounts only so suggestion credit sticks to a durable uid). Review surface built: app_health.html 'Venue suggestions' section — admin Google sign-in (uid gated in rules), approve/deny sets status/reviewedAt, 'Send note' writes a users/{uid}/notifications doc that lights the suggester's account-button dot. Remaining: the auto-first-pass scrape as an ASSIST (after approval, a manually-dispatched Action tries the suggested URL with the LLM strategy and reports yield to the dashboard — never auto-publishes; risks: LLM spend on junk/hostile URLs, prompt injection via page content, garbage events committed unreviewed), and notifying the suggester automatically when their venue's first real scrape lands."
     },
     {
+      "title": "Google OAuth consent-screen branding ('continue to Tonight')",
+      "area": "product",
+      "priority": "low",
+      "status": "open",
+      "detail": "The sign-in popup now says 'to continue to auth.tonight.quest' (custom auth domain via Firebase Hosting). To make it say 'Tonight' with the logo: Google Cloud console (tonight-prod-75027) → Google Auth Platform → Branding — set app name, support email, homepage tonight.quest, upload logo. The logo triggers Google's brand verification review (a few days; needs tonight.quest verified in Search Console). Prod-only; dev can stay unbranded."
+    },
+    {
       "title": "Suggestion points + swag redemption",
       "area": "product",
       "priority": "low",

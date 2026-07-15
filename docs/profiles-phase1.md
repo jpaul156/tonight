@@ -51,7 +51,7 @@ service cloud.firestore {
     // copy your uid from Firebase console → Authentication → Users. Set it
     // separately in each project (dev uid ≠ prod uid).
     function isAdmin() {
-      return request.auth != null && request.auth.uid == 'xAho1STa22YDDnKxFCpAM2AsaMD3';
+      return request.auth != null && request.auth.uid == 'vpYicmgCouPWk8xHlr4KFGQRY2K3';
     }
     // Which top-level fields changed in this write.
     function changed() {
