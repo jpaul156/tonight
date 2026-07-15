@@ -31,6 +31,14 @@ const ICONS = {
 // square lights up here automatically, no hand-maintained station list to
 // keep in sync. Built by buildStationLineIndex() after loadTransit().
 let stationLineIndex = {};       // station name → ["Green", ...] (BASE_LINE_ORDER order)
+let minorStations = new Set();   // names that are minor-only everywhere (a major copy anywhere excludes them)
+const MAJOR_TIER = 4;            // tier ≥ this = full station (labelled, tappable, home-square-eligible); below = minor
+// Prominence tier of a raw transit-layer node. Explicit `tier` (1–5) wins;
+// legacy files carry only the `minor` boolean, so map minor→3 and plain→5.
+function stationTier(n) {
+  if (typeof n.tier === "number") return n.tier;
+  return n.minor ? 3 : 5;
+}
 
 // Branch route id → trunk color name, so lineColor() can still resolve a
 // branch label like "Green (D)" (from older data) back to its trunk hue.
@@ -57,6 +65,7 @@ const BASE_LINE_ORDER = ["Red", "Orange", "Green", "Blue"];
 // joins to an event's e.square exactly like the old hand-maintained table.
 function buildStationLineIndex(transit) {
   const acc = {}; // name → Set of trunk colors
+  const major = new Set(); // names seen at least once at major tier (≥ MAJOR_TIER)
   if (!transit || !Array.isArray(transit.lines)) return;
   for (const ln of transit.lines) {
     const base = LINE_BASE[ln.line] || ln.line;
@@ -64,12 +73,15 @@ function buildStationLineIndex(transit) {
       for (const n of br.nodes || []) {
         if (!n.station || !n.name) continue;
         (acc[n.name] || (acc[n.name] = new Set())).add(base);
+        if (stationTier(n) >= MAJOR_TIER) major.add(n.name);
       }
     }
   }
   stationLineIndex = {};
+  minorStations = new Set();
   for (const [name, set] of Object.entries(acc)) {
     stationLineIndex[name] = BASE_LINE_ORDER.filter(b => set.has(b));
+    if (!major.has(name)) minorStations.add(name); // below MAJOR_TIER everywhere it appears
   }
 }
 
@@ -135,6 +147,13 @@ let activeCategory = "all";
 // profile once profiles land, letting each user pick their own Home Square.
 const HOME_SQUARE = "Davis";
 
+// The effective Home Square: the signed-in (or anonymous) user's saved choice
+// when profiles are active, otherwise the hardcoded default. Read at call time
+// so it updates live when the profile loads / changes.
+function currentHomeSquare() {
+  return window.TonightProfile?.homeSquare?.() || HOME_SQUARE;
+}
+
 init();
 
 async function init() {
@@ -170,6 +189,14 @@ async function init() {
   wireCollapsingHeader();
   window.addEventListener("hashchange", handleHash);
   handleHash();
+
+  // Profiles (Phase 1): when the user's profile loads or changes (Home Square,
+  // favorites, sign-in), re-rank the feed and refresh the pinned indicator.
+  // Fires harmlessly once in DISABLED mode, then never again.
+  window.addEventListener("tonight-profile-changed", () => {
+    renderSquareIndicator();
+    render();
+  });
 }
 
 async function loadVenues() {
@@ -242,7 +269,7 @@ async function loadTransit() {
 // ============================================================
 
 const LOGO_RATIO = 1000 / 529; // intrinsic width / height of logo-wide-transparent.png
-const HERO_WIDTH = 420;
+const HERO_WIDTH = 357; // 85% of the original 420 (80% read too small)
 const COMPACT_WIDTH = 130;
 const SHRINK_DISTANCE = 180; // px scrolled to go from hero to compact
 
@@ -385,7 +412,7 @@ function openMetro() {
   // Origin is your current square, or your Home Square when nothing's selected
   // ("Near me") — so the map always opens zoomed in around a real place. The
   // canvas can't measure itself until the panel is on screen, so wait a frame.
-  const origin = activeSquare === "all" ? HOME_SQUARE : activeSquare;
+  const origin = activeSquare === "all" ? currentHomeSquare() : activeSquare;
   requestAnimationFrame(() => MetroMap.show(origin));
 }
 
@@ -449,11 +476,10 @@ const MetroMap = (() => {
       if (!nd) { nd = { c: n.c, r: n.r, name: n.name || "", station: !!n.station, lines: new Set() }; nodes.set(k, nd); adj.set(k, []); }
       if (n.name) nd.name = n.name;   // never let "" overwrite a real name (branch-start convention)
       if (n.station) nd.station = true;
-      // minor = a low-priority infill stop (SL terminal stops, residential Green
-      // Line surface stops). A full-size copy anywhere wins, so a station shared
-      // with a major branch never renders minor regardless of node order.
-      if (n.station && !n.minor) nd.major = true;
-      if (n.minor) nd.minor = true;
+      // Effective tier is the max across shared copies, so a station that's major
+      // on one branch and minor-tier on another (branch-start convention) renders
+      // major regardless of node order. Render/label/home-square key off MAJOR_TIER.
+      if (n.station) nd.tier = Math.max(nd.tier || 0, stationTier(n));
       nd.lines.add(line);
       return k;
     };
@@ -631,7 +657,7 @@ const MetroMap = (() => {
         ctx.fillStyle = "#fff"; ctx.strokeStyle = "#10131a"; ctx.lineWidth = 2 / view.scale;
         const s = CELL * 0.42; ctx.fillRect(-s, -s, 2 * s, 2 * s); ctx.strokeRect(-s, -s, 2 * s, 2 * s); ctx.restore();
       } else if (nd.station) {                  // plain station — ring (minor = smaller/thinner)
-        const isMinor = nd.minor && !nd.major;
+        const isMinor = nd.tier < MAJOR_TIER;
         ctx.fillStyle = "#fff"; ctx.strokeStyle = lineColor([...nd.lines][0]);
         ctx.lineWidth = (isMinor ? 1.6 : 2.5) / view.scale;
         ctx.beginPath(); ctx.arc(p.x, p.y, CELL * (isMinor ? 0.2 : 0.3), 0, 7); ctx.fill(); ctx.stroke();
@@ -645,7 +671,7 @@ const MetroMap = (() => {
       // Queue a label for event squares (white, always) and other major
       // stations (grey, culled first). Minor stops are never labelled.
       if (nd.name && (nd.station || nd.lines.size > 1)) {
-        const isMinor = nd.minor && !nd.major;
+        const isMinor = nd.station && nd.tier < MAJOR_TIER;
         if (!isMinor) labels.push({
           // priority: origin/event squares win, then interchanges, then majors
           prio: k === originKey ? 0 : lit ? 1 : nd.lines.size > 1 ? 2 : 3,
@@ -997,10 +1023,20 @@ function render() {
   // Inman) to the top. Until we have a real location, randomize instead. The
   // random key is stable per event id so the order doesn't reshuffle on every
   // re-render.
-  const sortFn = (a, b) =>
+  const baseSort = (a, b) =>
     activeSquare === "all"
       ? randKey(a) - randKey(b)
       : startMs(a) - startMs(b);
+  // Personalization (Phase 1): the Home Square is never a filter — the "Near
+  // me" feed shows everything, ranked. Favorites float first, then (on "Near
+  // me" only) events in the user's saved Home Square, then the base order.
+  // First step toward multi-factor ranking (distance, favorites, sponsored);
+  // both keys are no-ops when profiles are disabled. Uses the raw saved value,
+  // not the hardcoded Davis fallback, so profile-less users see today's order.
+  const favOf = e => (window.TonightProfile?.isFavoriteEvent?.(e) ? 0 : 1);
+  const homeSq = activeSquare === "all" ? window.TonightProfile?.homeSquare?.() : null;
+  const homeOf = e => (homeSq && e.square === homeSq ? 0 : 1);
+  const sortFn = (a, b) => (favOf(a) - favOf(b)) || (homeOf(a) - homeOf(b)) || baseSort(a, b);
 
   const active = filtered.filter(e => !hasEnded(e)).sort(sortFn);
   const ended  = filtered.filter(e =>  hasEnded(e)).sort((a, b) => startMs(a) - startMs(b));
@@ -1241,6 +1277,10 @@ function openDetail(e) {
     e.performer
       ? allEvents.filter(o => o.performer === e.performer && o.id !== e.id && eventEndTime(o) > REAL_NOW)
       : []);
+
+  // Profiles (Phase 1): inject the favorite-venue star into the venue row.
+  // No-op when profiles are disabled.
+  window.TonightProfile?.decorateDetail?.(e);
 
   overlay.hidden = false;
   document.body.style.overflow = "hidden";

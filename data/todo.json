@@ -1,6 +1,6 @@
 {
   "schema": "tonight.todo/1",
-  "updated": "2026-07-10",
+  "updated": "2026-07-14",
   "note": "Hand-maintained running to-do list, surfaced on app_health.html. Mirror of the 'Pending work' sections in CLAUDE.md — keep the two roughly in sync. priority: high | med | low. status: open | in_progress | blocked.",
   "items": [
     {
@@ -23,6 +23,41 @@
       "priority": "med",
       "status": "open",
       "detail": "events.json ships every future event (unbounded), so the download grows with how far ahead venues post. Once the 'Page download' tile on this dashboard trends large, have the app fetch only events within N days out (exact N TBD — 60/90/180). Options: filter client-side after load (simplest, no payload win), or split events.json into a near-window file + a lazy-loaded remainder (real payload win). Decide N by watching the payload tile."
+    },
+    {
+      "title": "Artist favorites UI (data layer ready, keyed by artist uid)",
+      "area": "product",
+      "priority": "med",
+      "status": "open",
+      "detail": "The Firestore data layer (toggleFavoriteArtist / isFavoriteArtist in js/auth.js) and ranking hook already exist, keyed by the frozen artist id from data/artists.json — never the display name. No UI yet: the detail overlay only offers a venue star. Blocked-ish on artist pages: build the /{handle} resolver (data/handles.json) and a lightweight artist view (photo, website, upcoming events via the fuzzy matcher) with a favorite star, then optionally add an artist star to the detail overlay."
+    },
+    {
+      "title": "Multi-factor feed ranking (distance, favorites, sponsored)",
+      "area": "product",
+      "priority": "med",
+      "status": "in_progress",
+      "detail": "Home Square must never act as a filter — the 'Near me' feed shows everything, ranked. Phase 1 ships a two-key sort: favorites first, then events in the saved Home Square, then the stable-random base order (render() in js/app.js). End goal: a weighted score blending distance/transit time from Home Square (not just square equality), favorite venues/artists, sponsored status, and eventually Lit heat. Keep it a score, not filters, so serendipity survives."
+    },
+    {
+      "title": "Long-run favorites UX (the Slutcracker problem)",
+      "area": "product",
+      "priority": "low",
+      "status": "open",
+      "detail": "Favoriting a show with a month-long run (The Slutcracker at Somerville Theatre, Thu-Sun for a month) shouldn't pin it to the top of the feed every night it plays. Today's feed is day-of only so it's one card per night, not duplicates — the issue is nightly top-slot domination. Candidate designs (not decided): boost decays after the user has seen/opened it; a bounded 'From your favorites' shelf above the feed instead of reordering; moment-based surfacing (opening night, closing weekend, 'last chance tonight') with quiet ranking otherwise; per-run snooze. May also want a third favorite type — a show/run — distinct from venue and artist."
+    },
+    {
+      "title": "Venue-suggestion pipeline: review + auto-first-pass scrape",
+      "area": "product",
+      "priority": "med",
+      "status": "in_progress",
+      "detail": "Intake built ('Suggest a venue' → /venue_suggestions, shape-locked rules, verified accounts only so suggestion credit sticks to a durable uid). Review surface built: app_health.html 'Venue suggestions' section — admin Google sign-in (uid gated in rules), approve/deny sets status/reviewedAt, 'Send note' writes a users/{uid}/notifications doc that lights the suggester's account-button dot. Remaining: the auto-first-pass scrape as an ASSIST (after approval, a manually-dispatched Action tries the suggested URL with the LLM strategy and reports yield to the dashboard — never auto-publishes; risks: LLM spend on junk/hostile URLs, prompt injection via page content, garbage events committed unreviewed), and notifying the suggester automatically when their venue's first real scrape lands."
+    },
+    {
+      "title": "Suggestion points + swag redemption",
+      "area": "product",
+      "priority": "low",
+      "status": "open",
+      "detail": "Award points to the account whose venue suggestion gets added — this is why /venue_suggestions is verified-only (an anonymous uid dies with cleared cookies or a replaced phone; the credit must outlive both). Redeemable for merch: 200 glow-in-the-dark Tonight wristbands already exist (carried over from the first attempt at this app ~2016), t-shirts / other swag TBD. Needs: a points ledger on users/{uid} (award on approve in the app_health review flow, admin-written like notifications), a running tally in the account panel, and a redemption flow (v1 can be a 'Send note' + mailing address exchange)."
     },
     {
       "title": "Weekly event verification for recurring shows",
