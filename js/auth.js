@@ -32,6 +32,20 @@ function emitChanged() {
   window.dispatchEvent(new CustomEvent("tonight-profile-changed"));
 }
 
+// iOS/iPadOS Safari and other mobile WebKit browsers lose the popup→opener
+// handshake under ITP storage partitioning, leaving sign-in silently stuck
+// until a reload. Prefer full-page redirect there. Covers iPhone/iPad
+// (including iPadOS masquerading as desktop Safari, detected via touch) and
+// any browser on iOS (Chrome/Firefox on iOS are WebKit under the hood).
+function preferRedirectSignIn() {
+  const ua = navigator.userAgent || "";
+  const iOS = /iPad|iPhone|iPod/.test(ua) ||
+    // iPadOS 13+ reports as "Macintosh" but is a touch device.
+    (navigator.platform === "MacIntel" && (navigator.maxTouchPoints || 0) > 1);
+  const crios = /CriOS|FxiOS|EdgiOS/.test(ua); // Chrome/Firefox/Edge on iOS
+  return iOS || crios;
+}
+
 // ---- DISABLED mode ---------------------------------------------------------
 // Stand up a no-op API so callers don't need to null-check everywhere.
 function installDisabled() {
@@ -120,15 +134,30 @@ async function boot() {
       // Cheap here because this only runs on an explicit "Continue with
       // Google" tap; returning users ride Firebase's persisted session.
       provider.setCustomParameters({ prompt: "select_account" });
+
+      // iOS Safari (and mobile WebKit generally) partitions the popup's
+      // storage under ITP and routinely drops the popup→opener postMessage
+      // handshake: the popup completes and persists the session, but
+      // onAuthStateChanged never fires in the opener, so the page looks
+      // signed-out until a reload. Redirect has no cross-window handshake —
+      // getRedirectResult() in boot() finishes it on return — so prefer it
+      // on those browsers. Desktop keeps the nicer popup.
+      const useRedirect = preferRedirectSignIn();
+
       // If currently anonymous, link so the uid (and their Home Square) carries over.
       if (state.user && state.user.isAnonymous) {
+        if (useRedirect) {
+          // getRedirectResult() handles credential-already-in-use on return.
+          await authMod.linkWithRedirect(state.user, provider);
+          return;
+        }
         try {
           await authMod.linkWithPopup(state.user, provider);
           return;
         } catch (e) {
           if (e.code === "auth/popup-blocked") {
-            // Safari & strict settings block the popup — full-page redirect
-            // instead. getRedirectResult() in boot() finishes it on return.
+            // Popup blocked (strict settings) — full-page redirect instead.
+            // getRedirectResult() in boot() finishes it on return.
             await authMod.linkWithRedirect(state.user, provider);
             return;
           }
@@ -141,6 +170,10 @@ async function boot() {
           if (cred) { await authMod.signInWithCredential(auth, cred); return; }
           // No recoverable credential (shouldn't happen) — plain sign-in.
         }
+      }
+      if (useRedirect) {
+        await authMod.signInWithRedirect(auth, provider);
+        return;
       }
       try {
         await authMod.signInWithPopup(auth, provider);
