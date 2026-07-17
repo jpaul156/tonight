@@ -807,6 +807,43 @@ VENUES = [
     },
 
     # ----------------------------------------------------------
+    # The Grand Boston — Seaport (Silver Line)
+    # ----------------------------------------------------------
+    # Same building as Scorpion Bar (58 Seaport Blvd) — The Grand is the
+    # downstairs club, Scorpion the bar above it. Same Tablelist stack: the
+    # venue's page loads its schedule client-side via the event-carousel widget,
+    # so we hit the same api.tablelist.com/v1/venues/<id>/events feed directly
+    # (tablelist_events) — no LLM, no Playwright. Venue id lifted from the
+    # buy.tablelist.com/v/the-grand1 storefront ("venue":"a4fe0922fc507ce4"); the
+    # api-key is the same shared Tablelist widget key as Scorpion. If Tablelist
+    # rotates the key the feed 401s and the health dashboard flags it — re-lift.
+    # The feed suffixes each act with " | The Grand Boston"; the extractor strips
+    # that. Big-room EDM/house DJ nights (Audien, Noizu, Sam Feldt) ~10pm–3am.
+    {
+        "id": "grand-boston",
+        "name": "The Grand Boston",
+        "address": "58 Seaport Blvd, Suite 300, Boston, MA",
+        "square": "Seaport",  # off-map: no metro-map station (Silver Line not drawn)
+        "transit_line": "Silver",
+        "transit_stop": "Courthouse",
+        "walk_minutes": 4,
+        "is_local": True,
+        "collection_url": (
+            "https://api.tablelist.com/v1/venues/a4fe0922fc507ce4/events"
+            "?sort=-dateStart&limit=30"
+        ),
+        "scrape_strategy": "tablelist_events",
+        "fetch_headers": {
+            "api-key": "49dac8e0-7743-11e9-8e3f-a5601eb2e936",
+            "Accept": "application/json",
+        },
+        "detail_pages": False,
+        "url_contains": None,
+        "location_keywords": {},
+        "extra_venues": [],
+    },
+
+    # ----------------------------------------------------------
     # The Middle East complex — Central Square (Red)
     # ----------------------------------------------------------
     # One WordPress home page (mideastclub.com) embeds a TicketWeb plugin that

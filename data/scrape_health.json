@@ -1,19 +1,19 @@
 {
   "schema": "tonight.health/1",
-  "generated_at": "2026-07-17T22:36:11.549379+00:00",
-  "duration_seconds": 0.5,
+  "generated_at": "2026-07-17T22:44:53.377878+00:00",
+  "duration_seconds": 0.4,
   "totals": {
-    "active_events": 1237,
-    "payload_bytes": 1873453,
-    "payload_gzip_bytes": 351988,
-    "archived_this_run": 31,
-    "venues_total": 29,
-    "venues_ok": 25,
+    "active_events": 1249,
+    "payload_bytes": 1886109,
+    "payload_gzip_bytes": 354125,
+    "archived_this_run": 0,
+    "venues_total": 30,
+    "venues_ok": 26,
     "venues_idle": 2,
     "venues_warning": 0,
     "venues_error": 2,
     "no_image": 239,
-    "no_image_pct": 19.3
+    "no_image_pct": 19.1
   },
   "by_square": {
     "Davis": 357,
@@ -25,8 +25,8 @@
     "Central": 44,
     "Malden Center": 39,
     "Maverick": 29,
+    "Seaport": 21,
     "Brookline Village": 13,
-    "Seaport": 9,
     "Andrew": 6,
     "Lechmere": 4,
     "Coolidge Corner": 1
@@ -46,7 +46,7 @@
     },
     {
       "square": "Seaport",
-      "events": 9,
+      "events": 21,
       "bus_only": false,
       "probable_match": null
     }
@@ -321,6 +321,18 @@
       "last_success": "2026-07-17T11:28:54.603629+00:00"
     },
     {
+      "id": "grand-boston",
+      "name": "The Grand Boston",
+      "square": "Seaport",
+      "strategy": "tablelist_events",
+      "uses_llm": false,
+      "status": "ok",
+      "event_count": 12,
+      "delta": 0,
+      "note": "",
+      "last_success": "2026-07-17T22:44:53.267750+00:00"
+    },
+    {
       "id": "lizard-lounge",
       "name": "The Lizard Lounge",
       "square": "Porter",
@@ -353,7 +365,7 @@
       "status": "ok",
       "event_count": 9,
       "delta": 0,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-17T22:36:11.439450+00:00"
     },
     {

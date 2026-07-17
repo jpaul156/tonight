@@ -1380,6 +1380,16 @@ def extract_tablelist_events(text, base_url):
         title = html_unescape(ev.get("name") or "").strip() or None
         if not title:
             continue
+        # Some venues suffix the marquee act with the venue name ("Avello | The
+        # Grand Boston"); strip a trailing "| <venueName>" so the card shows just
+        # the act. Scorpion's feed has no suffix, so this is a no-op there.
+        vname = (ev.get("venueName") or "").strip()
+        if vname and title.endswith(vname):
+            head = title[: -len(vname)].rstrip()
+            if head.endswith("|") or head.endswith("-"):
+                stripped = head[:-1].strip()
+                if stripped:
+                    title = stripped
 
         # End only if it's genuinely after start (some rows carry a stray equal
         # or earlier dateEnd).

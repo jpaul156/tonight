@@ -276,6 +276,21 @@ def test_tablelist_events_basic():
 
 
 @freeze_time("2026-07-17")
+def test_tablelist_strips_trailing_venue_name_suffix():
+    # Some venues (The Grand Boston) suffix the act with "| <venueName>"; the
+    # extractor strips a trailing "| <venueName>" (or "- <venueName>") so the
+    # card shows just the act. Feeds without a suffix (Scorpion) are untouched.
+    feed = {"data": [
+        {"name": "Avello | The Grand Boston", "venueName": "The Grand Boston",
+         "dateStart": "2026-07-25T02:00:00.000Z", "publish": {"tablelist": True}},
+        {"name": "Certified", "venueName": "Scorpion Bar Boston",
+         "dateStart": "2026-07-25T02:00:00.000Z", "publish": {"tablelist": True}},
+    ]}
+    events = sc.extract_tablelist_events(json.dumps(feed), "https://api.tablelist.com")
+    assert [e["title"] for e in events] == ["Avello", "Certified"]
+
+
+@freeze_time("2026-07-17")
 def test_tablelist_drops_past_deleted_unpublished_and_bad_end():
     feed = {"data": [
         # Well before the 36h active window -> dropped.
