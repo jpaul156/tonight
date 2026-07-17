@@ -574,5 +574,21 @@
     "logo_thumb_url": null,
     "is_local": true,
     "notes": "Concert hall on the top floor of the Somerville Theatre building; a separate venue with its own calendar."
+  },
+  "scorpion-boston": {
+    "id": "scorpion-boston",
+    "name": "Scorpion Bar Boston",
+    "address": "58 Seaport Blvd, Suite 200, Boston, MA",
+    "neighborhood": "Seaport",
+    "square": "Seaport",
+    "transit_line": "Silver",
+    "transit_stop": "Courthouse",
+    "walk_minutes": 4,
+    "website": "https://www.scorpionboston.com",
+    "phone": null,
+    "logo_url": null,
+    "logo_thumb_url": null,
+    "is_local": true,
+    "notes": "21+ Seaport nightclub above The Grand: late-night DJ sets Thu–Sat (~10pm–2am), Top 40 / hip hop / house."
   }
 }

@@ -769,6 +769,44 @@ VENUES = [
     },
 
     # ----------------------------------------------------------
+    # Scorpion Bar Boston — Seaport (Silver Line)
+    # ----------------------------------------------------------
+    {
+        "id": "scorpion-boston",
+        "name": "Scorpion Bar Boston",
+        "address": "58 Seaport Blvd, Suite 200, Boston, MA",
+        "square": "Seaport",  # off-map: no metro-map station (Silver Line not drawn)
+        "transit_line": "Silver",
+        "transit_stop": "Courthouse",
+        "walk_minutes": 4,
+        "is_local": True,
+        # The venue's Squarespace site injects its schedule client-side via a
+        # Tablelist event-carousel widget, so nothing is in the page HTML. We hit
+        # the same Tablelist venue-events API the widget reads and parse it
+        # directly (tablelist_events) — no LLM, no Playwright. The 21+ DJ nights
+        # run ~10pm–3am Thu/Fri/Sat; the feed carries the real dateStart/dateEnd.
+        #
+        # The venue id (path) and api-key are lifted from the venue's own page:
+        # `data-venue-id` on the event-carousel widget div, and TL_API_KEY in the
+        # Tablelist widget app bundle. If Tablelist rotates the key the feed 401s
+        # and the health dashboard flags it — re-lift both. sort=-dateStart keeps
+        # the static URL surfacing upcoming shows without a dynamic date param.
+        "collection_url": (
+            "https://api.tablelist.com/v1/venues/71221233264978f5/events"
+            "?sort=-dateStart&limit=30"
+        ),
+        "scrape_strategy": "tablelist_events",
+        "fetch_headers": {
+            "api-key": "49dac8e0-7743-11e9-8e3f-a5601eb2e936",
+            "Accept": "application/json",
+        },
+        "detail_pages": False,
+        "url_contains": None,
+        "location_keywords": {},
+        "extra_venues": [],
+    },
+
+    # ----------------------------------------------------------
     # The Middle East complex — Central Square (Red)
     # ----------------------------------------------------------
     # One WordPress home page (mideastclub.com) embeds a TicketWeb plugin that

@@ -1313,6 +1313,124 @@ def extract_dice_events(text, base_url):
     return events
 
 
+def extract_tablelist_events(text, base_url):
+    """
+    Parse a Tablelist venue-events feed (api.tablelist.com /v1/venues/<id>/events).
+    Point the venue's collection_url at that endpoint with `sort=-dateStart` +
+    `limit` and supply the widget's public API key via `fetch_headers` (api-key)
+    in venues.py — we then parse the JSON directly, no LLM. This is the same feed
+    the venue's embedded event-carousel widget reads (Scorpion Bar Boston's
+    Squarespace page loads it client-side, so the events aren't in the HTML).
+
+    The venue id + api-key are lifted from the venue's own page: the venue id is
+    the `data-venue-id` on the `<div data-tl-widget="event-carousel-widget">`, and
+    the key is `TL_API_KEY` inside the widget app bundle (venues.tablelistpro.com
+    /app.js). If Tablelist rotates the key the feed 401s and the venue reads as
+    broken on the health dashboard — re-lift both from the widget.
+
+    `dateStart`/`dateEnd` are UTC instants carrying the real local door/close time
+    (e.g. 10pm–3am); we convert to naive Boston wall time with the project's fixed
+    EDT (-4) assumption, matching the other extractors. `date` is a separate
+    "night of" marquee field the widget shows — we ignore it and trust dateStart.
+    We sort descending in the URL so the static endpoint always surfaces the
+    upcoming shows without a dynamic date param, then drop anything older than the
+    active window here so the archive isn't flooded with past club nights.
+    """
+    try:
+        data = json.loads(text)
+    except ValueError:
+        print("  WARNING: Tablelist feed did not parse (is collection_url the api.tablelist.com endpoint?)")
+        return []
+
+    ET = timezone(timedelta(hours=-4))
+
+    def to_local(iso):
+        if not iso:
+            return None
+        try:
+            dt = datetime.fromisoformat(iso.replace("Z", "+00:00"))
+        except (ValueError, AttributeError):
+            return None
+        return dt.astimezone(ET).strftime("%Y-%m-%dT%H:%M")
+
+    # Keep the active window (tonight + future + just-ended); drop older nights.
+    # Matches ARCHIVE_LOOKBACK's spirit so we don't archive months of past shows.
+    cutoff = datetime.now(ET) - timedelta(hours=36)
+
+    events = []
+    for ev in data.get("data", []):
+        if ev.get("deleted"):
+            continue
+        # Only shows actually published to Tablelist (the widget hides the rest).
+        publish = ev.get("publish") or {}
+        if isinstance(publish, dict) and publish.get("tablelist") is False:
+            continue
+
+        iso_start = ev.get("dateStart")
+        if not iso_start:
+            continue
+        try:
+            start_dt = datetime.fromisoformat(iso_start.replace("Z", "+00:00")).astimezone(ET)
+        except (ValueError, AttributeError):
+            continue
+        if start_dt < cutoff:
+            continue
+        start = start_dt.strftime("%Y-%m-%dT%H:%M")
+
+        title = html_unescape(ev.get("name") or "").strip() or None
+        if not title:
+            continue
+
+        # End only if it's genuinely after start (some rows carry a stray equal
+        # or earlier dateEnd).
+        end = None
+        end_dt_iso = ev.get("dateEnd")
+        if end_dt_iso:
+            try:
+                end_dt = datetime.fromisoformat(end_dt_iso.replace("Z", "+00:00")).astimezone(ET)
+                if end_dt > start_dt:
+                    end = end_dt.strftime("%Y-%m-%dT%H:%M")
+            except (ValueError, AttributeError):
+                pass
+
+        img = ev.get("primaryImage") or {}
+        image_url = None
+        if isinstance(img, dict):
+            image_url = img.get("large") or img.get("original") or img.get("medium")
+
+        desc = (ev.get("description") or "").strip()
+        if desc and "<" in desc:
+            desc = BeautifulSoup(desc, "html.parser").get_text(" ").strip()
+        desc = desc or None
+
+        # Public per-event permalink → keys make_event_id (stable across title/
+        # time edits) and doubles as the ticket link.
+        seo = (ev.get("seoPathname") or "").strip()
+        eid = (ev.get("id") or ev.get("_id") or "").strip()
+        url = (f"https://www.tablelist.com/e/{seo}" if seo
+               else f"https://www.tablelist.com/events/{eid}" if eid
+               else None)
+
+        events.append({
+            "title":       title,
+            "start":       start,
+            "end":         end,
+            "location":    None,
+            "cost":        None,  # Tablelist prices are per-table/ticket; skip
+            "source_url":  url,
+            "performer":   None,
+            "description": desc,
+            "image_url":   image_url,
+            "ticket_url":  url,
+            "category":    "music",  # DJ / nightlife feed — all music
+            "is_recurring": False,
+            "recurrence_note": None,
+        })
+
+    print(f"  Parsed {len(events)} events from Tablelist feed (no LLM needed)")
+    return events
+
+
 def extract_shopify_products(html, base_url):
     """
     For Shopify/Tailwind sites with no semantic class names.
@@ -2054,6 +2172,12 @@ def scrape_venue(venue_cfg, cache, verbose=True, force=False, report=None):
         # Direct parse of a DICE partner-API feed (Deep Cuts) — no LLM, native
         # categories from DICE type tags.
         raw_events = extract_dice_events(html, base_url)
+        if verbose:
+            print(f"  Pass 1: {len(raw_events)} events (parsed directly, no LLM)")
+    elif strategy == "tablelist_events":
+        # Direct parse of a Tablelist venue-events API feed (Scorpion Bar) — no
+        # LLM; the DJ/nightlife feed is all "music".
+        raw_events = extract_tablelist_events(html, base_url)
         if verbose:
             print(f"  Pass 1: {len(raw_events)} events (parsed directly, no LLM)")
     elif strategy == "mideast_events":

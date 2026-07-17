@@ -8,6 +8,8 @@ to succeed — since the goal is to lock in field-mapping and drop/skip rules,
 not to reproduce a whole page."""
 import json
 
+from freezegun import freeze_time
+
 import scraper_core as sc
 
 
@@ -243,6 +245,59 @@ def test_dice_drops_cancelled_and_defaults_category():
 
 def test_dice_bad_json_returns_empty():
     assert sc.extract_dice_events("not json", "https://x") == []
+
+
+@freeze_time("2026-07-17")
+def test_tablelist_events_basic():
+    # Minimal Tablelist /v1/venues/<id>/events shape: UTC instants carrying the
+    # real local door/close time, a marquee `date` we ignore, and seoPathname.
+    feed = {"data": [{
+        "id": "43ddeb2b863cd39d",
+        "name": "Valyn &amp; Friends",
+        "date": "2026-07-18T06:00:00.000Z",              # marquee "night of" — ignored
+        "dateStart": "2026-07-18T02:00:00.000Z",         # -> 22:00 EDT (Jul 17)
+        "dateEnd": "2026-07-18T07:00:00.000Z",           # -> 03:00 EDT (Jul 18)
+        "deleted": False,
+        "publish": {"tablelist": True},
+        "seoPathname": "valyn-at-scorpion-bar-boston-43ddeb2b863cd39d",
+        "primaryImage": {"large": "https://cdn/large.jpg",
+                         "original": "https://cdn/orig.jpg"},
+    }]}
+    events = sc.extract_tablelist_events(json.dumps(feed), "https://api.tablelist.com")
+    assert len(events) == 1
+    e = events[0]
+    assert e["title"] == "Valyn & Friends"               # HTML entity unescaped
+    assert e["start"] == "2026-07-17T22:00"              # dateStart, not marquee date
+    assert e["end"] == "2026-07-18T03:00"
+    assert e["category"] == "music"                       # DJ/nightlife feed
+    assert e["image_url"] == "https://cdn/large.jpg"      # large preferred
+    assert (e["source_url"] == e["ticket_url"] ==
+            "https://www.tablelist.com/e/valyn-at-scorpion-bar-boston-43ddeb2b863cd39d")
+
+
+@freeze_time("2026-07-17")
+def test_tablelist_drops_past_deleted_unpublished_and_bad_end():
+    feed = {"data": [
+        # Well before the 36h active window -> dropped.
+        {"name": "Old Night", "dateStart": "2026-07-01T02:00:00.000Z",
+         "publish": {"tablelist": True}},
+        # Soft-deleted -> dropped.
+        {"name": "Deleted", "dateStart": "2026-07-25T02:00:00.000Z",
+         "deleted": True, "publish": {"tablelist": True}},
+        # Not published to Tablelist -> dropped.
+        {"name": "Hidden", "dateStart": "2026-07-25T02:00:00.000Z",
+         "publish": {"tablelist": False}},
+        # Kept, but dateEnd not after start -> end is None, not a backwards range.
+        {"name": "No End", "dateStart": "2026-07-25T02:00:00.000Z",
+         "dateEnd": "2026-07-25T02:00:00.000Z", "publish": {"tablelist": True}},
+    ]}
+    events = sc.extract_tablelist_events(json.dumps(feed), "https://api.tablelist.com")
+    assert [e["title"] for e in events] == ["No End"]
+    assert events[0]["end"] is None
+
+
+def test_tablelist_bad_json_returns_empty():
+    assert sc.extract_tablelist_events("not json", "https://x") == []
 
 
 # --- Google Calendar ICS (Village Social) ------------------------------------
