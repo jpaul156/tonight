@@ -1142,7 +1142,7 @@
        "c": 101,
        "r": 61,
        "station": true,
-       "tier": 3,
+       "tier": 4,
        "name": "Courthouse",
        "square": "Seaport"
       },
@@ -1150,7 +1150,7 @@
        "c": 104,
        "r": 61,
        "station": true,
-       "tier": 3,
+       "tier": 4,
        "name": "World Trade Center",
        "square": "Seaport"
       },
