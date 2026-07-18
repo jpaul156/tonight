@@ -304,12 +304,12 @@
 
     // Options: every named station on the traced map (stationLineIndex, built
     // by app.js from transit-layer.json) — your home square shouldn't depend
-    // on whether it has events tonight. eventSquares is the fallback if the
+    // on whether it has events tonight. eventPlaces is the fallback if the
     // map didn't load.
     const squares = new Set(
       typeof stationLineIndex !== "undefined" && Object.keys(stationLineIndex).length
         ? Object.keys(stationLineIndex)
-        : (typeof eventSquares !== "undefined" ? Array.from(eventSquares) : [])
+        : (typeof eventPlaces !== "undefined" ? Array.from(eventPlaces) : [])
     );
     squares.delete("");
     // Drop minor-only stops (neighborhood/infill) — a home square should be a

@@ -1,0 +1,16 @@
+{
+  "schema": "tonight.ranking/1",
+  "weights": {
+    "selected": 10,
+    "perStop": 5,
+    "transferStops": 2,
+    "proximityFloor": -15,
+    "offMap": 0,
+    "sponsored": 8,
+    "favoriteEvent": 5,
+    "favoriteVenue": 5,
+    "favoriteArtist": 5,
+    "litMax": 15,
+    "jitter": 2
+  }
+}

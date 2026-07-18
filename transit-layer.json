@@ -334,7 +334,8 @@
        "r": 67,
        "station": true,
        "tier": 3,
-       "name": "Tufts Medical Center"
+       "name": "Tufts Medical Center",
+       "square": "Theater District"
       },
       {
        "c": 85,
@@ -556,7 +557,8 @@
        "r": 55,
        "station": true,
        "tier": 3,
-       "name": "Boylston"
+       "name": "Boylston",
+       "square": "Theater District"
       },
       {
        "c": 78,
@@ -588,7 +590,8 @@
        "c": 55,
        "r": 56,
        "station": true,
-       "name": "Kenmore"
+       "name": "Kenmore",
+       "square": "Fenway Park"
       }
      ]
     },
@@ -777,7 +780,8 @@
        "c": 50,
        "r": 59,
        "station": true,
-       "name": "Fenway"
+       "name": "Fenway",
+       "square": "Fenway Park"
       },
       {
        "c": 48,
@@ -995,42 +999,42 @@
        "name": ""
       },
       {
-       "c": 48,
-       "r": 51,
+       "c": 47,
+       "r": 50,
        "station": true,
        "name": "Blandford Street"
       },
       {
-       "c": 46,
-       "r": 49,
+       "c": 45,
+       "r": 48,
        "station": true,
        "tier": 3,
        "name": "Boston University East"
       },
       {
-       "c": 44,
-       "r": 47,
+       "c": 43,
+       "r": 46,
        "station": true,
        "tier": 3,
        "name": "Boston University Central"
       },
       {
-       "c": 42,
-       "r": 45,
+       "c": 41,
+       "r": 44,
        "station": true,
        "tier": 3,
        "name": "Armory Street"
       },
       {
-       "c": 40,
-       "r": 43,
+       "c": 39,
+       "r": 42,
        "station": true,
        "name": "Babcock Street",
        "square": "BU"
       },
       {
-       "c": 38,
-       "r": 41,
+       "c": 37,
+       "r": 40,
        "station": true,
        "tier": 3,
        "name": "Packard's Corner"
@@ -1115,6 +1119,48 @@
        "r": 56,
        "station": true,
        "name": "Boston College"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Silver",
+   "line": "Silver",
+   "branches": [
+    {
+     "name": "main",
+     "nodes": [
+      {
+       "c": 95,
+       "r": 61,
+       "station": true,
+       "tier": 3,
+       "name": ""
+      },
+      {
+       "c": 101,
+       "r": 61,
+       "station": true,
+       "tier": 3,
+       "name": "Courthouse",
+       "square": "Seaport"
+      },
+      {
+       "c": 104,
+       "r": 61,
+       "station": true,
+       "tier": 3,
+       "name": "World Trade Center",
+       "square": "Seaport"
+      },
+      {
+       "c": 107,
+       "r": 61,
+       "station": true,
+       "tier": 3,
+       "name": "Silver Line Way",
+       "square": "Seaport"
       }
      ]
     }

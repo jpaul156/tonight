@@ -1,133 +1,140 @@
 {
-  "schema": "tonight.todo/1",
-  "updated": "2026-07-14",
-  "note": "Hand-maintained running to-do list, surfaced on app_health.html. Mirror of the 'Pending work' sections in CLAUDE.md — keep the two roughly in sync. priority: high | med | low. status: open | in_progress | blocked.",
-  "items": [
-    {
-      "title": "Replace LLM extraction with static parsers on server-rendered venues (kills dupes AND unstable ids)",
-      "area": "scraper",
-      "priority": "med",
-      "status": "in_progress",
-      "detail": "Root cause of both the duplicate ghosts and unstable share links is non-deterministic LLM Pass 1: html_full_text venues re-render the title differently each run ('52 Church' vs '52 Church - The Glitter Boys'), and since the event id is title-derived AND is the share/bookmark URL (js/app.js #hash), the id churns → dupes + dead links. DONE: (a) The Sinclair → aeg_events static parser (AEG/AXS .entry.sinclair, /events/detail/<id> permalinks), 13 collisions → 0; (b) Arts at the Armory → em_events static parser (WordPress Events Manager .em-event.em-item, per-instance permalinks, start+end times), 4 collisions → 0. (c) Crystal Ballroom → crystal_events (article.event-grid-item cards, /events/ permalinks); (d) Sally O'Brien's → sally_events (prose calendar, no permalinks but deterministic titles). All four strategies reusable. Collisions across the whole feed went 20 → 1 (the lone remainder is Middle East Upstairs, an already-static venue where the TicketWeb SOURCE changed the title — only reconciliation/a stable source id fixes that, not static parsing). NOTE: did NOT flip make_event_id's fallback to venue_id+start — verified it would silently clobber 10 genuine same-slot parallel events (Aeronaut soccer+jazz, Armory multi-space, tallship music+soccer). The current title-based id errs toward a visible dupe rather than invisible data loss; static parsers fix jitter at the source instead. REMAINING LLM venues (lower priority, not currently colliding): Comedy Studio, Somerville Theatre, VRCC, Sheet2 batch — audit each for a static parser."
-    },
-    {
-      "title": "Somerville Theatre: guard empty LLM Pass 1 + move to static parse",
-      "area": "scraper",
-      "priority": "med",
-      "status": "open",
-      "detail": "Dashboard error 'Pass 1 JSON parse failed: Expecting value: line 1 column 1 (char 0)' = the LLM returned an empty completion (json.loads('')). Page is healthy (200, 82KB, server-rendered WP Theatre Manager markup — wpt_ classes), so this is transient LLM flakiness that hard-errors the venue. Short term: treat an empty/whitespace Pass 1 response as a soft warning + retry, not a hard error. Better: build a static parser off the WP Theatre Manager markup (no per-event JSON-LD, only MovieTheater org data, so parse the HTML blocks) and drop the LLM — same deterministic-id win as Sinclair."
-    },
-    {
-      "title": "Trim the front-end load to a future window (60/90/180 days)",
-      "area": "product",
-      "priority": "med",
-      "status": "open",
-      "detail": "events.json ships every future event (unbounded), so the download grows with how far ahead venues post. Once the 'Page download' tile on this dashboard trends large, have the app fetch only events within N days out (exact N TBD — 60/90/180). Options: filter client-side after load (simplest, no payload win), or split events.json into a near-window file + a lazy-loaded remainder (real payload win). Decide N by watching the payload tile."
-    },
-    {
-      "title": "Artist favorites UI (data layer ready, keyed by artist uid)",
-      "area": "product",
-      "priority": "med",
-      "status": "open",
-      "detail": "The Firestore data layer (toggleFavoriteArtist / isFavoriteArtist in js/auth.js) and ranking hook already exist, keyed by the frozen artist id from data/artists.json — never the display name. No UI yet: the detail overlay only offers a venue star. Blocked-ish on artist pages: build the /{handle} resolver (data/handles.json) and a lightweight artist view (photo, website, upcoming events via the fuzzy matcher) with a favorite star, then optionally add an artist star to the detail overlay."
-    },
-    {
-      "title": "Multi-factor feed ranking (distance, favorites, sponsored)",
-      "area": "product",
-      "priority": "med",
-      "status": "in_progress",
-      "detail": "Home Square must never act as a filter — the 'Near me' feed shows everything, ranked. Phase 1 ships a two-key sort: favorites first, then events in the saved Home Square, then the stable-random base order (render() in js/app.js). End goal: a weighted score blending distance/transit time from Home Square (not just square equality), favorite venues/artists, sponsored status, and eventually Lit heat. Keep it a score, not filters, so serendipity survives."
-    },
-    {
-      "title": "Long-run favorites UX (the Slutcracker problem)",
-      "area": "product",
-      "priority": "low",
-      "status": "open",
-      "detail": "Favoriting a show with a month-long run (The Slutcracker at Somerville Theatre, Thu-Sun for a month) shouldn't pin it to the top of the feed every night it plays. Today's feed is day-of only so it's one card per night, not duplicates — the issue is nightly top-slot domination. Candidate designs (not decided): boost decays after the user has seen/opened it; a bounded 'From your favorites' shelf above the feed instead of reordering; moment-based surfacing (opening night, closing weekend, 'last chance tonight') with quiet ranking otherwise; per-run snooze. May also want a third favorite type — a show/run — distinct from venue and artist."
-    },
-    {
-      "title": "Venue-suggestion pipeline: review + auto-first-pass scrape",
-      "area": "product",
-      "priority": "med",
-      "status": "in_progress",
-      "detail": "Intake built ('Suggest a venue' → /venue_suggestions, shape-locked rules, verified accounts only so suggestion credit sticks to a durable uid). Review surface built: app_health.html 'Venue suggestions' section — admin Google sign-in (uid gated in rules), approve/deny sets status/reviewedAt, 'Send note' writes a users/{uid}/notifications doc that lights the suggester's account-button dot. Remaining: the auto-first-pass scrape as an ASSIST (after approval, a manually-dispatched Action tries the suggested URL with the LLM strategy and reports yield to the dashboard — never auto-publishes; risks: LLM spend on junk/hostile URLs, prompt injection via page content, garbage events committed unreviewed), and notifying the suggester automatically when their venue's first real scrape lands."
-    },
-    {
-      "title": "Google OAuth consent-screen branding ('continue to Tonight')",
-      "area": "product",
-      "priority": "low",
-      "status": "open",
-      "detail": "The sign-in popup now says 'to continue to auth.tonight.quest' (custom auth domain via Firebase Hosting). To make it say 'Tonight' with the logo: Google Cloud console (tonight-prod-75027) → Google Auth Platform → Branding — set app name, support email, homepage tonight.quest, upload logo. The logo triggers Google's brand verification review (a few days; needs tonight.quest verified in Search Console). Prod-only; dev can stay unbranded."
-    },
-    {
-      "title": "Suggestion points + swag redemption",
-      "area": "product",
-      "priority": "low",
-      "status": "open",
-      "detail": "Award points to the account whose venue suggestion gets added — this is why /venue_suggestions is verified-only (an anonymous uid dies with cleared cookies or a replaced phone; the credit must outlive both). Redeemable for merch: 200 glow-in-the-dark Tonight wristbands already exist (carried over from the first attempt at this app ~2016), t-shirts / other swag TBD. Needs: a points ledger on users/{uid} (award on approve in the app_health review flow, admin-written like notifications), a running tally in the account panel, and a redemption flow (v1 can be a 'Send note' + mailing address exchange)."
-    },
-    {
-      "title": "Weekly event verification for recurring shows",
-      "area": "product",
-      "priority": "med",
-      "status": "open",
-      "detail": "Recurring events (trivia, sessions) get cancelled week-to-week without the calendar updating (e.g. Grainne O'Malley's). Build a venue-facing view to confirm a recurring event is still on for the day/week. Until then treat weekly-only calendars cautiously."
-    },
-    {
-      "title": "\"Third place\" category for cafes/plazas/quiet nooks",
-      "area": "product",
-      "priority": "low",
-      "status": "open",
-      "detail": "Add a category (name TBD, e.g. 'third place') for coffee shops, plazas, and hidden nooks people go to sit/chill/read/study/work — not live events. Like film listings, these should be hidden from the main events page by default (opt-in filter). Pepita Lo-Fi at Lamplighter belongs in this category but stays on the main list for now; reclassify it when this is addressed."
-    },
-    {
-      "title": "Movies / cinema listings with opt-in filter",
-      "area": "product",
-      "priority": "low",
-      "status": "open",
-      "detail": "Add Apple Cinemas, Coolidge Corner, Somerville Theatre /calendar + /schedule. Hide showtimes from the main feed by default via an event_type:'film' filter that must be opted into. Design the opt-in UX before adding cinema venues; Somerville's mixed blockbuster/repertory content needs a wide-release vs niche label."
-    },
-    {
-      "title": "Generate station_list.csv from MBTA GTFS",
-      "area": "transit",
-      "priority": "med",
-      "status": "open",
-      "detail": "Build prototype/station_list.csv from GTFS stops.txt (V3 API https://api-v3.mbta.com/stops) to stay current with service changes, and add a stable GTFS id to each station node in transit-layer.json. This also fixes the LINES-topology / transit-layer.json duplication."
-    },
-    {
-      "title": "Station status field instead of deletion for closures",
-      "area": "transit",
-      "priority": "low",
-      "status": "open",
-      "detail": "Use a status field (open / temporary_closed / closed) on station nodes for closures like the Symphony renovation, rather than deleting the station."
-    },
-    {
-      "title": "Bus-connected squares on the metro map",
-      "area": "transit",
-      "priority": "low",
-      "status": "open",
-      "detail": "Surface squares served only by frequent buses (Inman, Medford Square) — show the connecting bus routes with 15-min-or-better headways (Frequent Bus Network) via GTFS routes.txt + frequencies. Decide how they render near the map so a bus-only square has a navigable home."
-    },
-    {
-      "title": "Playwright support for JS-rendered calendars",
-      "area": "scraper",
-      "priority": "med",
-      "status": "blocked",
-      "detail": "Midway Cafe and Club Passim's full calendar need a headless browser — their event data is JS-injected and html_full_text gets near-empty pages, flagged expected_empty until Playwright lands. (Deep Cuts is resolved: its JS widget reads DICE's partner API, now scraped directly via the dice_events strategy — no Playwright needed. Village Social is resolved the same way: its JS-only BentoBox calendar embeds a public Google Calendar iframe, now scraped directly via the gcal_ics strategy off the calendar's .ics feed.)"
-    },
-    {
-      "title": "Sinclair truncates at the Pass-1 token cap",
-      "area": "scraper",
-      "priority": "med",
-      "status": "open",
-      "detail": "The Sinclair's calendar (44+ events) overflowed the 6000-token Pass-1 response and lost trailing events. Default raised to 8000 with a per-venue max_output_tokens override; if the dashboard still flags it as truncated, bump max_output_tokens for sinclair or paginate the source. Watch the 'truncated' warning on app_health.html."
-    },
-    {
-      "title": "Winter EST offset in run_scraper",
-      "area": "scraper",
-      "priority": "low",
-      "status": "open",
-      "detail": "EDT/UTC-4 is hardcoded in run_scraper.py — off by one hour in winter (EST). Low priority until the app has winter users."
-    }
-  ]
+ "schema": "tonight.todo/1",
+ "updated": "2026-07-17",
+ "note": "Hand-maintained running to-do list, surfaced on app_health.html. Mirror of the 'Pending work' sections in CLAUDE.md — keep the two roughly in sync. priority: high | med | low. status: open | in_progress | blocked.",
+ "items": [
+  {
+   "title": "ranking.html tuner — sliders for data/ranking.json weights with live feed preview",
+   "area": "app",
+   "priority": "med",
+   "status": "open",
+   "detail": "Feed ranking shipped (js/ranking.js + data/ranking.json): geography is now a score, not a filter — station-hop Dijkstra from the selected station/area, with transfer penalty, plus sponsored/favorite/Lit/jitter factors (Lit + venue/artist favorites are stubbed hooks awaiting profile data). Next: a curator.html-style tool page with a slider per weight, the live feed re-ranking as you drag, per-event score breakdowns, and export of data/ranking.json."
+  },
+  {
+   "title": "Replace LLM extraction with static parsers on server-rendered venues (kills dupes AND unstable ids)",
+   "area": "scraper",
+   "priority": "med",
+   "status": "in_progress",
+   "detail": "Root cause of both the duplicate ghosts and unstable share links is non-deterministic LLM Pass 1: html_full_text venues re-render the title differently each run ('52 Church' vs '52 Church - The Glitter Boys'), and since the event id is title-derived AND is the share/bookmark URL (js/app.js #hash), the id churns → dupes + dead links. DONE: (a) The Sinclair → aeg_events static parser (AEG/AXS .entry.sinclair, /events/detail/<id> permalinks), 13 collisions → 0; (b) Arts at the Armory → em_events static parser (WordPress Events Manager .em-event.em-item, per-instance permalinks, start+end times), 4 collisions → 0. (c) Crystal Ballroom → crystal_events (article.event-grid-item cards, /events/ permalinks); (d) Sally O'Brien's → sally_events (prose calendar, no permalinks but deterministic titles). All four strategies reusable. Collisions across the whole feed went 20 → 1 (the lone remainder is Middle East Upstairs, an already-static venue where the TicketWeb SOURCE changed the title — only reconciliation/a stable source id fixes that, not static parsing). NOTE: did NOT flip make_event_id's fallback to venue_id+start — verified it would silently clobber 10 genuine same-slot parallel events (Aeronaut soccer+jazz, Armory multi-space, tallship music+soccer). The current title-based id errs toward a visible dupe rather than invisible data loss; static parsers fix jitter at the source instead. REMAINING LLM venues (lower priority, not currently colliding): Comedy Studio, Somerville Theatre, VRCC, Sheet2 batch — audit each for a static parser."
+  },
+  {
+   "title": "Somerville Theatre: guard empty LLM Pass 1 + move to static parse",
+   "area": "scraper",
+   "priority": "med",
+   "status": "open",
+   "detail": "Dashboard error 'Pass 1 JSON parse failed: Expecting value: line 1 column 1 (char 0)' = the LLM returned an empty completion (json.loads('')). Page is healthy (200, 82KB, server-rendered WP Theatre Manager markup — wpt_ classes), so this is transient LLM flakiness that hard-errors the venue. Short term: treat an empty/whitespace Pass 1 response as a soft warning + retry, not a hard error. Better: build a static parser off the WP Theatre Manager markup (no per-event JSON-LD, only MovieTheater org data, so parse the HTML blocks) and drop the LLM — same deterministic-id win as Sinclair."
+  },
+  {
+   "title": "Trim the front-end load to a future window (60/90/180 days)",
+   "area": "product",
+   "priority": "med",
+   "status": "open",
+   "detail": "events.json ships every future event (unbounded), so the download grows with how far ahead venues post. Once the 'Page download' tile on this dashboard trends large, have the app fetch only events within N days out (exact N TBD — 60/90/180). Options: filter client-side after load (simplest, no payload win), or split events.json into a near-window file + a lazy-loaded remainder (real payload win). Decide N by watching the payload tile."
+  },
+  {
+   "title": "Artist favorites UI (data layer ready, keyed by artist uid)",
+   "area": "product",
+   "priority": "med",
+   "status": "open",
+   "detail": "The Firestore data layer (toggleFavoriteArtist / isFavoriteArtist in js/auth.js) and ranking hook already exist, keyed by the frozen artist id from data/artists.json — never the display name. No UI yet: the detail overlay only offers a venue star. Blocked-ish on artist pages: build the /{handle} resolver (data/handles.json) and a lightweight artist view (photo, website, upcoming events via the fuzzy matcher) with a favorite star, then optionally add an artist star to the detail overlay."
+  },
+  {
+   "title": "Multi-factor feed ranking (distance, favorites, sponsored)",
+   "area": "product",
+   "priority": "med",
+   "status": "in_progress",
+   "detail": "Home Square must never act as a filter — the 'Near me' feed shows everything, ranked. Phase 1 ships a two-key sort: favorites first, then events in the saved Home Square, then the stable-random base order (render() in js/app.js). End goal: a weighted score blending distance/transit time from Home Square (not just square equality), favorite venues/artists, sponsored status, and eventually Lit heat. Keep it a score, not filters, so serendipity survives."
+  },
+  {
+   "title": "Long-run favorites UX (the Slutcracker problem)",
+   "area": "product",
+   "priority": "low",
+   "status": "open",
+   "detail": "Favoriting a show with a month-long run (The Slutcracker at Somerville Theatre, Thu-Sun for a month) shouldn't pin it to the top of the feed every night it plays. Today's feed is day-of only so it's one card per night, not duplicates — the issue is nightly top-slot domination. Candidate designs (not decided): boost decays after the user has seen/opened it; a bounded 'From your favorites' shelf above the feed instead of reordering; moment-based surfacing (opening night, closing weekend, 'last chance tonight') with quiet ranking otherwise; per-run snooze. May also want a third favorite type — a show/run — distinct from venue and artist."
+  },
+  {
+   "title": "Venue-suggestion pipeline: review + auto-first-pass scrape",
+   "area": "product",
+   "priority": "med",
+   "status": "in_progress",
+   "detail": "Intake built ('Suggest a venue' → /venue_suggestions, shape-locked rules, verified accounts only so suggestion credit sticks to a durable uid). Review surface built: app_health.html 'Venue suggestions' section — admin Google sign-in (uid gated in rules), approve/deny sets status/reviewedAt, 'Send note' writes a users/{uid}/notifications doc that lights the suggester's account-button dot. Remaining: the auto-first-pass scrape as an ASSIST (after approval, a manually-dispatched Action tries the suggested URL with the LLM strategy and reports yield to the dashboard — never auto-publishes; risks: LLM spend on junk/hostile URLs, prompt injection via page content, garbage events committed unreviewed), and notifying the suggester automatically when their venue's first real scrape lands."
+  },
+  {
+   "title": "Google OAuth consent-screen branding ('continue to Tonight')",
+   "area": "product",
+   "priority": "low",
+   "status": "open",
+   "detail": "The sign-in popup now says 'to continue to auth.tonight.quest' (custom auth domain via Firebase Hosting). To make it say 'Tonight' with the logo: Google Cloud console (tonight-prod-75027) → Google Auth Platform → Branding — set app name, support email, homepage tonight.quest, upload logo. The logo triggers Google's brand verification review (a few days; needs tonight.quest verified in Search Console). Prod-only; dev can stay unbranded."
+  },
+  {
+   "title": "Suggestion points + swag redemption",
+   "area": "product",
+   "priority": "low",
+   "status": "open",
+   "detail": "Award points to the account whose venue suggestion gets added — this is why /venue_suggestions is verified-only (an anonymous uid dies with cleared cookies or a replaced phone; the credit must outlive both). Redeemable for merch: 200 glow-in-the-dark Tonight wristbands already exist (carried over from the first attempt at this app ~2016), t-shirts / other swag TBD. Needs: a points ledger on users/{uid} (award on approve in the app_health review flow, admin-written like notifications), a running tally in the account panel, and a redemption flow (v1 can be a 'Send note' + mailing address exchange)."
+  },
+  {
+   "title": "Weekly event verification for recurring shows",
+   "area": "product",
+   "priority": "med",
+   "status": "open",
+   "detail": "Recurring events (trivia, sessions) get cancelled week-to-week without the calendar updating (e.g. Grainne O'Malley's). Build a venue-facing view to confirm a recurring event is still on for the day/week. Until then treat weekly-only calendars cautiously."
+  },
+  {
+   "title": "\"Third place\" category for cafes/plazas/quiet nooks",
+   "area": "product",
+   "priority": "low",
+   "status": "open",
+   "detail": "Add a category (name TBD, e.g. 'third place') for coffee shops, plazas, and hidden nooks people go to sit/chill/read/study/work — not live events. Like film listings, these should be hidden from the main events page by default (opt-in filter). Pepita Lo-Fi at Lamplighter belongs in this category but stays on the main list for now; reclassify it when this is addressed."
+  },
+  {
+   "title": "Movies / cinema listings with opt-in filter",
+   "area": "product",
+   "priority": "low",
+   "status": "open",
+   "detail": "Add Apple Cinemas, Coolidge Corner, Somerville Theatre /calendar + /schedule. Hide showtimes from the main feed by default via an event_type:'film' filter that must be opted into. Design the opt-in UX before adding cinema venues; Somerville's mixed blockbuster/repertory content needs a wide-release vs niche label."
+  },
+  {
+   "title": "Generate station_list.csv from MBTA GTFS",
+   "area": "transit",
+   "priority": "med",
+   "status": "open",
+   "detail": "Build prototype/station_list.csv from GTFS stops.txt (V3 API https://api-v3.mbta.com/stops) to stay current with service changes, and add a stable GTFS id to each station node in transit-layer.json. This also fixes the LINES-topology / transit-layer.json duplication."
+  },
+  {
+   "title": "Station status field instead of deletion for closures",
+   "area": "transit",
+   "priority": "low",
+   "status": "open",
+   "detail": "Use a status field (open / temporary_closed / closed) on station nodes for closures like the Symphony renovation, rather than deleting the station."
+  },
+  {
+   "title": "Bus-connected squares on the metro map",
+   "area": "transit",
+   "priority": "low",
+   "status": "open",
+   "detail": "Surface squares served only by frequent buses (Inman, Medford Square) — show the connecting bus routes with 15-min-or-better headways (Frequent Bus Network) via GTFS routes.txt + frequencies. Decide how they render near the map so a bus-only square has a navigable home."
+  },
+  {
+   "title": "Playwright support for JS-rendered calendars",
+   "area": "scraper",
+   "priority": "med",
+   "status": "blocked",
+   "detail": "Midway Cafe and Club Passim's full calendar need a headless browser — their event data is JS-injected and html_full_text gets near-empty pages, flagged expected_empty until Playwright lands. (Deep Cuts is resolved: its JS widget reads DICE's partner API, now scraped directly via the dice_events strategy — no Playwright needed. Village Social is resolved the same way: its JS-only BentoBox calendar embeds a public Google Calendar iframe, now scraped directly via the gcal_ics strategy off the calendar's .ics feed.)"
+  },
+  {
+   "title": "Sinclair truncates at the Pass-1 token cap",
+   "area": "scraper",
+   "priority": "med",
+   "status": "open",
+   "detail": "The Sinclair's calendar (44+ events) overflowed the 6000-token Pass-1 response and lost trailing events. Default raised to 8000 with a per-venue max_output_tokens override; if the dashboard still flags it as truncated, bump max_output_tokens for sinclair or paginate the source. Watch the 'truncated' warning on app_health.html."
+  },
+  {
+   "title": "Winter EST offset in run_scraper",
+   "area": "scraper",
+   "priority": "low",
+   "status": "open",
+   "detail": "EDT/UTC-4 is hardcoded in run_scraper.py — off by one hour in winter (EST). Low priority until the app has winter users."
+  }
+ ]
 }

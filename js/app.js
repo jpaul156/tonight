@@ -56,7 +56,7 @@ function stationLabel(name) {
 }
 
 // Brand-color order, used when collapsing a stop's lines down to colored dots.
-const BASE_LINE_ORDER = ["Red", "Orange", "Green", "Blue"];
+const BASE_LINE_ORDER = ["Red", "Orange", "Green", "Blue", "Silver"];
 
 // Walk the loaded transit map and record, per station name, which trunk
 // colors it sits on. A station shared across branches (e.g. two Green
@@ -86,15 +86,37 @@ function buildStationLineIndex(transit) {
 }
 
 // Distinct trunk colors a stop sits on, for badges/dots — so a stop on two
-// Green branches reads as one Green dot, not two.
+// Green branches reads as one Green dot, not two. An AREA name (Seaport,
+// Theater District) resolves to the union of its member stations' lines.
 function stationLines(name) {
-  return stationLineIndex[name] || [];
+  if (stationLineIndex[name]) return stationLineIndex[name];
+  const members = rankIndex?.areaStations?.[name];
+  if (!members) return [];
+  const set = new Set(members.flatMap(m => stationLineIndex[m] || []));
+  return BASE_LINE_ORDER.filter(b => set.has(b));
 }
 
-// Stops that are actually offered as filters: only those where events happen.
-// Populated from loaded events (incl. food deals) in init() — a stop with no
-// events shows on the map as a connector but can't be selected.
-let eventSquares = new Set();
+// Places (squares AND stops) where public events happen tonight. Populated
+// from loaded events (incl. food deals) in init() — a stop with no events
+// shows on the map as a connector but can't be selected.
+let eventPlaces = new Set();
+
+// Ranking state: weights from data/ranking.json (merged over the module's
+// defaults) and the station/area/graph index built from transit-layer.json
+// by js/ranking.js. Both are null-safe — with no map, geography degrades to
+// exact string matching inside TonightRanking.rank.
+let rankWeights = {};
+let rankIndex = null;
+
+// Does anything happen at this place tonight? True when the name itself has
+// events, or — for a station — when its AREA does (an event with square
+// "Seaport" lights Courthouse, World Trade Center and Silver Line Way alike,
+// since selecting any of them yields a meaningful nearby feed).
+function placeHasEvents(name) {
+  if (eventPlaces.has(name)) return true;
+  const area = rankIndex?.areaOf?.[name];
+  return !!(area && eventPlaces.has(area));
+}
 
 const CATEGORIES = ["music", "trivia", "comedy", "film", "market", "karaoke", "community", "sports", "fitness", "food"];
 
@@ -161,28 +183,33 @@ async function init() {
   buildFilterChips();
   renderSquareIndicator();
   wireMetroOverlay();
-  let deals, transit, artists;
-  [allEvents, venueData, deals, transit, artists, cropOverrides] = await Promise.all([
-    loadEvents(), loadVenues(), loadDeals(), loadTransit(), loadArtists(), loadCrops()
+  let deals, transit, artists, rankingCfg;
+  [allEvents, venueData, deals, transit, artists, cropOverrides, rankingCfg] = await Promise.all([
+    loadEvents(), loadVenues(), loadDeals(), loadTransit(), loadArtists(), loadCrops(), loadRanking()
   ]);
   buildArtistIndex(artists);
   // Recurring food deals live alongside one-off events in the same feed; they
   // just match "tonight" by weekday instead of a calendar date (see isTonightEvent).
   allEvents = allEvents.concat(deals);
-  // A stop is filterable only if something PUBLIC happens there TONIGHT — same
-  // predicate the feed uses (isTonightEvent), so a station can't light up /
-  // stay tappable on the strength of a future event with nothing to show today
-  // (e.g. Malden). Private bookings are hidden from the feed, so they don't
-  // count either.
-  eventSquares = new Set(
-    allEvents.filter(e => !e.private && isTonightEvent(e)).map(e => e.square).filter(Boolean)
+  // A stop lights up only if something PUBLIC happens there (or in its area)
+  // TONIGHT — same predicate the feed uses (isTonightEvent), so a station
+  // can't light up / stay tappable on the strength of a future event with
+  // nothing to show today (e.g. Malden). Private bookings are hidden from the
+  // feed, so they don't count either. Both squares AND stops go in the set:
+  // an event at Courthouse (square "Seaport") should light Courthouse itself
+  // plus, via the area index, its Seaport siblings (see placeHasEvents).
+  const tonightPublic = allEvents.filter(e => !e.private && isTonightEvent(e));
+  eventPlaces = new Set(
+    tonightPublic.flatMap(e => [e.square, e.transit_stop]).filter(Boolean)
   );
+  rankWeights = rankingCfg?.weights || {};
+  rankIndex = transit ? TonightRanking.buildIndex(transit) : null;
   // Derive station → line colors from the traced map before anything renders a
   // line dot, so the pinned square indicator shows the right color(s).
   buildStationLineIndex(transit);
   renderSquareIndicator();
-  // Build the overlay's metro map once events are known (eventSquares decides
-  // which stations light up). Tapping a station applies its square as the filter.
+  // Build the overlay's metro map once events are known (placeHasEvents decides
+  // which stations light up). Tapping a station applies it as the selection.
   if (transit) MetroMap.setup(transit, selectSquare);
   render();
   wireDetailOverlay();
@@ -246,6 +273,20 @@ async function loadCrops() {
   } catch (err) {
     console.warn("Could not load image-crops.json", err);
     return {};
+  }
+}
+
+// Ranking weights (schema tonight.ranking/1) — hand-tuned overrides for the
+// feed-scoring factors in js/ranking.js. Optional; missing file just means
+// the module's DEFAULT_WEIGHTS apply.
+async function loadRanking() {
+  try {
+    const res = await fetch("data/ranking.json");
+    if (!res.ok) return null;
+    return await res.json();
+  } catch (err) {
+    console.warn("Could not load ranking.json", err);
+    return null;
   }
 }
 
@@ -410,9 +451,12 @@ function openMetro() {
   overlay.hidden = false;
   document.body.style.overflow = "hidden";
   // Origin is your current square, or your Home Square when nothing's selected
-  // ("Near me") — so the map always opens zoomed in around a real place. The
-  // canvas can't measure itself until the panel is on screen, so wait a frame.
-  const origin = activeSquare === "all" ? currentHomeSquare() : activeSquare;
+  // ("Near me") — so the map always opens zoomed in around a real place. An
+  // AREA selection (Seaport) focuses its first member station, since only
+  // stations exist as map nodes. The canvas can't measure itself until the
+  // panel is on screen, so wait a frame.
+  let origin = activeSquare === "all" ? currentHomeSquare() : activeSquare;
+  origin = rankIndex?.areaStations?.[origin]?.[0] || origin;
   requestAnimationFrame(() => MetroMap.show(origin));
 }
 
@@ -465,7 +509,7 @@ const MetroMap = (() => {
 
   const s2w = (sx, sy) => ({ x: (sx - view.x) / view.scale, y: (sy - view.y) / view.scale });
   const w2s = (wx, wy) => ({ x: wx * view.scale + view.x, y: wy * view.scale + view.y });
-  const isFilterable = name => name && eventSquares.has(name);
+  const isFilterable = name => name && placeHasEvents(name);
 
   // ---- graph build: nodes keyed by coordinate, so a shared (c,r) is a junction/transfer
   function buildGraph(d) {
@@ -988,18 +1032,6 @@ function startMs(e) {
   return e.start ? new Date(e.start).getTime() : (e.deal ? Infinity : 0);
 }
 
-// Stable pseudo-random key derived from the event id, so "Near me" can shuffle
-// events without them jumping around on every re-render.
-function randKey(e) {
-  const s = String(e.id ?? "");
-  let h = 2166136261;
-  for (let i = 0; i < s.length; i++) {
-    h ^= s.charCodeAt(i);
-    h = Math.imul(h, 16777619);
-  }
-  return (h >>> 0) / 4294967296;
-}
-
 function render() {
   const list = document.getElementById("event-list");
   const empty = document.getElementById("empty-state");
@@ -1011,35 +1043,28 @@ function render() {
     // feed — they aren't attendable. They still surface in a venue's "More from
     // this venue" list (see renderMoreFrom) so a venue view shows it's booked.
     .filter(e => !e.private)
-    .filter(e => {
-      const squareMatch = activeSquare === "all" || e.square === activeSquare;
-      const categoryMatch = activeCategory === "all" || e.category === activeCategory;
-      return squareMatch && categoryMatch;
-    });
+    .filter(e => activeCategory === "all" || e.category === activeCategory);
 
-  // In "Near me" there is no user location, so walk_minutes (distance from the
-  // event's own station) is not a meaningful order — it just floats whichever
-  // venue happens to sit closest to any station (e.g. The Lilypad, 1 min from
-  // Inman) to the top. Until we have a real location, randomize instead. The
-  // random key is stable per event id so the order doesn't reshuffle on every
-  // re-render.
-  const baseSort = (a, b) =>
-    activeSquare === "all"
-      ? randKey(a) - randKey(b)
-      : startMs(a) - startMs(b);
-  // Personalization (Phase 1): the Home Square is never a filter — the "Near
-  // me" feed shows everything, ranked. Favorites float first, then (on "Near
-  // me" only) events in the user's saved Home Square, then the base order.
-  // First step toward multi-factor ranking (distance, favorites, sponsored);
-  // both keys are no-ops when profiles are disabled. Uses the raw saved value,
-  // not the hardcoded Davis fallback, so profile-less users see today's order.
-  const favOf = e => (window.TonightProfile?.isFavoriteEvent?.(e) ? 0 : 1);
-  const homeSq = activeSquare === "all" ? window.TonightProfile?.homeSquare?.() : null;
-  const homeOf = e => (homeSq && e.square === homeSq ? 0 : 1);
-  const sortFn = (a, b) => (favOf(a) - favOf(b)) || (homeOf(a) - homeOf(b)) || baseSort(a, b);
+  // Geography is a RANK, not a filter: picking a place no longer hides the
+  // rest of the feed — everything tonight stays visible, ordered by transit
+  // distance from the selection (station-hop Dijkstra in js/ranking.js) plus
+  // sponsorship, favorites and a daily-seeded jitter. On "Near me" the saved
+  // Home Square (raw value, not the Davis fallback — profile-less users get
+  // no geography) anchors the same scoring, so "near me" means near home.
+  const selection = activeSquare !== "all"
+    ? activeSquare
+    : (window.TonightProfile?.homeSquare?.() || null);
+  const rankOpts = {
+    index: rankIndex,
+    selection,
+    weights: rankWeights,
+    daySeed: NOW.toDateString(),
+    hooks: { isFavoriteEvent: e => !!window.TonightProfile?.isFavoriteEvent?.(e) },
+    tiebreak: (a, b) => startMs(a) - startMs(b),
+  };
 
-  const active = filtered.filter(e => !hasEnded(e)).sort(sortFn);
-  const ended  = filtered.filter(e =>  hasEnded(e)).sort((a, b) => startMs(a) - startMs(b));
+  const active = TonightRanking.rank(filtered.filter(e => !hasEnded(e)), rankOpts).map(r => r.event);
+  const ended  = filtered.filter(e => hasEnded(e)).sort((a, b) => startMs(a) - startMs(b));
 
   if (active.length === 0 && ended.length === 0) {
     empty.hidden = false;
