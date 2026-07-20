@@ -1,6 +1,6 @@
 {
   "schema": "tonight.frequentbus/1",
-  "generated_at": "2026-07-13T14:37:09.883118+00:00",
+  "generated_at": "2026-07-20T14:08:31.134781+00:00",
   "source": "MBTA V3 API /routes filter[type]=3, description='Frequent Bus'",
   "count": 25,
   "routes": [
@@ -283,24 +283,43 @@
   "changes": {
     "added": [],
     "dropped": [],
-    "endpoint_changed": [
-      {
-        "short_name": "22",
-        "was": "Ashmont Station - Ruggles Station via Talbot Ave",
-        "now": "Ashmont Station - Ruggles Station via Talbot Avenue"
-      },
-      {
-        "short_name": "32",
-        "was": "Wolcott or Cleary Square - Forest Hills Station",
-        "now": "Wolcott Square - Forest Hills Station"
-      }
-    ]
+    "endpoint_changed": []
   },
   "last_change_at": "2026-07-13T14:37:09.883118+00:00",
   "map": {
-    "tracking": false,
-    "drawn": [],
-    "missing_from_map": [],
-    "drawn_not_frequent": []
+    "tracking": true,
+    "drawn": [
+      "Silver"
+    ],
+    "missing_from_map": [
+      "1",
+      "9",
+      "15",
+      "22",
+      "23",
+      "28",
+      "31",
+      "32",
+      "39",
+      "57",
+      "66",
+      "71",
+      "73",
+      "77",
+      "104",
+      "109",
+      "110",
+      "111",
+      "116",
+      "SL1",
+      "SL2",
+      "SL3",
+      "SL4",
+      "SL5",
+      "SLW"
+    ],
+    "drawn_not_frequent": [
+      "Silver"
+    ]
   }
 }
