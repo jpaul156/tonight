@@ -384,8 +384,12 @@ def map_station_names(path):
             for n in br.get("nodes", []):
                 if n.get("name"):
                     names.add(n["name"])
-                if n.get("square"):
-                    names.add(n["square"])
+                # `square` is a neighborhood or a list of them (a station can sit
+                # in several, e.g. North Station in West End + North End).
+                sq = n.get("square")
+                for s in (sq if isinstance(sq, list) else [sq]):
+                    if s:
+                        names.add(s)
     return names
 
 

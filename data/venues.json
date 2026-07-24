@@ -109,7 +109,7 @@
     "logo_url": "assets/venues/orig/vrcc.jpg",
     "logo_thumb_url": null,
     "is_local": true,
-    "notes": "Latino cultural center in East Boston. Festivals, family events, and community celebrations \u2014 some held off-site at partner venues."
+    "notes": "Latino cultural center in East Boston. Festivals, family events, and community celebrations — some held off-site at partner venues."
   },
   "mission": {
     "id": "mission",
@@ -146,12 +146,12 @@
   "arts-armory": {
     "id": "arts-armory",
     "name": "Arts at the Armory",
-    "square": "Davis",
+    "square": "Magoun Square",
     "transit_line": "Green",
-    "transit_stop": "Magoun",
+    "transit_stop": "Magoun Square",
     "walk_minutes": 10,
     "address": "191 Highland Ave, Somerville, MA",
-    "neighborhood": "Davis Square",
+    "neighborhood": "Magoun Square",
     "phone": "(617) 718-2191",
     "website": "https://artsatthearmory.org",
     "notes": "Community arts hall: music, markets, talks, performances.",
@@ -271,6 +271,22 @@
     "logo_url": null,
     "logo_thumb_url": null
   },
+  "west-end-museum": {
+    "id": "west-end-museum",
+    "name": "The West End Museum",
+    "square": "North Station",
+    "transit_line": "Green",
+    "transit_stop": "North Station",
+    "walk_minutes": 4,
+    "address": "150 Staniford St, Boston, MA",
+    "neighborhood": "West End",
+    "phone": "(617) 723-2125",
+    "website": "https://thewestendmuseum.org",
+    "notes": "Neighborhood history museum: walking tours, book talks, film screenings, and community events (many via Eventbrite).",
+    "is_local": true,
+    "logo_url": null,
+    "logo_thumb_url": null
+  },
   "lilypad": {
     "id": "lilypad",
     "name": "The Lilypad",
@@ -346,7 +362,7 @@
     "neighborhood": "Porter Square",
     "phone": null,
     "website": "https://lizardloungeclub.com",
-    "notes": "105-cap basement club, 21+. Wed\u2013Sun: local bands, touring acts, weekly poetry jam.",
+    "notes": "105-cap basement club, 21+. Wed–Sun: local bands, touring acts, weekly poetry jam.",
     "is_local": true,
     "logo_url": null,
     "logo_thumb_url": null
@@ -410,7 +426,7 @@
     "neighborhood": "Medford Square",
     "phone": "(781) 219-3815",
     "website": "https://www.deepcuts.rocks",
-    "notes": "240-cap brewery, eatery, and live music venue in Medford Square. Tue\u2013Sat shows.",
+    "notes": "240-cap brewery, eatery, and live music venue in Medford Square. Tue–Sat shows.",
     "is_local": true,
     "logo_url": null,
     "logo_thumb_url": null
@@ -477,7 +493,7 @@
     "logo_url": null,
     "logo_thumb_url": null,
     "is_local": true,
-    "notes": "Legendary Central Square rock club \u2014 the large basement room. National and local touring acts."
+    "notes": "Legendary Central Square rock club — the large basement room. National and local touring acts."
   },
   "mideast-upstairs": {
     "id": "mideast-upstairs",
@@ -509,7 +525,7 @@
     "logo_url": null,
     "logo_thumb_url": null,
     "is_local": true,
-    "notes": "The Corner (Bakery) stage \u2014 free and low-cover shows, DJs, karaoke, and residencies."
+    "notes": "The Corner (Bakery) stage — free and low-cover shows, DJs, karaoke, and residencies."
   },
   "mideast-zuzu": {
     "id": "mideast-zuzu",

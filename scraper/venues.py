@@ -269,9 +269,13 @@ VENUES = [
         "id": "arts-armory",
         "name": "Arts at the Armory",
         "address": "191 Highland Ave, Somerville, MA",
-        "square": "Davis",
+        # square/transit_stop must both be the exact map-node name so the venue
+        # groups under (and lights) the right station. The node is "Magoun
+        # Square" (not "Magoun"), and the old square "Davis" was plain wrong —
+        # it made the Armory rank onto the Davis page ~2mi away.
+        "square": "Magoun Square",
         "transit_line": "Green",
-        "transit_stop": "Magoun",
+        "transit_stop": "Magoun Square",
         "walk_minutes": 10,
         "is_local": True,
         "collection_url": "https://artsatthearmory.org/upcoming-events/",
@@ -412,6 +416,31 @@ VENUES = [
         # schedule as schema.org Event JSON-LD — parsed directly, no LLM.
         "collection_url": "https://therockwell.org/calendar/",
         "scrape_strategy": "jsonld_events",
+        "detail_pages": False,
+        "url_contains": None,
+        "location_keywords": {},
+        "extra_venues": [],
+    },
+
+    {
+        "id": "west-end-museum",
+        "name": "The West End Museum",
+        "address": "150 Staniford St, Boston, MA",
+        # Station-level: square mirrors the transit_stop node name (North Station
+        # spans West End/North End; "West End" identity lives in venues.json
+        # `neighborhood` until map nodes carry multiple neighborhoods).
+        "square": "North Station",
+        "transit_line": "Green",
+        "transit_stop": "North Station",
+        "walk_minutes": 4,
+        "is_local": True,
+        # WordPress/The Events Calendar site (like The Rockwell): /programs/
+        # server-renders schema.org Event JSON-LD, parsed directly (no LLM). Each
+        # Event's `url` is its Eventbrite permalink → source_url. This install has
+        # TEC's JSON-LD tz bug (jsonld_fix_tz_offset; see _jsonld_walltime_utc).
+        "collection_url": "https://thewestendmuseum.org/programs/",
+        "scrape_strategy": "jsonld_events",
+        "jsonld_fix_tz_offset": True,
         "detail_pages": False,
         "url_contains": None,
         "location_keywords": {},

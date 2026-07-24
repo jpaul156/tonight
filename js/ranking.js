@@ -25,22 +25,36 @@
 // ============================================================
 window.TonightRanking = (() => {
   const DEFAULT_WEIGHTS = {
-    // -- proximity: score = clamp(selected − perStop·hops, floor..selected)
+    // -- proximity = max(hopScore, neighborhoodScore), then a below-0 total is
+    //    hidden from a location-filtered feed (see rank()).
+    //    hopScore          = clamp(selected − perStop·hops, floor..selected)
+    //    neighborhoodScore = neighborhoodBonus[nbhd-graph depth from selection]
     selected: 10,        // at the selected station / any station of the selected area
     perStop: 5,          // penalty per station passed (adjacent = +5, two away = 0, …)
     transferStops: 2,    // extra hops charged per line change (two-seat rides read farther)
-    proximityFloor: -15, // far events stop sinking here, so favorites/Lit can still lift them
-    offMap: 0,           // events whose stop/square isn't on the traced map (e.g. Inman Square)
+    proximityFloor: -10, // far events stop sinking here; favoriteArtist (+10) exactly cancels it
+    offMap: -10,         // events whose stop/square isn't on the traced map (e.g. Inman) — as far as it gets, so they drop out of a filtered feed until a bonus lifts them
+    // Neighborhood proximity: a station can belong to several neighborhoods
+    // (node `square` is a list), so selecting a station also lifts events at
+    // OTHER stations that share a neighborhood with it — indexed by how many
+    // neighborhood-hops away (0 = same station, 1 = shares a neighborhood,
+    // 2 = shares one with a depth-1 station). Depth ≥ length → no bonus.
+    neighborhoodBonus: [10, 5, 2],
     // -- everything else
     sponsored: 8,        // kept BELOW `selected` so a paid post can't outrank the square you chose
     favoriteEvent: 5,
     favoriteVenue: 5,
-    favoriteArtist: 5,
+    favoriteArtist: 10,  // exactly cancels proximityFloor — a favorite artist far away still clears the below-0 cutoff
     litMax: 15,          // scaled by the hook's 0..1 lit level
     jitter: 2,           // daily-seeded shuffle — stable all night, fresh tomorrow, never alphabetical
   };
 
   const keyOf = (c, r) => c + "," + r;
+
+  // Normalize a node's `square` to an array of neighborhood names. Back-compat:
+  // a single string (the old schema) reads as a one-element list, so no data
+  // migration is needed and the editor can rewrite string→list on next export.
+  const squaresOf = (n) => (Array.isArray(n.square) ? n.square : (n.square ? [n.square] : []));
 
   // ---- map index: stations, areas, and a hop-weighted graph -------------
   // Same coordinate-keyed dedupe as the app's MetroMap graph (a shared (c,r)
@@ -49,7 +63,7 @@ window.TonightRanking = (() => {
   function buildIndex(transit) {
     const nodes = new Map();       // key → {c, r, name, station}
     const adj = new Map();         // key → [{to, line}]
-    const areaOfName = {};         // station name → area name (from node `square`)
+    const areaOfName = {};         // station name → [area names] (from node `square`, many-to-many)
     if (!transit || !Array.isArray(transit.lines)) return null;
     transit.lines.forEach(ln => (ln.branches || []).forEach(br => {
       const ns = br.nodes || [];
@@ -59,7 +73,10 @@ window.TonightRanking = (() => {
         if (!nd) { nd = { c: n.c, r: n.r, name: "", station: false }; nodes.set(k, nd); adj.set(k, []); }
         if (n.name) nd.name = n.name;   // branch-start convention: "" never overwrites a real name
         if (n.station) nd.station = true;
-        if (n.name && n.square) areaOfName[n.name] = n.square;
+        if (n.name) {
+          const list = areaOfName[n.name] || (areaOfName[n.name] = []);
+          for (const a of squaresOf(n)) if (a && !list.includes(a)) list.push(a);
+        }
         if (i > 0) {
           const pk = keyOf(ns[i - 1].c, ns[i - 1].r);
           adj.get(pk).push({ to: k, line: ln.line });
@@ -75,14 +92,40 @@ window.TonightRanking = (() => {
     });
     const areas = new Map();       // area name → [keys of member stations]
     const areaStations = {};       // area name → [member station names]
-    for (const [name, area] of Object.entries(areaOfName)) {
+    for (const [name, list] of Object.entries(areaOfName)) {
       const keys = nameToKeys.get(name);
-      if (!keys) continue;
-      if (!areas.has(area)) { areas.set(area, []); areaStations[area] = []; }
-      areas.get(area).push(...keys);
-      areaStations[area].push(name);
+      if (!keys || !list.length) continue;
+      for (const area of list) {
+        if (!areas.has(area)) { areas.set(area, []); areaStations[area] = []; }
+        areas.get(area).push(...keys);
+        areaStations[area].push(name);
+      }
     }
     return { nodes, adj, nameToKeys, areas, areaOf: areaOfName, areaStations };
+  }
+
+  // Neighborhood-graph distance (in neighborhood-hops) from a set of seed
+  // station names: depth 0 = the seeds, depth 1 = any station sharing a
+  // neighborhood with a seed, depth 2 = sharing one with a depth-1 station, …
+  // A station in several neighborhoods bridges between them. Capped at maxDepth.
+  // Returns Map(station name → depth). Parallels distancesFrom (physical hops);
+  // proximity takes the better of the two.
+  function neighborhoodDepths(index, seedNames, maxDepth) {
+    const depth = new Map();
+    let frontier = [];
+    for (const nm of seedNames) if (!depth.has(nm)) { depth.set(nm, 0); frontier.push(nm); }
+    for (let d = 0; d < maxDepth && frontier.length; d++) {
+      const next = [];
+      for (const nm of frontier) {
+        for (const area of (index.areaOf[nm] || [])) {
+          for (const sib of (index.areaStations[area] || [])) {
+            if (!depth.has(sib)) { depth.set(sib, d + 1); next.push(sib); }
+          }
+        }
+      }
+      frontier = next;
+    }
+    return depth;
   }
 
   // A selection name resolves to source node keys: a station name wins (so
@@ -150,6 +193,21 @@ window.TonightRanking = (() => {
     return d;
   }
 
+  // Neighborhood-graph depth of an event from the selection: the min over the
+  // event's own station names (its stop, or its square when that's a station).
+  // Null when the event's station isn't within reach of any seeded neighborhood.
+  function anchorNbhdDepth(ndepth, e) {
+    if (!ndepth) return null;
+    let best = null;
+    for (const nm of [e.transit_stop, e.square]) {
+      if (nm != null && ndepth.has(nm)) {
+        const d = ndepth.get(nm);
+        if (best == null || d < best) best = d;
+      }
+    }
+    return best;
+  }
+
   // FNV-1a → [0,1). Seeded per (day, event id): stable within the night so the
   // list never reshuffles mid-browse, fresh tomorrow, and never alphabetical.
   function hash01(s) {
@@ -162,13 +220,20 @@ window.TonightRanking = (() => {
   }
 
   function scoreEvent(e, ctx) {
-    const { W, index, dmap, selection, hooks, daySeed } = ctx;
+    const { W, index, dmap, ndepth, selection, hooks, daySeed } = ctx;
     const parts = {};
     if (selection) {
       const d = index && dmap ? anchorDist(index, dmap, e) : null;
       let prox = d == null
         ? W.offMap
         : Math.max(W.proximityFloor, W.selected - W.perStop * d);
+      // Neighborhood proximity runs in parallel with physical hops and the best
+      // wins: a station sharing a neighborhood with the selection is "near" even
+      // when it's far by transit (Boylston is near-Chinatown by Theater
+      // District, several hops + a transfer by rail). Redundant at depth 0.
+      const nb = W.neighborhoodBonus || [];
+      const nd = anchorNbhdDepth(ndepth, e);
+      if (nd != null && nd < nb.length) prox = Math.max(prox, nb[nd]);
       // Exact string match always earns the full bonus — covers off-map
       // selections (no Dijkstra sources) and any map/data name drift.
       if (e.square === selection || e.transit_stop === selection) prox = Math.max(prox, W.selected);
@@ -202,12 +267,21 @@ window.TonightRanking = (() => {
     const selection = opts.selection || null;
     const sources = selection && index ? resolveSources(index, selection) : null;
     const dmap = sources ? distancesFrom(index, sources, W.transferStops) : null;
-    const ctx = { W, index, dmap, selection, hooks: opts.hooks, daySeed: opts.daySeed || "" };
+    // Neighborhood-hop depths from the selection's station(s): the selected stop
+    // itself, or every member station when an area is selected.
+    let ndepth = null;
+    if (sources && index) {
+      const seedNames = index.nameToKeys.has(selection)
+        ? [selection]
+        : (index.areaStations[selection] || []);
+      ndepth = neighborhoodDepths(index, seedNames, (W.neighborhoodBonus || []).length - 1);
+    }
+    const ctx = { W, index, dmap, ndepth, selection, hooks: opts.hooks, daySeed: opts.daySeed || "" };
     const scored = events.map(e => ({ event: e, ...scoreEvent(e, ctx) }));
     const tb = opts.tiebreak || (() => 0);
     scored.sort((a, b) => (b.total - a.total) || tb(a.event, b.event));
     return scored;
   }
 
-  return { DEFAULT_WEIGHTS, buildIndex, resolveSources, distancesFrom, anchorKeys, rank };
+  return { DEFAULT_WEIGHTS, buildIndex, resolveSources, distancesFrom, neighborhoodDepths, anchorKeys, rank };
 })();

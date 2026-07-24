@@ -42,6 +42,37 @@ def test_jsonld_dedups_repeated_event():
     assert len(sc.extract_jsonld_events(html, "https://x.org")) == 1
 
 
+def test_jsonld_fix_tz_offset_recovers_local_walltime():
+    # The West End Museum's The Events Calendar install stamps local wall-clock
+    # digits with an offset such that the true local time is the instant's UTC
+    # wall clock: '07:00-04:00' is really 11:00 AM, '14:00-04:00' is 6:00 PM.
+    html = """
+    <script type="application/ld+json">
+    {"@type":"Event","name":"Walking Tour",
+     "startDate":"2026-07-23T07:00:00-04:00","endDate":"2026-07-23T08:30:00-04:00",
+     "url":"https://www.eventbrite.com/e/abc"}
+    </script>
+    """
+    # default (Rockwell): trust the digits verbatim
+    assert sc.extract_jsonld_events(html, "https://x.org")[0]["start"] == "2026-07-23T07:00"
+    # corrected (WEM): shift to the true local time
+    fixed = sc.extract_jsonld_events(html, "https://x.org", fix_tz_offset=True)[0]
+    assert fixed["start"] == "2026-07-23T11:00"
+    assert fixed["end"] == "2026-07-23T12:30"
+
+
+def test_jsonld_fix_tz_offset_est_and_midnight_rollover():
+    # DST-safe: an EST (-05:00) label shifts by 5h, and a late event can roll
+    # to the next calendar day without string surgery.
+    html = """
+    <script type="application/ld+json">
+    {"@type":"Event","name":"Late Talk",
+     "startDate":"2026-01-15T20:00:00-05:00","url":"u"}
+    </script>
+    """
+    assert sc.extract_jsonld_events(html, "https://x.org", fix_tz_offset=True)[0]["start"] == "2026-01-16T01:00"
+
+
 def test_squarespace_events_basic():
     # startDate is epoch-ms UTC; 2026-06-15T00:00Z -> 2026-06-14T20:00 EDT.
     doc = {"upcoming": [{

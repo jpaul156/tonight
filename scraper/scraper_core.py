@@ -1002,7 +1002,28 @@ def _jsonld_price(offers):
     return price if price.startswith("$") else f"${price}"
 
 
-def extract_jsonld_events(html, base_url):
+def _jsonld_walltime_utc(iso):
+    """
+    Correct The Events Calendar's JSON-LD timezone bug (seen on the West End
+    Museum install): the plugin emits the event's *local* wall-clock digits but
+    stamps them with the site offset such that the true local time is the
+    instant's UTC wall clock (e.g. '2026-07-23T07:00:00-04:00' is really 11:00
+    AM local). Parsing as an aware datetime and reading it in UTC recovers the
+    real local time and is DST-safe (works for the -05:00 EST label too).
+    Returns 'YYYY-MM-DDTHH:MM' or None.
+    """
+    if not iso:
+        return None
+    try:
+        dt = datetime.fromisoformat(iso)
+    except ValueError:
+        return iso[:16] or None
+    if dt.tzinfo is None:          # no offset to correct — leave as written
+        return iso[:16] or None
+    return dt.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M")
+
+
+def extract_jsonld_events(html, base_url, fix_tz_offset=False):
     """
     Generic schema.org Event extractor for pages that server-render their
     schedule as JSON-LD (e.g. The Rockwell, a WordPress/The Events Calendar
@@ -1013,6 +1034,10 @@ def extract_jsonld_events(html, base_url):
     Parse the JSON without pre-unescaping: the blocks are valid JSON whose
     string values may legitimately contain &lt;/&gt;; we unescape per field
     afterward (title) or strip with BeautifulSoup (description).
+
+    fix_tz_offset: set for installs whose JSON-LD carries the timezone bug
+    described in _jsonld_walltime_utc (West End Museum). Off by default so
+    correct feeds like The Rockwell are untouched.
     """
     soup = BeautifulSoup(html, "html.parser")
     raw = []
@@ -1033,7 +1058,12 @@ def extract_jsonld_events(html, base_url):
     events = []
     seen = set()
     for e in raw:
-        start = (e.get("startDate") or "")[:16]
+        if fix_tz_offset:
+            start = _jsonld_walltime_utc(e.get("startDate")) or ""
+            end_str = _jsonld_walltime_utc(e.get("endDate"))
+        else:
+            start = (e.get("startDate") or "")[:16]
+            end_str = (e.get("endDate") or "")[:16] or None
         if len(start) < 16:
             continue
         title = html_unescape(e.get("name") or "").strip() or None
@@ -1052,7 +1082,7 @@ def extract_jsonld_events(html, base_url):
         events.append({
             "title":       title,
             "start":       start,
-            "end":         (e.get("endDate") or "")[:16] or None,
+            "end":         end_str,
             "location":    None,
             "cost":        _jsonld_price(e.get("offers")),
             "source_url":  e.get("url"),
@@ -2170,7 +2200,10 @@ def scrape_venue(venue_cfg, cache, verbose=True, force=False, report=None):
             print(f"  Pass 1: {len(raw_events)} events (parsed directly, no LLM)")
     elif strategy == "jsonld_events":
         # Generic schema.org Event JSON-LD parse — no LLM
-        raw_events = extract_jsonld_events(html, base_url)
+        raw_events = extract_jsonld_events(
+            html, base_url,
+            fix_tz_offset=venue_cfg.get("jsonld_fix_tz_offset", False),
+        )
         if verbose:
             print(f"  Pass 1: {len(raw_events)} events (parsed directly, no LLM)")
     elif strategy == "aeronaut_events":

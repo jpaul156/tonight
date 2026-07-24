@@ -718,13 +718,22 @@ function selectStationForLabel(ref){
   refreshLines(); refreshBranches(); syncNameInputs(); draw();
   const nm = document.getElementById("nodeName"); nm.focus(); nm.select();
 }
+// A station can sit in several neighborhoods (North Station in West End +
+// North End), so `square` is a neighborhood name OR a list of them. The input
+// is comma-separated; we store a bare string for one, an array for several,
+// and nothing for none (keeps single-neighborhood diffs clean).
+function squareToInput(sq){ return Array.isArray(sq) ? sq.join(", ") : (sq||""); }
+function inputToSquare(str){
+  const list = (str||"").split(",").map(s=>s.trim()).filter(Boolean);
+  return list.length === 0 ? undefined : (list.length === 1 ? list[0] : list);
+}
 function syncNameInputs(){
   const n = curNode();
   const nm = document.getElementById("nodeName"), sq = document.getElementById("nodeSquare");
   const ok = !!(n && n.station);
   nm.disabled = sq.disabled = !ok;
   nm.value = ok ? (n.name||"") : "";
-  sq.value = ok ? (n.square||"") : "";
+  sq.value = ok ? squareToInput(n.square) : "";
   updateNameProgress();
 }
 function updateNameProgress(){
@@ -764,7 +773,7 @@ function acShow(matches){
   matches.forEach((s,i)=>{
     const d = document.createElement("div");
     d.className = "ac-item";
-    d.textContent = s.name + (s.square ? ` — ${s.square}` : "");
+    d.textContent = s.name + (s.square ? ` — ${squareToInput(s.square)}` : "");
     d.addEventListener("mousedown", ev=>{ ev.preventDefault(); acPick(s); });
     acDrop.appendChild(d);
   });
@@ -773,7 +782,7 @@ function acShow(matches){
 function acPick(s){
   const inp = document.getElementById("nodeName");
   inp.value = s.name;
-  const n = curNode(); if(n){ n.name = s.name; if(s.square && !n.square) n.square = s.square; document.getElementById("nodeSquare").value = n.square||""; updateNameProgress(); draw(); }
+  const n = curNode(); if(n){ n.name = s.name; if(s.square && !n.square) n.square = s.square; document.getElementById("nodeSquare").value = squareToInput(n.square); updateNameProgress(); draw(); }
   acDrop.style.display = "none";
   gotoNextUnnamed();
 }
@@ -796,7 +805,7 @@ document.getElementById("nodeName").addEventListener("keydown", e=>{
   if(e.key==="Enter"){ e.preventDefault(); acHide(); gotoNextUnnamed(); }
 });
 document.getElementById("nodeName").addEventListener("blur", ()=>{ setTimeout(acHide,120); });
-document.getElementById("nodeSquare").addEventListener("input", e=>{ const n=curNode(); if(n){ n.square=e.target.value; } });
+document.getElementById("nodeSquare").addEventListener("input", e=>{ const n=curNode(); if(n){ const v=inputToSquare(e.target.value); if(v===undefined) delete n.square; else n.square=v; } });
 document.getElementById("prevNode").onclick = ()=>gotoStation(-1);
 document.getElementById("nextNode").onclick = ()=>gotoStation(1);
 document.getElementById("nextUnnamed").onclick = gotoNextUnnamed;

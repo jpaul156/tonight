@@ -4,12 +4,13 @@
     "selected": 10,
     "perStop": 5,
     "transferStops": 2,
-    "proximityFloor": -15,
-    "offMap": 0,
+    "proximityFloor": -10,
+    "offMap": -10,
+    "neighborhoodBonus": [10, 5, 2],
     "sponsored": 8,
     "favoriteEvent": 5,
     "favoriteVenue": 5,
-    "favoriteArtist": 5,
+    "favoriteArtist": 10,
     "litMax": 15,
     "jitter": 2
   }

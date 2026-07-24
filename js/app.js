@@ -114,8 +114,8 @@ let rankIndex = null;
 // since selecting any of them yields a meaningful nearby feed).
 function placeHasEvents(name) {
   if (eventPlaces.has(name)) return true;
-  const area = rankIndex?.areaOf?.[name];
-  return !!(area && eventPlaces.has(area));
+  const areas = rankIndex?.areaOf?.[name];   // a station can belong to several neighborhoods
+  return !!(areas && areas.some(a => eventPlaces.has(a)));
 }
 
 const CATEGORIES = ["music", "trivia", "comedy", "film", "market", "karaoke", "community", "sports", "fitness", "food"];
@@ -1063,7 +1063,14 @@ function render() {
     tiebreak: (a, b) => startMs(a) - startMs(b),
   };
 
-  const active = TonightRanking.rank(filtered.filter(e => !hasEnded(e)), rankOpts).map(r => r.event);
+  // When a place is actively selected, geography becomes a filter as well as a
+  // rank: events scoring below 0 (too far by transit AND unrelated by
+  // neighborhood, with no favorite/sponsor/lit boost to rescue them) drop out.
+  // Off-map venues fall out here until the bus network reaches them or a bonus
+  // lifts them. On "Near me" (no explicit selection) nothing is hidden.
+  let scored = TonightRanking.rank(filtered.filter(e => !hasEnded(e)), rankOpts);
+  if (activeSquare !== "all") scored = scored.filter(r => r.total >= 0);
+  const active = scored.map(r => r.event);
   const ended  = filtered.filter(e => hasEnded(e)).sort((a, b) => startMs(a) - startMs(b));
 
   if (active.length === 0 && ended.length === 0) {
