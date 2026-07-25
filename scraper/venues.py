@@ -448,6 +448,34 @@ VENUES = [
     },
 
     {
+        "id": "museum-of-science",
+        "name": "Museum of Science",
+        "address": "1 Science Park, Boston, MA",
+        "square": "Science Park/West End",
+        "transit_line": "Green",
+        "transit_stop": "Science Park/West End",
+        "walk_minutes": 2,
+        "is_local": False,
+        # SubSpace is MoS's adult-nightlife series (music/talks/drag/film in the
+        # Planetarium and galleries) — the only MoS calendar we scrape; general
+        # daytime museum admission isn't a "tonight" event. /events/subspace
+        # renders its grid client-side from a Drupal event-listing block; point
+        # collection_url at that block's own JSON API directly (found via the
+        # page's data-api-url attribute) rather than the JS shell. Each result
+        # is an HTML snippet (title, permalink, date/time, image, teaser),
+        # parsed directly — no LLM. detail_pages fetches each /events/<slug>
+        # page for a fuller description, cost, and ticket link (generic Pass 2).
+        # Requires a browser User-Agent (default fetch_page one works) — a bare
+        # request gets a Cloudflare 403.
+        "collection_url": "https://www.mos.org/api/v1/event-listing/event_detail/96/all/all/516/all?items_per_page=18&sort_by=date_asc",
+        "scrape_strategy": "mos_subspace_events",
+        "detail_pages": True,
+        "url_contains": "/events/",
+        "location_keywords": {},
+        "extra_venues": [],
+    },
+
+    {
         "id": "lilypad",
         "name": "The Lilypad",
         "address": "1353 Cambridge St, Cambridge, MA",

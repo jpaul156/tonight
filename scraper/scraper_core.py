@@ -11,6 +11,7 @@ from bs4 import BeautifulSoup
 import anthropic
 from datetime import datetime, timezone, timedelta
 from html import unescape as html_unescape
+from urllib.parse import urljoin
 
 # Lazy client so importing this module (e.g. from the test suite) doesn't
 # require ANTHROPIC_API_KEY — it's only needed when an LLM pass actually runs.
@@ -1239,6 +1240,96 @@ def extract_aeronaut_events(text, base_url):
     return events
 
 
+def extract_mos_subspace_events(text, base_url):
+    """
+    Museum of Science's SubSpace adult-nightlife series (/events/subspace) renders
+    its calendar client-side from a Drupal event-listing block. Point
+    collection_url at the block's own JSON API (see the venue's collection_url
+    comment in venues.py) and we parse the HTML snippet in each `results[]`
+    entry's `event_listing` field directly — no LLM for extraction. Each event
+    still gets its own /events/<slug> detail page (detail_pages: True) for a
+    fuller description, cost, and ticket link via the generic Pass 2 LLM
+    extractor — the listing summary here is a truncated teaser.
+
+    No year is given in the "Friday, July 24 | 7:00pm" date string, so we infer
+    it the same way parse_sally_datetime does: roll forward a year if the date
+    would otherwise land more than 60 days in the past (SubSpace only lists
+    near-term events, so this never misfires). A listing sometimes gives two
+    times ("Doors at 6:30 pm, Show at 7:00 pm") — we take the first, matching
+    the convention in parse_aeg_datetime.
+    """
+    try:
+        data = json.loads(text)
+    except ValueError:
+        print("  WARNING: MoS SubSpace API response did not parse as JSON")
+        return []
+
+    date_re = re.compile(r"[A-Za-z]+,\s*([A-Za-z]+)\s+(\d{1,2})\s*\|\s*(.+)")
+    time_re = re.compile(r"(\d{1,2}):(\d{2})\s*([APap])\.?\s*[Mm]\.?")
+
+    events = []
+    for item in data.get("results", []):
+        card = BeautifulSoup(item.get("event_listing") or "", "html.parser")
+
+        title_el = card.select_one(".listing-item__title a")
+        date_el = card.select_one(".listing-item__date .field__item")
+        if not (title_el and date_el):
+            continue
+
+        title = html_unescape(title_el.get_text(strip=True))
+        href = (title_el.get("href") or "").strip()
+        source_url = urljoin(base_url, href) if href else None
+
+        dm = date_re.match(date_el.get_text(strip=True))
+        if not dm:
+            continue
+        month_str, day_str, time_part = dm.groups()
+        tm = time_re.search(time_part)
+        if not tm:
+            continue
+        try:
+            mon = datetime.strptime(month_str[:3].title(), "%b").month
+        except ValueError:
+            continue
+        hour, minute = int(tm.group(1)), int(tm.group(2))
+        if tm.group(3).lower() == "p" and hour != 12:
+            hour += 12
+        elif tm.group(3).lower() == "a" and hour == 12:
+            hour = 0
+
+        now = datetime.now(timezone.utc)
+        try:
+            dt = datetime(now.year, mon, int(day_str), hour, minute)
+        except ValueError:
+            continue
+        if dt.replace(tzinfo=timezone.utc) < now - timedelta(days=60):
+            dt = dt.replace(year=now.year + 1)
+
+        img_el = card.select_one("img")
+        image_url = urljoin(base_url, img_el["src"].strip()) if img_el and img_el.get("src") else None
+
+        summary_el = card.select_one(".listing-item__summary")
+        summary = html_unescape(summary_el.get_text(strip=True)) if summary_el else None
+
+        events.append({
+            "title":       title or None,
+            "start":       dt.strftime("%Y-%m-%dT%H:%M:00"),
+            "end":         None,
+            "location":    None,
+            "cost":        None,
+            "source_url":  source_url,
+            "performer":   None,
+            "description": summary or None,
+            "image_url":   image_url,
+            "ticket_url":  None,
+            "is_recurring": False,
+            "recurrence_note": None,
+        })
+
+    print(f"  Parsed {len(events)} events from MoS SubSpace event-listing API (no LLM needed)")
+    return events
+
+
 # DICE tags its events with a type ("music:dj", "comedy:standup"). Map the tag
 # prefix to our taxonomy so a DICE-fed venue skips the LLM classifier entirely
 # (same free-category pattern as Aeronaut). Deep Cuts is a music room, so an
@@ -2209,6 +2300,12 @@ def scrape_venue(venue_cfg, cache, verbose=True, force=False, report=None):
     elif strategy == "aeronaut_events":
         # Direct parse of Aeronaut's CDN JSON feed — no LLM, native categories
         raw_events = extract_aeronaut_events(html, base_url)
+        if verbose:
+            print(f"  Pass 1: {len(raw_events)} events (parsed directly, no LLM)")
+    elif strategy == "mos_subspace_events":
+        # Direct parse of the Museum of Science's SubSpace event-listing API —
+        # no LLM for extraction (Pass 2 still runs per-event detail pages).
+        raw_events = extract_mos_subspace_events(html, base_url)
         if verbose:
             print(f"  Pass 1: {len(raw_events)} events (parsed directly, no LLM)")
     elif strategy == "dice_events":

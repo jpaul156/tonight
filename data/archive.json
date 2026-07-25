@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-25T11:20:15.682503+00:00",
+  "generated_at": "2026-07-25T18:29:03.561992+00:00",
   "events": [
     {
       "id": "village-social-20220305T2000",
@@ -10275,7 +10275,7 @@
       "recurrence_note": null,
       "private": false,
       "source_url": "https://www.eventbrite.com/e/boston-trivia-night-tickets-1982697200700?aff=WEMsite",
-      "last_scraped": "2026-07-25T11:19:07.354376+00:00"
+      "last_scraped": "2026-07-25T18:28:35.090046+00:00"
     },
     {
       "id": "village-social-20260326T1900",
@@ -10415,7 +10415,7 @@
       "recurrence_note": null,
       "private": false,
       "source_url": "https://www.eventbrite.com/e/spring-social-craft-circle-tickets-1984914504716?aff=WEMsite",
-      "last_scraped": "2026-07-25T11:19:07.354359+00:00"
+      "last_scraped": "2026-07-25T18:28:35.090025+00:00"
     },
     {
       "id": "village-social-20260409T1900",
@@ -10458,7 +10458,7 @@
       "address": null,
       "start": "2026-04-11T11:00",
       "end": "2026-04-11T12:30",
-      "category": "other",
+      "category": "community",
       "cost": "$10",
       "performer": null,
       "performer_is_local": null,
@@ -10471,7 +10471,7 @@
       "recurrence_note": null,
       "private": false,
       "source_url": "https://www.eventbrite.com/e/bulfinch-triangle-walking-tour-tickets-1982700132469?aff=WEMsite",
-      "last_scraped": "2026-07-25T11:19:07.354343+00:00"
+      "last_scraped": "2026-07-25T18:28:35.090002+00:00"
     },
     {
       "id": "village-social-20260411T2000",
@@ -10514,7 +10514,7 @@
       "address": null,
       "start": "2026-04-15T18:00",
       "end": "2026-04-15T19:00",
-      "category": "other",
+      "category": "community",
       "cost": "Free",
       "performer": null,
       "performer_is_local": null,
@@ -10527,7 +10527,7 @@
       "recurrence_note": null,
       "private": false,
       "source_url": "https://www.eventbrite.com/e/shining-a-spotlight-on-the-big-dig-tickets-1983981615419?aff=WEMsite",
-      "last_scraped": "2026-07-25T11:19:07.354323+00:00"
+      "last_scraped": "2026-07-25T18:28:35.089975+00:00"
     },
     {
       "id": "village-social-20260416T1900",
@@ -10583,7 +10583,7 @@
       "recurrence_note": null,
       "private": false,
       "source_url": "https://www.eventbrite.com/e/thoreau-path-arbor-day-clean-up-tickets-1983977361696?aff=WEMsite",
-      "last_scraped": "2026-07-25T11:19:07.354306+00:00"
+      "last_scraped": "2026-07-25T18:28:35.089954+00:00"
     },
     {
       "id": "village-social-20260418T2000",
@@ -10639,7 +10639,7 @@
       "recurrence_note": null,
       "private": false,
       "source_url": "https://www.eventbrite.com/e/big-screen-boston-film-clip-show-and-book-talk-tickets-1983975810055?aff=WEMsite",
-      "last_scraped": "2026-07-25T11:19:07.354298+00:00"
+      "last_scraped": "2026-07-25T18:28:35.089941+00:00"
     },
     {
       "id": "village-social-20260423T1900",
@@ -10807,7 +10807,7 @@
       "recurrence_note": null,
       "private": false,
       "source_url": "https://www.eventbrite.com/e/harry-bucky-lew-an-early-black-history-of-basketball-tickets-1985536908342?aff=WEMsite",
-      "last_scraped": "2026-07-25T11:19:07.354281+00:00"
+      "last_scraped": "2026-07-25T18:28:35.089918+00:00"
     },
     {
       "id": "village-social-20260502T2000",
@@ -10850,7 +10850,7 @@
       "address": null,
       "start": "2026-05-03T03:00",
       "end": "2026-05-03T18:00",
-      "category": "other",
+      "category": "community",
       "cost": "Free",
       "performer": null,
       "performer_is_local": null,
@@ -10863,7 +10863,7 @@
       "recurrence_note": null,
       "private": false,
       "source_url": "https://www.eventbrite.com/e/developers-in-dialogue-tickets-1985941996973?aff=WEMsite",
-      "last_scraped": "2026-07-25T11:19:07.354260+00:00"
+      "last_scraped": "2026-07-25T18:28:35.089884+00:00"
     },
     {
       "id": "west-end-museum-a331b6c456",
@@ -10891,7 +10891,7 @@
       "recurrence_note": null,
       "private": false,
       "source_url": "https://www.eventbrite.com/e/immigration-community-and-identity-a-conversation-with-shubha-sunder-tickets-1985948600725?aff=WEMsite",
-      "last_scraped": "2026-07-25T11:19:07.354252+00:00"
+      "last_scraped": "2026-07-25T18:28:35.089871+00:00"
     },
     {
       "id": "village-social-20260507T1900",
@@ -10975,7 +10975,7 @@
       "recurrence_note": null,
       "private": false,
       "source_url": "https://www.eventbrite.com/e/the-body-revealed-the-spirit-unbound-tickets-1986078817206?aff=WEMsite",
-      "last_scraped": "2026-07-25T11:19:07.354229+00:00"
+      "last_scraped": "2026-07-25T18:28:35.089845+00:00"
     },
     {
       "id": "village-social-20260514T1900",
@@ -11018,7 +11018,7 @@
       "address": null,
       "start": "2026-05-16T11:00",
       "end": "2026-05-16T12:30",
-      "category": "other",
+      "category": "community",
       "cost": "Free",
       "performer": null,
       "performer_is_local": null,
@@ -11031,7 +11031,7 @@
       "recurrence_note": null,
       "private": false,
       "source_url": "https://www.eventbrite.com/e/remnants-of-urban-renewal-walking-tour-tickets-1985533899342?aff=WEMsite",
-      "last_scraped": "2026-07-25T11:19:07.354209+00:00"
+      "last_scraped": "2026-07-25T18:28:35.089818+00:00"
     },
     {
       "id": "village-social-20260516T2000",
@@ -11087,7 +11087,7 @@
       "recurrence_note": null,
       "private": false,
       "source_url": "https://www.eventbrite.com/e/boston-trivia-night-tickets-1985529612520?aff=WEMsite",
-      "last_scraped": "2026-07-25T11:19:07.354189+00:00"
+      "last_scraped": "2026-07-25T18:28:35.089792+00:00"
     },
     {
       "id": "village-social-20260521T1900",
@@ -11364,7 +11364,7 @@
       "recurrence_note": null,
       "private": false,
       "source_url": "https://www.eventbrite.com/e/wild-times-in-the-west-end-exhibit-opening-and-talk-tickets-1987071662834?aff=WEMsite",
-      "last_scraped": "2026-07-25T11:19:07.354170+00:00"
+      "last_scraped": "2026-07-25T18:28:35.089768+00:00"
     },
     {
       "id": "lizard-lounge-20260603-wailer-wednesdays-with-the-dup",
@@ -11419,7 +11419,7 @@
       "recurrence_note": null,
       "private": false,
       "source_url": "https://www.eventbrite.com/e/rebuilding-shattered-worlds-book-talk-and-panel-tickets-1986812983116?aff=WEMsite",
-      "last_scraped": "2026-07-25T11:19:07.354152+00:00"
+      "last_scraped": "2026-07-25T18:28:35.089743+00:00"
     },
     {
       "id": "village-social-20260604T1900",
@@ -11956,7 +11956,7 @@
       "recurrence_note": null,
       "private": false,
       "source_url": "https://www.eventbrite.com/e/dont-talk-about-joe-mac-with-author-springs-toledo-tickets-1986807129608?aff=WEMsite",
-      "last_scraped": "2026-07-25T11:19:07.354128+00:00"
+      "last_scraped": "2026-07-25T18:28:35.089688+00:00"
     },
     {
       "id": "plough-stars-20260611-book-event--chris-ballard",
@@ -13411,7 +13411,7 @@
       "recurrence_note": null,
       "private": false,
       "source_url": "https://www.eventbrite.com/e/queer-history-west-end-exhibit-opening-tickets-1987073993806?aff=WEMsite",
-      "last_scraped": "2026-07-25T11:19:07.354108+00:00"
+      "last_scraped": "2026-07-25T18:28:35.089657+00:00"
     },
     {
       "id": "lamplighter-broadway-20260617-queer-knitting-group",
@@ -14033,7 +14033,7 @@
       "recurrence_note": null,
       "private": false,
       "source_url": "https://www.eventbrite.com/e/scotland-versus-morocco-watch-party-tickets-1986807911948?aff=WEMsite",
-      "last_scraped": "2026-07-25T11:19:07.354079+00:00"
+      "last_scraped": "2026-07-25T18:28:35.089647+00:00"
     },
     {
       "id": "tallship-20260619-live-music--dj-spiezio",
@@ -14318,7 +14318,7 @@
       "address": null,
       "start": "2026-06-20T11:00",
       "end": "2026-06-20T12:30",
-      "category": "other",
+      "category": "community",
       "cost": "$10",
       "performer": null,
       "performer_is_local": null,
@@ -14331,7 +14331,7 @@
       "recurrence_note": null,
       "private": false,
       "source_url": "https://www.eventbrite.com/e/1988002820953?aff=oddtdtcreator",
-      "last_scraped": "2026-07-25T11:19:07.354061+00:00"
+      "last_scraped": "2026-07-25T18:28:35.089617+00:00"
     },
     {
       "id": "burren-20260620-school-of-rock-burlington---ro",
@@ -16342,7 +16342,7 @@
       "recurrence_note": null,
       "private": false,
       "source_url": "https://www.eventbrite.com/e/queer-history-west-end-pride-party-tickets-1988024928076?aff=WEMsite",
-      "last_scraped": "2026-07-25T11:19:07.354042+00:00"
+      "last_scraped": "2026-07-25T18:28:35.089585+00:00"
     },
     {
       "id": "aeronaut-20260626-soccer--uruguay-vs-spain",
@@ -24583,7 +24583,7 @@
       "recurrence_note": null,
       "private": false,
       "source_url": "https://www.eventbrite.com/e/lost-found-historic-boston-in-postcards-book-talk-with-kathy-alpert-tickets-1989609035183?aff=WEMsite",
-      "last_scraped": "2026-07-25T11:19:07.354024+00:00"
+      "last_scraped": "2026-07-25T18:28:35.089452+00:00"
     },
     {
       "id": "aeronaut-eaf6015bde",
@@ -25171,7 +25171,7 @@
       "recurrence_note": null,
       "private": false,
       "source_url": "https://www.eventbrite.com/e/quarter-final-match-watch-party-tickets-1991582826847?aff=WEMsite",
-      "last_scraped": "2026-07-25T11:19:07.354003+00:00"
+      "last_scraped": "2026-07-25T18:28:35.089426+00:00"
     },
     {
       "id": "arts-armory-6919bba447",
@@ -26429,7 +26429,7 @@
       "recurrence_note": null,
       "private": false,
       "source_url": "https://www.eventbrite.com/e/boston-and-the-declaration-of-independence-1776-film-screening-and-lecture-tickets-1989605214756?aff=WEMsite",
-      "last_scraped": "2026-07-25T11:19:07.353986+00:00"
+      "last_scraped": "2026-07-25T18:28:35.089400+00:00"
     },
     {
       "id": "rockwell-13849050ea",
@@ -32898,6 +32898,258 @@
       "private": false,
       "source_url": "https://www.mccarthystoad.com/music/friday-cover-band-xp59l-74lac-a6nry-r366m-3acwx-sj4n3-9ts9j-62hm5-wsas8-yxw7g-gj24w-gsgkl-t3a48-g8x6c-p2gta-4yccj-dglp3-5m9fb-m28la-9a4nr-gm8wx",
       "last_scraped": "2026-07-17T11:27:33.231320+00:00"
+    },
+    {
+      "id": "lamplighter-broadway-c613183454",
+      "title": "Pepita Lo-Fi Saturday",
+      "venue_id": "lamplighter-broadway",
+      "venue": "Lamplighter Brewing - Broadway",
+      "venue_is_local": true,
+      "square": "Central",
+      "transit_line": "Red",
+      "transit_stop": "Central",
+      "walk_minutes": 8,
+      "address": null,
+      "start": "2026-07-18T08:00:00",
+      "end": "2026-07-18T13:00:00",
+      "category": "music",
+      "cost": "Free",
+      "performer": "Pepita",
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "A weekly peaceful, unplugged experience featuring chill ambient music in a designated quiet zone at Lamplighter Brewing's back taproom, perfect for reading, working, or studying with minimal conversation.",
+      "image_url": "https://lamplighterbrewing.com/cdn/shop/files/PepitaLoFiWeekends.png?v=1730660984",
+      "ticket_url": null,
+      "is_recurring": true,
+      "recurrence_note": "Weekly Saturday events",
+      "private": false,
+      "source_url": "https://lamplighterbrewing.com/products/pepita-lo-fi-saturday",
+      "last_scraped": "2026-07-18T11:10:17.318717+00:00"
+    },
+    {
+      "id": "tallship-8c32e40c0c",
+      "title": "B/SPOKE Fitness Takeover",
+      "venue_id": "tallship",
+      "venue": "The Tall Ship Boston",
+      "venue_is_local": true,
+      "square": "Maverick",
+      "transit_line": "Blue",
+      "transit_stop": "Maverick",
+      "walk_minutes": 7,
+      "address": null,
+      "start": "2026-07-18T10:00:00",
+      "end": "2026-07-18T13:00:00",
+      "category": "fitness",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": null,
+      "image_url": "https://static.wixstatic.com/media/081a16_88cd121fb7ac4019b05f1719bfa61e7b~mv2.png",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "private": false,
+      "source_url": "https://www.tallshipboston.com/event-details/b-spoke-fitness-takeover-2026-07-18-10-00",
+      "last_scraped": "2026-07-18T11:10:44.873408+00:00"
+    },
+    {
+      "id": "lilypad-bcf9a20e39",
+      "title": "Hatha Yoga w/ Live Music",
+      "venue_id": "lilypad",
+      "venue": "The Lilypad",
+      "venue_is_local": true,
+      "square": "Inman Square",
+      "transit_line": "Bus",
+      "transit_stop": "Inman Square",
+      "walk_minutes": 1,
+      "address": null,
+      "start": "2026-07-18T12:00",
+      "end": "2026-07-18T13:45",
+      "category": "fitness",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "$20-$25 at the door / $15 students & seniors / 12pm start / Level 1 Experience the magic of a moving meditation with Integral Yoga instructor Vienna-Parashakti. This 90-minute class is appropriate for all students, from beginners to advanced yogis. Dress comfortably, and bring a cozy blanket if you\u2019d like. \n \n \n \n \n    Reserve your spot\n   \n \n \n \n \n \n (cash or venmo accepted at the door) \n \n \n \n \n \n \n \n \n \n \n \n \n \n Prepare to relax and rejuvenate your body, mind, and spirit in this peaceful yoga class. Explore the guided practice of Hatha Yoga and experience a series of classical Yoga asanas (physical postures), pranayama (breath control), Yoga Nidra (deep relaxation) and meditation.  \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n \n Parashakti  (Vienna) is an Integral Yoga instructor and a new-ish resident to Cambridge from two and a half years studying and teaching at  Satchidananda Ashram  in Yogaville, Virginia.  She is currently teaching weekly Hatha Yoga classes at the Lilypad and other places around Cambridge. \n \n \n \n \n \n Musical accompaniment on the Grand Piano provided by Jesse Gallagher, along with selections from his meditation album \"The Inner Sound.\" \n \n \n \n \n \n \n \n \n \n \n \n \n \u201c It was such a delight to attend your class.  My nervous system has been a wreck and it was wonderful to be in a place that felt safe for my body.  I haven\u2019t moved my \u201cyogi\u201d body in years and it felt so good to wake up the cobwebs. Thank you for providing such a beautiful space for me in a day that I really needed it. \u201d \n \n \u2014 Maria \n \n \n \n \n \n Yoga Classes at Lilypad continue weekly on Saturdays.",
+      "image_url": "https://images.squarespace-cdn.com/content/v1/5813d44e8419c25c3b432ef4/1758297979209-4RETG08UNDZSIV0ITUE7/YogaNidraEye.jpg",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "private": false,
+      "source_url": "https://www.lilypadinman.com/home/live-music-hatha-yoga",
+      "last_scraped": "2026-07-18T11:11:35.431520+00:00"
+    },
+    {
+      "id": "medford-brewing-b8a0aa3552",
+      "title": "Paisani",
+      "venue_id": "medford-brewing",
+      "venue": "Medford Brewing Company",
+      "venue_is_local": true,
+      "square": "Medford Square",
+      "transit_line": "Bus",
+      "transit_stop": "Medford Square",
+      "walk_minutes": 5,
+      "address": null,
+      "start": "2026-07-18T12:00",
+      "end": "2026-07-18T17:00",
+      "category": "other",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "We\u2019re excited to welcome Paisani back to Medford Brewing!! Check them out here:\u00a0https://paisanifoodtruck.com \\n",
+      "image_url": "https://medfordbrew.com/wp-content/uploads/2025/06/Paisani.jpg",
+      "ticket_url": "https://medfordbrew.com/events/paisani/",
+      "is_recurring": false,
+      "recurrence_note": null,
+      "private": false,
+      "source_url": "https://medfordbrew.com/events/paisani/",
+      "last_scraped": "2026-07-18T11:11:53.596425+00:00"
+    },
+    {
+      "id": "burren-back-room-20260718T1200",
+      "title": "REALJAMS ACADEMY ADVANCED SUMMER PERFORMANCE",
+      "venue_id": "burren-back-room",
+      "venue": "The Burren - Back Room",
+      "venue_is_local": true,
+      "square": "Davis",
+      "transit_line": "Red",
+      "transit_stop": "Davis",
+      "walk_minutes": 4,
+      "address": null,
+      "start": "2026-07-18T12:00:00",
+      "end": null,
+      "category": "music",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Featuring students from The Real School of Music in Andover",
+      "image_url": "https://tickets.24hourmusic.com/uplimage/RealJams25SW.jpg",
+      "ticket_url": "https://tickets.24hourmusic.com/eventperformances.asp?evt=1338",
+      "is_recurring": false,
+      "recurrence_note": null,
+      "private": false,
+      "source_url": "https://www.burren.com/music.html",
+      "last_scraped": "2026-07-17T11:26:21.587538+00:00"
+    },
+    {
+      "id": "mideast-upstairs-20260718T1200",
+      "title": "Assbeaters Anonymous Presents: fallfiftyfeet, Banishment, Ends of Eden, Caedus",
+      "venue_id": "mideast-upstairs",
+      "venue": "The Middle East - Upstairs",
+      "venue_is_local": true,
+      "square": "Central",
+      "transit_line": "Red",
+      "transit_stop": "Central",
+      "walk_minutes": 3,
+      "address": null,
+      "start": "2026-07-18T12:00:00",
+      "end": null,
+      "category": "music",
+      "cost": "$22.64",
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": null,
+      "image_url": "https://i.ticketweb.com/i/00/12/93/44/04_Original.jpg?v=5",
+      "ticket_url": "https://www.ticketweb.com/event/assbeaters-anonymous-presents-fallfiftyfeet-banishment-middle-east-upstairs-tickets/14215904?pl=mideastclub&REFID=clientsitewp",
+      "is_recurring": false,
+      "recurrence_note": null,
+      "private": false,
+      "source_url": "https://www.mideastclub.com",
+      "last_scraped": "2026-07-19T11:16:05.914487+00:00"
+    },
+    {
+      "id": "tallship-a0bcee77d2",
+      "title": "Live Music: DJ Frank White",
+      "venue_id": "tallship",
+      "venue": "The Tall Ship Boston",
+      "venue_is_local": true,
+      "square": "Maverick",
+      "transit_line": "Blue",
+      "transit_stop": "Maverick",
+      "walk_minutes": 7,
+      "address": null,
+      "start": "2026-07-18T13:00:00",
+      "end": "2026-07-18T17:00:00",
+      "category": "music",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": null,
+      "image_url": "https://static.wixstatic.com/media/081a16_0d7278dd6a6541f8b0efb568d62ae502~mv2.png",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "private": false,
+      "source_url": "https://www.tallshipboston.com/event-details/live-music-dj-frank-white-16",
+      "last_scraped": "2026-07-18T11:10:44.873430+00:00"
+    },
+    {
+      "id": "idle-hands-4d919aee72",
+      "title": "Black Tongue Sloppy Joes",
+      "venue_id": "idle-hands",
+      "venue": "Idle Hands Craft Ales",
+      "venue_is_local": true,
+      "square": "Malden Center",
+      "transit_line": "Orange",
+      "transit_stop": "Malden Center",
+      "walk_minutes": 10,
+      "address": null,
+      "start": "2026-07-18T14:00",
+      "end": "2026-07-18T18:00",
+      "category": "food",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": "Black Tongue  Sloppy Joe Pop Up",
+      "image_url": "https://images.squarespace-cdn.com/content/v1/63275449af728c0c2845dc96/1781289960989-QREDQOYU8IKVKKLS9H0D/BLACK+TONGUE+FOODS+%288.5+x+11+in%29+%282%29.png",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "private": false,
+      "source_url": "https://www.idlehandscraftales.com/events/black-tongue-sloppy-joes-2ay3k",
+      "last_scraped": "2026-07-18T11:11:46.305393+00:00"
+    },
+    {
+      "id": "arts-armory-b7becc3bd4",
+      "title": "Sam Bondi and Holly Sverdrup Hoyer Exhibition Opening Reception",
+      "venue_id": "arts-armory",
+      "venue": "Arts at the Armory",
+      "venue_is_local": true,
+      "square": "Davis",
+      "transit_line": "Green",
+      "transit_stop": "Magoun",
+      "walk_minutes": 10,
+      "address": null,
+      "start": "2026-07-18T15:00:00",
+      "end": "2026-07-18T17:00:00",
+      "category": "other",
+      "cost": null,
+      "performer": null,
+      "performer_is_local": null,
+      "sponsored": false,
+      "sponsor": null,
+      "description": null,
+      "image_url": "https://artsatthearmory.org/wp-content/uploads/2026/06/Sam-and-Holly-Show-Poster.webp",
+      "ticket_url": null,
+      "is_recurring": false,
+      "recurrence_note": null,
+      "private": false,
+      "source_url": "https://artsatthearmory.org/events/sam-bondi-and-holly-sverdrup-hoyer-exhibition-opening-reception/",
+      "last_scraped": "2026-07-18T11:11:01.965526+00:00"
     }
   ]
 }

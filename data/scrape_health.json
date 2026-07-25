@@ -1,24 +1,24 @@
 {
   "schema": "tonight.health/1",
-  "generated_at": "2026-07-25T11:20:15.707746+00:00",
-  "duration_seconds": 191.5,
+  "generated_at": "2026-07-25T18:29:03.584611+00:00",
+  "duration_seconds": 32.7,
   "totals": {
-    "active_events": 1217,
-    "payload_bytes": 1858289,
-    "payload_gzip_bytes": 353878,
-    "archived_this_run": 457,
-    "venues_total": 31,
-    "venues_ok": 29,
+    "active_events": 1225,
+    "payload_bytes": 1861798,
+    "payload_gzip_bytes": 355775,
+    "archived_this_run": 31,
+    "venues_total": 32,
+    "venues_ok": 30,
     "venues_idle": 2,
     "venues_warning": 0,
     "venues_error": 0,
-    "no_image": 221,
-    "no_image_pct": 18.2
+    "no_image": 220,
+    "no_image_pct": 18.0
   },
   "by_square": {
-    "Davis": 307,
+    "Davis": 306,
     "Union Square": 198,
-    "Porter": 173,
+    "Porter": 172,
     "Harvard": 159,
     "Inman Square": 119,
     "Medford Square": 62,
@@ -26,8 +26,9 @@
     "Central": 40,
     "Malden Center": 33,
     "Maverick": 22,
-    "Seaport": 19,
+    "Seaport": 18,
     "Brookline Village": 12,
+    "Science Park/West End": 11,
     "North Station": 10,
     "Andrew": 6,
     "Lechmere": 3,
@@ -52,20 +53,7 @@
     "overlap": []
   },
   "reconciled": {
-    "dropped": [
-      {
-        "venue_id": "arts-armory",
-        "id": "arts-armory-c6fec8c2a4",
-        "title": "Strummerville Ukulele Club",
-        "start": "2026-08-26T18:30:00"
-      },
-      {
-        "venue_id": "deep-cuts",
-        "id": "deep-cuts-84cbb40ed1",
-        "title": "Monsterwatch",
-        "start": "2026-09-26T19:00"
-      }
-    ],
+    "dropped": [],
     "skipped": []
   },
   "tests": {
@@ -86,7 +74,7 @@
       "status": "idle",
       "event_count": 0,
       "delta": 0,
-      "note": "0 events (known \u2014 awaiting fix, see venues.py)",
+      "note": "not scraped this run (last-known state)",
       "last_success": null
     },
     {
@@ -98,7 +86,7 @@
       "status": "idle",
       "event_count": 0,
       "delta": 0,
-      "note": "0 events (known \u2014 awaiting fix, see venues.py)",
+      "note": "not scraped this run (last-known state)",
       "last_success": null
     },
     {
@@ -110,7 +98,7 @@
       "status": "ok",
       "event_count": 185,
       "delta": -1,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-25T11:20:15.596966+00:00"
     },
     {
@@ -122,7 +110,7 @@
       "status": "ok",
       "event_count": 169,
       "delta": -3,
-      "note": "unchanged since last run (cache hit)",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-22T11:55:53.715639+00:00"
     },
     {
@@ -134,7 +122,7 @@
       "status": "ok",
       "event_count": 167,
       "delta": -1,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-25T11:20:15.596966+00:00"
     },
     {
@@ -158,7 +146,7 @@
       "status": "ok",
       "event_count": 134,
       "delta": -1,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-25T11:20:15.596966+00:00"
     },
     {
@@ -170,7 +158,7 @@
       "status": "ok",
       "event_count": 119,
       "delta": -3,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-25T11:20:15.596966+00:00"
     },
     {
@@ -182,7 +170,7 @@
       "status": "ok",
       "event_count": 80,
       "delta": 1,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-25T11:20:15.596966+00:00"
     },
     {
@@ -194,7 +182,7 @@
       "status": "ok",
       "event_count": 53,
       "delta": -1,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-25T11:20:15.596966+00:00"
     },
     {
@@ -206,7 +194,7 @@
       "status": "ok",
       "event_count": 49,
       "delta": 0,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-25T11:20:15.596966+00:00"
     },
     {
@@ -218,7 +206,7 @@
       "status": "ok",
       "event_count": 47,
       "delta": 1,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-25T11:20:15.596966+00:00"
     },
     {
@@ -230,7 +218,7 @@
       "status": "ok",
       "event_count": 29,
       "delta": 0,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-25T11:20:15.596966+00:00"
     },
     {
@@ -242,7 +230,7 @@
       "status": "ok",
       "event_count": 20,
       "delta": 0,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-25T11:20:15.596966+00:00"
     },
     {
@@ -254,7 +242,7 @@
       "status": "ok",
       "event_count": 18,
       "delta": -1,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-25T11:20:15.596966+00:00"
     },
     {
@@ -266,7 +254,7 @@
       "status": "ok",
       "event_count": 17,
       "delta": 0,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-25T11:20:15.596966+00:00"
     },
     {
@@ -278,7 +266,7 @@
       "status": "ok",
       "event_count": 17,
       "delta": 0,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-25T11:20:15.596966+00:00"
     },
     {
@@ -290,7 +278,7 @@
       "status": "ok",
       "event_count": 13,
       "delta": 0,
-      "note": "unchanged since last run (cache hit)",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-24T11:50:08.506795+00:00"
     },
     {
@@ -302,7 +290,7 @@
       "status": "ok",
       "event_count": 13,
       "delta": 1,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-25T11:20:15.596966+00:00"
     },
     {
@@ -314,7 +302,7 @@
       "status": "ok",
       "event_count": 13,
       "delta": -1,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-25T11:20:15.596966+00:00"
     },
     {
@@ -326,8 +314,20 @@
       "status": "ok",
       "event_count": 12,
       "delta": 0,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-25T11:20:15.596966+00:00"
+    },
+    {
+      "id": "museum-of-science",
+      "name": "Museum of Science",
+      "square": "Science Park/West End",
+      "strategy": "mos_subspace_events",
+      "uses_llm": true,
+      "status": "ok",
+      "event_count": 11,
+      "delta": 0,
+      "note": "",
+      "last_success": "2026-07-25T18:29:03.462761+00:00"
     },
     {
       "id": "somerville-theatre",
@@ -338,7 +338,7 @@
       "status": "ok",
       "event_count": 11,
       "delta": 0,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-25T11:20:15.596966+00:00"
     },
     {
@@ -349,9 +349,9 @@
       "uses_llm": false,
       "status": "ok",
       "event_count": 10,
-      "delta": -2,
+      "delta": 0,
       "note": "",
-      "last_success": "2026-07-25T11:20:15.596966+00:00"
+      "last_success": "2026-07-25T18:29:03.462761+00:00"
     },
     {
       "id": "passim",
@@ -362,7 +362,7 @@
       "status": "ok",
       "event_count": 8,
       "delta": 0,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-25T11:20:15.596966+00:00"
     },
     {
@@ -374,7 +374,7 @@
       "status": "ok",
       "event_count": 6,
       "delta": -1,
-      "note": "unchanged since last run (cache hit)",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-11T13:25:23.333511+00:00"
     },
     {
@@ -386,7 +386,7 @@
       "status": "ok",
       "event_count": 6,
       "delta": -1,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-25T11:20:15.596966+00:00"
     },
     {
@@ -398,7 +398,7 @@
       "status": "ok",
       "event_count": 6,
       "delta": -1,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-25T11:20:15.596966+00:00"
     },
     {
@@ -410,7 +410,7 @@
       "status": "ok",
       "event_count": 6,
       "delta": 0,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-25T11:20:15.596966+00:00"
     },
     {
@@ -422,7 +422,7 @@
       "status": "ok",
       "event_count": 4,
       "delta": 0,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-25T11:20:15.596966+00:00"
     },
     {
@@ -434,7 +434,7 @@
       "status": "ok",
       "event_count": 4,
       "delta": 0,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-25T11:20:15.596966+00:00"
     },
     {
@@ -446,7 +446,7 @@
       "status": "ok",
       "event_count": 1,
       "delta": 0,
-      "note": "",
+      "note": "not scraped this run (last-known state)",
       "last_success": "2026-07-25T11:20:15.596966+00:00"
     }
   ]

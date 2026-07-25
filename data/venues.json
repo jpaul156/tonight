@@ -287,6 +287,22 @@
     "logo_url": null,
     "logo_thumb_url": null
   },
+  "museum-of-science": {
+    "id": "museum-of-science",
+    "name": "Museum of Science",
+    "square": "Science Park/West End",
+    "transit_line": "Green",
+    "transit_stop": "Science Park/West End",
+    "walk_minutes": 2,
+    "address": "1 Science Park, Boston, MA",
+    "neighborhood": "West End",
+    "phone": "(617) 723-2500",
+    "website": "https://www.mos.org/events/subspace",
+    "notes": "SubSpace: the museum's after-hours adult series — music, talks, drag, and film screenings in the Planetarium and galleries.",
+    "is_local": false,
+    "logo_url": null,
+    "logo_thumb_url": null
+  },
   "lilypad": {
     "id": "lilypad",
     "name": "The Lilypad",

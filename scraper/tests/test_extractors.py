@@ -238,6 +238,64 @@ def test_aeronaut_bad_json_returns_empty():
     assert sc.extract_aeronaut_events("not json", "https://x") == []
 
 
+def _mos_card(title, href, date_text, img_src="/sites/default/files/x.jpg",
+              summary="A night of science and sound..."):
+    return {"event_listing": f"""
+        <div class="listing-item">
+          <a href="{href}" class="listing-item__image"><img src="{img_src}" /></a>
+          <div class="listing-item__date"><div class="field__item">{date_text}</div></div>
+          <h3 class="listing-item__title"><a href="{href}">{title}</a></h3>
+          <div class="listing-item__summary">{summary}</div>
+        </div>"""}
+
+
+@freeze_time("2026-07-25")
+def test_mos_subspace_events_basic():
+    data = {"results": [
+        _mos_card("Blue Light Bandits", "/events/blue-light-bandits",
+                  "Thursday, August 6 | 7:30 pm"),
+    ]}
+    events = sc.extract_mos_subspace_events(json.dumps(data), "https://www.mos.org")
+    assert len(events) == 1
+    e = events[0]
+    assert e["title"] == "Blue Light Bandits"
+    assert e["start"] == "2026-08-06T19:30:00"
+    assert e["source_url"] == "https://www.mos.org/events/blue-light-bandits"
+    assert e["image_url"] == "https://www.mos.org/sites/default/files/x.jpg"
+    assert e["description"] == "A night of science and sound..."
+
+
+@freeze_time("2026-07-25")
+def test_mos_subspace_events_handles_pm_period_and_doors_show_split():
+    data = {"results": [
+        _mos_card("Facing the Falls", "/events/facing-falls",
+                  "Wednesday, July 29 | 7:00 p.m."),
+        # "Doors at X, Show at Y" — first (doors) time wins, matching the
+        # first-match convention used elsewhere (parse_aeg_datetime).
+        _mos_card("Shine the Light", "/events/shine-the-light",
+                  "Friday, August 21 | Doors at 6:30 pm, Show at 7:00 pm"),
+    ]}
+    events = sc.extract_mos_subspace_events(json.dumps(data), "https://www.mos.org")
+    by = {e["title"]: e["start"] for e in events}
+    assert by["Facing the Falls"] == "2026-07-29T19:00:00"
+    assert by["Shine the Light"] == "2026-08-21T18:30:00"
+
+
+@freeze_time("2026-12-15")
+def test_mos_subspace_events_rolls_year_forward_for_january():
+    # A January listing seen in December should be inferred as next year.
+    data = {"results": [
+        _mos_card("New Year Show", "/events/new-year-show",
+                  "Friday, January 9 | 7:00pm"),
+    ]}
+    events = sc.extract_mos_subspace_events(json.dumps(data), "https://www.mos.org")
+    assert events[0]["start"] == "2027-01-09T19:00:00"
+
+
+def test_mos_subspace_events_bad_json_returns_empty():
+    assert sc.extract_mos_subspace_events("not json", "https://x") == []
+
+
 def test_dice_events_basic():
     # Minimal DICE api/v2 shape: UTC instant + type tag + per-event permalink.
     feed = {"data": [{
