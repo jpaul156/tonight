@@ -180,7 +180,6 @@ init();
 
 async function init() {
   setDate();
-  buildFilterChips();
   renderSquareIndicator();
   wireMetroOverlay();
   let deals, transit, artists, rankingCfg;
@@ -211,6 +210,7 @@ async function init() {
   // Build the overlay's metro map once events are known (placeHasEvents decides
   // which stations light up). Tapping a station applies it as the selection.
   if (transit) MetroMap.setup(transit, selectSquare);
+  renderCategoryChips();
   render();
   wireDetailOverlay();
   wireCollapsingHeader();
@@ -222,6 +222,7 @@ async function init() {
   // Fires harmlessly once in DISABLED mode, then never again.
   window.addEventListener("tonight-profile-changed", () => {
     renderSquareIndicator();
+    renderCategoryChips();
     render();
   });
 }
@@ -367,15 +368,42 @@ async function loadEvents() {
   }
 }
 
-function buildFilterChips() {
-  const categoryRow = document.getElementById("category-filters");
-  addChip(categoryRow, "All", "all");
-  CATEGORIES.forEach(cat => addChip(categoryRow, capitalize(cat), cat));
+// Which categories have events tonight, and — when a place is selected — which
+// of those actually have events *at that place* (i.e. would survive the feed's
+// geographic cutoff). `day` decides which chips exist at all (no chip for a
+// category with nothing tonight, so nobody taps "Fitness" into an empty feed);
+// `local` decides which stay lit vs. grey out when a location is selected.
+function categoryAvailability() {
+  const tonight = allEvents.filter(e => !e.private && isTonightEvent(e));
+  const day = new Set(tonight.map(e => e.category));
+  if (activeSquare === "all") return { day, local: day };
+  // Same rank + below-0 cutoff render() uses, so "lit" means "would show here".
+  const near = TonightRanking.rank(tonight, currentRankOpts())
+    .filter(r => r.total >= 0)
+    .map(r => r.event);
+  return { day, local: new Set(near.map(e => e.category)) };
 }
 
-function addChip(row, label, value) {
+// (Re)build the category chip row for the current selection. Present-today
+// categories in fixed order first; those absent at the selected place grey out
+// (still tappable) and sort to the end. Called on load and on every location
+// change — category taps don't change availability, so they don't rebuild.
+function renderCategoryChips() {
+  const row = document.getElementById("category-filters");
+  row.innerHTML = "";
+  const { day, local } = categoryAvailability();
+  addChip(row, "All", "all", false);
+  const present = CATEGORIES.filter(c => day.has(c) && local.has(c));
+  const empty   = CATEGORIES.filter(c => day.has(c) && !local.has(c));
+  present.forEach(c => addChip(row, capitalize(c), c, false));
+  empty.forEach(c => addChip(row, capitalize(c), c, true));
+}
+
+function addChip(row, label, value, isEmpty) {
   const btn = document.createElement("button");
-  btn.className = "chip" + (value === "all" ? " active" : "");
+  btn.className = "chip"
+    + (value === activeCategory ? " active" : "")
+    + (isEmpty ? " is-empty" : "");
   btn.textContent = label;
   btn.dataset.value = value;
   btn.addEventListener("click", () => {
@@ -906,6 +934,7 @@ const MetroMap = (() => {
 function selectSquare(value) {
   activeSquare = value;
   renderSquareIndicator();
+  renderCategoryChips();
   render();
   closeMetro();
 }
@@ -1032,6 +1061,27 @@ function startMs(e) {
   return e.start ? new Date(e.start).getTime() : (e.deal ? Infinity : 0);
 }
 
+// Ranking options for the current selection. Geography is a RANK, not a filter:
+// picking a place ranks the whole feed by transit distance from the selection
+// (station-hop Dijkstra in js/ranking.js) plus sponsorship, favorites and a
+// daily-seeded jitter. On "Near me" the saved Home Square (raw value, not the
+// Davis fallback — profile-less users get no geography) anchors the same
+// scoring, so "near me" means near home. Shared by render() and the category
+// chips so both scope events to the same geography.
+function currentRankOpts() {
+  const selection = activeSquare !== "all"
+    ? activeSquare
+    : (window.TonightProfile?.homeSquare?.() || null);
+  return {
+    index: rankIndex,
+    selection,
+    weights: rankWeights,
+    daySeed: NOW.toDateString(),
+    hooks: { isFavoriteEvent: e => !!window.TonightProfile?.isFavoriteEvent?.(e) },
+    tiebreak: (a, b) => startMs(a) - startMs(b),
+  };
+}
+
 function render() {
   const list = document.getElementById("event-list");
   const empty = document.getElementById("empty-state");
@@ -1045,42 +1095,55 @@ function render() {
     .filter(e => !e.private)
     .filter(e => activeCategory === "all" || e.category === activeCategory);
 
-  // Geography is a RANK, not a filter: picking a place no longer hides the
-  // rest of the feed — everything tonight stays visible, ordered by transit
-  // distance from the selection (station-hop Dijkstra in js/ranking.js) plus
-  // sponsorship, favorites and a daily-seeded jitter. On "Near me" the saved
-  // Home Square (raw value, not the Davis fallback — profile-less users get
-  // no geography) anchors the same scoring, so "near me" means near home.
-  const selection = activeSquare !== "all"
-    ? activeSquare
-    : (window.TonightProfile?.homeSquare?.() || null);
-  const rankOpts = {
-    index: rankIndex,
-    selection,
-    weights: rankWeights,
-    daySeed: NOW.toDateString(),
-    hooks: { isFavoriteEvent: e => !!window.TonightProfile?.isFavoriteEvent?.(e) },
-    tiebreak: (a, b) => startMs(a) - startMs(b),
-  };
+  const rankOpts = currentRankOpts();
 
   // When a place is actively selected, geography becomes a filter as well as a
   // rank: events scoring below 0 (too far by transit AND unrelated by
   // neighborhood, with no favorite/sponsor/lit boost to rescue them) drop out.
   // Off-map venues fall out here until the bus network reaches them or a bonus
-  // lifts them. On "Near me" (no explicit selection) nothing is hidden.
-  let scored = TonightRanking.rank(filtered.filter(e => !hasEnded(e)), rankOpts);
-  if (activeSquare !== "all") scored = scored.filter(r => r.total >= 0);
-  const active = scored.map(r => r.event);
-  const ended  = filtered.filter(e => hasEnded(e)).sort((a, b) => startMs(a) - startMs(b));
+  // lifts them. On "Near me" (no explicit selection) nothing is hidden. The
+  // same cutoff applies to past events, so "recently ended" is scoped to the
+  // same geography as the live sections above rather than showing the whole city.
+  const hasSelection = activeSquare !== "all";
+  const geoFilter = rows => hasSelection ? rows.filter(r => r.total >= 0) : rows;
 
-  if (active.length === 0 && ended.length === 0) {
+  const scored = geoFilter(TonightRanking.rank(filtered.filter(e => !hasEnded(e)), rankOpts));
+  // §1/§2: split the live feed at the geographic boundary. When a place is
+  // selected, events sitting AT it (distance 0 — the stop itself, or any
+  // station of a selected neighborhood) head their own section; everything else
+  // keeps the same ranking under an "other suggested" divider. Both retain rank
+  // order, so a boosted far event stays in "other," never promoted into "At X".
+  const atRows    = hasSelection ? scored.filter(r => r.atSelection) : [];
+  const otherRows = hasSelection ? scored.filter(r => !r.atSelection) : scored;
+
+  // §2: past events, ranked + geo-filtered the same way, then shown chronologically.
+  const endedRows = geoFilter(TonightRanking.rank(filtered.filter(e => hasEnded(e)), rankOpts));
+  const ended = endedRows.map(r => r.event).sort((a, b) => startMs(a) - startMs(b));
+
+  if (atRows.length === 0 && otherRows.length === 0 && ended.length === 0) {
     empty.hidden = false;
     return;
   }
   empty.hidden = true;
 
-  active.forEach(e => list.appendChild(renderCard(e)));
-  ended.forEach(e => list.appendChild(renderCard(e)));
+  const appendSection = (label, events) => {
+    if (!events.length) return;
+    if (label) list.appendChild(sectionHeader(label));
+    events.forEach(e => list.appendChild(renderCard(e)));
+  };
+
+  appendSection(atRows.length ? `At ${activeSquare}` : null, atRows.map(r => r.event));
+  // Only label the second section when the first one exists to divide it from.
+  appendSection(atRows.length ? "Other suggested" : null, otherRows.map(r => r.event));
+  appendSection(ended.length ? "Recently ended" : null, ended);
+}
+
+// A subtle divider between feed sections (§1 selected square / §2 other / past).
+function sectionHeader(label) {
+  const h = document.createElement("h2");
+  h.className = "feed-section";
+  h.textContent = label;
+  return h;
 }
 
 function renderCard(e) {

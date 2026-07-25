@@ -222,6 +222,11 @@ window.TonightRanking = (() => {
   function scoreEvent(e, ctx) {
     const { W, index, dmap, ndepth, selection, hooks, daySeed } = ctx;
     const parts = {};
+    // Whether the event sits AT the selection (distance 0): its own stop when a
+    // station is picked, or any member station when a neighborhood is picked.
+    // The feed uses this to split "At [selection]" from "other suggested" —
+    // works the same for a station tap, a neighborhood, or a future sprite.
+    let atSelection = false;
     if (selection) {
       const d = index && dmap ? anchorDist(index, dmap, e) : null;
       let prox = d == null
@@ -236,7 +241,9 @@ window.TonightRanking = (() => {
       if (nd != null && nd < nb.length) prox = Math.max(prox, nb[nd]);
       // Exact string match always earns the full bonus — covers off-map
       // selections (no Dijkstra sources) and any map/data name drift.
-      if (e.square === selection || e.transit_stop === selection) prox = Math.max(prox, W.selected);
+      const exact = e.square === selection || e.transit_stop === selection;
+      if (exact) prox = Math.max(prox, W.selected);
+      atSelection = d === 0 || nd === 0 || exact;
       parts.proximity = prox;
     } else {
       parts.proximity = 0;          // "Near me" with no home square: geography is silent
@@ -249,7 +256,7 @@ window.TonightRanking = (() => {
     parts.jitter = W.jitter * hash01(daySeed + "|" + (e.id ?? e.title ?? ""));
     let total = 0;
     for (const v of Object.values(parts)) total += v;
-    return { total, parts };
+    return { total, parts, atSelection };
   }
 
   // Rank events for display. opts:
