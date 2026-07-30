@@ -45,12 +45,22 @@ jobs:
       - name: Run tests
         run: python3 scraper/run_tests.py || true
 
+      # Exits 0 even when individual venues error — those are recorded in
+      # scrape_health.json and surfaced post-commit below. A non-zero exit here
+      # means the scraper itself crashed (no/partial output written).
       - name: Run scraper
         run: python3 scraper/run_scraper.py
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
+      # always() — publish whatever was produced even if the scraper crashed
+      # mid-run: outputs are written atomically (old version or complete new
+      # one, never truncated), and a crash after events.json but before
+      # scrape_health.json leaves the health file's generated_at stale, which
+      # the dashboard flags loudly. Never let a red step suppress the commit —
+      # that's how one flaky venue once hid 4 days of good data.
       - name: Commit updated data
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -58,6 +68,33 @@ jobs:
           git diff --staged --quiet || git commit -m "chore: update events [skip ci]"
           git push
 
+      # Post-commit visibility: turn the run red (-> GitHub failure email) and
+      # write the per-venue errors into the run's Summary page, so the cause is
+      # readable without digging through logs. Data is already published above.
+      - name: Surface venue errors
+        if: always()
+        run: |
+          python3 - <<'EOF'
+          import json, os, sys
+          h = json.load(open("data/scrape_health.json"))
+          bad = [v for v in h.get("venues", []) if v.get("status") == "error"]
+          warn = [v for v in h.get("venues", []) if v.get("status") == "warning"]
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as s:
+              if not bad and not warn:
+                  s.write("## Scrape: all venues healthy\n")
+              for v in bad:
+                  s.write(f"## :red_circle: {v['name']} — error\n{v.get('note','')}\n\n"
+                          f"- last successful scrape: {v.get('last_success') or 'never'}\n"
+                          f"- events still in feed (last-known): {v.get('event_count', 0)}\n\n")
+              for v in warn:
+                  s.write(f"### :warning: {v['name']} — warning\n{v.get('note','')}\n\n")
+          if bad:
+              print(f"{len(bad)} venue(s) errored — data was still published; "
+                    "see the run Summary and app_health.html for details")
+              sys.exit(1)
+          EOF
+
       - name: Surface test failures
+        if: always()
         run: |
           python3 -c "import json,sys; s=json.load(open('data/test_status.json')); sys.exit(1 if s.get('status')=='fail' else 0)"

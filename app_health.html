@@ -219,13 +219,25 @@
       const dupes = (collide.exact || []).length;
 
       // ---- overall banner ----
-      let cls = "calm", head = "All systems nominal", detail = `${t.venues_ok + t.venues_idle} of ${t.venues_total} venues healthy`;
-      if (errs > 0 || dupes > 0) {
+      // Staleness outranks everything: a health file that stopped updating means
+      // the PIPELINE is down (the daily Action failed or stopped committing), and
+      // every number on this page describes a run that's no longer current. The
+      // file can't self-report why it isn't being rewritten, so link straight to
+      // the Action's run history — that's where the answer lives.
+      const ACTIONS_URL = "https://github.com/jpaul156/tonight/actions/workflows/scrape.yml";
+      let cls = "calm", head = "All systems nominal", detail = `${t.venues_ok + t.venues_idle} of ${t.venues_total} venues healthy`, extra = "";
+      if (stale) {
+        cls = "loud";
+        head = "Scrape pipeline down — no run has published";
+        detail = `last publish ${REL(h.generated_at)} (daily run expected) — everything below reflects that run, not today`;
+        extra = ` · <a href="${ACTIONS_URL}" style="color:inherit;font-weight:600">check the Action's run history →</a>`;
+      }
+      else if (errs > 0 || dupes > 0) {
         cls = "loud";
         if (errs > 0) { head = `${errs} venue${errs > 1 ? "s" : ""} need attention`; detail = `${errs} error · ${warns} warning${dupes ? ` · ${dupes} duplicate slot${dupes > 1 ? "s" : ""}` : ""}`; }
         else { head = `${dupes} duplicate event slot${dupes > 1 ? "s" : ""}`; detail = `two events in one room at one time — likely a rename left a ghost`; }
       }
-      else if (warns > 0 || stale) { cls = "note"; head = stale ? "Data may be stale" : `${warns} warning${warns > 1 ? "s" : ""} to review`; detail = `${warns} warning · last run ${REL(h.generated_at)}`; }
+      else if (warns > 0) { cls = "note"; head = `${warns} warning${warns > 1 ? "s" : ""} to review`; detail = `${warns} warning · last run ${REL(h.generated_at)}`; }
 
       // ---- off-map partitioned: probable typos are loud, bus-only is expected ----
       const offLoud = (h.off_map_squares || []).filter(o => o.probable_match || !o.bus_only);
@@ -245,7 +257,7 @@
 
         <div class="banner ${cls}">
           <span class="dot"></span>
-          <span class="headline">${esc(head)}<small>${esc(detail)} · scrape took ${h.duration_seconds}s</small></span>
+          <span class="headline">${esc(head)}<small>${esc(detail)}${extra}${stale ? "" : ` · scrape took ${h.duration_seconds}s`}</small></span>
         </div>
 
         <div class="tiles">

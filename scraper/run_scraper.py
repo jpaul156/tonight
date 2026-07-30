@@ -26,6 +26,16 @@ TRANSIT_FILE = "transit-layer.json"
 CACHE_FILE = "scraper_cache.json"
 
 
+def write_json_atomic(path, obj):
+    """Write JSON via a temp file + rename so a crash mid-write can never leave
+    a truncated/corrupt file — the CI commit step publishes whatever is on disk,
+    so every output must be either the old version or the complete new one."""
+    tmp = path + ".tmp"
+    with open(tmp, "w") as f:
+        json.dump(obj, f, indent=2)
+    os.replace(tmp, path)
+
+
 def load_existing_events(path):
     if not os.path.exists(path):
         return {}
@@ -645,8 +655,7 @@ def main():
         "events": active_sorted,
         "past_events": past_sorted,
     }
-    with open(OUTPUT_FILE, "w") as f:
-        json.dump(output, f, indent=2)
+    write_json_atomic(OUTPUT_FILE, output)
 
     # Measure what the front end downloads on open (raw + gzipped transfer size).
     import gzip
@@ -663,8 +672,7 @@ def main():
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "events": sort_events(list(archive_map.values())),
     }
-    with open(ARCHIVE_FILE, "w") as f:
-        json.dump(archive_out, f, indent=2)
+    write_json_atomic(ARCHIVE_FILE, archive_out)
 
     # --- Write the health report for the dashboard ---
     station_names = map_station_names(TRANSIT_FILE)
@@ -672,8 +680,7 @@ def main():
     health = build_health(venue_reports, active_sorted, len(archived_now),
                           time.time() - run_start, test_status, station_names, payload,
                           reconciled=reconciled_dropped, reconcile_skipped=reconcile_skipped)
-    with open(HEALTH_FILE, "w") as f:
-        json.dump(health, f, indent=2)
+    write_json_atomic(HEALTH_FILE, health)
 
     if scraped_venue_names:
         print_summary(active_sorted, scraped_venue_names)
@@ -692,11 +699,19 @@ def main():
     unchanged = sum(1 for v in cache.values() if v.get("last_changed") != v.get("last_fetched"))
     print(f"\nCache: {len(cache)} URLs tracked, {unchanged} unchanged on this run")
 
+    # Per-venue errors are DATA, not a process failure: they're already recorded
+    # in scrape_health.json (status: error) and the other venues' events were
+    # merged and written. Exit 0 so CI still commits/publishes everything —
+    # otherwise one flaky venue suppresses the whole day's data AND the very
+    # health report that explains what broke (the Aug 2026 MoS-403 incident:
+    # 4 days of stale data because exit 1 blocked the commit step). The
+    # workflow's post-commit "Surface venue errors" step turns the run red
+    # from the published health file instead. Only a total crash (unhandled
+    # exception, bad args) exits non-zero.
     if errors:
-        print(f"\nErrors ({len(errors)}):")
+        print(f"\nErrors ({len(errors)}) — recorded in {HEALTH_FILE}, exit 0 so results still publish:")
         for name, err in errors:
             print(f"  {name}: {err}")
-        sys.exit(1)
 
 
 if __name__ == "__main__":

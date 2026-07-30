@@ -1,6 +1,6 @@
 {
  "schema": "tonight.todo/1",
- "updated": "2026-07-17",
+ "updated": "2026-07-30",
  "note": "Hand-maintained running to-do list, surfaced on app_health.html. Mirror of the 'Pending work' sections in CLAUDE.md — keep the two roughly in sync. priority: high | med | low. status: open | in_progress | blocked.",
  "items": [
   {
@@ -128,6 +128,13 @@
    "priority": "med",
    "status": "open",
    "detail": "The Sinclair's calendar (44+ events) overflowed the 6000-token Pass-1 response and lost trailing events. Default raised to 8000 with a per-venue max_output_tokens override; if the dashboard still flags it as truncated, bump max_output_tokens for sinclair or paginate the source. Watch the 'truncated' warning on app_health.html."
+  },
+  {
+   "title": "Museum of Science 403s from GitHub Actions (Cloudflare blocks runner IPs)",
+   "area": "scraper",
+   "priority": "med",
+   "status": "open",
+   "detail": "The MoS Drupal API returns 200 from residential IPs but 403 (Cloudflare) from GitHub-hosted runners — this took down the whole daily pipeline for 4 days in July 2026 (fixed: venue errors no longer block the commit; see the 'Surface venue errors' step in scrape.yml). MoS itself still won't scrape from CI. If tomorrow's runs keep 403ing: options are (a) an expected_empty-style 'known_blocked' flag downgrading it to a calm dashboard state + occasional local --force scrapes, (b) a self-hosted/residential runner or proxy for just this venue, (c) drop to warning after N consecutive identical failures. Last-known events stay in the feed either way (merge keeps them; reconcile only runs on clean scrapes)."
   },
   {
    "title": "Winter EST offset in run_scraper",
