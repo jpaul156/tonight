@@ -450,3 +450,46 @@ def test_gcal_ics_converts_utc_skips_allday_and_unfolds():
 
 def test_gcal_ics_empty_feed_returns_empty():
     assert sc.extract_gcal_ics("BEGIN:VCALENDAR\r\nEND:VCALENDAR\r\n", "https://x") == []
+
+
+def _neom_cal(*, year=2026, months):
+    # months: list of (name, [(day, status), ...]) with status in
+    # "open"/"special"/"closed", matching Boston Open Market's real markup.
+    month_html = ""
+    for name, days in months:
+        day_html = "".join(
+            f'<div class="vbom-cal-day vbom-cal-{status}">{day}</div>'
+            for day, status in days
+        )
+        month_html += (
+            f'<div class="vbom-cal-month">'
+            f'<div class="vbom-cal-month-name">{name}</div>'
+            f'<div class="vbom-cal-saturdays">{day_html}</div></div>'
+        )
+    return f"""
+    <p>{year} Season at a Glance</p>
+    <div class="vbom-cal-months">{month_html}</div>
+    """
+
+
+def test_neom_boston_calendar_skips_closed_and_flags_special():
+    html = _neom_cal(months=[
+        ("May", [(2, "open"), (9, "special"), (16, "closed")]),
+    ])
+    events = sc.extract_neom_boston_calendar(html, "https://neom.example/boston")
+    starts = {e["start"]: e for e in events}
+    assert set(starts) == {"2026-05-02T12:00:00", "2026-05-09T12:00:00"}
+    assert starts["2026-05-02T12:00:00"]["title"] == "Boston Open Market"
+    assert starts["2026-05-09T12:00:00"]["title"] == "Boston Open Market — Specialty Market"
+    assert all(e["end"].endswith("17:00:00") for e in events)
+    assert all(e["category"] == "market" for e in events)
+
+
+def test_neom_boston_calendar_reads_year_from_season_label():
+    html = _neom_cal(year=2027, months=[("June", [(5, "open")])])
+    events = sc.extract_neom_boston_calendar(html, "https://neom.example/boston")
+    assert events[0]["start"] == "2027-06-05T12:00:00"
+
+
+def test_neom_boston_calendar_missing_grid_returns_empty():
+    assert sc.extract_neom_boston_calendar("<p>redesigned page</p>", "https://neom.example/boston") == []

@@ -1330,6 +1330,76 @@ def extract_mos_subspace_events(text, base_url):
     return events
 
 
+def extract_neom_boston_calendar(html, base_url):
+    """
+    Boston Open Market's page hand-renders its own "N Season at a Glance"
+    grid (a Squarespace code block) — one `.vbom-cal-day` div per Saturday,
+    classed `vbom-cal-open`, `vbom-cal-special`, or `vbom-cal-closed`. Closed
+    Saturdays are exceptions to the "every Saturday, May-October" cadence with
+    no other structured signal (the closures aren't listed anywhere else), so
+    rather than generating every Saturday in range and subtracting closures,
+    we do the opposite and treat the grid as the sole source of truth: only
+    days marked open or special are read as events, closed days are simply
+    skipped. This also means a redesign that drops the grid entirely yields
+    zero events (caught by the health dashboard's zero-yield check) rather
+    than silently minting a market for every Saturday including closures.
+
+    No year is attached to the day divs themselves — it's inferred from the
+    "20XX Season at a Glance" label above the grid, which the site updates
+    each season.
+    """
+    soup = BeautifulSoup(html, "html.parser")
+    months_container = soup.select_one(".vbom-cal-months")
+    if not months_container:
+        print("  WARNING: NEOM Boston Open Market calendar grid not found (page format may have changed)")
+        return []
+
+    year_match = re.search(r"(20\d{2})\s+Season at a Glance", soup.get_text())
+    year = int(year_match.group(1)) if year_match else datetime.now(timezone.utc).year
+
+    events = []
+    for month_el in months_container.select(".vbom-cal-month"):
+        name_el = month_el.select_one(".vbom-cal-month-name")
+        if not name_el:
+            continue
+        try:
+            month_num = datetime.strptime(name_el.get_text(strip=True)[:3].title(), "%b").month
+        except ValueError:
+            continue
+        for day_el in month_el.select(".vbom-cal-day"):
+            classes = day_el.get("class", [])
+            if "vbom-cal-open" not in classes and "vbom-cal-special" not in classes:
+                continue  # closed, or an unrecognized status — skip either way
+            day_text = day_el.get_text(strip=True)
+            if not day_text.isdigit():
+                continue
+            try:
+                d = datetime(year, month_num, int(day_text))
+            except ValueError:
+                continue
+            special = "vbom-cal-special" in classes
+            events.append({
+                "title":       "Boston Open Market" + (" — Specialty Market" if special else ""),
+                "start":       d.strftime("%Y-%m-%dT12:00:00"),
+                "end":         d.strftime("%Y-%m-%dT17:00:00"),
+                "location":    None,
+                "cost":        "Free",
+                "source_url":  None,
+                "performer":   None,
+                "description": ("Specialty themed market day. " if special else "")
+                                + "50+ local artists, makers, and curated vintage dealers along "
+                                  "Boylston Street at the entrance to the Public Garden.",
+                "image_url":   None,
+                "ticket_url":  None,
+                "category":    "market",
+                "is_recurring": True,
+                "recurrence_note": "Saturdays, May-October",
+            })
+
+    print(f"  Parsed {len(events)} Boston Open Market dates from the season calendar (no LLM needed)")
+    return events
+
+
 # DICE tags its events with a type ("music:dj", "comedy:standup"). Map the tag
 # prefix to our taxonomy so a DICE-fed venue skips the LLM classifier entirely
 # (same free-category pattern as Aeronaut). Deep Cuts is a music room, so an
@@ -2306,6 +2376,13 @@ def scrape_venue(venue_cfg, cache, verbose=True, force=False, report=None):
         # Direct parse of the Museum of Science's SubSpace event-listing API —
         # no LLM for extraction (Pass 2 still runs per-event detail pages).
         raw_events = extract_mos_subspace_events(html, base_url)
+        if verbose:
+            print(f"  Pass 1: {len(raw_events)} events (parsed directly, no LLM)")
+    elif strategy == "neom_boston_calendar":
+        # Direct parse of Boston Open Market's hand-built season calendar grid
+        # — no LLM, native category ("market"), positively reads open/special
+        # days rather than subtracting closed exceptions from every Saturday.
+        raw_events = extract_neom_boston_calendar(html, base_url)
         if verbose:
             print(f"  Pass 1: {len(raw_events)} events (parsed directly, no LLM)")
     elif strategy == "dice_events":

@@ -980,6 +980,34 @@ VENUES = [
         ],
     },
 
+    # ----------------------------------------------------------
+    # Boston Open Market (New England Open Markets)
+    # ----------------------------------------------------------
+    {
+        "id": "boston-open-market",
+        "name": "Boston Open Market",
+        "address": "Boylston Street, Boston, MA",
+        "square": "Arlington",
+        "transit_line": "Green",
+        "transit_stop": "Arlington",
+        "walk_minutes": 1,
+        "is_local": True,
+        # NEOM's page hand-renders its own "N Season at a Glance" grid (a
+        # Squarespace code block, not a real Events collection) marking each
+        # Saturday open/special/closed — see extract_neom_boston_calendar for
+        # why we read it positively (open+special) rather than generating
+        # every Saturday and subtracting closures. Only this flagship weekly
+        # market is added for now; NEOM's other listings (Indie Art by the
+        # Sea, Plymouth/Salem/Worcester/Cohasset holiday markets) are one-day
+        # events well outside the transit map and not yet in scope.
+        "collection_url": "https://www.newenglandopenmarkets.com/visit-boston-open-market",
+        "scrape_strategy": "neom_boston_calendar",
+        "detail_pages": False,
+        "url_contains": None,
+        "location_keywords": {},
+        "extra_venues": [],
+    },
+
 ]
 
 # Quick lookup by venue ID (used by the runner to resolve sibling venues)
