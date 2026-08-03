@@ -1,6 +1,6 @@
 {
   "schema": "tonight.frequentbus/1",
-  "generated_at": "2026-07-27T14:37:37.048480+00:00",
+  "generated_at": "2026-08-03T14:41:06.917508+00:00",
   "source": "MBTA V3 API /routes filter[type]=3, description='Frequent Bus'",
   "count": 25,
   "routes": [
