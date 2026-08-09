@@ -1,32 +1,32 @@
 {
   "schema": "tonight.health/1",
-  "generated_at": "2026-08-08T10:45:17.206992+00:00",
-  "duration_seconds": 317.2,
+  "generated_at": "2026-08-09T10:44:24.887206+00:00",
+  "duration_seconds": 226.5,
   "totals": {
-    "active_events": 1286,
-    "payload_bytes": 1894230,
-    "payload_gzip_bytes": 355546,
-    "archived_this_run": 462,
+    "active_events": 1275,
+    "payload_bytes": 1873380,
+    "payload_gzip_bytes": 348864,
+    "archived_this_run": 465,
     "venues_total": 33,
-    "venues_ok": 28,
+    "venues_ok": 30,
     "venues_idle": 2,
     "venues_warning": 0,
-    "venues_error": 3,
+    "venues_error": 1,
     "no_image": 228,
-    "no_image_pct": 17.7
+    "no_image_pct": 17.9
   },
   "by_square": {
-    "Davis": 315,
-    "Union Square": 219,
-    "Harvard": 160,
-    "Porter": 158,
-    "Inman Square": 105,
-    "Central": 66,
+    "Davis": 319,
+    "Union Square": 218,
+    "Harvard": 159,
+    "Porter": 156,
+    "Inman Square": 102,
     "Medford Square": 63,
-    "Magoun Square": 55,
-    "Malden Center": 32,
-    "Maverick": 31,
-    "Seaport": 29,
+    "Central": 59,
+    "Magoun Square": 57,
+    "Malden Center": 31,
+    "Maverick": 30,
+    "Seaport": 28,
     "North Station": 12,
     "Arlington": 11,
     "Brookline Village": 10,
@@ -38,7 +38,7 @@
   "off_map_squares": [
     {
       "square": "Inman Square",
-      "events": 105,
+      "events": 102,
       "bus_only": true,
       "probable_match": null
     },
@@ -56,101 +56,77 @@
   "reconciled": {
     "dropped": [
       {
-        "venue_id": "plough-stars",
-        "id": "plough-stars-20260813T2200",
-        "title": "Double Down with Satch Kerans",
-        "start": "2026-08-13T22:00:00"
+        "venue_id": "mideast-upstairs",
+        "id": "mideast-upstairs-20260809T1900",
+        "title": "exociety Presents Kill Bill the Rapper (w/Ashtin Larold) 'I FOUND THE END' Tour",
+        "start": "2026-08-09T19:00:00"
       },
       {
-        "venue_id": "plough-stars",
-        "id": "plough-stars-20260814T2200",
-        "title": "KaBeatles",
-        "start": "2026-08-14T22:00:00"
-      },
-      {
-        "venue_id": "lamplighter-broadway",
-        "id": "lamplighter-broadway-20260811T1900",
-        "title": "Broadway Trivia",
-        "start": "2026-08-11T19:00:00"
-      },
-      {
-        "venue_id": "arts-armory",
-        "id": "arts-armory-57c0f002c2",
-        "title": "Red Cross Blood Drive",
-        "start": "2026-08-12T09:00:00"
+        "venue_id": "village-social",
+        "id": "village-social-20260829T2000",
+        "title": "David Harrison",
+        "start": "2026-08-29T20:00:00"
       },
       {
         "venue_id": "lamplighter-broadway",
-        "id": "lamplighter-broadway-20260814T0800",
-        "title": "Pepita Lo-Fi Friday",
-        "start": "2026-08-14T08:00:00"
+        "id": "lamplighter-broadway-20260810T0900",
+        "title": "Pepita Lo-Fi Monday",
+        "start": "2026-08-10T09:00:00"
+      },
+      {
+        "venue_id": "lamplighter-cx",
+        "id": "lamplighter-cx-6b3f67cdf0",
+        "title": "Pottery with a Purpose - Ceramic Mug Making",
+        "start": "2026-08-11T18:00:00"
       },
       {
         "venue_id": "lamplighter-broadway",
-        "id": "lamplighter-broadway-20260815T0800",
+        "id": "lamplighter-broadway-72aecf95c9",
         "title": "Pepita Lo-Fi Saturday",
         "start": "2026-08-15T08:00:00"
       },
       {
         "venue_id": "lamplighter-broadway",
-        "id": "lamplighter-broadway-20260816T0800",
+        "id": "lamplighter-broadway-d9b6027ad7",
         "title": "Pepita Lo-Fi Sunday",
         "start": "2026-08-16T08:00:00"
       },
       {
         "venue_id": "lamplighter-broadway",
-        "id": "lamplighter-broadway-20260822T0800",
+        "id": "lamplighter-broadway-0ffa26a7d7",
+        "title": "Queer Knitting Group",
+        "start": "2026-08-19T18:00:00"
+      },
+      {
+        "venue_id": "lamplighter-broadway",
+        "id": "lamplighter-broadway-663b85c901",
         "title": "Pepita Lo-Fi Saturday",
         "start": "2026-08-22T08:00:00"
       },
       {
         "venue_id": "lamplighter-broadway",
-        "id": "lamplighter-broadway-20260825T1900",
-        "title": "Broadway Trivia",
-        "start": "2026-08-25T19:00:00"
+        "id": "lamplighter-broadway-20260823T0800",
+        "title": "Pepita Lo-Fi Sunday",
+        "start": "2026-08-23T08:00:00"
       },
       {
         "venue_id": "lamplighter-broadway",
-        "id": "lamplighter-broadway-20261003T1600",
-        "title": "Brewery Tour & Tasting",
-        "start": "2026-10-03T16:00:00"
+        "id": "lamplighter-broadway-e40077d0a9",
+        "title": "Pepita Lo-Fi Saturday",
+        "start": "2026-08-29T08:00:00"
       }
     ],
     "skipped": []
   },
   "tests": {
     "status": "pass",
-    "at": "2026-08-08T10:39:59.331621+00:00",
+    "at": "2026-08-09T10:40:37.628553+00:00",
     "total": 98,
     "passed": 98,
     "failed": 0,
     "skipped": 0
   },
   "venues": [
-    {
-      "id": "crystal-ballroom",
-      "name": "Crystal Ballroom",
-      "square": "Davis",
-      "strategy": "crystal_events",
-      "uses_llm": false,
-      "status": "error",
-      "event_count": 40,
-      "delta": 0,
-      "note": "HTTPSConnectionPool(host='www.crystalballroomboston.com', port=443): Max retries exceeded with url: /events/ (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.crystalballroomboston.com', port=443) at 0x7f78cd769e90>, 'Connection to www.crystalballroomboston.com timed out. (connect timeout=12)'))",
-      "last_success": "2026-08-05T12:07:08.921301+00:00"
-    },
-    {
-      "id": "somerville-theatre",
-      "name": "Somerville Theatre",
-      "square": "Davis",
-      "strategy": "html_full_text",
-      "uses_llm": true,
-      "status": "error",
-      "event_count": 12,
-      "delta": 0,
-      "note": "HTTPSConnectionPool(host='www.somervilletheatre.com', port=443): Max retries exceeded with url: /events/ (Caused by ConnectTimeoutError(<HTTPSConnection(host='www.somervilletheatre.com', port=443) at 0x7f78ccf3d950>, 'Connection to www.somervilletheatre.com timed out. (connect timeout=12)'))",
-      "last_success": "2026-08-05T12:07:08.921301+00:00"
-    },
     {
       "id": "museum-of-science",
       "name": "Museum of Science",
@@ -159,7 +135,7 @@
       "uses_llm": true,
       "status": "error",
       "event_count": 7,
-      "delta": -1,
+      "delta": 0,
       "note": "403 Client Error: Forbidden for url: https://www.mos.org/api/v1/event-listing/event_detail/96/all/all/516/all?items_per_page=18&sort_by=date_asc",
       "last_success": "2026-07-25T18:29:03.462761+00:00"
     },
@@ -195,9 +171,9 @@
       "uses_llm": false,
       "status": "ok",
       "event_count": 197,
-      "delta": -1,
+      "delta": 0,
       "note": "",
-      "last_success": "2026-08-08T10:45:17.081745+00:00"
+      "last_success": "2026-08-09T10:44:24.763326+00:00"
     },
     {
       "id": "burren-back-room",
@@ -206,10 +182,10 @@
       "strategy": "burren_tables",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 178,
-      "delta": -2,
+      "event_count": 175,
+      "delta": -3,
       "note": "",
-      "last_success": "2026-08-08T10:45:17.081745+00:00"
+      "last_success": "2026-08-09T10:44:24.763326+00:00"
     },
     {
       "id": "burren",
@@ -230,10 +206,10 @@
       "strategy": "squarespace_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 140,
-      "delta": 2,
+      "event_count": 138,
+      "delta": -2,
       "note": "",
-      "last_success": "2026-08-08T10:45:17.081745+00:00"
+      "last_success": "2026-08-09T10:44:24.763326+00:00"
     },
     {
       "id": "comedy-studio",
@@ -242,10 +218,10 @@
       "strategy": "seatengine",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 136,
+      "event_count": 135,
       "delta": -1,
       "note": "",
-      "last_success": "2026-08-08T10:45:17.081745+00:00"
+      "last_success": "2026-08-09T10:44:24.763326+00:00"
     },
     {
       "id": "lilypad",
@@ -254,10 +230,10 @@
       "strategy": "squarespace_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 105,
-      "delta": 2,
+      "event_count": 102,
+      "delta": -3,
       "note": "",
-      "last_success": "2026-08-08T10:45:17.081745+00:00"
+      "last_success": "2026-08-09T10:44:24.763326+00:00"
     },
     {
       "id": "rockwell",
@@ -269,7 +245,7 @@
       "event_count": 85,
       "delta": 0,
       "note": "",
-      "last_success": "2026-08-08T10:45:17.081745+00:00"
+      "last_success": "2026-08-09T10:44:24.763326+00:00"
     },
     {
       "id": "arts-armory",
@@ -278,10 +254,10 @@
       "strategy": "em_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 55,
-      "delta": 3,
+      "event_count": 57,
+      "delta": 2,
       "note": "",
-      "last_success": "2026-08-08T10:45:17.081745+00:00"
+      "last_success": "2026-08-09T10:44:24.763326+00:00"
     },
     {
       "id": "deep-cuts",
@@ -291,9 +267,21 @@
       "uses_llm": false,
       "status": "ok",
       "event_count": 50,
-      "delta": 1,
+      "delta": 0,
       "note": "",
-      "last_success": "2026-08-08T10:45:17.081745+00:00"
+      "last_success": "2026-08-09T10:44:24.763326+00:00"
+    },
+    {
+      "id": "crystal-ballroom",
+      "name": "Crystal Ballroom",
+      "square": "Davis",
+      "strategy": "crystal_events",
+      "uses_llm": false,
+      "status": "ok",
+      "event_count": 46,
+      "delta": 6,
+      "note": "",
+      "last_success": "2026-08-09T10:44:24.763326+00:00"
     },
     {
       "id": "mideast-downstairs",
@@ -302,22 +290,10 @@
       "strategy": "mideast_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 28,
-      "delta": 3,
-      "note": "",
-      "last_success": "2026-08-08T10:45:17.081745+00:00"
-    },
-    {
-      "id": "lamplighter-broadway",
-      "name": "Lamplighter Brewing - Broadway",
-      "square": "Central",
-      "strategy": "shopify_products",
-      "uses_llm": true,
-      "status": "ok",
       "event_count": 27,
-      "delta": 0,
+      "delta": -1,
       "note": "",
-      "last_success": "2026-08-08T10:45:17.081745+00:00"
+      "last_success": "2026-08-09T10:44:24.763326+00:00"
     },
     {
       "id": "tallship",
@@ -326,10 +302,10 @@
       "strategy": "wix_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 27,
-      "delta": 1,
+      "event_count": 26,
+      "delta": -1,
       "note": "",
-      "last_success": "2026-08-08T10:45:17.081745+00:00"
+      "last_success": "2026-08-09T10:44:24.763326+00:00"
     },
     {
       "id": "idle-hands",
@@ -338,10 +314,10 @@
       "strategy": "squarespace_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 25,
-      "delta": 0,
+      "event_count": 24,
+      "delta": -1,
       "note": "",
-      "last_success": "2026-08-08T10:45:17.081745+00:00"
+      "last_success": "2026-08-09T10:44:24.763326+00:00"
     },
     {
       "id": "sally-obriens",
@@ -350,10 +326,34 @@
       "strategy": "sally_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 22,
-      "delta": 0,
+      "event_count": 21,
+      "delta": -1,
       "note": "",
-      "last_success": "2026-08-08T10:45:17.081745+00:00"
+      "last_success": "2026-08-09T10:44:24.763326+00:00"
+    },
+    {
+      "id": "lamplighter-broadway",
+      "name": "Lamplighter Brewing - Broadway",
+      "square": "Central",
+      "strategy": "shopify_products",
+      "uses_llm": true,
+      "status": "ok",
+      "event_count": 20,
+      "delta": -7,
+      "note": "",
+      "last_success": "2026-08-09T10:44:24.763326+00:00"
+    },
+    {
+      "id": "plough-stars",
+      "name": "The Plough and Stars",
+      "square": "Central",
+      "strategy": "html_full_text",
+      "uses_llm": true,
+      "status": "ok",
+      "event_count": 18,
+      "delta": 1,
+      "note": "",
+      "last_success": "2026-08-09T10:44:24.763326+00:00"
     },
     {
       "id": "lizard-lounge",
@@ -363,21 +363,9 @@
       "uses_llm": false,
       "status": "ok",
       "event_count": 18,
-      "delta": -1,
+      "delta": 0,
       "note": "",
-      "last_success": "2026-08-08T10:45:17.081745+00:00"
-    },
-    {
-      "id": "plough-stars",
-      "name": "The Plough and Stars",
-      "square": "Central",
-      "strategy": "html_full_text",
-      "uses_llm": true,
-      "status": "ok",
-      "event_count": 17,
-      "delta": -3,
-      "note": "",
-      "last_success": "2026-08-08T10:45:17.081745+00:00"
+      "last_success": "2026-08-09T10:44:24.763326+00:00"
     },
     {
       "id": "grand-boston",
@@ -387,9 +375,9 @@
       "uses_llm": false,
       "status": "ok",
       "event_count": 17,
-      "delta": 1,
+      "delta": 0,
       "note": "",
-      "last_success": "2026-08-08T10:45:17.081745+00:00"
+      "last_success": "2026-08-09T10:44:24.763326+00:00"
     },
     {
       "id": "sinclair",
@@ -401,7 +389,7 @@
       "event_count": 16,
       "delta": 0,
       "note": "",
-      "last_success": "2026-08-08T10:45:17.081745+00:00"
+      "last_success": "2026-08-09T10:44:24.763326+00:00"
     },
     {
       "id": "medford-brewing",
@@ -413,7 +401,19 @@
       "event_count": 13,
       "delta": 0,
       "note": "",
-      "last_success": "2026-08-08T10:45:17.081745+00:00"
+      "last_success": "2026-08-09T10:44:24.763326+00:00"
+    },
+    {
+      "id": "somerville-theatre",
+      "name": "Somerville Theatre",
+      "square": "Davis",
+      "strategy": "html_full_text",
+      "uses_llm": true,
+      "status": "ok",
+      "event_count": 13,
+      "delta": 1,
+      "note": "",
+      "last_success": "2026-08-09T10:44:24.763326+00:00"
     },
     {
       "id": "west-end-museum",
@@ -423,9 +423,9 @@
       "uses_llm": false,
       "status": "ok",
       "event_count": 12,
-      "delta": 2,
+      "delta": 0,
       "note": "",
-      "last_success": "2026-08-08T10:45:17.081745+00:00"
+      "last_success": "2026-08-09T10:44:24.763326+00:00"
     },
     {
       "id": "scorpion-boston",
@@ -434,10 +434,10 @@
       "strategy": "tablelist_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 12,
-      "delta": 0,
+      "event_count": 11,
+      "delta": -1,
       "note": "",
-      "last_success": "2026-08-08T10:45:17.081745+00:00"
+      "last_success": "2026-08-09T10:44:24.763326+00:00"
     },
     {
       "id": "boston-open-market",
@@ -449,7 +449,7 @@
       "event_count": 11,
       "delta": 0,
       "note": "",
-      "last_success": "2026-08-08T10:45:17.081745+00:00"
+      "last_success": "2026-08-09T10:44:24.763326+00:00"
     },
     {
       "id": "village-social",
@@ -461,7 +461,7 @@
       "event_count": 10,
       "delta": 0,
       "note": "",
-      "last_success": "2026-08-08T10:45:17.081745+00:00"
+      "last_success": "2026-08-09T10:44:24.763326+00:00"
     },
     {
       "id": "passim",
@@ -473,7 +473,7 @@
       "event_count": 8,
       "delta": 0,
       "note": "",
-      "last_success": "2026-08-08T10:45:17.081745+00:00"
+      "last_success": "2026-08-09T10:44:24.763326+00:00"
     },
     {
       "id": "faces-brewing",
@@ -483,9 +483,9 @@
       "uses_llm": true,
       "status": "ok",
       "event_count": 7,
-      "delta": 2,
+      "delta": 0,
       "note": "",
-      "last_success": "2026-08-08T10:45:17.081745+00:00"
+      "last_success": "2026-08-09T10:44:24.763326+00:00"
     },
     {
       "id": "dorchester-brewing",
@@ -497,7 +497,7 @@
       "event_count": 6,
       "delta": 0,
       "note": "",
-      "last_success": "2026-08-08T10:45:17.081745+00:00"
+      "last_success": "2026-08-09T10:44:24.763326+00:00"
     },
     {
       "id": "vrcc",
@@ -509,7 +509,7 @@
       "event_count": 4,
       "delta": 0,
       "note": "",
-      "last_success": "2026-08-08T10:45:17.081745+00:00"
+      "last_success": "2026-08-09T10:44:24.763326+00:00"
     },
     {
       "id": "hamilton-brookline",
@@ -521,7 +521,7 @@
       "event_count": 1,
       "delta": 0,
       "note": "",
-      "last_success": "2026-08-08T10:45:17.081745+00:00"
+      "last_success": "2026-08-09T10:44:24.763326+00:00"
     }
   ]
 }
