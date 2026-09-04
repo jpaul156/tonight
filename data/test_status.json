@@ -1,8 +1,8 @@
 {
-  "status": "pass",
-  "at": "2026-09-03T14:18:49.671125+00:00",
+  "status": "fail",
+  "at": "2026-09-04T14:07:54.970336+00:00",
   "total": 98,
-  "passed": 98,
-  "failed": 0,
+  "passed": 97,
+  "failed": 1,
   "skipped": 0
 }
