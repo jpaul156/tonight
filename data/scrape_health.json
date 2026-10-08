@@ -1,35 +1,35 @@
 {
   "schema": "tonight.health/1",
-  "generated_at": "2026-10-07T17:27:16.814181+00:00",
-  "duration_seconds": 279.9,
+  "generated_at": "2026-10-08T17:23:55.832823+00:00",
+  "duration_seconds": 301.1,
   "totals": {
-    "active_events": 1259,
-    "payload_bytes": 1941463,
-    "payload_gzip_bytes": 353408,
-    "archived_this_run": 457,
+    "active_events": 1255,
+    "payload_bytes": 1926535,
+    "payload_gzip_bytes": 350803,
+    "archived_this_run": 465,
     "venues_total": 33,
-    "venues_ok": 27,
+    "venues_ok": 26,
     "venues_idle": 2,
     "venues_warning": 0,
-    "venues_error": 4,
-    "no_image": 131,
-    "no_image_pct": 10.4
+    "venues_error": 5,
+    "no_image": 132,
+    "no_image_pct": 10.5
   },
   "by_square": {
     "Davis": 366,
-    "Union Square": 252,
-    "Harvard": 187,
-    "Inman Square": 125,
-    "Magoun Square": 59,
-    "Central": 58,
-    "Medford Square": 55,
-    "Malden Center": 41,
+    "Union Square": 251,
+    "Harvard": 185,
+    "Inman Square": 127,
+    "Magoun Square": 58,
+    "Central": 56,
+    "Medford Square": 54,
     "Porter": 40,
+    "Malden Center": 40,
     "Seaport": 30,
-    "Maverick": 14,
+    "Maverick": 16,
     "North Station": 11,
-    "Brookline Village": 7,
-    "Lechmere": 5,
+    "Brookline Village": 8,
+    "Lechmere": 4,
     "Andrew": 4,
     "Arlington": 3,
     "Coolidge Corner": 2
@@ -37,13 +37,13 @@
   "off_map_squares": [
     {
       "square": "Inman Square",
-      "events": 125,
+      "events": 127,
       "bus_only": true,
       "probable_match": null
     },
     {
       "square": "Medford Square",
-      "events": 55,
+      "events": 54,
       "bus_only": true,
       "probable_match": null
     }
@@ -53,85 +53,30 @@
     "overlap": []
   },
   "reconciled": {
-    "dropped": [
-      {
-        "venue_id": "aeronaut",
-        "id": "aeronaut-20261028T2000-halloween-drag-night",
-        "title": "Halloween Drag Night",
-        "start": "2026-10-28T20:00"
-      },
-      {
-        "venue_id": "burren-back-room",
-        "id": "burren-back-room-20270928T2000",
-        "title": "TRIVIA NIGHT",
-        "start": "2027-09-28T20:00:00"
-      },
-      {
-        "venue_id": "burren-front-room",
-        "id": "burren-front-room-20270928T2030",
-        "title": "IRISH SESSION",
-        "start": "2027-09-28T20:30:00"
-      },
-      {
-        "venue_id": "burren-front-room",
-        "id": "burren-front-room-20270929T1900",
-        "title": "THE DJANGO CADRE",
-        "start": "2027-09-29T19:00:00"
-      },
-      {
-        "venue_id": "burren-back-room",
-        "id": "burren-back-room-20270929T1900",
-        "title": "PettyNPoetic presents: Pop-Punk Princess, LAYLA BLACK",
-        "start": "2027-09-29T19:00:00"
-      },
-      {
-        "venue_id": "burren-front-room",
-        "id": "burren-front-room-20270930T1900",
-        "title": "GRAIN THIEF",
-        "start": "2027-09-30T19:00:00"
-      },
-      {
-        "venue_id": "burren-back-room",
-        "id": "burren-back-room-20270930T1900",
-        "title": "GR\u00dcVMEINERS BRASS BAND",
-        "start": "2027-09-30T19:00:00"
-      },
-      {
-        "venue_id": "burren-back-room",
-        "id": "burren-back-room-20270930T2200",
-        "title": "COMEDY NIGHT",
-        "start": "2027-09-30T22:00:00"
-      },
-      {
-        "venue_id": "comedy-studio",
-        "id": "comedy-studio-81233bf1d6",
-        "title": "TCS presents: Matt Ruby",
-        "start": "2026-10-07T19:30"
-      },
-      {
-        "venue_id": "aeronaut",
-        "id": "aeronaut-2c496e6738",
-        "title": "Mingle Mayhem Big Singles Bash",
-        "start": "2026-10-08T19:00"
-      },
-      {
-        "venue_id": "comedy-studio",
-        "id": "comedy-studio-909d2da8d4",
-        "title": "Hump! Film Fest - Fall Season 2026",
-        "start": "2026-11-06T23:00"
-      }
-    ],
+    "dropped": [],
     "skipped": []
   },
   "tests": {
     "status": "fail",
-    "at": "2026-10-07T17:22:35.906156+00:00",
+    "at": "2026-10-08T17:18:53.671546+00:00",
     "total": 98,
     "passed": 97,
     "failed": 1,
     "skipped": 0
   },
   "venues": [
+    {
+      "id": "arts-armory",
+      "name": "Arts at the Armory",
+      "square": "Magoun Square",
+      "strategy": "em_events",
+      "uses_llm": false,
+      "status": "error",
+      "event_count": 58,
+      "delta": -1,
+      "note": "HTTPSConnectionPool(host='artsatthearmory.org', port=443): Read timed out. (read timeout=12)",
+      "last_success": "2026-10-07T17:27:16.643543+00:00"
+    },
     {
       "id": "somerville-theatre",
       "name": "Somerville Theatre",
@@ -141,7 +86,7 @@
       "status": "error",
       "event_count": 39,
       "delta": 0,
-      "note": "yielded 0 events (feed had 39) \u2014 likely broken",
+      "note": "Pass 1 JSON parse failed: Expecting value: line 1 column 1 (char 0)",
       "last_success": "2026-10-03T14:42:32.719743+00:00"
     },
     {
@@ -211,10 +156,10 @@
       "strategy": "aeronaut_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 230,
-      "delta": -3,
+      "event_count": 229,
+      "delta": -1,
       "note": "",
-      "last_success": "2026-10-07T17:27:16.643543+00:00"
+      "last_success": "2026-10-08T17:23:55.649611+00:00"
     },
     {
       "id": "burren-back-room",
@@ -223,10 +168,10 @@
       "strategy": "burren_tables",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 168,
-      "delta": 4,
+      "event_count": 169,
+      "delta": 1,
       "note": "",
-      "last_success": "2026-10-07T17:27:16.643543+00:00"
+      "last_success": "2026-10-08T17:23:55.649611+00:00"
     },
     {
       "id": "comedy-studio",
@@ -235,10 +180,10 @@
       "strategy": "seatengine",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 162,
+      "event_count": 161,
       "delta": -1,
       "note": "",
-      "last_success": "2026-10-07T17:27:16.643543+00:00"
+      "last_success": "2026-10-08T17:23:55.649611+00:00"
     },
     {
       "id": "burren",
@@ -259,10 +204,10 @@
       "strategy": "squarespace_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 125,
-      "delta": -3,
+      "event_count": 127,
+      "delta": 2,
       "note": "",
-      "last_success": "2026-10-07T17:27:16.643543+00:00"
+      "last_success": "2026-10-08T17:23:55.649611+00:00"
     },
     {
       "id": "rockwell",
@@ -271,22 +216,10 @@
       "strategy": "jsonld_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 124,
-      "delta": -2,
+      "event_count": 123,
+      "delta": -1,
       "note": "",
-      "last_success": "2026-10-07T17:27:16.643543+00:00"
-    },
-    {
-      "id": "arts-armory",
-      "name": "Arts at the Armory",
-      "square": "Magoun Square",
-      "strategy": "em_events",
-      "uses_llm": false,
-      "status": "ok",
-      "event_count": 59,
-      "delta": 0,
-      "note": "",
-      "last_success": "2026-10-07T17:27:16.643543+00:00"
+      "last_success": "2026-10-08T17:23:55.649611+00:00"
     },
     {
       "id": "deep-cuts",
@@ -298,7 +231,7 @@
       "event_count": 42,
       "delta": 0,
       "note": "",
-      "last_success": "2026-10-07T17:27:16.643543+00:00"
+      "last_success": "2026-10-08T17:23:55.649611+00:00"
     },
     {
       "id": "idle-hands",
@@ -307,10 +240,10 @@
       "strategy": "squarespace_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 34,
-      "delta": 1,
+      "event_count": 33,
+      "delta": -1,
       "note": "",
-      "last_success": "2026-10-07T17:27:16.643543+00:00"
+      "last_success": "2026-10-08T17:23:55.649611+00:00"
     },
     {
       "id": "mideast-downstairs",
@@ -320,9 +253,9 @@
       "uses_llm": false,
       "status": "ok",
       "event_count": 23,
-      "delta": 2,
+      "delta": 0,
       "note": "",
-      "last_success": "2026-10-07T17:27:16.643543+00:00"
+      "last_success": "2026-10-08T17:23:55.649611+00:00"
     },
     {
       "id": "sally-obriens",
@@ -332,21 +265,9 @@
       "uses_llm": false,
       "status": "ok",
       "event_count": 22,
-      "delta": -1,
+      "delta": 0,
       "note": "",
-      "last_success": "2026-10-07T17:27:16.643543+00:00"
-    },
-    {
-      "id": "lamplighter-broadway",
-      "name": "Lamplighter Brewing - Broadway",
-      "square": "Central",
-      "strategy": "shopify_products",
-      "uses_llm": true,
-      "status": "ok",
-      "event_count": 20,
-      "delta": -2,
-      "note": "",
-      "last_success": "2026-10-07T17:27:16.643543+00:00"
+      "last_success": "2026-10-08T17:23:55.649611+00:00"
     },
     {
       "id": "plough-stars",
@@ -355,10 +276,22 @@
       "strategy": "html_full_text",
       "uses_llm": true,
       "status": "ok",
-      "event_count": 20,
+      "event_count": 19,
       "delta": -1,
       "note": "",
-      "last_success": "2026-10-07T17:27:16.643543+00:00"
+      "last_success": "2026-10-08T17:23:55.649611+00:00"
+    },
+    {
+      "id": "lamplighter-broadway",
+      "name": "Lamplighter Brewing - Broadway",
+      "square": "Central",
+      "strategy": "shopify_products",
+      "uses_llm": true,
+      "status": "ok",
+      "event_count": 18,
+      "delta": -2,
+      "note": "",
+      "last_success": "2026-10-08T17:23:55.649611+00:00"
     },
     {
       "id": "lizard-lounge",
@@ -370,7 +303,7 @@
       "event_count": 18,
       "delta": 0,
       "note": "",
-      "last_success": "2026-10-07T17:27:16.643543+00:00"
+      "last_success": "2026-10-08T17:23:55.649611+00:00"
     },
     {
       "id": "sinclair",
@@ -379,10 +312,10 @@
       "strategy": "aeg_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 17,
-      "delta": 0,
+      "event_count": 16,
+      "delta": -1,
       "note": "",
-      "last_success": "2026-10-07T17:27:16.643543+00:00"
+      "last_success": "2026-10-08T17:23:55.649611+00:00"
     },
     {
       "id": "scorpion-boston",
@@ -394,7 +327,19 @@
       "event_count": 16,
       "delta": 0,
       "note": "",
-      "last_success": "2026-10-07T17:27:16.643543+00:00"
+      "last_success": "2026-10-08T17:23:55.649611+00:00"
+    },
+    {
+      "id": "tallship",
+      "name": "The Tall Ship Boston",
+      "square": "Maverick",
+      "strategy": "wix_events",
+      "uses_llm": false,
+      "status": "ok",
+      "event_count": 14,
+      "delta": 2,
+      "note": "",
+      "last_success": "2026-10-08T17:23:55.649611+00:00"
     },
     {
       "id": "grand-boston",
@@ -404,9 +349,9 @@
       "uses_llm": false,
       "status": "ok",
       "event_count": 14,
-      "delta": 1,
+      "delta": 0,
       "note": "",
-      "last_success": "2026-10-07T17:27:16.643543+00:00"
+      "last_success": "2026-10-08T17:23:55.649611+00:00"
     },
     {
       "id": "medford-brewing",
@@ -415,22 +360,10 @@
       "strategy": "jsonld_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 13,
-      "delta": 1,
-      "note": "",
-      "last_success": "2026-10-07T17:27:16.643543+00:00"
-    },
-    {
-      "id": "tallship",
-      "name": "The Tall Ship Boston",
-      "square": "Maverick",
-      "strategy": "wix_events",
-      "uses_llm": false,
-      "status": "ok",
       "event_count": 12,
-      "delta": 0,
+      "delta": -1,
       "note": "",
-      "last_success": "2026-10-07T17:27:16.643543+00:00"
+      "last_success": "2026-10-08T17:23:55.649611+00:00"
     },
     {
       "id": "west-end-museum",
@@ -442,7 +375,7 @@
       "event_count": 11,
       "delta": 0,
       "note": "",
-      "last_success": "2026-10-07T17:27:16.643543+00:00"
+      "last_success": "2026-10-08T17:23:55.649611+00:00"
     },
     {
       "id": "passim",
@@ -454,7 +387,19 @@
       "event_count": 8,
       "delta": 0,
       "note": "",
-      "last_success": "2026-10-07T17:27:16.643543+00:00"
+      "last_success": "2026-10-08T17:23:55.649611+00:00"
+    },
+    {
+      "id": "village-social",
+      "name": "Village Social Club",
+      "square": "Brookline Village",
+      "strategy": "gcal_ics",
+      "uses_llm": false,
+      "status": "ok",
+      "event_count": 8,
+      "delta": 1,
+      "note": "",
+      "last_success": "2026-10-08T17:23:55.649611+00:00"
     },
     {
       "id": "faces-brewing",
@@ -466,19 +411,7 @@
       "event_count": 7,
       "delta": 0,
       "note": "",
-      "last_success": "2026-10-07T17:27:16.643543+00:00"
-    },
-    {
-      "id": "village-social",
-      "name": "Village Social Club",
-      "square": "Brookline Village",
-      "strategy": "gcal_ics",
-      "uses_llm": false,
-      "status": "ok",
-      "event_count": 7,
-      "delta": 0,
-      "note": "",
-      "last_success": "2026-10-07T17:27:16.643543+00:00"
+      "last_success": "2026-10-08T17:23:55.649611+00:00"
     },
     {
       "id": "dorchester-brewing",
@@ -490,7 +423,7 @@
       "event_count": 4,
       "delta": 0,
       "note": "",
-      "last_success": "2026-10-07T17:27:16.643543+00:00"
+      "last_success": "2026-10-08T17:23:55.649611+00:00"
     },
     {
       "id": "boston-open-market",
@@ -502,7 +435,7 @@
       "event_count": 3,
       "delta": 0,
       "note": "",
-      "last_success": "2026-10-07T17:27:16.643543+00:00"
+      "last_success": "2026-10-08T17:23:55.649611+00:00"
     },
     {
       "id": "vrcc",
@@ -514,7 +447,7 @@
       "event_count": 2,
       "delta": 0,
       "note": "",
-      "last_success": "2026-10-07T17:27:16.643543+00:00"
+      "last_success": "2026-10-08T17:23:55.649611+00:00"
     },
     {
       "id": "hamilton-brookline",
@@ -524,9 +457,9 @@
       "uses_llm": true,
       "status": "ok",
       "event_count": 2,
-      "delta": -1,
+      "delta": 0,
       "note": "",
-      "last_success": "2026-10-07T17:27:16.643543+00:00"
+      "last_success": "2026-10-08T17:23:55.649611+00:00"
     }
   ]
 }
