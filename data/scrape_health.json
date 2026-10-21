@@ -1,38 +1,38 @@
 {
   "schema": "tonight.health/1",
-  "generated_at": "2026-10-20T14:58:45.610617+00:00",
-  "duration_seconds": 347.7,
+  "generated_at": "2026-10-21T15:05:17.634950+00:00",
+  "duration_seconds": 345.6,
   "totals": {
-    "active_events": 1188,
-    "payload_bytes": 1844613,
-    "payload_gzip_bytes": 331060,
-    "archived_this_run": 487,
+    "active_events": 1171,
+    "payload_bytes": 1832024,
+    "payload_gzip_bytes": 328677,
+    "archived_this_run": 477,
     "venues_total": 33,
-    "venues_ok": 29,
+    "venues_ok": 28,
     "venues_idle": 2,
     "venues_warning": 0,
-    "venues_error": 2,
-    "no_image": 108,
-    "no_image_pct": 9.1
+    "venues_error": 3,
+    "no_image": 94,
+    "no_image_pct": 8.0
   },
   "by_square": {
-    "Davis": 344,
-    "Union Square": 253,
-    "Harvard": 188,
+    "Davis": 319,
+    "Union Square": 261,
+    "Harvard": 187,
     "Inman Square": 117,
-    "Magoun Square": 72,
+    "Magoun Square": 71,
     "Central": 52,
-    "Medford Square": 49,
-    "Malden Center": 31,
+    "Medford Square": 51,
+    "Malden Center": 33,
     "Porter": 26,
     "Seaport": 20,
-    "Lechmere": 8,
     "North Station": 8,
+    "Lechmere": 7,
     "Andrew": 6,
     "Brookline Village": 6,
-    "Coolidge Corner": 3,
     "Maverick": 3,
-    "Arlington": 2
+    "Arlington": 2,
+    "Coolidge Corner": 2
   },
   "off_map_squares": [
     {
@@ -43,7 +43,7 @@
     },
     {
       "square": "Medford Square",
-      "events": 49,
+      "events": 51,
       "bus_only": true,
       "probable_match": null
     }
@@ -55,41 +55,161 @@
   "reconciled": {
     "dropped": [
       {
+        "venue_id": "village-social",
+        "id": "village-social-20261024T2000",
+        "title": "Ollie Gullick",
+        "start": "2026-10-24T20:00:00"
+      },
+      {
         "venue_id": "somerville-theatre",
-        "id": "somerville-theatre-20261023T2000",
+        "id": "somerville-theatre-20261101T1500",
         "title": "The Eleventh Year - World Premiere of New Score by the Psychedelic Cinema Orchestra",
-        "start": "2026-10-23T20:00:00"
+        "start": "2026-11-01T15:00:00"
       },
       {
-        "venue_id": "aeronaut",
-        "id": "aeronaut-4b7ecd22ca",
-        "title": "Sophia Saleh",
-        "start": "2026-11-01T14:30"
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261104T1930",
+        "title": "Warren Miller's Days Off",
+        "start": "2026-11-04T19:30:00"
       },
       {
-        "venue_id": "comedy-studio",
-        "id": "comedy-studio-98c43e6ffc",
-        "title": "TCS presents: Dana Gould",
-        "start": "2026-11-20T19:15"
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261105T1930",
+        "title": "Warren Miller's Days Off",
+        "start": "2026-11-05T19:30:00"
       },
       {
-        "venue_id": "comedy-studio",
-        "id": "comedy-studio-97135c1287",
-        "title": "TCS presents: Dana Gould",
-        "start": "2026-11-21T19:15"
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261113T1830",
+        "title": "Andrea Gibson's Love Letter from the Afterlife",
+        "start": "2026-11-13T18:30:00"
       },
       {
-        "venue_id": "arts-armory",
-        "id": "arts-armory-b265c1d3e4",
-        "title": "Somerville Winter Farmers Market",
-        "start": "2027-02-06T09:30:00"
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261113T2200",
+        "title": "Andrea Gibson's Love Letter from the Afterlife",
+        "start": "2026-11-13T22:00:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261205T2000",
+        "title": "The Slutcracker",
+        "start": "2026-12-05T20:00:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261206T1600",
+        "title": "The Slutcracker",
+        "start": "2026-12-06T16:00:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261211T2000",
+        "title": "The Slutcracker",
+        "start": "2026-12-11T20:00:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261212T1400",
+        "title": "The Slutcracker",
+        "start": "2026-12-12T14:00:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261212T2000",
+        "title": "The Slutcracker",
+        "start": "2026-12-12T20:00:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261213T1600",
+        "title": "The Slutcracker",
+        "start": "2026-12-13T16:00:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261216T2000",
+        "title": "The Slutcracker",
+        "start": "2026-12-16T20:00:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261217T2000",
+        "title": "The Slutcracker",
+        "start": "2026-12-17T20:00:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261218T2000",
+        "title": "The Slutcracker",
+        "start": "2026-12-18T20:00:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261219T1400",
+        "title": "The Slutcracker",
+        "start": "2026-12-19T14:00:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261219T2000",
+        "title": "The Slutcracker",
+        "start": "2026-12-19T20:00:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261220T1600",
+        "title": "The Slutcracker",
+        "start": "2026-12-20T16:00:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261221T2000",
+        "title": "The Slutcracker",
+        "start": "2026-12-21T20:00:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261226T2000",
+        "title": "The Slutcracker",
+        "start": "2026-12-26T20:00:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261227T1600",
+        "title": "The Slutcracker",
+        "start": "2026-12-27T16:00:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20270101T2000",
+        "title": "The Slutcracker",
+        "start": "2027-01-01T20:00:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20270102T2000",
+        "title": "The Slutcracker",
+        "start": "2027-01-02T20:00:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20270103T1600",
+        "title": "The Slutcracker",
+        "start": "2027-01-03T16:00:00"
+      },
+      {
+        "venue_id": "medford-brewing",
+        "id": "medford-brewing-2f6f8d2777",
+        "title": "Revelry N\u2019awlins Cuisine",
+        "start": "2026-11-07T13:00"
       }
     ],
     "skipped": []
   },
   "tests": {
     "status": "fail",
-    "at": "2026-10-20T14:52:56.813233+00:00",
+    "at": "2026-10-21T14:59:31.224402+00:00",
     "total": 98,
     "passed": 97,
     "failed": 1,
@@ -104,9 +224,21 @@
       "uses_llm": false,
       "status": "error",
       "event_count": 17,
-      "delta": -2,
-      "note": "yielded 0 events (feed had 19) \u2014 likely broken",
+      "delta": 0,
+      "note": "yielded 0 events (feed had 17) \u2014 likely broken",
       "last_success": "2026-08-29T15:03:58.548262+00:00"
+    },
+    {
+      "id": "lizard-lounge",
+      "name": "The Lizard Lounge",
+      "square": "Porter",
+      "strategy": "jsonld_events",
+      "uses_llm": false,
+      "status": "error",
+      "event_count": 9,
+      "delta": 0,
+      "note": "HTTPSConnectionPool(host='lizardloungeclub.com', port=443): Read timed out. (read timeout=12)",
+      "last_success": "2026-10-20T14:58:45.437709+00:00"
     },
     {
       "id": "museum-of-science",
@@ -151,10 +283,10 @@
       "strategy": "aeronaut_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 237,
-      "delta": -3,
+      "event_count": 236,
+      "delta": -1,
       "note": "",
-      "last_success": "2026-10-20T14:58:45.437709+00:00"
+      "last_success": "2026-10-21T15:05:17.452771+00:00"
     },
     {
       "id": "comedy-studio",
@@ -164,9 +296,9 @@
       "uses_llm": false,
       "status": "ok",
       "event_count": 163,
-      "delta": -4,
+      "delta": 0,
       "note": "",
-      "last_success": "2026-10-20T14:58:45.437709+00:00"
+      "last_success": "2026-10-21T15:05:17.452771+00:00"
     },
     {
       "id": "burren",
@@ -187,10 +319,10 @@
       "strategy": "burren_tables",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 155,
-      "delta": -5,
+      "event_count": 153,
+      "delta": -2,
       "note": "",
-      "last_success": "2026-10-20T14:58:45.437709+00:00"
+      "last_success": "2026-10-21T15:05:17.452771+00:00"
     },
     {
       "id": "rockwell",
@@ -199,10 +331,10 @@
       "strategy": "jsonld_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 119,
-      "delta": -1,
+      "event_count": 117,
+      "delta": -2,
       "note": "",
-      "last_success": "2026-10-20T14:58:45.437709+00:00"
+      "last_success": "2026-10-21T15:05:17.452771+00:00"
     },
     {
       "id": "lilypad",
@@ -212,9 +344,9 @@
       "uses_llm": false,
       "status": "ok",
       "event_count": 117,
-      "delta": -2,
+      "delta": 0,
       "note": "",
-      "last_success": "2026-10-20T14:58:45.437709+00:00"
+      "last_success": "2026-10-21T15:05:17.452771+00:00"
     },
     {
       "id": "arts-armory",
@@ -223,22 +355,10 @@
       "strategy": "em_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 72,
+      "event_count": 71,
       "delta": -1,
       "note": "",
-      "last_success": "2026-10-20T14:58:45.437709+00:00"
-    },
-    {
-      "id": "somerville-theatre",
-      "name": "Somerville Theatre",
-      "square": "Davis",
-      "strategy": "html_full_text",
-      "uses_llm": true,
-      "status": "ok",
-      "event_count": 39,
-      "delta": 2,
-      "note": "",
-      "last_success": "2026-10-20T14:58:45.437709+00:00"
+      "last_success": "2026-10-21T15:05:17.452771+00:00"
     },
     {
       "id": "deep-cuts",
@@ -247,10 +367,10 @@
       "strategy": "dice_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 37,
-      "delta": 0,
+      "event_count": 38,
+      "delta": 1,
       "note": "",
-      "last_success": "2026-10-20T14:58:45.437709+00:00"
+      "last_success": "2026-10-21T15:05:17.452771+00:00"
     },
     {
       "id": "crystal-ballroom",
@@ -260,9 +380,9 @@
       "uses_llm": false,
       "status": "ok",
       "event_count": 31,
-      "delta": -1,
+      "delta": 0,
       "note": "",
-      "last_success": "2026-10-20T14:58:45.437709+00:00"
+      "last_success": "2026-10-21T15:05:17.452771+00:00"
     },
     {
       "id": "idle-hands",
@@ -271,34 +391,10 @@
       "strategy": "squarespace_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 27,
-      "delta": -1,
+      "event_count": 29,
+      "delta": 2,
       "note": "",
-      "last_success": "2026-10-20T14:58:45.437709+00:00"
-    },
-    {
-      "id": "lamplighter-broadway",
-      "name": "Lamplighter Brewing - Broadway",
-      "square": "Central",
-      "strategy": "shopify_products",
-      "uses_llm": true,
-      "status": "ok",
-      "event_count": 26,
-      "delta": -1,
-      "note": "",
-      "last_success": "2026-10-20T14:58:45.437709+00:00"
-    },
-    {
-      "id": "mideast-downstairs",
-      "name": "The Middle East - Downstairs",
-      "square": "Central",
-      "strategy": "mideast_events",
-      "uses_llm": false,
-      "status": "ok",
-      "event_count": 20,
-      "delta": -6,
-      "note": "",
-      "last_success": "2026-10-20T14:58:45.437709+00:00"
+      "last_success": "2026-10-21T15:05:17.452771+00:00"
     },
     {
       "id": "sally-obriens",
@@ -307,10 +403,46 @@
       "strategy": "sally_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 16,
-      "delta": -2,
+      "event_count": 25,
+      "delta": 9,
       "note": "",
-      "last_success": "2026-10-20T14:58:45.437709+00:00"
+      "last_success": "2026-10-21T15:05:17.452771+00:00"
+    },
+    {
+      "id": "lamplighter-broadway",
+      "name": "Lamplighter Brewing - Broadway",
+      "square": "Central",
+      "strategy": "shopify_products",
+      "uses_llm": true,
+      "status": "ok",
+      "event_count": 23,
+      "delta": -3,
+      "note": "",
+      "last_success": "2026-10-21T15:05:17.452771+00:00"
+    },
+    {
+      "id": "mideast-downstairs",
+      "name": "The Middle East - Downstairs",
+      "square": "Central",
+      "strategy": "mideast_events",
+      "uses_llm": false,
+      "status": "ok",
+      "event_count": 23,
+      "delta": 3,
+      "note": "",
+      "last_success": "2026-10-21T15:05:17.452771+00:00"
+    },
+    {
+      "id": "somerville-theatre",
+      "name": "Somerville Theatre",
+      "square": "Davis",
+      "strategy": "html_full_text",
+      "uses_llm": true,
+      "status": "ok",
+      "event_count": 18,
+      "delta": -21,
+      "note": "",
+      "last_success": "2026-10-21T15:05:17.452771+00:00"
     },
     {
       "id": "sinclair",
@@ -319,10 +451,10 @@
       "strategy": "aeg_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 16,
-      "delta": -1,
+      "event_count": 17,
+      "delta": 1,
       "note": "",
-      "last_success": "2026-10-20T14:58:45.437709+00:00"
+      "last_success": "2026-10-21T15:05:17.452771+00:00"
     },
     {
       "id": "plough-stars",
@@ -331,10 +463,10 @@
       "strategy": "html_full_text",
       "uses_llm": true,
       "status": "ok",
-      "event_count": 14,
-      "delta": 3,
+      "event_count": 13,
+      "delta": -1,
       "note": "",
-      "last_success": "2026-10-20T14:58:45.437709+00:00"
+      "last_success": "2026-10-21T15:05:17.452771+00:00"
     },
     {
       "id": "medford-brewing",
@@ -343,10 +475,10 @@
       "strategy": "jsonld_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 12,
-      "delta": -1,
+      "event_count": 13,
+      "delta": 1,
       "note": "",
-      "last_success": "2026-10-20T14:58:45.437709+00:00"
+      "last_success": "2026-10-21T15:05:17.452771+00:00"
     },
     {
       "id": "grand-boston",
@@ -358,31 +490,7 @@
       "event_count": 12,
       "delta": 0,
       "note": "",
-      "last_success": "2026-10-20T14:58:45.437709+00:00"
-    },
-    {
-      "id": "passim",
-      "name": "Club Passim",
-      "square": "Harvard",
-      "strategy": "html_full_text",
-      "uses_llm": true,
-      "status": "ok",
-      "event_count": 9,
-      "delta": 1,
-      "note": "",
-      "last_success": "2026-10-20T14:58:45.437709+00:00"
-    },
-    {
-      "id": "lizard-lounge",
-      "name": "The Lizard Lounge",
-      "square": "Porter",
-      "strategy": "jsonld_events",
-      "uses_llm": false,
-      "status": "ok",
-      "event_count": 9,
-      "delta": -1,
-      "note": "",
-      "last_success": "2026-10-20T14:58:45.437709+00:00"
+      "last_success": "2026-10-21T15:05:17.452771+00:00"
     },
     {
       "id": "west-end-museum",
@@ -394,7 +502,7 @@
       "event_count": 8,
       "delta": 0,
       "note": "",
-      "last_success": "2026-10-20T14:58:45.437709+00:00"
+      "last_success": "2026-10-21T15:05:17.452771+00:00"
     },
     {
       "id": "scorpion-boston",
@@ -406,7 +514,19 @@
       "event_count": 8,
       "delta": 0,
       "note": "",
-      "last_success": "2026-10-20T14:58:45.437709+00:00"
+      "last_success": "2026-10-21T15:05:17.452771+00:00"
+    },
+    {
+      "id": "passim",
+      "name": "Club Passim",
+      "square": "Harvard",
+      "strategy": "html_full_text",
+      "uses_llm": true,
+      "status": "ok",
+      "event_count": 7,
+      "delta": -2,
+      "note": "",
+      "last_success": "2026-10-21T15:05:17.452771+00:00"
     },
     {
       "id": "dorchester-brewing",
@@ -418,7 +538,7 @@
       "event_count": 6,
       "delta": 0,
       "note": "",
-      "last_success": "2026-10-20T14:58:45.437709+00:00"
+      "last_success": "2026-10-21T15:05:17.452771+00:00"
     },
     {
       "id": "village-social",
@@ -430,7 +550,7 @@
       "event_count": 6,
       "delta": 0,
       "note": "",
-      "last_success": "2026-10-20T14:58:45.437709+00:00"
+      "last_success": "2026-10-21T15:05:17.452771+00:00"
     },
     {
       "id": "faces-brewing",
@@ -442,19 +562,7 @@
       "event_count": 4,
       "delta": 0,
       "note": "",
-      "last_success": "2026-10-20T14:58:45.437709+00:00"
-    },
-    {
-      "id": "hamilton-brookline",
-      "name": "Hamilton Restaurant & Bar",
-      "square": "Coolidge Corner",
-      "strategy": "html_full_text",
-      "uses_llm": true,
-      "status": "ok",
-      "event_count": 3,
-      "delta": 1,
-      "note": "",
-      "last_success": "2026-10-20T14:58:45.437709+00:00"
+      "last_success": "2026-10-21T15:05:17.452771+00:00"
     },
     {
       "id": "tallship",
@@ -464,9 +572,21 @@
       "uses_llm": false,
       "status": "ok",
       "event_count": 2,
+      "delta": 0,
+      "note": "",
+      "last_success": "2026-10-21T15:05:17.452771+00:00"
+    },
+    {
+      "id": "hamilton-brookline",
+      "name": "Hamilton Restaurant & Bar",
+      "square": "Coolidge Corner",
+      "strategy": "html_full_text",
+      "uses_llm": true,
+      "status": "ok",
+      "event_count": 2,
       "delta": -1,
       "note": "",
-      "last_success": "2026-10-20T14:58:45.437709+00:00"
+      "last_success": "2026-10-21T15:05:17.452771+00:00"
     },
     {
       "id": "boston-open-market",
@@ -478,7 +598,7 @@
       "event_count": 2,
       "delta": 0,
       "note": "",
-      "last_success": "2026-10-20T14:58:45.437709+00:00"
+      "last_success": "2026-10-21T15:05:17.452771+00:00"
     },
     {
       "id": "vrcc",
@@ -490,7 +610,7 @@
       "event_count": 1,
       "delta": 0,
       "note": "",
-      "last_success": "2026-10-20T14:58:45.437709+00:00"
+      "last_success": "2026-10-21T15:05:17.452771+00:00"
     }
   ]
 }
