@@ -1,43 +1,44 @@
 {
   "schema": "tonight.health/1",
-  "generated_at": "2026-10-24T14:00:45.947933+00:00",
-  "duration_seconds": 360.4,
+  "generated_at": "2026-10-25T14:18:12.098531+00:00",
+  "duration_seconds": 332.1,
   "totals": {
-    "active_events": 1187,
-    "payload_bytes": 1831758,
-    "payload_gzip_bytes": 329318,
-    "archived_this_run": 486,
+    "active_events": 1171,
+    "payload_bytes": 1791308,
+    "payload_gzip_bytes": 318532,
+    "archived_this_run": 513,
     "venues_total": 33,
-    "venues_ok": 28,
+    "venues_ok": 30,
     "venues_idle": 2,
     "venues_warning": 0,
-    "venues_error": 3,
-    "no_image": 106,
-    "no_image_pct": 8.9
+    "venues_error": 1,
+    "no_image": 88,
+    "no_image_pct": 7.5
   },
   "by_square": {
-    "Davis": 362,
-    "Union Square": 253,
-    "Harvard": 188,
-    "Inman Square": 110,
-    "Magoun Square": 70,
+    "Davis": 340,
+    "Union Square": 252,
+    "Harvard": 186,
+    "Inman Square": 108,
+    "Magoun Square": 69,
+    "Central": 63,
     "Medford Square": 50,
-    "Central": 48,
-    "Malden Center": 30,
-    "Porter": 24,
-    "Seaport": 20,
+    "Malden Center": 28,
+    "Porter": 23,
+    "Seaport": 18,
     "North Station": 8,
     "Andrew": 7,
-    "Lechmere": 5,
+    "Lechmere": 6,
     "Brookline Village": 5,
     "Maverick": 3,
     "Arlington": 2,
-    "Coolidge Corner": 2
+    "Coolidge Corner": 2,
+    "Science Park/West End": 1
   },
   "off_map_squares": [
     {
       "square": "Inman Square",
-      "events": 110,
+      "events": 108,
       "bus_only": true,
       "probable_match": null
     },
@@ -55,65 +56,125 @@
   "reconciled": {
     "dropped": [
       {
-        "venue_id": "sally-obriens",
-        "id": "sally-obriens-20261031T1400",
-        "title": "Unusual Methods, Split Lips",
-        "start": "2026-10-31T14:00:00"
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261205T2000",
+        "title": "The Slutcracker",
+        "start": "2026-12-05T20:00:00"
       },
       {
         "venue_id": "somerville-theatre",
-        "id": "somerville-theatre-20261101T1500",
-        "title": "The Eleventh Year - World Premiere of New Score by the Psychedelic Cinema Orchestra",
-        "start": "2026-11-01T15:00:00"
+        "id": "somerville-theatre-20261206T1600",
+        "title": "The Slutcracker",
+        "start": "2026-12-06T16:00:00"
       },
       {
         "venue_id": "somerville-theatre",
-        "id": "somerville-theatre-20261104T1930",
-        "title": "Warren Miller's Days Off",
-        "start": "2026-11-04T19:30:00"
+        "id": "somerville-theatre-20261211T2000",
+        "title": "The Slutcracker",
+        "start": "2026-12-11T20:00:00"
       },
       {
         "venue_id": "somerville-theatre",
-        "id": "somerville-theatre-20261105T1930",
-        "title": "Warren Miller's Days Off",
-        "start": "2026-11-05T19:30:00"
+        "id": "somerville-theatre-20261212T1400",
+        "title": "The Slutcracker",
+        "start": "2026-12-12T14:00:00"
       },
       {
-        "venue_id": "arts-armory",
-        "id": "arts-armory-bead4c179a",
-        "title": "Beft Friends Community Jam",
-        "start": "2026-11-08T12:00:00"
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261212T2000",
+        "title": "The Slutcracker",
+        "start": "2026-12-12T20:00:00"
       },
       {
-        "venue_id": "arts-armory",
-        "id": "arts-armory-1916be2522",
-        "title": "SOLD OUT: The Bowery Presents The Blasting Company [Moved to the Royale]",
-        "start": "2026-11-09T19:00:00"
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261213T1600",
+        "title": "The Slutcracker",
+        "start": "2026-12-13T16:00:00"
       },
       {
-        "venue_id": "lilypad",
-        "id": "lilypad-b786745a74",
-        "title": "lighthearted + Kate Stephenson",
-        "start": "2026-11-13T20:30"
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261216T2000",
+        "title": "The Slutcracker",
+        "start": "2026-12-16T20:00:00"
       },
       {
-        "venue_id": "comedy-studio",
-        "id": "comedy-studio-c57ac0ee4a",
-        "title": "The Late Night",
-        "start": "2026-11-20T21:30"
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261217T2000",
+        "title": "The Slutcracker",
+        "start": "2026-12-17T20:00:00"
       },
       {
-        "venue_id": "comedy-studio",
-        "id": "comedy-studio-e76bdffabd",
-        "title": "The Late Night",
-        "start": "2026-11-21T21:30"
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261218T2000",
+        "title": "The Slutcracker",
+        "start": "2026-12-18T20:00:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261219T1400",
+        "title": "The Slutcracker",
+        "start": "2026-12-19T14:00:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261219T2000",
+        "title": "The Slutcracker",
+        "start": "2026-12-19T20:00:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261220T1600",
+        "title": "The Slutcracker",
+        "start": "2026-12-20T16:00:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261221T2000",
+        "title": "The Slutcracker",
+        "start": "2026-12-21T20:00:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261226T2000",
+        "title": "The Slutcracker",
+        "start": "2026-12-26T20:00:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20261227T1600",
+        "title": "The Slutcracker",
+        "start": "2026-12-27T16:00:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20270101T2000",
+        "title": "The Slutcracker",
+        "start": "2027-01-01T20:00:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20270102T2000",
+        "title": "The Slutcracker",
+        "start": "2027-01-02T20:00:00"
+      },
+      {
+        "venue_id": "somerville-theatre",
+        "id": "somerville-theatre-20270103T1600",
+        "title": "The Slutcracker",
+        "start": "2027-01-03T16:00:00"
+      },
+      {
+        "venue_id": "lamplighter-broadway",
+        "id": "lamplighter-broadway-e104d0cf97",
+        "title": "Brewery Tour & Tasting",
+        "start": "2026-12-05T16:00:00"
       }
     ],
     "skipped": []
   },
   "tests": {
     "status": "fail",
-    "at": "2026-10-24T13:54:44.261436+00:00",
+    "at": "2026-10-25T14:12:38.888785+00:00",
     "total": 98,
     "passed": 97,
     "failed": 1,
@@ -131,30 +192,6 @@
       "delta": 0,
       "note": "yielded 0 events (feed had 17) \u2014 likely broken",
       "last_success": "2026-08-29T15:03:58.548262+00:00"
-    },
-    {
-      "id": "plough-stars",
-      "name": "The Plough and Stars",
-      "square": "Central",
-      "strategy": "html_full_text",
-      "uses_llm": true,
-      "status": "error",
-      "event_count": 9,
-      "delta": -1,
-      "note": "HTTPSConnectionPool(host='calendar.ploughandstars.com', port=443): Max retries exceeded with url: /events/calendar (Caused by ConnectTimeoutError(<HTTPSConnection(host='calendar.ploughandstars.com', port=443) at 0x7fdf986dda50>, 'Connection to calendar.ploughandstars.com timed out. (connect timeout=12)'))",
-      "last_success": "2026-10-23T14:56:14.279931+00:00"
-    },
-    {
-      "id": "museum-of-science",
-      "name": "Museum of Science",
-      "square": "Science Park/West End",
-      "strategy": "mos_subspace_events",
-      "uses_llm": true,
-      "status": "error",
-      "event_count": 0,
-      "delta": 0,
-      "note": "403 Client Error: Forbidden for url: https://www.mos.org/api/v1/event-listing/event_detail/96/all/all/516/all?items_per_page=18&sort_by=date_asc",
-      "last_success": "2026-07-25T18:29:03.462761+00:00"
     },
     {
       "id": "bow-market",
@@ -188,9 +225,9 @@
       "uses_llm": false,
       "status": "ok",
       "event_count": 230,
-      "delta": -3,
+      "delta": 0,
       "note": "",
-      "last_success": "2026-10-24T14:00:45.768140+00:00"
+      "last_success": "2026-10-25T14:18:11.922457+00:00"
     },
     {
       "id": "comedy-studio",
@@ -199,10 +236,10 @@
       "strategy": "seatengine",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 164,
-      "delta": 0,
+      "event_count": 162,
+      "delta": -2,
       "note": "",
-      "last_success": "2026-10-24T14:00:45.768140+00:00"
+      "last_success": "2026-10-25T14:18:11.922457+00:00"
     },
     {
       "id": "burren",
@@ -223,10 +260,10 @@
       "strategy": "burren_tables",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 155,
+      "event_count": 152,
       "delta": -3,
       "note": "",
-      "last_success": "2026-10-24T14:00:45.768140+00:00"
+      "last_success": "2026-10-25T14:18:11.922457+00:00"
     },
     {
       "id": "rockwell",
@@ -238,7 +275,7 @@
       "event_count": 141,
       "delta": 0,
       "note": "",
-      "last_success": "2026-10-24T14:00:45.768140+00:00"
+      "last_success": "2026-10-25T14:18:11.922457+00:00"
     },
     {
       "id": "lilypad",
@@ -247,10 +284,10 @@
       "strategy": "squarespace_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 110,
+      "event_count": 108,
       "delta": -2,
       "note": "",
-      "last_success": "2026-10-24T14:00:45.768140+00:00"
+      "last_success": "2026-10-25T14:18:11.922457+00:00"
     },
     {
       "id": "arts-armory",
@@ -259,10 +296,10 @@
       "strategy": "em_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 70,
-      "delta": -2,
+      "event_count": 69,
+      "delta": -1,
       "note": "",
-      "last_success": "2026-10-24T14:00:45.768140+00:00"
+      "last_success": "2026-10-25T14:18:11.922457+00:00"
     },
     {
       "id": "deep-cuts",
@@ -271,70 +308,10 @@
       "strategy": "dice_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 38,
-      "delta": 0,
-      "note": "",
-      "last_success": "2026-10-24T14:00:45.768140+00:00"
-    },
-    {
-      "id": "somerville-theatre",
-      "name": "Somerville Theatre",
-      "square": "Davis",
-      "strategy": "html_full_text",
-      "uses_llm": true,
-      "status": "ok",
-      "event_count": 36,
-      "delta": -3,
-      "note": "",
-      "last_success": "2026-10-24T14:00:45.768140+00:00"
-    },
-    {
-      "id": "crystal-ballroom",
-      "name": "Crystal Ballroom",
-      "square": "Davis",
-      "strategy": "crystal_events",
-      "uses_llm": false,
-      "status": "ok",
-      "event_count": 30,
-      "delta": 0,
-      "note": "",
-      "last_success": "2026-10-24T14:00:45.768140+00:00"
-    },
-    {
-      "id": "idle-hands",
-      "name": "Idle Hands Craft Ales",
-      "square": "Malden Center",
-      "strategy": "squarespace_events",
-      "uses_llm": false,
-      "status": "ok",
-      "event_count": 26,
-      "delta": 0,
-      "note": "",
-      "last_success": "2026-10-24T14:00:45.768140+00:00"
-    },
-    {
-      "id": "mideast-downstairs",
-      "name": "The Middle East - Downstairs",
-      "square": "Central",
-      "strategy": "mideast_events",
-      "uses_llm": false,
-      "status": "ok",
-      "event_count": 26,
-      "delta": 0,
-      "note": "",
-      "last_success": "2026-10-24T14:00:45.768140+00:00"
-    },
-    {
-      "id": "sally-obriens",
-      "name": "Sally O'Brien's",
-      "square": "Union Square",
-      "strategy": "sally_events",
-      "uses_llm": false,
-      "status": "ok",
-      "event_count": 23,
+      "event_count": 37,
       "delta": -1,
       "note": "",
-      "last_success": "2026-10-24T14:00:45.768140+00:00"
+      "last_success": "2026-10-25T14:18:11.922457+00:00"
     },
     {
       "id": "lamplighter-broadway",
@@ -343,10 +320,70 @@
       "strategy": "shopify_products",
       "uses_llm": true,
       "status": "ok",
-      "event_count": 18,
+      "event_count": 33,
+      "delta": 15,
+      "note": "",
+      "last_success": "2026-10-25T14:18:11.922457+00:00"
+    },
+    {
+      "id": "crystal-ballroom",
+      "name": "Crystal Ballroom",
+      "square": "Davis",
+      "strategy": "crystal_events",
+      "uses_llm": false,
+      "status": "ok",
+      "event_count": 29,
       "delta": -1,
       "note": "",
-      "last_success": "2026-10-24T14:00:45.768140+00:00"
+      "last_success": "2026-10-25T14:18:11.922457+00:00"
+    },
+    {
+      "id": "mideast-downstairs",
+      "name": "The Middle East - Downstairs",
+      "square": "Central",
+      "strategy": "mideast_events",
+      "uses_llm": false,
+      "status": "ok",
+      "event_count": 28,
+      "delta": 2,
+      "note": "",
+      "last_success": "2026-10-25T14:18:11.922457+00:00"
+    },
+    {
+      "id": "idle-hands",
+      "name": "Idle Hands Craft Ales",
+      "square": "Malden Center",
+      "strategy": "squarespace_events",
+      "uses_llm": false,
+      "status": "ok",
+      "event_count": 25,
+      "delta": -1,
+      "note": "",
+      "last_success": "2026-10-25T14:18:11.922457+00:00"
+    },
+    {
+      "id": "sally-obriens",
+      "name": "Sally O'Brien's",
+      "square": "Union Square",
+      "strategy": "sally_events",
+      "uses_llm": false,
+      "status": "ok",
+      "event_count": 22,
+      "delta": -1,
+      "note": "",
+      "last_success": "2026-10-25T14:18:11.922457+00:00"
+    },
+    {
+      "id": "somerville-theatre",
+      "name": "Somerville Theatre",
+      "square": "Davis",
+      "strategy": "html_full_text",
+      "uses_llm": true,
+      "status": "ok",
+      "event_count": 18,
+      "delta": -18,
+      "note": "",
+      "last_success": "2026-10-25T14:18:11.922457+00:00"
     },
     {
       "id": "sinclair",
@@ -355,22 +392,10 @@
       "strategy": "aeg_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 16,
-      "delta": 0,
+      "event_count": 17,
+      "delta": 1,
       "note": "",
-      "last_success": "2026-10-24T14:00:45.768140+00:00"
-    },
-    {
-      "id": "grand-boston",
-      "name": "The Grand Boston",
-      "square": "Seaport",
-      "strategy": "tablelist_events",
-      "uses_llm": false,
-      "status": "ok",
-      "event_count": 14,
-      "delta": 0,
-      "note": "",
-      "last_success": "2026-10-24T14:00:45.768140+00:00"
+      "last_success": "2026-10-25T14:18:11.922457+00:00"
     },
     {
       "id": "medford-brewing",
@@ -379,22 +404,34 @@
       "strategy": "jsonld_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 12,
-      "delta": 0,
+      "event_count": 13,
+      "delta": 1,
       "note": "",
-      "last_success": "2026-10-24T14:00:45.768140+00:00"
+      "last_success": "2026-10-25T14:18:11.922457+00:00"
     },
     {
-      "id": "passim",
-      "name": "Club Passim",
-      "square": "Harvard",
+      "id": "grand-boston",
+      "name": "The Grand Boston",
+      "square": "Seaport",
+      "strategy": "tablelist_events",
+      "uses_llm": false,
+      "status": "ok",
+      "event_count": 13,
+      "delta": -1,
+      "note": "",
+      "last_success": "2026-10-25T14:18:11.922457+00:00"
+    },
+    {
+      "id": "plough-stars",
+      "name": "The Plough and Stars",
+      "square": "Central",
       "strategy": "html_full_text",
       "uses_llm": true,
       "status": "ok",
       "event_count": 8,
-      "delta": 1,
+      "delta": -1,
       "note": "",
-      "last_success": "2026-10-24T14:00:45.768140+00:00"
+      "last_success": "2026-10-25T14:18:11.922457+00:00"
     },
     {
       "id": "west-end-museum",
@@ -406,7 +443,19 @@
       "event_count": 8,
       "delta": 0,
       "note": "",
-      "last_success": "2026-10-24T14:00:45.768140+00:00"
+      "last_success": "2026-10-25T14:18:11.922457+00:00"
+    },
+    {
+      "id": "passim",
+      "name": "Club Passim",
+      "square": "Harvard",
+      "strategy": "html_full_text",
+      "uses_llm": true,
+      "status": "ok",
+      "event_count": 7,
+      "delta": -1,
+      "note": "",
+      "last_success": "2026-10-25T14:18:11.922457+00:00"
     },
     {
       "id": "dorchester-brewing",
@@ -418,7 +467,7 @@
       "event_count": 7,
       "delta": 0,
       "note": "",
-      "last_success": "2026-10-24T14:00:45.768140+00:00"
+      "last_success": "2026-10-25T14:18:11.922457+00:00"
     },
     {
       "id": "lizard-lounge",
@@ -427,22 +476,10 @@
       "strategy": "jsonld_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 7,
+      "event_count": 6,
       "delta": -1,
       "note": "",
-      "last_success": "2026-10-24T14:00:45.768140+00:00"
-    },
-    {
-      "id": "scorpion-boston",
-      "name": "Scorpion Bar Boston",
-      "square": "Seaport",
-      "strategy": "tablelist_events",
-      "uses_llm": false,
-      "status": "ok",
-      "event_count": 6,
-      "delta": -2,
-      "note": "",
-      "last_success": "2026-10-24T14:00:45.768140+00:00"
+      "last_success": "2026-10-25T14:18:11.922457+00:00"
     },
     {
       "id": "village-social",
@@ -454,7 +491,19 @@
       "event_count": 5,
       "delta": 0,
       "note": "",
-      "last_success": "2026-10-24T14:00:45.768140+00:00"
+      "last_success": "2026-10-25T14:18:11.922457+00:00"
+    },
+    {
+      "id": "scorpion-boston",
+      "name": "Scorpion Bar Boston",
+      "square": "Seaport",
+      "strategy": "tablelist_events",
+      "uses_llm": false,
+      "status": "ok",
+      "event_count": 5,
+      "delta": -1,
+      "note": "",
+      "last_success": "2026-10-25T14:18:11.922457+00:00"
     },
     {
       "id": "faces-brewing",
@@ -463,10 +512,10 @@
       "strategy": "html_full_text",
       "uses_llm": true,
       "status": "ok",
-      "event_count": 4,
-      "delta": 0,
+      "event_count": 3,
+      "delta": -1,
       "note": "",
-      "last_success": "2026-10-24T14:00:45.768140+00:00"
+      "last_success": "2026-10-25T14:18:11.922457+00:00"
     },
     {
       "id": "tallship",
@@ -478,7 +527,7 @@
       "event_count": 2,
       "delta": 0,
       "note": "",
-      "last_success": "2026-10-24T14:00:45.768140+00:00"
+      "last_success": "2026-10-25T14:18:11.922457+00:00"
     },
     {
       "id": "hamilton-brookline",
@@ -490,7 +539,7 @@
       "event_count": 2,
       "delta": 0,
       "note": "",
-      "last_success": "2026-10-24T14:00:45.768140+00:00"
+      "last_success": "2026-10-25T14:18:11.922457+00:00"
     },
     {
       "id": "boston-open-market",
@@ -502,7 +551,7 @@
       "event_count": 2,
       "delta": 0,
       "note": "",
-      "last_success": "2026-10-24T14:00:45.768140+00:00"
+      "last_success": "2026-10-25T14:18:11.922457+00:00"
     },
     {
       "id": "vrcc",
@@ -514,7 +563,19 @@
       "event_count": 1,
       "delta": 0,
       "note": "",
-      "last_success": "2026-10-24T14:00:45.768140+00:00"
+      "last_success": "2026-10-25T14:18:11.922457+00:00"
+    },
+    {
+      "id": "museum-of-science",
+      "name": "Museum of Science",
+      "square": "Science Park/West End",
+      "strategy": "mos_subspace_events",
+      "uses_llm": true,
+      "status": "ok",
+      "event_count": 1,
+      "delta": 1,
+      "note": "",
+      "last_success": "2026-10-25T14:18:11.922457+00:00"
     }
   ]
 }
