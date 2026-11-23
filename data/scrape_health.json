@@ -1,47 +1,47 @@
 {
   "schema": "tonight.health/1",
-  "generated_at": "2026-11-22T17:47:51.176072+00:00",
-  "duration_seconds": 308.6,
+  "generated_at": "2026-11-23T22:02:05.207729+00:00",
+  "duration_seconds": 247.2,
   "totals": {
-    "active_events": 1080,
-    "payload_bytes": 1663640,
-    "payload_gzip_bytes": 300198,
-    "archived_this_run": 501,
+    "active_events": 1059,
+    "payload_bytes": 1639564,
+    "payload_gzip_bytes": 293345,
+    "archived_this_run": 511,
     "venues_total": 33,
-    "venues_ok": 27,
+    "venues_ok": 28,
     "venues_idle": 2,
     "venues_warning": 2,
-    "venues_error": 2,
-    "no_image": 75,
-    "no_image_pct": 6.9
+    "venues_error": 1,
+    "no_image": 67,
+    "no_image_pct": 6.3
   },
   "by_square": {
-    "Davis": 307,
-    "Union Square": 268,
-    "Harvard": 162,
-    "Inman Square": 125,
-    "Magoun Square": 58,
-    "Central": 48,
-    "Medford Square": 47,
-    "Malden Center": 20,
-    "Porter": 19,
-    "Seaport": 10,
+    "Davis": 298,
+    "Union Square": 278,
+    "Harvard": 160,
+    "Inman Square": 121,
+    "Magoun Square": 54,
+    "Medford Square": 45,
+    "Central": 45,
+    "Malden Center": 18,
+    "Porter": 17,
+    "Seaport": 8,
     "Andrew": 6,
     "North Station": 4,
-    "Brookline Village": 2,
     "Lechmere": 2,
-    "Coolidge Corner": 2
+    "Coolidge Corner": 2,
+    "Brookline Village": 1
   },
   "off_map_squares": [
     {
       "square": "Inman Square",
-      "events": 125,
+      "events": 121,
       "bus_only": true,
       "probable_match": null
     },
     {
       "square": "Medford Square",
-      "events": 47,
+      "events": 45,
       "bus_only": true,
       "probable_match": null
     }
@@ -51,12 +51,19 @@
     "overlap": []
   },
   "reconciled": {
-    "dropped": [],
+    "dropped": [
+      {
+        "venue_id": "mideast-sonia",
+        "id": "mideast-sonia-20261125T1900",
+        "title": "MATTAPARK Holiday Party",
+        "start": "2026-11-25T19:00:00"
+      }
+    ],
     "skipped": []
   },
   "tests": {
     "status": "fail",
-    "at": "2026-11-22T17:42:41.420042+00:00",
+    "at": "2026-11-23T21:57:57.064883+00:00",
     "total": 98,
     "passed": 97,
     "failed": 1,
@@ -64,27 +71,15 @@
   },
   "venues": [
     {
-      "id": "lizard-lounge",
-      "name": "The Lizard Lounge",
-      "square": "Porter",
-      "strategy": "jsonld_events",
-      "uses_llm": false,
-      "status": "error",
-      "event_count": 12,
-      "delta": -1,
-      "note": "HTTPSConnectionPool(host='lizardloungeclub.com', port=443): Read timed out. (read timeout=12)",
-      "last_success": "2026-11-21T17:20:39.485872+00:00"
-    },
-    {
       "id": "mccarthys",
       "name": "McCarthy's",
       "square": "Porter",
       "strategy": "squarespace_events",
       "uses_llm": false,
       "status": "error",
-      "event_count": 7,
+      "event_count": 6,
       "delta": -1,
-      "note": "yielded 0 events (feed had 8) \u2014 likely broken",
+      "note": "yielded 0 events (feed had 7) \u2014 likely broken",
       "last_success": "2026-08-29T15:03:58.548262+00:00"
     },
     {
@@ -142,10 +137,10 @@
       "strategy": "aeronaut_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 253,
-      "delta": -2,
+      "event_count": 265,
+      "delta": 12,
       "note": "",
-      "last_success": "2026-11-22T17:47:50.982155+00:00"
+      "last_success": "2026-11-23T22:02:05.015764+00:00"
     },
     {
       "id": "burren",
@@ -166,10 +161,10 @@
       "strategy": "seatengine",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 138,
-      "delta": 0,
+      "event_count": 136,
+      "delta": -2,
       "note": "",
-      "last_success": "2026-11-22T17:47:50.982155+00:00"
+      "last_success": "2026-11-23T22:02:05.015764+00:00"
     },
     {
       "id": "rockwell",
@@ -179,9 +174,9 @@
       "uses_llm": false,
       "status": "ok",
       "event_count": 130,
-      "delta": 1,
+      "delta": 0,
       "note": "",
-      "last_success": "2026-11-22T17:47:50.982155+00:00"
+      "last_success": "2026-11-23T22:02:05.015764+00:00"
     },
     {
       "id": "lilypad",
@@ -190,10 +185,10 @@
       "strategy": "squarespace_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 125,
-      "delta": -3,
+      "event_count": 121,
+      "delta": -4,
       "note": "",
-      "last_success": "2026-11-22T17:47:50.982155+00:00"
+      "last_success": "2026-11-23T22:02:05.015764+00:00"
     },
     {
       "id": "burren-back-room",
@@ -202,10 +197,10 @@
       "strategy": "burren_tables",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 120,
-      "delta": -3,
+      "event_count": 114,
+      "delta": -6,
       "note": "",
-      "last_success": "2026-11-22T17:47:50.982155+00:00"
+      "last_success": "2026-11-23T22:02:05.015764+00:00"
     },
     {
       "id": "arts-armory",
@@ -214,10 +209,10 @@
       "strategy": "em_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 58,
-      "delta": 2,
+      "event_count": 54,
+      "delta": -4,
       "note": "",
-      "last_success": "2026-11-22T17:47:50.982155+00:00"
+      "last_success": "2026-11-23T22:02:05.015764+00:00"
     },
     {
       "id": "deep-cuts",
@@ -226,22 +221,10 @@
       "strategy": "dice_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 33,
-      "delta": 0,
+      "event_count": 32,
+      "delta": -1,
       "note": "",
-      "last_success": "2026-11-22T17:47:50.982155+00:00"
-    },
-    {
-      "id": "crystal-ballroom",
-      "name": "Crystal Ballroom",
-      "square": "Davis",
-      "strategy": "crystal_events",
-      "uses_llm": false,
-      "status": "ok",
-      "event_count": 29,
-      "delta": 0,
-      "note": "",
-      "last_success": "2026-11-22T17:47:50.982155+00:00"
+      "last_success": "2026-11-23T22:02:05.015764+00:00"
     },
     {
       "id": "somerville-theatre",
@@ -250,10 +233,22 @@
       "strategy": "html_full_text",
       "uses_llm": true,
       "status": "ok",
-      "event_count": 28,
-      "delta": 0,
+      "event_count": 27,
+      "delta": -1,
       "note": "",
-      "last_success": "2026-11-22T17:47:50.982155+00:00"
+      "last_success": "2026-11-23T22:02:05.015764+00:00"
+    },
+    {
+      "id": "crystal-ballroom",
+      "name": "Crystal Ballroom",
+      "square": "Davis",
+      "strategy": "crystal_events",
+      "uses_llm": false,
+      "status": "ok",
+      "event_count": 27,
+      "delta": -2,
+      "note": "",
+      "last_success": "2026-11-23T22:02:05.015764+00:00"
     },
     {
       "id": "mideast-downstairs",
@@ -263,9 +258,9 @@
       "uses_llm": false,
       "status": "ok",
       "event_count": 26,
-      "delta": 1,
+      "delta": 0,
       "note": "",
-      "last_success": "2026-11-22T17:47:50.982155+00:00"
+      "last_success": "2026-11-23T22:02:05.015764+00:00"
     },
     {
       "id": "lamplighter-broadway",
@@ -274,10 +269,10 @@
       "strategy": "shopify_products",
       "uses_llm": true,
       "status": "ok",
-      "event_count": 17,
+      "event_count": 16,
       "delta": -1,
       "note": "",
-      "last_success": "2026-11-22T17:47:50.982155+00:00"
+      "last_success": "2026-11-23T22:02:05.015764+00:00"
     },
     {
       "id": "sinclair",
@@ -286,10 +281,10 @@
       "strategy": "aeg_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 17,
-      "delta": 2,
+      "event_count": 16,
+      "delta": -1,
       "note": "",
-      "last_success": "2026-11-22T17:47:50.982155+00:00"
+      "last_success": "2026-11-23T22:02:05.015764+00:00"
     },
     {
       "id": "idle-hands",
@@ -298,10 +293,10 @@
       "strategy": "squarespace_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 16,
-      "delta": 0,
+      "event_count": 15,
+      "delta": -1,
       "note": "",
-      "last_success": "2026-11-22T17:47:50.982155+00:00"
+      "last_success": "2026-11-23T22:02:05.015764+00:00"
     },
     {
       "id": "sally-obriens",
@@ -310,10 +305,10 @@
       "strategy": "sally_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 15,
-      "delta": -1,
+      "event_count": 13,
+      "delta": -2,
       "note": "",
-      "last_success": "2026-11-22T17:47:50.982155+00:00"
+      "last_success": "2026-11-23T22:02:05.015764+00:00"
     },
     {
       "id": "medford-brewing",
@@ -322,10 +317,22 @@
       "strategy": "jsonld_events",
       "uses_llm": false,
       "status": "ok",
-      "event_count": 14,
-      "delta": 1,
+      "event_count": 13,
+      "delta": -1,
       "note": "",
-      "last_success": "2026-11-22T17:47:50.982155+00:00"
+      "last_success": "2026-11-23T22:02:05.015764+00:00"
+    },
+    {
+      "id": "lizard-lounge",
+      "name": "The Lizard Lounge",
+      "square": "Porter",
+      "strategy": "jsonld_events",
+      "uses_llm": false,
+      "status": "ok",
+      "event_count": 11,
+      "delta": -1,
+      "note": "",
+      "last_success": "2026-11-23T22:02:05.015764+00:00"
     },
     {
       "id": "passim",
@@ -334,34 +341,10 @@
       "strategy": "html_full_text",
       "uses_llm": true,
       "status": "ok",
-      "event_count": 7,
-      "delta": -1,
+      "event_count": 8,
+      "delta": 1,
       "note": "",
-      "last_success": "2026-11-22T17:47:50.982155+00:00"
-    },
-    {
-      "id": "plough-stars",
-      "name": "The Plough and Stars",
-      "square": "Central",
-      "strategy": "html_full_text",
-      "uses_llm": true,
-      "status": "ok",
-      "event_count": 7,
-      "delta": -1,
-      "note": "",
-      "last_success": "2026-11-22T17:47:50.982155+00:00"
-    },
-    {
-      "id": "grand-boston",
-      "name": "The Grand Boston",
-      "square": "Seaport",
-      "strategy": "tablelist_events",
-      "uses_llm": false,
-      "status": "ok",
-      "event_count": 7,
-      "delta": -1,
-      "note": "",
-      "last_success": "2026-11-22T17:47:50.982155+00:00"
+      "last_success": "2026-11-23T22:02:05.015764+00:00"
     },
     {
       "id": "dorchester-brewing",
@@ -371,9 +354,33 @@
       "uses_llm": true,
       "status": "ok",
       "event_count": 6,
+      "delta": 0,
+      "note": "",
+      "last_success": "2026-11-23T22:02:05.015764+00:00"
+    },
+    {
+      "id": "grand-boston",
+      "name": "The Grand Boston",
+      "square": "Seaport",
+      "strategy": "tablelist_events",
+      "uses_llm": false,
+      "status": "ok",
+      "event_count": 6,
       "delta": -1,
       "note": "",
-      "last_success": "2026-11-22T17:47:50.982155+00:00"
+      "last_success": "2026-11-23T22:02:05.015764+00:00"
+    },
+    {
+      "id": "plough-stars",
+      "name": "The Plough and Stars",
+      "square": "Central",
+      "strategy": "html_full_text",
+      "uses_llm": true,
+      "status": "ok",
+      "event_count": 5,
+      "delta": -2,
+      "note": "",
+      "last_success": "2026-11-23T22:02:05.015764+00:00"
     },
     {
       "id": "west-end-museum",
@@ -385,7 +392,7 @@
       "event_count": 4,
       "delta": 0,
       "note": "",
-      "last_success": "2026-11-22T17:47:50.982155+00:00"
+      "last_success": "2026-11-23T22:02:05.015764+00:00"
     },
     {
       "id": "faces-brewing",
@@ -394,34 +401,10 @@
       "strategy": "html_full_text",
       "uses_llm": true,
       "status": "ok",
-      "event_count": 4,
-      "delta": 0,
-      "note": "",
-      "last_success": "2026-11-22T17:47:50.982155+00:00"
-    },
-    {
-      "id": "scorpion-boston",
-      "name": "Scorpion Bar Boston",
-      "square": "Seaport",
-      "strategy": "tablelist_events",
-      "uses_llm": false,
-      "status": "ok",
       "event_count": 3,
       "delta": -1,
       "note": "",
-      "last_success": "2026-11-22T17:47:50.982155+00:00"
-    },
-    {
-      "id": "village-social",
-      "name": "Village Social Club",
-      "square": "Brookline Village",
-      "strategy": "gcal_ics",
-      "uses_llm": false,
-      "status": "ok",
-      "event_count": 2,
-      "delta": 0,
-      "note": "",
-      "last_success": "2026-11-22T17:47:50.982155+00:00"
+      "last_success": "2026-11-23T22:02:05.015764+00:00"
     },
     {
       "id": "hamilton-brookline",
@@ -433,7 +416,31 @@
       "event_count": 2,
       "delta": 0,
       "note": "",
-      "last_success": "2026-11-22T17:47:50.982155+00:00"
+      "last_success": "2026-11-23T22:02:05.015764+00:00"
+    },
+    {
+      "id": "scorpion-boston",
+      "name": "Scorpion Bar Boston",
+      "square": "Seaport",
+      "strategy": "tablelist_events",
+      "uses_llm": false,
+      "status": "ok",
+      "event_count": 2,
+      "delta": -1,
+      "note": "",
+      "last_success": "2026-11-23T22:02:05.015764+00:00"
+    },
+    {
+      "id": "village-social",
+      "name": "Village Social Club",
+      "square": "Brookline Village",
+      "strategy": "gcal_ics",
+      "uses_llm": false,
+      "status": "ok",
+      "event_count": 1,
+      "delta": -1,
+      "note": "",
+      "last_success": "2026-11-23T22:02:05.015764+00:00"
     },
     {
       "id": "vrcc",
@@ -445,7 +452,7 @@
       "event_count": 0,
       "delta": 0,
       "note": "",
-      "last_success": "2026-11-22T17:47:50.982155+00:00"
+      "last_success": "2026-11-23T22:02:05.015764+00:00"
     },
     {
       "id": "boston-open-market",
@@ -457,7 +464,7 @@
       "event_count": 0,
       "delta": 0,
       "note": "",
-      "last_success": "2026-11-22T17:47:50.982155+00:00"
+      "last_success": "2026-11-23T22:02:05.015764+00:00"
     }
   ]
 }
